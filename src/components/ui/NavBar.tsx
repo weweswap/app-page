@@ -1,6 +1,5 @@
 "use client";
 
-import logo from "@/assets/img/navbar-logo.svg";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,12 +23,12 @@ export default function NavBar() {
         <div className="flex justify-between items-center mx-auto max-w-screen-2xl">
           <div className="flex items-center gap-4">
             <Link href="#" className="flex items-center">
-              <Image
+              {/* <Image
                 src={logo}
                 height={50}
                 className="mr-3"
                 alt="vampire-attack"
-              />
+              /> */}
             </Link>
             <ul className="items-center gap-2 hidden md:flex">
               <li>
