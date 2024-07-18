@@ -1,36 +1,24 @@
 "use client";
 
 import { colorsTuple, createTheme, rem } from "@mantine/core";
-import { Montserrat } from "next/font/google";
-
-const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const theme = createTheme({
   /** Put your mantine theme override here */
-  ...montserrat.style,
   black: "#000000",
   white: "#FFFFFF",
-  colors: {
-    bgLight: colorsTuple("#171313"),
-    bgLight2: colorsTuple("#262121"),
-    border: colorsTuple("#443838"),
-    textGray: colorsTuple("#A7A7A7"),
-    textGray2: colorsTuple("#B5A3A3"),
-    red: colorsTuple("#FC393A"),
-    green: colorsTuple("#05E278"),
-    yellow: colorsTuple("#EFAD2B"),
-    cyan: colorsTuple("#23DAE5"),
-  },
-  primaryColor: "red",
   fontSizes: {
-    sm: rem(14),
-    md: rem(16),
+    xs: rem(14),
+    sm: rem(16),
+    md: rem(18),
     lg: rem(20),
+    xl: rem(24),
   },
   lineHeights: {
+    xs: "normal",
     sm: "normal",
     md: "normal",
     lg: "normal",
+    xl: "normal",
   },
   headings: {
     sizes: {
@@ -50,10 +38,5 @@ export const theme = createTheme({
         lineHeight: "normal",
       },
     },
-  },
-  defaultGradient: {
-    from: "#000000",
-    to: "#EF1D1E",
-    deg: 52,
   },
 });
