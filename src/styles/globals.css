@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "VCR_OSD_MONO";
+  src: url("/fonts/VCR_OSD_MONO_1.001-1.ttf") format("ttf"),
+    url("/fonts/VCR_OSD_MONO_1.001 2.woff") format("woff"),
+    url("/fonts/VCR_OSD_MONO_1.001 2.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Verdana";
+  src: url("/fonts/Verdana.ttf") format("ttf"),
+    url("/fonts/verdanab.eot") format("eot"),
+    url("/fonts/Verdana.woff") format("woff");
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a7964;
+}
+
+body {
+  background: #33e6bf;
+  font-family: "VCR_OSD_MONO" !important;
+}
