@@ -28,5 +28,13 @@
 
 body {
   background: #33e6bf;
-  font-family: "VCR_OSD_MONO" !important;
+  font-family: "VCR_OSD_MONO";
+}
+
+.vcr {
+  font-family: "VCR_OSD_MONO";
+}
+
+.verdana {
+  font-family: "Verdana";
 }

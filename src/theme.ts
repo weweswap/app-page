@@ -12,6 +12,8 @@ export const theme = createTheme({
     md: rem(18),
     lg: rem(20),
     xl: rem(24),
+    xxl: rem(32),
+    xxxl: rem(40),
   },
   lineHeights: {
     xs: "normal",
@@ -19,24 +21,7 @@ export const theme = createTheme({
     md: "normal",
     lg: "normal",
     xl: "normal",
-  },
-  headings: {
-    sizes: {
-      h1: {
-        fontWeight: "500",
-        fontSize: rem(32),
-        lineHeight: "normal",
-      },
-      h2: {
-        fontWeight: "700",
-        fontSize: rem(28),
-        lineHeight: "normal",
-      },
-      h3: {
-        fontWeight: "700",
-        fontSize: rem(20),
-        lineHeight: "normal",
-      },
-    },
+    xxl: "normal",
+    xxxl: "normal",
   },
 });

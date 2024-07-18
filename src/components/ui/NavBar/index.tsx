@@ -6,7 +6,7 @@ import { PAGE_LINKS } from "./links";
 import NavLink from "./NavLink";
 import { ConnectButton } from "~/components/common";
 
-export default function NavBar() {
+export const NavBar = () => {
   return (
     <header>
       <nav className="flex items-center justify-between gap-4 p-8">
@@ -29,4 +29,4 @@ export default function NavBar() {
       </nav>
     </header>
   );
-}
+};

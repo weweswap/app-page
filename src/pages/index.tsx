@@ -1,5 +1,7 @@
-const Home = () => {
-  return <div>Home</div>;
+import { Migrate } from "~/components/ui";
+
+const MigratePage = () => {
+  return <Migrate />;
 };
 
-export default Home;
+export default MigratePage;
