@@ -7,7 +7,7 @@ export const PAGE_LINKS = [
   {
     icon: "img/links/pools.svg",
     text: "Pools",
-    href: "/",
+    href: "/pools",
   },
   {
     icon: "img/links/swap.svg",
