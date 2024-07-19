@@ -2,7 +2,7 @@
 
 import { Text } from "@mantine/core";
 import Image from "next/image";
-import { Card } from "~/components/common";
+import { Button, Card } from "~/components/common";
 
 type MigrateDetailProps = {
   onBack: () => void;
@@ -105,9 +105,9 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
           </div>
         </div>
 
-        <button className="w-full bg-blue-800 px-8 py-2" onClick={onMigrate}>
+        <Button className="w-full" onClick={onMigrate}>
           <Text size="md">Migrate</Text>
-        </button>
+        </Button>
       </Card>
 
       <Card>

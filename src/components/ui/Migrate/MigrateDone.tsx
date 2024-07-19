@@ -2,6 +2,7 @@
 
 import { Text } from "@mantine/core";
 import Image from "next/image";
+import { Button } from "~/components/common";
 
 type MigrateDoneProps = {
   onNext: () => void;
@@ -14,11 +15,11 @@ export const MigrateDone = ({ onNext }: MigrateDoneProps) => {
         Nice!!!
       </Text>
       <Image src="/img/nice.png" width={400} height={400} alt="" />
-      <button className="w-[400px] bg-blue-800 px-8 py-2" onClick={onNext}>
+      <Button className="w-[400px]" onClick={onNext}>
         <Text size="md" className="text-white">
           View Pool
         </Text>
-      </button>
+      </Button>
     </div>
   );
 };
