@@ -46,7 +46,7 @@ export const PoolHome = ({ onNext }: PoolHomeProps) => {
               1% Fee Tier 6,000,000,000 WEWE ($1,000,000) $1,000,000 volume
             </Text>
           </div>
-          <Button>
+          <Button onClick={onNext}>
             <Text size="sm" className="uppercase">
               Manage
             </Text>
