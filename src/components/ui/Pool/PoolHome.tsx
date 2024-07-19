@@ -6,9 +6,10 @@ import { Button, Card } from "~/components/common";
 
 type PoolHomeProps = {
   onNext: () => void;
+  onAdd: () => void;
 };
 
-export const PoolHome = ({ onNext }: PoolHomeProps) => {
+export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
   return (
     <>
       <Card className="flex items-center justify-between gap-3">
@@ -20,7 +21,7 @@ export const PoolHome = ({ onNext }: PoolHomeProps) => {
             Simple, passive yield earnt in USDC! Make your assets work for you.
           </Text>
         </div>
-        <Button>
+        <Button onClick={onAdd}>
           <Text size="sm" className="uppercase">
             Add to any pool
           </Text>

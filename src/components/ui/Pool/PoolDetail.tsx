@@ -6,9 +6,10 @@ import { Button, Card } from "~/components/common";
 
 type PoolDetailProps = {
   onBack: () => void;
+  onAdd: () => void;
 };
 
-export const PoolDetail = ({ onBack }: PoolDetailProps) => {
+export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
   return (
     <>
       <Card>
@@ -39,7 +40,7 @@ export const PoolDetail = ({ onBack }: PoolDetailProps) => {
               alt=""
             />
           </div>
-          <Button>
+          <Button onClick={onAdd}>
             <Text size="sm">Add</Text>
           </Button>
         </div>
