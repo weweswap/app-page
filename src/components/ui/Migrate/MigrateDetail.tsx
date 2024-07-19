@@ -106,7 +106,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
         </div>
 
         <button className="w-full bg-blue-800 px-8 py-2" onClick={onMigrate}>
-          Migrate
+          <Text size="md">Migrate</Text>
         </button>
       </Card>
 

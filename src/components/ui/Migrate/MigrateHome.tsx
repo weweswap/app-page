@@ -79,7 +79,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
           </div>
 
           <button className="bg-blue-800 px-8 py-2" onClick={onMigrate}>
-            Migrate
+            <Text size="md">Migrate</Text>
           </button>
         </div>
       </Card>
