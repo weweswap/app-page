@@ -1,8 +1,14 @@
+"use client";
+
 import { Text } from "@mantine/core";
 import Image from "next/image";
 import { Card } from "~/components/common";
 
-export const MigrateHome = () => {
+type MigrateHomeProps = {
+  onMigrate: () => void;
+};
+
+export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
   return (
     <>
       <Card>
@@ -72,7 +78,9 @@ export const MigrateHome = () => {
             </div>
           </div>
 
-          <button className="bg-blue-800 px-8 py-2">Migrate</button>
+          <button className="bg-blue-800 px-8 py-2" onClick={onMigrate}>
+            Migrate
+          </button>
         </div>
       </Card>
 
