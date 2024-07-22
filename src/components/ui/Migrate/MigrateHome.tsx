@@ -12,7 +12,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
   return (
     <>
       <Card>
-        <Text size="xxl" className="uppercase">
+        <Text size="xl" className="uppercase">
           EARN CHAOS COINS!
         </Text>
         <Text size="sm" className="verdana uppercase pt-4">
@@ -79,7 +79,9 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
           </div>
 
           <Button onClick={onMigrate}>
-            <Text size="md">Migrate</Text>
+            <Text size="md" fw={700}>
+              Migrate
+            </Text>
           </Button>
         </div>
       </Card>
@@ -88,16 +90,15 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
         <Text size="lg" className="verdana">
           WEWESWAP uses a new high-performance liquidity design that:
         </Text>
-        <Text size="xs" className="verdana pt-3">
-          <ul className="list-decimal list-inside">
-            <li>Is very simple to add or remove liquidity (yay!)</li>
-            <li>
-              Is fully passive, using auto-rebalancing for you (you never go out
-              of range!)
-            </li>
-            <li>Collects all fees in USDC for you (nice!)</li>
-          </ul>
-        </Text>
+
+        <ul className="list-decimal list-inside pt-3 verdana text-sm">
+          <li>Is very simple to add or remove liquidity (yay!)</li>
+          <li>
+            Is fully passive, using auto-rebalancing for you (you never go out
+            of range!)
+          </li>
+          <li>Collects all fees in USDC for you (nice!)</li>
+        </ul>
       </Card>
     </>
   );

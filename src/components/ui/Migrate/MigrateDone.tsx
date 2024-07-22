@@ -16,7 +16,7 @@ export const MigrateDone = ({ onNext }: MigrateDoneProps) => {
       </Text>
       <Image src="/img/nice.png" width={400} height={400} alt="" />
       <Button className="w-[400px]" onClick={onNext}>
-        <Text size="md" className="text-white">
+        <Text size="md" fw={700} className="text-white">
           View Pool
         </Text>
       </Button>

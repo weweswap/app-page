@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @font-face {
+  font-family: "Dogica";
+  src: url("/fonts/Dogica.woff") format("woff"),
+    url("/fonts/Dogica.woff2") format("woff2"),
+    url("/fonts/Dogica.eot") format("eot");
+}
+
+@font-face {
   font-family: "VCR_OSD_MONO";
   src: url("/fonts/VCR_OSD_MONO_1.001-1.ttf") format("ttf"),
     url("/fonts/VCR_OSD_MONO_1.001 2.woff") format("woff"),
@@ -26,15 +33,67 @@
   background: #1a7964;
 }
 
-body {
-  background: #33e6bf;
-  font-family: "VCR_OSD_MONO";
+:root {
+  --pink: #f29dff;
+  --yellow: #ffd911;
+  --blue: #0439c7;
+  --stroke: #797979;
 }
 
-.vcr {
-  font-family: "VCR_OSD_MONO";
+body {
+  background: #000;
+  font-family: "Dogica";
+  letter-spacing: -0.48px;
+}
+
+body:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+  filter: blur(3.5px);
+  background-image: url("/img/background.svg");
+  background-repeat: space;
+  background-position-x: center;
+}
+
+.dogica {
+  font-family: "Dogica";
+  letter-spacing: -0.48px;
 }
 
 .verdana {
   font-family: "Verdana";
+  letter-spacing: -0.28px;
+}
+
+.bg_pink {
+  background: var(--pink);
+}
+
+.bg_yellow {
+  background: var(--yellow);
+}
+
+.bg_blue {
+  background: var(--blue);
+}
+
+.text_pink {
+  color: var(--pink);
+}
+
+.text_yellow {
+  color: var(--yellow);
+}
+
+.text_blue {
+  color: var(--blue);
+}
+
+.border_stroke {
+  border: 1px solid var(--stroke);
 }

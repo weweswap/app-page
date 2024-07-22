@@ -14,7 +14,7 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
     <>
       <Card className="flex items-center justify-between gap-3">
         <div className="flex-1">
-          <Text size="xxl" className="uppercase">
+          <Text size="xl" className="uppercase">
             WEWESWAP ACTIVE POOLS
           </Text>
           <Text size="xs" className="verdana pt-3">
@@ -22,7 +22,7 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
           </Text>
         </div>
         <Button onClick={onAdd}>
-          <Text size="sm" className="uppercase">
+          <Text size="sm" fw={700} className="uppercase">
             Add to any pool
           </Text>
         </Button>
@@ -48,7 +48,7 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
             </Text>
           </div>
           <Button onClick={onNext}>
-            <Text size="sm" className="uppercase">
+            <Text size="sm" fw={700} className="uppercase">
               Manage
             </Text>
           </Button>
@@ -99,18 +99,16 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
         <Text size="lg" className="verdana">
           WEWESWAP pools are all paired to USDC:
         </Text>
-        <Text size="xs" className="verdana pt-3">
-          <ul className="list-decimal list-inside">
-            <li>
-              Your can zap into a pool with either USDC, the asset, or both.
-            </li>
-            <li>
-              Your assets are distributed across an automatically re-balanced
-              price range.
-            </li>
-            <li>All fees are collected in USDC for you.</li>
-          </ul>
-        </Text>
+        <ul className="list-decimal list-inside pt-3 verdana text-sm">
+          <li>
+            Your can zap into a pool with either USDC, the asset, or both.
+          </li>
+          <li>
+            Your assets are distributed across an automatically re-balanced
+            price range.
+          </li>
+          <li>All fees are collected in USDC for you.</li>
+        </ul>
       </Card>
     </>
   );

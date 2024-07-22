@@ -10,9 +10,9 @@ import { theme } from "~/theme";
 const App: AppType = ({ Component, pageProps }) => {
   return (
     <DirectionProvider>
-      <MantineProvider theme={theme} defaultColorScheme="light">
+      <MantineProvider theme={theme} defaultColorScheme="dark">
         <WagmiProviderComp>
-          <main>
+          <main className="relative text-white">
             <NavBar />
             <div className="flex flex-col items-center p-4">
               <div className="w-full max-w-[845px] flex flex-col items-center gap-5">

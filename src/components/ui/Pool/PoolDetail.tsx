@@ -23,7 +23,7 @@ export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
           classNames={{
             root: "flex-1",
             input:
-              "bg-gray-900 p-4 vcr text-white text-lg h-auto border-transparent rounded-none",
+              "bg-gray-900 p-4 dogica text-white text-lg h-auto border-transparent rounded-none",
           }}
           hideControls
         />
@@ -41,7 +41,9 @@ export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
             />
           </div>
           <Button onClick={onAdd}>
-            <Text size="sm">Add</Text>
+            <Text size="sm" fw={700}>
+              Add
+            </Text>
           </Button>
         </div>
       </Card>
@@ -50,18 +52,16 @@ export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
         <Text size="lg" className="verdana">
           When you add liquidity to an Active Pool:
         </Text>
-        <Text size="xs" className="verdana pt-3">
-          <ul className="list-decimal list-inside">
-            <li>Your assets are swapped to be added correctly to the pool.</li>
-            <li>
-              Any assets that can’t fit in the pool are refunded back to you.
-            </li>
-            <li>
-              You may experience a small slip when you enter a pool that is
-              out-of-balance.
-            </li>
-          </ul>
-        </Text>
+        <ul className="list-decimal list-inside pt-3 verdana text-sm">
+          <li>Your assets are swapped to be added correctly to the pool.</li>
+          <li>
+            Any assets that can’t fit in the pool are refunded back to you.
+          </li>
+          <li>
+            You may experience a small slip when you enter a pool that is
+            out-of-balance.
+          </li>
+        </ul>
       </Card>
     </>
   );

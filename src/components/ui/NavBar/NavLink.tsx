@@ -17,7 +17,7 @@ const NavLink = ({ icon, text, href }: NavLinkProps) => {
         className="flex items-center p-2 gap-2"
       >
         <Image src={icon} width={25} height={25} alt="" />
-        <Text size="lg" className="uppercase">
+        <Text size="lg" className="uppercase text_yellow">
           {text}
         </Text>
       </Link>

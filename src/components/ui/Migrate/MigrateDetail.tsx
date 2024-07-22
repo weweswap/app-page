@@ -106,7 +106,9 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
         </div>
 
         <Button className="w-full" onClick={onMigrate}>
-          <Text size="md">Migrate</Text>
+          <Text size="md" fw={700}>
+            Migrate
+          </Text>
         </Button>
       </Card>
 
@@ -114,19 +116,17 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
         <Text size="lg" className="verdana">
           By pairing with USDC, WEWESWAP:
         </Text>
-        <Text size="xs" className="verdana pt-3">
-          <ul className="list-decimal list-inside">
-            <li>Allows you to earn a stream of stable yield (nice!)</li>
-            <li>
-              Is a more stable “working asset”, which means less volatility in
-              total (cool!)
-            </li>
-            <li>
-              Is paired with a volatile asset, so potentially more volume and
-              fees (yay!)
-            </li>
-          </ul>
-        </Text>
+        <ul className="list-decimal list-inside pt-3 verdana text-sm">
+          <li>Allows you to earn a stream of stable yield (nice!)</li>
+          <li>
+            Is a more stable “working asset”, which means less volatility in
+            total (cool!)
+          </li>
+          <li>
+            Is paired with a volatile asset, so potentially more volume and fees
+            (yay!)
+          </li>
+        </ul>
       </Card>
     </>
   );

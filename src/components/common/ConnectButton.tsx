@@ -32,9 +32,11 @@ export const ConnectButton = () => {
                   <button
                     onClick={openConnectModal}
                     type="button"
-                    className="bg-white px-8 py-2"
+                    className="flex items-center bg_pink text-black px-4 h-10"
                   >
-                    <Text size="sm">Connect</Text>
+                    <Text size="sm" fw={700}>
+                      Connect
+                    </Text>
                   </button>
                 );
               }
@@ -44,9 +46,11 @@ export const ConnectButton = () => {
                   <button
                     onClick={openChainModal}
                     type="button"
-                    className="bg-white px-8 py-2"
+                    className="flex items-center bg_pink text-black px-4 h-10"
                   >
-                    <Text size="sm">Wrong network</Text>
+                    <Text size="sm" fw={700}>
+                      Wrong network
+                    </Text>
                   </button>
                 );
               }
@@ -56,7 +60,7 @@ export const ConnectButton = () => {
                   <button
                     onClick={openChainModal}
                     type="button"
-                    className="flex items-center gap-2 bg-white p-2"
+                    className="flex items-center text-black gap-2 bg_pink px-4 h-10"
                   >
                     {chain.hasIcon && (
                       <div
@@ -77,15 +81,17 @@ export const ConnectButton = () => {
                         )}
                       </div>
                     )}
-                    <Text size="sm">{chain.name}</Text>
+                    <Text size="sm" fw={700}>
+                      {chain.name}
+                    </Text>
                   </button>
 
                   <button
                     onClick={openAccountModal}
                     type="button"
-                    className="bg-white p-2"
+                    className="flex items-center bg_pink text-black px-4 h-10"
                   >
-                    <Text size="sm">
+                    <Text size="sm" fw={700}>
                       {account.displayName}
                       {account.displayBalance
                         ? ` (${account.displayBalance})`
