@@ -11,7 +11,7 @@ export const NavBar = () => {
     <header>
       <nav className="flex items-center justify-between gap-4 p-8">
         <Link href="/" className="flex items-center">
-          <Image src="img/logo.svg" width={101} height={50} alt="logo" />
+          <Image src="/img/logo.svg" width={129} height={56} alt="logo" />
         </Link>
 
         <ul className="flex items-center gap-4">

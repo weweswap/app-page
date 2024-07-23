@@ -8,8 +8,8 @@ const Document = () => {
         <link rel="icon" type="image/jpeg" sizes="32x32" href="/fav.jpg" />
         <link rel="icon" type="image/jpeg" sizes="16x16" href="/fav.jpg" />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="msapplication-TileColor" content="#33E6BF" />
-        <meta name="theme-color" content="#33E6BF" />
+        <meta name="msapplication-TileColor" content="#000" />
+        <meta name="theme-color" content="#000" />
       </Head>
       <body>
         <Main />

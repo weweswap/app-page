@@ -86,7 +86,9 @@ export const PoolAddModal = (props: ModalRootProps) => {
           </div>
 
           <Button className="w-full" onClick={props.onClose}>
-            <Text size="md">Add Liquidity</Text>
+            <Text size="md" fw={700}>
+              Add Liquidity
+            </Text>
           </Button>
         </Modal.Body>
       </Modal.Content>

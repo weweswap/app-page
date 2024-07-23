@@ -10,7 +10,7 @@ export const Button = ({
   HTMLButtonElement
 >) => {
   return (
-    <button className={clsx("bg-blue-800 px-8 py-2", className)} {...props}>
+    <button className={clsx("bg_blue p-4 font-bold", className)} {...props}>
       {children}
     </button>
   );

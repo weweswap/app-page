@@ -10,7 +10,10 @@ export const Card = ({
 >) => {
   return (
     <div
-      className={clsx("w-full bg-black text-white p-4", className)}
+      className={clsx(
+        "w-full bg-black border_stroke text-white p-4",
+        className
+      )}
       {...props}
     >
       {children}

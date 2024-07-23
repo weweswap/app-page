@@ -12,7 +12,7 @@ export const PAGE_LINKS = [
   {
     icon: "img/links/swap.svg",
     text: "Swap",
-    href: "/",
+    href: "/swap",
   },
   {
     icon: "img/links/earn.svg",
