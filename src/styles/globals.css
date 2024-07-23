@@ -38,6 +38,7 @@
   --yellow: #ffd911;
   --blue: #0439c7;
   --stroke: #797979;
+  --aqua: #33e6bf;
 }
 
 body {
@@ -96,4 +97,8 @@ body:before {
 
 .border_stroke {
   border: 1px solid var(--stroke);
+}
+
+.border_aqua {
+  border-color: var(--aqua);
 }
