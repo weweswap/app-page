@@ -83,6 +83,10 @@ body:before {
   background: var(--blue);
 }
 
+.bg_aqua {
+  background: var(--aqua);
+}
+
 .text_pink {
   color: var(--pink);
 }
@@ -101,4 +105,8 @@ body:before {
 
 .border_aqua {
   border-color: var(--aqua);
+}
+
+.border_pink {
+  border: 1px solid var(--pink);
 }

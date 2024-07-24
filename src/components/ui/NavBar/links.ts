@@ -17,6 +17,6 @@ export const PAGE_LINKS = [
   {
     icon: "img/links/earn.svg",
     text: "Earn",
-    href: "/",
+    href: "/earn",
   },
 ];

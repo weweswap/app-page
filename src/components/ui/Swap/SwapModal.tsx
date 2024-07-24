@@ -27,7 +27,7 @@ export const SwapModal = (props: ModalRootProps) => {
         </Text>
       </div>
 
-      <Divider className="border-blue-800" />
+      <Divider className="border-blue-700" />
 
       <div className="flex items-center justify-between gap-3">
         <Text size="xs" className="verdana">

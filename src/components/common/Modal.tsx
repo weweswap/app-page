@@ -26,7 +26,7 @@ export const Modal = ({ title, children, ...props }: ModalProps) => {
         </MtModal.Header>
 
         <MtModal.Body className="flex flex-col gap-5 p-0">
-          <Divider className="border-blue-800" />
+          <Divider className="border-blue-700" />
           {children}
         </MtModal.Body>
       </MtModal.Content>

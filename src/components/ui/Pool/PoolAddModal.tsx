@@ -43,7 +43,7 @@ export const PoolAddModal = (props: ModalRootProps) => {
         </div>
       </div>
 
-      <Divider className="border-blue-800" />
+      <Divider className="border-blue-700" />
 
       <div className="flex items-center justify-between">
         <Text size="xs" className="verdana">
