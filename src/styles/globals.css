@@ -34,11 +34,12 @@
 }
 
 :root {
-  --pink: #f29dff;
-  --yellow: #ffd911;
+  --turq: #33e6bf;
   --blue: #0439c7;
+  --violet: #f29dff;
+  --yellow: #ffd911;
+  --red: #fe0000;
   --stroke: #797979;
-  --aqua: #33e6bf;
 }
 
 body {
@@ -71,8 +72,8 @@ body:before {
   letter-spacing: -0.28px;
 }
 
-.bg_pink {
-  background: var(--pink);
+.bg_violet {
+  background: var(--violet);
 }
 
 .bg_yellow {
@@ -83,12 +84,12 @@ body:before {
   background: var(--blue);
 }
 
-.bg_aqua {
-  background: var(--aqua);
+.bg_turq {
+  background: var(--turq);
 }
 
-.text_pink {
-  color: var(--pink);
+.text_violet {
+  color: var(--violet);
 }
 
 .text_yellow {
@@ -103,10 +104,10 @@ body:before {
   border: 1px solid var(--stroke);
 }
 
-.border_aqua {
-  border-color: var(--aqua);
+.border_turq {
+  border-color: var(--turq);
 }
 
-.border_pink {
-  border: 1px solid var(--pink);
+.border_violet {
+  border: 1px solid var(--violet);
 }

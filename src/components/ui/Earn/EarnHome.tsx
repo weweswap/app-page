@@ -26,7 +26,7 @@ export const EarnHome = () => {
           </Text>
         </div>
 
-        <div className="border_pink p-4 flex flex-col gap-6">
+        <div className="border_violet p-4 flex flex-col gap-6">
           <Text size="xs">Claim CHAOS</Text>
           <Divider className="border-blue-700" />
           <div className="flex items-center justify-between gap-3">
@@ -53,7 +53,7 @@ export const EarnHome = () => {
               }`}
             >
               <div className="flex items-center gap-4">
-                <button className="w-9 h-9 bg_aqua flex items-center justify-center">
+                <button className="w-9 h-9 bg_turq flex items-center justify-center">
                   <Image
                     src="/img/icons/download.svg"
                     width={24}
@@ -70,7 +70,7 @@ export const EarnHome = () => {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="w-9 h-9 rounded-full bg_aqua opacity-20" />
+                <div className="w-9 h-9 rounded-full bg_turq opacity-20" />
                 <Text size="sm">500 CHAOS</Text>
               </div>
             </div>

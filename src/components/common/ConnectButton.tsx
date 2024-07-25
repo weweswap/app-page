@@ -32,7 +32,7 @@ export const ConnectButton = () => {
                   <button
                     onClick={openConnectModal}
                     type="button"
-                    className="flex items-center bg_pink text-black px-4 h-10"
+                    className="flex items-center bg_violet text-black px-4 h-10"
                   >
                     <Text size="sm" fw={700}>
                       Connect
@@ -46,7 +46,7 @@ export const ConnectButton = () => {
                   <button
                     onClick={openChainModal}
                     type="button"
-                    className="flex items-center bg_pink text-black px-4 h-10"
+                    className="flex items-center bg_violet text-black px-4 h-10"
                   >
                     <Text size="sm" fw={700}>
                       Wrong network
@@ -60,7 +60,7 @@ export const ConnectButton = () => {
                   <button
                     onClick={openChainModal}
                     type="button"
-                    className="flex items-center text-black gap-2 bg_pink px-4 h-10"
+                    className="flex items-center text-black gap-2 bg_violet px-4 h-10"
                   >
                     {chain.hasIcon && (
                       <div
@@ -89,7 +89,7 @@ export const ConnectButton = () => {
                   <button
                     onClick={openAccountModal}
                     type="button"
-                    className="flex items-center bg_pink text-black px-4 h-10"
+                    className="flex items-center bg_violet text-black px-4 h-10"
                   >
                     <Text size="sm" fw={700}>
                       {account.displayName}
