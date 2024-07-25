@@ -8,7 +8,7 @@ import { ConnectButton } from "~/components/common";
 
 export const NavBar = () => {
   return (
-    <header>
+    <header className="w-full">
       <nav className="flex items-center justify-between gap-4 p-8">
         <Link href="/" className="flex items-center">
           <Image src="/img/logo.svg" width={129} height={56} alt="logo" />

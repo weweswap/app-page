@@ -15,18 +15,6 @@ type SwapHomeProps = {
 };
 
 export const SwapHome = ({ onSwap }: SwapHomeProps) => {
-  const getTokenIcon = (symbol?: string) => {
-    const token = TOKEN_LIST.find((t) => t.symbol === symbol);
-    return (
-      <Image
-        src={token?.icon || "/img/wewe.png"}
-        width={36}
-        height={36}
-        alt=""
-      />
-    );
-  };
-
   return (
     <>
       <div className="w-full flex items-center justify-between">
@@ -72,7 +60,7 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
         </Card>
 
         <div className="h-1 flex items-center justify-center">
-          <button className="absolute bg-black border border-[3px] border_aqua p-3">
+          <button className="absolute bg-black border border-[3px] border_turq p-3">
             <Image
               src="/img/icons/arrow_swap1.svg"
               width={16}

@@ -11,7 +11,7 @@ if (!projectId) throw new Error("Project ID is not defined");
 const metadata = {
   name: "WEWE",
   description: "WEWE App",
-  icons: ["/fav.jpg"],
+  icons: ["/fav.svg"],
   url: "https://weweswap.com",
 };
 
