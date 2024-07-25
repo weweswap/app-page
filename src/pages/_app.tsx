@@ -13,10 +13,12 @@ const App: AppType = ({ Component, pageProps }) => {
       <MantineProvider theme={theme} defaultColorScheme="dark">
         <WagmiProviderComp>
           <main className="relative text-white w-full min-h-screen flex flex-col items-center justify-between">
-            <NavBar />
-            <div className="flex flex-col items-center p-4">
-              <div className="w-full max-w-[845px] flex flex-col items-center gap-5">
-                <Component {...pageProps} />
+            <div className="w-full flex flex-col items-center">
+              <NavBar />
+              <div className="w-full flex flex-col items-center p-4">
+                <div className="w-full max-w-[845px] flex flex-col items-center gap-5">
+                  <Component {...pageProps} />
+                </div>
               </div>
             </div>
             <Footer />
