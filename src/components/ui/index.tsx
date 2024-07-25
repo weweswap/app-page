@@ -1,3 +1,4 @@
+export * from "./Background";
 export * from "./NavBar";
 export * from "./Footer";
 export * from "./Migrate";
