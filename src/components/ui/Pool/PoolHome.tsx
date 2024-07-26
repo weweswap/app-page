@@ -12,7 +12,7 @@ type PoolHomeProps = {
 export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
   return (
     <>
-      <Card className="flex items-center justify-between gap-3">
+      <Card className="flex flex-col md:flex-row text-center md:text-start items-center justify-between gap-3">
         <div className="flex-1">
           <Text size="xl" className="uppercase">
             WEWESWAP ACTIVE POOLS
@@ -21,7 +21,7 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
             Simple, passive yield earnt in USDC! Make your assets work for you.
           </Text>
         </div>
-        <Button onClick={onAdd}>
+        <Button onClick={onAdd} className="w-full md:w-auto">
           <Text size="sm" fw={700} className="uppercase">
             Add to any pool
           </Text>
@@ -29,8 +29,8 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
       </Card>
 
       <Card className="flex flex-col gap-4">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex-1">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="flex-1 w-full md:w-auto">
             <div className="flex items-center gap-3">
               <Image
                 className="rounded"
@@ -47,7 +47,7 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
               1% Fee Tier 6,000,000,000 WEWE ($1,000,000) $1,000,000 volume
             </Text>
           </div>
-          <Button onClick={onNext}>
+          <Button onClick={onNext} className="w-full md:w-auto">
             <Text size="sm" fw={700} className="uppercase">
               Manage
             </Text>
