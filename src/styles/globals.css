@@ -45,6 +45,7 @@
 body {
   background: #000;
   font-family: "Dogica";
+  line-height: 125%;
   letter-spacing: -0.48px;
 }
 
@@ -64,6 +65,7 @@ body:before {
 
 .dogica {
   font-family: "Dogica";
+  line-height: 125%;
   letter-spacing: -0.48px;
 }
 
