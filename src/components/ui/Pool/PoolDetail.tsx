@@ -18,16 +18,16 @@ export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
         </button>
       </Card>
 
-      <Card className="flex items-center gap-4">
+      <Card className="flex flex-col md:flex-row items-center gap-4">
         <NumberInput
           classNames={{
-            root: "flex-1",
+            root: "flex-1 w-full md:w-auto",
             input:
               "bg-gray-900 p-4 dogica text-white text-lg h-auto border-transparent rounded-none",
           }}
           hideControls
         />
-        <div className="flex-1 flex items-center justify-between gap-3">
+        <div className="flex-1 w-full md:w-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Image src="/img/tokens/wewe.png" width={40} height={40} alt="" />
             <Text size="md" className="verdana">
