@@ -14,7 +14,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
     <>
       <Card className="flex flex-col gap-6 p-6">
         <div>
-          <button onClick={onBack}>
+          <button onClick={onBack} className="w-full text-start">
             <Text size="xl">{"<"} Migrate Uniswap Liquidity</Text>
           </button>
           <Text size="xs" className="verdana mt-3">
@@ -24,7 +24,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
         </div>
 
         <div className="flex items-center justify-between bg-gray-900 p-4 gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col md:flex-row items-center gap-3">
             <div className="flex items-center">
               <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
               <Image
@@ -35,12 +35,12 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
                 className="-translate-x-1.5"
               />
             </div>
-            <Text size="md">WETH/WEWE</Text>
+            <Text className="text-xs sm:text-lg">WETH/WEWE</Text>
           </div>
 
           <Text size="md">{">"}</Text>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col md:flex-row items-center gap-3">
             <div className="flex items-center">
               <Image src="/img/tokens/usdc.png" width={24} height={24} alt="" />
               <Image
@@ -51,7 +51,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
                 className="-translate-x-1.5"
               />
             </div>
-            <Text size="md">USDC/WEWE</Text>
+            <Text className="text-xs sm:text-lg">USDC/WEWE</Text>
           </div>
         </div>
 
