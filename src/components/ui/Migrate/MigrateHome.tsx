@@ -21,7 +21,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
       </Card>
 
       <Card className="flex flex-col gap-4">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex-1 bg-gray-900 px-4 py-3 flex items-center gap-3">
             <Image
               className="rounded"
@@ -39,8 +39,8 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
           </Text>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex-1 flex flex-col items-center md:items-start">
             <div className="flex items-center gap-3">
               <div className="flex items-center">
                 <Image
