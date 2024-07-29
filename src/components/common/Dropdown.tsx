@@ -11,6 +11,7 @@ type DropdownProps = {
     text?: string;
   }[];
   placeholder?: string;
+  className?: string;
 };
 
 export const Dropdown = ({
@@ -18,6 +19,7 @@ export const Dropdown = ({
   defaultValue,
   options,
   placeholder,
+  className,
 }: DropdownProps) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -44,23 +46,27 @@ export const Dropdown = ({
           pointer
           onClick={() => combobox.toggleDropdown()}
           classNames={{
-            input: "rounded-none flex items-center gap-3 px-3 py-1 h-auto",
+            root: className,
+            input:
+              "rounded-none flex items-center justify-between gap-3 px-3 py-1 h-auto",
           }}
         >
-          {selected ? (
-            <>
-              {selected.icon && (
-                <Image src={selected.icon} width={36} height={36} alt="" />
-              )}
+          <div className="flex items-center gap-3">
+            {selected ? (
+              <>
+                {selected.icon && (
+                  <Image src={selected.icon} width={36} height={36} alt="" />
+                )}
+                <Text size="lg" className="verdana">
+                  {selected.text ?? selected.value}
+                </Text>
+              </>
+            ) : (
               <Text size="lg" className="verdana">
-                {selected.text ?? selected.value}
+                {placeholder ?? "Select"}
               </Text>
-            </>
-          ) : (
-            <Text size="lg" className="verdana">
-              {placeholder ?? "Select"}
-            </Text>
-          )}
+            )}
+          </div>
           <Image
             src="/img/icons/arrow_down.svg"
             width={16}
