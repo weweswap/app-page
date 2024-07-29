@@ -1,0 +1,64 @@
+name: Auto Create Issue for PR
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  create_issue:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create Issue
+      id: create_issue
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { data: issue } = await github.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `Review PR #${context.payload.pull_request.number}: ${context.payload.pull_request.title}`,
+            body: `A new pull request has been created by @${context.payload.pull_request.user.login}.\n\n` +
+                  `PR Link: ${context.payload.pull_request.html_url}`,
+            labels: ['PR Review'],
+            assignees: [context.payload.pull_request.user.login],
+          });
+
+          return issue.number;
+
+    - name: Add Issue to Project
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const projectName = 'WEWESwap Development'; // Your project name
+          const columnName = 'Todo'; // Your column name
+
+          // Get the project board
+          const { data: projects } = await github.projects.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+          });
+
+          const project = projects.find(p => p.name === projectName);
+
+          if (!project) {
+            throw new Error(`Project ${projectName} not found`);
+          }
+
+          // Get the columns in the project
+          const { data: columns } = await github.projects.listColumns({
+            project_id: project.id,
+          });
+
+          const column = columns.find(c => c.name === columnName);
+
+          if (!column) {
+            throw new Error(`Column ${columnName} not found in project ${project.name}`);
+          }
+
+          // Add the issue to the project column
+          await github.projects.createCard({
+            column_id: column.id,
+            content_id: issue.number,
+            content_type: 'Issue'
+          });
