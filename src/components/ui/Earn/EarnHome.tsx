@@ -29,9 +29,9 @@ export const EarnHome = () => {
         <div className="border_violet p-4 flex flex-col gap-6">
           <Text size="xs">Claim CHAOS</Text>
           <Divider className="border-blue-700" />
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <Text size="sm">Claim CHAOS</Text>
-            <Button>
+            <Button className="w-full sm:w-auto">
               <Text size="xs" fw={700}>
                 Claim CHAOS
               </Text>
