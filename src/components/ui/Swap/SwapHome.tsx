@@ -28,17 +28,21 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
         <Card className="flex flex-col gap-4">
           <Text size="xs">Sell</Text>
 
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <NumberInput
               classNames={{
-                root: "flex-1",
+                root: "flex-1 w-full md:w-auto",
                 input:
-                  "bg-transparent dogica text-white text-2xl h-auto border-transparent rounded-none",
+                  "text-center md:text-start bg-transparent dogica text-white text-2xl h-auto border-transparent rounded-none",
               }}
               defaultValue="0.030"
               hideControls
             />
-            <Dropdown defaultValue="ETH" options={tokenOptions} />
+            <Dropdown
+              defaultValue="ETH"
+              options={tokenOptions}
+              className="w-full md:w-auto"
+            />
           </div>
 
           <div className="flex items-center justify-between gap-3">
@@ -73,17 +77,21 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
         <Card className="flex flex-col gap-4">
           <Text size="xs">Buy</Text>
 
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <NumberInput
               classNames={{
-                root: "flex-1",
+                root: "flex-1 w-full md:w-auto",
                 input:
-                  "bg-transparent dogica text-white text-2xl h-auto border-transparent rounded-none",
+                  "text-center md:text-start bg-transparent dogica text-white text-2xl h-auto border-transparent rounded-none",
               }}
               defaultValue="109.925"
               hideControls
             />
-            <Dropdown defaultValue="USDC" options={tokenOptions} />
+            <Dropdown
+              defaultValue="USDC"
+              options={tokenOptions}
+              className="w-full md:w-auto"
+            />
           </div>
 
           <Text size="xs" ta="center" className="verdana">
