@@ -13,8 +13,12 @@ jobs:
       id: create_issue
       uses: actions/github-script@v6
       with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const { data: issue } = await github.issues.create({
+          const { context, getOctokit } = require('@actions/github');
+          const github = getOctokit(process.env.GITHUB_TOKEN);
+
+          const { data: issue } = await github.rest.issues.create({
             owner: context.repo.owner,
             repo: context.repo.repo,
             title: `Review PR #${context.payload.pull_request.number}: ${context.payload.pull_request.title}`,
@@ -29,12 +33,16 @@ jobs:
     - name: Add Issue to Project
       uses: actions/github-script@v6
       with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
+          const { context, getOctokit } = require('@actions/github');
+          const github = getOctokit(process.env.GITHUB_TOKEN);
+
           const projectName = 'WEWESwap Development'; // Your project name
           const columnName = 'Todo'; // Your column name
 
           // Get the project board
-          const { data: projects } = await github.projects.listForRepo({
+          const { data: projects } = await github.rest.projects.listForRepo({
             owner: context.repo.owner,
             repo: context.repo.repo,
           });
@@ -46,7 +54,7 @@ jobs:
           }
 
           // Get the columns in the project
-          const { data: columns } = await github.projects.listColumns({
+          const { data: columns } = await github.rest.projects.listColumns({
             project_id: project.id,
           });
 
@@ -57,7 +65,7 @@ jobs:
           }
 
           // Add the issue to the project column
-          await github.projects.createCard({
+          await github.rest.projects.createCard({
             column_id: column.id,
             content_id: issue.number,
             content_type: 'Issue'
