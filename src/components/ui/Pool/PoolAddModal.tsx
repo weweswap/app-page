@@ -2,7 +2,11 @@ import { Divider, ModalRootProps, Text } from "@mantine/core";
 import Image from "next/image";
 import { Button, Modal } from "~/components/common";
 
-export const PoolAddModal = (props: ModalRootProps) => {
+type PoolAddModalProps = {
+  onAdd: () => void;
+} & ModalRootProps;
+
+export const PoolAddModal = (props: PoolAddModalProps) => {
   return (
     <Modal title="Add liquidity" {...props}>
       <div className="flex flex-col gap-3">
@@ -54,7 +58,7 @@ export const PoolAddModal = (props: ModalRootProps) => {
         </Text>
       </div>
 
-      <Button className="w-full" onClick={props.onClose}>
+      <Button className="w-full" onClick={props.onAdd}>
         <Text size="md" fw={700}>
           Add Liquidity
         </Text>
