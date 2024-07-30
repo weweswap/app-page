@@ -6,6 +6,7 @@ import { PoolHome } from "./PoolHome";
 import { PoolDetail } from "./PoolDetail";
 import { PoolAddModal } from "./PoolAddModal";
 import { PoolClaim } from "./PoolClaim";
+import { PoolClaimModal } from "./PoolClaimModal";
 
 export const Pool = () => {
   const [step, setStep] = useState(0);
@@ -26,6 +27,7 @@ export const Pool = () => {
         <PoolClaim onBack={() => setStep(1)} onClaim={openClaim} />
       )}
       <PoolAddModal opened={addOpened} onClose={closeAdd} onAdd={handleAdd} />
+      <PoolClaimModal opened={claimOpened} onClose={closeClaim} />
     </>
   );
 };
