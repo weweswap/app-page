@@ -1,9 +1,12 @@
-"use client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-import { Migrate } from "~/components/ui";
+export default function Home() {
+  const router = useRouter();
 
-const MigratePage = () => {
-  return <Migrate />;
-};
+  useEffect(() => {
+    router.push("/merge");
+  }, []);
 
-export default MigratePage;
+  return <></>;
+}
