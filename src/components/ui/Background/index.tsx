@@ -26,6 +26,13 @@ export const Background = () => {
           alt=""
         />
       )}
+      {pathname.startsWith("/merge") && (
+        <img
+          src="/img/patterns/earn.svg"
+          className="z-[-1] absolute w-[96%] left-[4%] top-[20%]"
+          alt=""
+        />
+      )}
     </>
   );
 };
