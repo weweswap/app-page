@@ -10,6 +10,7 @@ const Document = () => {
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="msapplication-TileColor" content="#000" />
         <meta name="theme-color" content="#000" />
+        <title>WEWE Swap</title>
       </Head>
       <body>
         <Main />
