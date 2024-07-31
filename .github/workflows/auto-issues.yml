@@ -15,10 +15,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const { context, getOctokit } = require('@actions/github');
-          const github = getOctokit(process.env.GITHUB_TOKEN);
-
-          const { data: issue } = await github.rest.issues.create({
+          const issue = await github.rest.issues.create({
             owner: context.repo.owner,
             repo: context.repo.repo,
             title: `Review PR #${context.payload.pull_request.number}: ${context.payload.pull_request.title}`,
@@ -28,37 +25,36 @@ jobs:
             assignees: [context.payload.pull_request.user.login],
           });
 
-          return issue.number;
+          core.setOutput('issueNumber', issue.data.number);
 
     - name: Add Issue to Project
       uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const { context, getOctokit } = require('@actions/github');
-          const github = getOctokit(process.env.GITHUB_TOKEN);
+          const issueNumber = "${{ steps.create_issue.outputs.issueNumber }}";
 
           const projectName = 'WEWESwap Development'; // Your project name
           const columnName = 'Todo'; // Your column name
 
           // Get the project board
-          const { data: projects } = await github.rest.projects.listForRepo({
+          const projects = await github.rest.projects.listForRepo({
             owner: context.repo.owner,
             repo: context.repo.repo,
           });
 
-          const project = projects.find(p => p.name === projectName);
+          const project = projects.data.find(p => p.name === projectName);
 
           if (!project) {
             throw new Error(`Project ${projectName} not found`);
           }
 
           // Get the columns in the project
-          const { data: columns } = await github.rest.projects.listColumns({
+          const columns = await github.rest.projects.listColumns({
             project_id: project.id,
           });
 
-          const column = columns.find(c => c.name === columnName);
+          const column = columns.data.find(c => c.name === columnName);
 
           if (!column) {
             throw new Error(`Column ${columnName} not found in project ${project.name}`);
@@ -67,6 +63,6 @@ jobs:
           // Add the issue to the project column
           await github.rest.projects.createCard({
             column_id: column.id,
-            content_id: issue.number,
+            content_id: issueNumber,
             content_type: 'Issue'
           });
