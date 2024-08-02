@@ -9,7 +9,7 @@ export const Footer = () => {
       {path === "/merge" ?
         (
           <video style={{ width: "500px" }} autoPlay loop muted>
-            <source src={"/videos/burn-animation.mov"} type="video/mp4"></source>
+            <source src={"/videos/burn-animation.mp4"} type="video/mp4"></source>
           </video>
         ) :
         (
