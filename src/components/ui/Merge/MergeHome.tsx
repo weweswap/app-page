@@ -1,7 +1,26 @@
+"use client";
+
+import { Loader } from "@mantine/core";
 import Image from "next/image";
+import { formatEther } from "viem";
+import { useAccount } from "wagmi";
 import { Button, Card, Typography } from "~/components/common";
+import { CONTRACT_ADDRESSES } from "~/constants";
+import { useApproveAndCall, useQuoteVult, useTokenBalance } from "~/hooks";
 
 export const MergeHome = () => {
+  const { address } = useAccount();
+  const { data: balanceWewe } = useTokenBalance(
+    address,
+    CONTRACT_ADDRESSES.wewe
+  );
+  const { data: quoteAmount } = useQuoteVult(balanceWewe);
+  const { onWriteAsync: onApproveAndCall, isPending } = useApproveAndCall();
+
+  const handleMerge = () => {
+    onApproveAndCall(balanceWewe);
+  };
+
   return (
     <>
       <Card>
@@ -51,18 +70,25 @@ export const MergeHome = () => {
               <Typography size="md">WEWE</Typography>
             </div>
             <div className="flex items-center gap-3 pt-3">
-              <Typography size="xs">1,616,522 WEWE</Typography>
+              <Typography size="xs">{formatEther(balanceWewe)} WEWE</Typography>
               <Image
                 src="/img/icons/arrow_right1.svg"
                 width={19}
                 height={9}
                 alt=""
               />
-              <Typography size="xs">Max: 1,650.52 VULT</Typography>
+              <Typography size="xs">
+                Max: {formatEther(quoteAmount)} VULT
+              </Typography>
             </div>
           </div>
 
-          <Button className="w-full sm:w-auto">
+          <Button
+            className="flex items-center gap-3"
+            disabled={!address || !balanceWewe || isPending}
+            onClick={handleMerge}
+          >
+            {isPending && <Loader color="white" size="sm" />}
             <Typography secondary size="sm" fw={700} tt="uppercase">
               Merge
             </Typography>
