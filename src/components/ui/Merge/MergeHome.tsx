@@ -79,7 +79,7 @@ export const MergeHome = () => {
             This is a way to get $VULT before anyone else
           </li>
           <li>
-            Starting price is 1000 $WEWE to 1 $VULT, but this will rise with conversions
+            Starting price is 1,000 $WEWE to 1 $VULT, but this will rise with conversions
           </li>
           <li>
             Burning your $WEWE earlier = get more $VULT
