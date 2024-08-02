@@ -9,8 +9,8 @@ export const MergeHome = () => {
     <>
       <Card>
         <div className="flex items-center justify-between gap-3">
-          <Text size="xl" className="uppercase">
-            MERGE YOUR COINS
+          <Text size="xl" className="uppercase ">
+            MERGE NOW
           </Text>
           <Text size="xl">
             🔥 🔥 🔥 
@@ -76,7 +76,7 @@ export const MergeHome = () => {
          
         </Text>
 
-        <ul className="list-decimal list-inside pt-3 dogica text-sm">
+        <ul className="list-decimal list-inside pt-3 verdana text-sm">
           <li>
             MERGE your WEWE into VULT
           </li>
