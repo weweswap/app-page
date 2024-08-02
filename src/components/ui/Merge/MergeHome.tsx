@@ -8,9 +8,14 @@ export const MergeHome = () => {
   return (
     <>
       <Card>
-        <Text size="xl" className="uppercase">
-          MERGE YOUR COINS
-        </Text>
+        <div className="flex items-center justify-between gap-3">
+          <Text size="xl" className="uppercase">
+            MERGE YOUR COINS
+          </Text>
+          <Text size="xl">
+            🔥 🔥 🔥 
+          </Text>
+        </div>
         <Text size="sm" className="verdana uppercase pt-4">
           Forever merge your coins
         </Text>
@@ -68,10 +73,13 @@ export const MergeHome = () => {
 
       <Card>
         <Text size="lg" className="verdana">
-          MERGE your WEWE into VULT
+         
         </Text>
 
-        <ul className="list-decimal list-inside pt-3 verdana text-sm">
+        <ul className="list-decimal list-inside pt-3 dogica text-sm">
+          <li>
+            MERGE your WEWE into VULT
+          </li>
           <li>
             Click MERGE to burn your $WEWE and get $VULT
           </li>
