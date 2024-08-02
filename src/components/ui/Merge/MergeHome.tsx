@@ -8,15 +8,16 @@ export const MergeHome = () => {
   return (
     <>
       <Card>
-        <div className="flex items-center justify-between gap-3">
+        <div className="md:flex items-center justify-between gap-3 text-center md:text-start  ">
           <Text size="xl" className="uppercase">
             MERGE NOW
           </Text>
-          <Text size="xl">
-            🔥 🔥 🔥 
-          </Text>
+          <Text size="xl">🔥 🔥 🔥</Text>
         </div>
-        <Text size="sm" className="verdana uppercase pt-4">
+        <Text
+          size="sm"
+          className="verdana uppercase pt-4 text-center md:text-start"
+        >
           Forever merge your coins
         </Text>
       </Card>
@@ -72,29 +73,12 @@ export const MergeHome = () => {
       </Card>
 
       <Card>
-        <Text size="lg" className="verdana">
-         
-        </Text>
+        <Text size="lg" className="verdana"></Text>
 
         <ul className="list-decimal list-inside pt-3 verdana text-sm">
-          <li>
-            MERGE your WEWE into VULT
-          </li>
-          <li>
-            Click MERGE to burn your $WEWE and get $VULT
-          </li>
-          <li>
-            This is a way to get $VULT before anyone else
-          </li>
-          <li>
-            Starting price is 1,000 $WEWE to 1 $VULT, but this will rise with conversions
-          </li>
-          <li>
-            Burning your $WEWE earlier = get more $VULT
-          </li>
-          <li>
-            Your $VULT will be locked until the public launch is live
-          </li>
+          <li>Click MERGE to burn your $WEWE and receive $VULT</li>
+          <li>Starting price is 1,000 $WEWE to 1 $VULT, but this will rise</li>
+          <li>Your $VULT will be locked until the public launch</li>
         </ul>
       </Card>
     </>
