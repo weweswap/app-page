@@ -72,14 +72,20 @@ export const MergeHome = () => {
         </Text>
 
         <ul className="list-decimal list-inside pt-3 verdana text-sm">
-          <li>You get VULT tokens before anyone else (yay!)</li>
           <li>
-            The starting price is 1000 WEWE to 1 VULT, but it goes up quickly
-            (careful!)
+            Click MERGE to burn your $WEWE and get $VULT
           </li>
           <li>
-            The VULT tokens will be locked until the Public Launch is live
-            (patience!)
+            This is a way to get $VULT before anyone else
+          </li>
+          <li>
+            Starting price is 1,000 $WEWE to 1 $VULT, but this will rise with conversions
+          </li>
+          <li>
+            Burning your $WEWE earlier = get more $VULT
+          </li>
+          <li>
+            Your $VULT will be locked until the public launch is live
           </li>
         </ul>
       </Card>
