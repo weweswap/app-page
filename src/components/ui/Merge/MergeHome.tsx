@@ -65,7 +65,7 @@ export const MergeHome = () => {
           </div>
 
           <Button>
-            <Text size="sm" fw={700}>
+            <Text size="sm" fw={700} className="uppercase">
               Merge
             </Text>
           </Button>
