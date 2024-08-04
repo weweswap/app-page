@@ -1,6 +1,7 @@
 import { Combobox, Input, InputBase, Text, useCombobox } from "@mantine/core";
 import Image from "next/image";
 import { useState } from "react";
+import { verdana } from "~/fonts";
 
 type DropdownProps = {
   value?: string;
@@ -57,12 +58,12 @@ export const Dropdown = ({
                 {selected.icon && (
                   <Image src={selected.icon} width={36} height={36} alt="" />
                 )}
-                <Text size="lg" className="verdana">
+                <Text size="lg" className={verdana.className}>
                   {selected.text ?? selected.value}
                 </Text>
               </>
             ) : (
-              <Text size="lg" className="verdana">
+              <Text size="lg" className={verdana.className}>
                 {placeholder ?? "Select"}
               </Text>
             )}
@@ -87,7 +88,7 @@ export const Dropdown = ({
               {option.icon && (
                 <Image src={option.icon} width={36} height={36} alt="" />
               )}
-              <Text size="lg" className="verdana">
+              <Text size="lg" className={verdana.className}>
                 {option.text ?? option.value}
               </Text>
             </Combobox.Option>

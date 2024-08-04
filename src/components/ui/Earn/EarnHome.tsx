@@ -3,6 +3,7 @@
 import { Divider, Text } from "@mantine/core";
 import Image from "next/image";
 import { Button, Card } from "~/components/common";
+import { verdana } from "~/fonts";
 
 export const EarnHome = () => {
   return (
@@ -12,16 +13,16 @@ export const EarnHome = () => {
           <Text size="xxl" fw={700} className="uppercase">
             Your Rewards
           </Text>
-          <Text size="xs" className="verdana pt-3">
+          <Text size="xs" className={`${verdana.className} pt-3`}>
             View and claim your token rewards.
           </Text>
         </div>
 
         <div>
-          <Text size="xs" className="verdana">
+          <Text size="xs" className={verdana.className}>
             Total CHAOS Earned
           </Text>
-          <Text size="lg" fw={700} className="verdana pt-4">
+          <Text size="lg" fw={700} className={`${verdana.className} pt-4`}>
             1200 CHAOS
           </Text>
         </div>
@@ -41,7 +42,7 @@ export const EarnHome = () => {
       </Card>
 
       <Card>
-        <Text size="sm" className="verdana pb-5">
+        <Text size="sm" className={`${verdana.className} pb-5`}>
           Payout History
         </Text>
 
@@ -63,7 +64,7 @@ export const EarnHome = () => {
                 </button>
                 <div>
                   <Text size="xs">Payout</Text>
-                  <Text size="xs" className="verdana pt-3">
+                  <Text size="xs" className={`${verdana.className} pt-3`}>
                     Sun Jun 19 2024
                   </Text>
                 </div>
@@ -78,7 +79,7 @@ export const EarnHome = () => {
         </div>
 
         <button>
-          <Text size="xs" className="verdana opacity-50">
+          <Text size="xs" className={`${verdana.className} opacity-50`}>
             View More
           </Text>
         </button>

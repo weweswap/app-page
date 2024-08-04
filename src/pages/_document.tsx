@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import { dogica } from "~/fonts";
 
 const Document = () => {
   return (
@@ -12,7 +13,7 @@ const Document = () => {
         <meta name="theme-color" content="#000" />
         <title>WEWE Swap</title>
       </Head>
-      <body>
+      <body className={dogica.className}>
         <Main />
         <NextScript />
       </body>

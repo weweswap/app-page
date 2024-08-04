@@ -3,6 +3,7 @@
 import { Text } from "@mantine/core";
 import Image from "next/image";
 import { Button, Card } from "~/components/common";
+import { verdana } from "~/fonts";
 
 type MigrateDetailProps = {
   onBack: () => void;
@@ -17,7 +18,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
           <button onClick={onBack} className="w-full text-start">
             <Text size="xl">{"<"} Migrate Uniswap Liquidity</Text>
           </button>
-          <Text size="xs" className="verdana mt-3">
+          <Text size="xs" className={`${verdana.className} mt-3`}>
             All WEWESWAP pools are paired in USDC - this means easy to collect
             and earn fees. This migration will move your liquidity over.
           </Text>
@@ -55,13 +56,13 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className={`flex flex-col gap-3 ${verdana.className}`}>
           <div className="flex items-center justify-between">
-            <Text size="xs" className="verdana">
+            <Text size="xs" >
               START WETH
             </Text>
             <div className="flex items-center gap-2">
-              <Text size="xs" fw={700} className="verdana">
+              <Text size="xs" fw={700} >
                 0.001079432
               </Text>
               <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
@@ -69,11 +70,11 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
           </div>
 
           <div className="flex items-center justify-between">
-            <Text size="xs" className="verdana">
+            <Text size="xs" >
               START WEWE
             </Text>
             <div className="flex items-center gap-2">
-              <Text size="xs" fw={700} className="verdana">
+              <Text size="xs" fw={700} >
                 0.428156
               </Text>
               <Image src="/img/tokens/wewe.png" width={24} height={24} alt="" />
@@ -81,11 +82,11 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
           </div>
 
           <div className="flex items-center justify-between">
-            <Text size="xs" className="verdana">
+            <Text size="xs" >
               END USDC
             </Text>
             <div className="flex items-center gap-2">
-              <Text size="xs" fw={700} className="verdana">
+              <Text size="xs" fw={700} >
                 0.001079432
               </Text>
               <Image src="/img/tokens/usdc.png" width={24} height={24} alt="" />
@@ -93,11 +94,11 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
           </div>
 
           <div className="flex items-center justify-between">
-            <Text size="xs" className="verdana">
+            <Text size="xs" >
               END WEWE
             </Text>
             <div className="flex items-center gap-2">
-              <Text size="xs" fw={700} className="verdana">
+              <Text size="xs" fw={700}>
                 0.001079432
               </Text>
               <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
@@ -112,11 +113,11 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
         </Button>
       </Card>
 
-      <Card>
-        <Text size="lg" className="verdana">
+      <Card className={verdana.className}>
+        <Text size="lg">
           By pairing with USDC, WEWESWAP:
         </Text>
-        <ul className="list-decimal list-inside pt-3 verdana text-sm">
+        <ul className="list-decimal list-inside pt-3 text-sm">
           <li>Allows you to earn a stream of stable yield (nice!)</li>
           <li>
             Is a more stable “working asset”, which means less volatility in

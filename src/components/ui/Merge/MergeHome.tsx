@@ -3,6 +3,7 @@
 import { Text } from "@mantine/core";
 import Image from "next/image";
 import { Button, Card } from "~/components/common";
+import { dogica, verdana } from "~/fonts";
 
 export const MergeHome = () => {
   return (
@@ -40,16 +41,18 @@ export const MergeHome = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-3">
+        <div
+          className={`${verdana.className} flex items-center justify-between gap-3`}
+        >
           <div>
             <div className="flex items-center gap-3">
               <Image src="/img/tokens/wewe.png" width={24} height={24} alt="" />
-              <Text size="md" className="verdana">
+              <Text size="md" >
                 WEWE
               </Text>
             </div>
             <div className="flex items-center gap-3 pt-3">
-              <Text size="xs" className="verdana">
+              <Text size="xs" >
                 1,616,522 WEWE
               </Text>
               <Image
@@ -58,14 +61,14 @@ export const MergeHome = () => {
                 height={9}
                 alt=""
               />
-              <Text size="xs" className="verdana">
+              <Text size="xs" >
                 Max: 1,650.52 VULT
               </Text>
             </div>
           </div>
 
           <Button>
-            <Text size="sm" fw={700} className="uppercase">
+            <Text size="sm" fw={700} className={`uppercase ${dogica.className}`}>
               Merge
             </Text>
           </Button>
@@ -73,9 +76,11 @@ export const MergeHome = () => {
       </Card>
 
       <Card>
-        <Text size="lg" className="verdana"></Text>
+        <Text size="lg" className={verdana.className}></Text>
 
-        <ul className="list-decimal list-inside pt-3 verdana text-sm">
+        <ul
+          className={`list-decimal list-inside pt-3 ${verdana.className} text-sm`}
+        >
           <li>Click MERGE to burn your $WEWE and receive $VULT</li>
           <li>Starting price is 1,000 $WEWE to 1 $VULT, but this will rise</li>
           <li>Your $VULT will be locked until the public launch</li>

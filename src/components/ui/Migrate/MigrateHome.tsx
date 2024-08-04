@@ -3,6 +3,7 @@
 import { Text } from "@mantine/core";
 import Image from "next/image";
 import { Button, Card } from "~/components/common";
+import { verdana } from "~/fonts";
 
 type MigrateHomeProps = {
   onMigrate: () => void;
@@ -15,7 +16,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
         <Text size="xl" className="uppercase">
           EARN CHAOS COINS!
         </Text>
-        <Text size="sm" className="verdana uppercase pt-4">
+        <Text size="sm" className={`${verdana.className} uppercase pt-4`}>
           1BN CHAOS COINS UP FOR GRABS TO EARN
         </Text>
       </Card>
@@ -34,7 +35,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
               Uniswap
             </Text>
           </div>
-          <Text size="sm" className="flex-1 verdana text-right">
+          <Text size="sm" className={`flex-1 ${verdana.className} text-right`}>
             Your positions (1)
           </Text>
         </div>
@@ -57,24 +58,20 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
                   className="-translate-x-1.5"
                 />
               </div>
-              <Text size="md" className="verdana">
+              <Text size="md" className={verdana.className}>
                 WETH/WEWE <span className="text-gray-400">1.00%</span>
               </Text>
             </div>
 
-            <div className="flex items-center gap-3 mt-3">
-              <Text size="xs" className="verdana">
-                Min: 1,616.52 WETH per WEWE
-              </Text>
+            <div className={`lex items-center gap-3 mt-3 ${verdana.className}`}>
+              <Text size="xs">Min: 1,616.52 WETH per WEWE</Text>
               <Image
                 src="/img/icons/arrow_swap.svg"
                 width={20}
                 height={9}
                 alt=""
               />
-              <Text size="xs" className="verdana">
-                Max: 1,650.52 WETH per WEWE
-              </Text>
+              <Text size="xs">Max: 1,650.52 WETH per WEWE</Text>
             </div>
           </div>
 
@@ -86,12 +83,12 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
         </div>
       </Card>
 
-      <Card>
-        <Text size="lg" className="verdana">
+      <Card className={verdana.className}>
+        <Text size="lg" >
           WEWESWAP uses a new high-performance liquidity design that:
         </Text>
 
-        <ul className="list-decimal list-inside pt-3 verdana text-sm">
+        <ul className="list-decimal list-inside pt-3 text-sm">
           <li>Is very simple to add or remove liquidity (yay!)</li>
           <li>
             Is fully passive, using auto-rebalancing for you (you never go out
