@@ -1,6 +1,7 @@
 import { Divider, ModalRootProps, Text } from "@mantine/core";
 import Image from "next/image";
 import { Button, Modal } from "~/components/common";
+import { verdana } from "~/fonts";
 
 type PoolAddModalProps = {
   onAdd: () => void;
@@ -9,13 +10,11 @@ type PoolAddModalProps = {
 export const PoolAddModal = (props: PoolAddModalProps) => {
   return (
     <Modal title="Add liquidity" {...props}>
-      <div className="flex flex-col gap-3">
+      <div className={`${verdana.className} flex flex-col gap-3`}>
         <div className="flex items-center justify-between">
-          <Text size="xs" className="verdana">
-            START WEWE
-          </Text>
+          <Text size="xs">START WEWE</Text>
           <div className="flex items-center gap-2">
-            <Text size="xs" fw={700} className="verdana">
+            <Text size="xs" fw={700}>
               0.428156
             </Text>
             <Image src="/img/tokens/wewe.png" width={40} height={40} alt="" />
@@ -23,11 +22,9 @@ export const PoolAddModal = (props: PoolAddModalProps) => {
         </div>
 
         <div className="flex items-center justify-between">
-          <Text size="xs" className="verdana">
-            END USDC
-          </Text>
+          <Text size="xs">END USDC</Text>
           <div className="flex items-center gap-2">
-            <Text size="xs" fw={700} className="verdana">
+            <Text size="xs" fw={700}>
               0.001079432
             </Text>
             <Image src="/img/tokens/usdc.png" width={40} height={40} alt="" />
@@ -35,11 +32,9 @@ export const PoolAddModal = (props: PoolAddModalProps) => {
         </div>
 
         <div className="flex items-center justify-between">
-          <Text size="xs" className="verdana">
-            END WEWE
-          </Text>
+          <Text size="xs">END WEWE</Text>
           <div className="flex items-center gap-2">
-            <Text size="xs" fw={700} className="verdana">
+            <Text size="xs" fw={700}>
               0.001079432
             </Text>
             <Image src="/img/tokens/weth.png" width={40} height={40} alt="" />
@@ -49,13 +44,9 @@ export const PoolAddModal = (props: PoolAddModalProps) => {
 
       <Divider className="border-blue-700" />
 
-      <div className="flex items-center justify-between">
-        <Text size="xs" className="verdana">
-          Refund
-        </Text>
-        <Text size="xs" className="verdana">
-          Estimated ammount
-        </Text>
+      <div className={`flex items-center justify-between ${verdana.className}`}>
+        <Text size="xs">Refund</Text>
+        <Text size="xs">Estimated ammount</Text>
       </div>
 
       <Button className="w-full" onClick={props.onAdd}>
