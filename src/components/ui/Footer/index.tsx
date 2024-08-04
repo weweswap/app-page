@@ -16,6 +16,7 @@ export const Footer = () => {
           <Image src="/img/footer-logo.svg" width={400} height={60} alt="" />
         )
       }
+      
       <div className="flex items-center gap-6">
         <Link href="https://x.com/weweswap" target="_blank">
           <Image src="/img/socials/x.svg" width={40} height={40} alt="" />
