@@ -6,16 +6,13 @@ const Document = () => {
     <Html lang="en">
       <Head>
         <link rel="apple-touch-icon" sizes="180x180" href="/fav.svg" />
-        <link rel="icon" type="image/svg" sizes="32x32" href="/fav.svg" />
-        <link rel="icon" type="image/svg" sizes="16x16" href="/fav.svg" />
+        <link rel="icon" type="image/svg+xml" sizes="32x32" href="/fav.svg" />
+        <link rel="icon" type="image/svg+xml" sizes="16x16" href="/fav.svg" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="msapplication-TileColor" content="#000" />
         <meta name="theme-color" content="#000" />
         <title>WEWE Swap</title>
-
-        <meta name="description">Click MERGE to burn your $WEWE and receive $VULT. Starting price is 1,000 $WEWE to 1 $VULT, but this will rise. Your $VULT will be locked until the public launch</meta>
-        <meta name="author" content="wewe swap" />
-        <link rel="author" href="app.weweswap.com" />
+        <meta name="description" content="Click MERGE to burn your $WEWE and receive $VULT. Starting price is 1,000 $WEWE to 1 $VULT, but this will rise. Your $VULT will be locked until the public launch." />
         <meta name="author" content="wewe swap" />
         <meta name="keywords" content="WeWe app,WeWe Swap,WeWe Token,DeFi,MEME,MEME Coin,DeFi,USDC Yield,Yields,Earnings,Chaos,Pools" />
         <meta property="og:title" content="WEWESwap - Together We Earn " />
@@ -29,7 +26,6 @@ const Document = () => {
         <meta name="twitter:title" content="WEWE - Together We Earn" />
         <meta name="twitter:description" content="We Love Yields!" />
         <meta name="twitter:image" content="https://app.weweswap.com/img/wewe-thumbnail.png" />
-
       </Head>
       <body className={dogica.className}>
         <Main />
