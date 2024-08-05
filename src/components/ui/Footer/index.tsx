@@ -8,7 +8,7 @@ export const Footer = () => {
   return (
     <div className="flex flex-col items-center gap-9 p-4">
       {path === "/merge" ? (
-        <div className="lg:w-[500px] md:w-full">
+        <div className="w-full sm:w-[500px]">
           <Lottie animationData={animation} />
         </div>
       ) : (
