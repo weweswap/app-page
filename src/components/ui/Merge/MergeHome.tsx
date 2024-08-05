@@ -42,31 +42,33 @@ export const MergeHome = () => {
         </div>
 
         <div
-          className={`${verdana.className} w-full sm:w-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3`}
+          className={`${verdana.className} flex items-center justify-between gap-3`}
         >
           <div>
             <div className="flex items-center gap-3">
               <Image src="/img/tokens/wewe.png" width={24} height={24} alt="" />
-              <Text size="md">WEWE</Text>
+              <Text size="md" >
+                WEWE
+              </Text>
             </div>
             <div className="flex items-center gap-3 pt-3">
-              <Text size="xs">1,616,522 WEWE</Text>
+              <Text size="xs" >
+                1,616,522 WEWE
+              </Text>
               <Image
                 src="/img/icons/arrow_right1.svg"
                 width={19}
                 height={9}
                 alt=""
               />
-              <Text size="xs">Max: 1,650.52 VULT</Text>
+              <Text size="xs" >
+                Max: 1,650.52 VULT
+              </Text>
             </div>
           </div>
 
-          <Button className="w-full sm:w-auto">
-            <Text
-              size="sm"
-              fw={700}
-              className={`uppercase ${dogica.className}`}
-            >
+          <Button>
+            <Text size="sm" fw={700} className={`uppercase ${dogica.className}`}>
               Merge
             </Text>
           </Button>
