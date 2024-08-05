@@ -1,22 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
-
+import { usePathname } from "next/navigation";
+import Lottie from "lottie-react";
+import animation from "../../../../public/videos/burn-animation.json";
 export const Footer = () => {
-  const path = usePathname()
+  const path = usePathname();
   return (
     <div className="flex flex-col items-center gap-9 p-4">
-      {path === "/merge" ?
-        (
-          <video style={{ width: "500px" }} autoPlay loop muted>
-            <source src={"/videos/burn-animation.mp4"} type="video/mp4"></source>
-          </video>
-        ) :
-        (
-          <Image src="/img/footer-logo.svg" width={400} height={60} alt="" />
-        )
-      }
-      
+      {path === "/merge" ? (
+        <div className="lg:w-[500px] md:w-full">
+          <Lottie animationData={animation} />
+        </div>
+      ) : (
+        <Image src="/img/footer-logo.svg" width={400} height={60} alt="" />
+      )}
       <div className="flex items-center gap-6">
         <Link href="https://x.com/weweswap" target="_blank">
           <Image src="/img/socials/x.svg" width={40} height={40} alt="" />
