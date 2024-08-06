@@ -63,7 +63,9 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
               </Text>
             </div>
 
-            <div className={`lex items-center gap-3 mt-3 ${verdana.className}`}>
+            <div
+              className={`flex items-center gap-3 mt-3 ${verdana.className}`}
+            >
               <Text size="xs">Min: 1,616.52 WETH per WEWE</Text>
               <Image
                 src="/img/icons/arrow_swap.svg"
@@ -84,7 +86,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
       </Card>
 
       <Card className={verdana.className}>
-        <Text size="lg" >
+        <Text size="lg">
           WEWESWAP uses a new high-performance liquidity design that:
         </Text>
 

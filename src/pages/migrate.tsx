@@ -1,5 +1,3 @@
-"use client";
-
 import { Migrate } from "~/components/ui";
 
 const MigratePage = () => {
