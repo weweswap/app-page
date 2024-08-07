@@ -4,9 +4,7 @@ import React, { ReactNode } from "react";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { State, WagmiProvider } from "wagmi";
-import { config, projectId } from "./config";
-
-if (!projectId) throw new Error("Project ID is not defined");
+import { config } from "./config";
 
 export const WagmiProviderComp = ({
   children,
