@@ -1,7 +1,7 @@
 "use client";
 
 import { createConfig, http } from "wagmi";
-import { mainnet } from "wagmi/chains";
+import { base } from "wagmi/chains";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
   rainbowWallet,
@@ -32,10 +32,10 @@ const connectors = connectorsForWallets(
 );
 
 export const config = createConfig({
-  chains: [mainnet],
+  chains: [base],
   connectors,
   ssr: true,
   transports: {
-    [mainnet.id]: http(),
+    [base.id]: http(process.env.NEXT_PUBLIC_RPC_URL),
   },
 });
