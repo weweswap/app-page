@@ -1,5 +1,3 @@
-"use client";
-
 import { Merge } from "~/components/ui";
 
 const MergePage = () => {
