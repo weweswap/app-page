@@ -15,16 +15,16 @@ const Document = () => {
         <meta name="description" content="Click MERGE to burn your $WEWE and receive $VULT. Starting price is 1,000 $WEWE to 1 $VULT, but this will rise. Your $VULT will be locked until the public launch." />
         <meta name="author" content="wewe swap" />
         <meta name="keywords" content="WeWe app,WeWe Swap,WeWe Token,DeFi,MEME,MEME Coin,DeFi,USDC Yield,Yields,Earnings,Chaos,Pools" />
-        <meta property="og:title" content="WEWESwap - Together We Earn " />
-        <meta property="og:description" content="We Love Yields!" />
+        <meta property="og:title" content="Together We Earn - WEWESWAP | $WEWE" />
+        <meta property="og:description" content="WEWESWAP | $WEWE" />
         <meta property="og:url" content="https://app.weweswap.com" />
         <meta property="og:site_name" content="WEWE Swap" />
         <meta property="og:image" content="https://app.weweswap.com/img/wewe-thumbnail.png" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="app.weweswap.com" />
-        <meta name="twitter:title" content="WEWE - Together We Earn" />
-        <meta name="twitter:description" content="We Love Yields!" />
+        <meta name="twitter:title" content="Together We Earn - WEWESWAP | $WEWE" />
+        <meta name="twitter:description" content="WEWESWAP | $WEWE" />
         <meta name="twitter:image" content="https://app.weweswap.com/img/wewe-thumbnail.png" />
       </Head>
       <body className={dogica.className}>
