@@ -1,33 +1,34 @@
-"use client";
-
-import { Text } from "@mantine/core";
 import Image from "next/image";
-import { Button, Card } from "~/components/common";
-import { dogica, verdana } from "~/fonts";
+import { Button, Card, Typography } from "~/components/common";
 
 export const MergeHome = () => {
   return (
     <>
       <Card>
         <div className="md:flex items-center justify-between gap-3 text-center md:text-start  ">
-          <Text size="xl" className="uppercase">
+          <Typography secondary size="xl" tt="uppercase">
             MERGE NOW
-          </Text>
-          <Text size="xl">🔥 🔥 🔥</Text>
+          </Typography>
+          <Typography secondary size="xl">
+            🔥 🔥 🔥
+          </Typography>
         </div>
-        <Text
+        <Typography
           size="sm"
-          className="verdana uppercase pt-4 text-center md:text-start"
+          tt="uppercase"
+          className="pt-4 text-center md:text-start"
         >
           Forever merge your coins
-        </Text>
+        </Typography>
       </Card>
 
       <Card className="flex flex-col gap-5">
         <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
           <div className="flex-1 flex items-center gap-3">
             <Image src="/img/tokens/wewe.png" width={32} height={32} alt="" />
-            <Text size="md">WEWE</Text>
+            <Typography secondary size="md">
+              WEWE
+            </Typography>
           </div>
           <Image
             src="/img/icons/arrow_right.svg"
@@ -37,48 +38,42 @@ export const MergeHome = () => {
           />
           <div className="flex-1 flex items-center justify-end gap-3">
             <Image src="/img/tokens/vult.svg" width={32} height={32} alt="" />
-            <Text size="md">VULT</Text>
+            <Typography secondary size="md">
+              VULT
+            </Typography>
           </div>
         </div>
 
-        <div
-          className={`${verdana.className} w-full sm:w-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3`}
-        >
+        <div className="flex items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-3">
               <Image src="/img/tokens/wewe.png" width={24} height={24} alt="" />
-              <Text size="md">WEWE</Text>
+              <Typography size="md">WEWE</Typography>
             </div>
             <div className="flex items-center gap-3 pt-3">
-              <Text size="xs">1,616,522 WEWE</Text>
+              <Typography size="xs">1,616,522 WEWE</Typography>
               <Image
                 src="/img/icons/arrow_right1.svg"
                 width={19}
                 height={9}
                 alt=""
               />
-              <Text size="xs">Max: 1,650.52 VULT</Text>
+              <Typography size="xs">Max: 1,650.52 VULT</Typography>
             </div>
           </div>
 
           <Button className="w-full sm:w-auto">
-            <Text
-              size="sm"
-              fw={700}
-              className={`uppercase ${dogica.className}`}
-            >
+            <Typography secondary size="sm" fw={700} tt="uppercase">
               Merge
-            </Text>
+            </Typography>
           </Button>
         </div>
       </Card>
 
       <Card>
-        <Text size="lg" className={verdana.className}></Text>
+        <Typography size="lg">MERGE your WEWE into VULT</Typography>
 
-        <ul
-          className={`list-decimal list-inside pt-3 ${verdana.className} text-sm`}
-        >
+        <ul className="list-decimal list-inside pt-3 text-sm">
           <li>Click MERGE to burn your $WEWE and receive $VULT</li>
           <li>Starting price is 1,000 $WEWE to 1 $VULT, but this will rise</li>
           <li>Your $VULT will be locked until the public launch</li>

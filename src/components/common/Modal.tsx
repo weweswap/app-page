@@ -1,5 +1,6 @@
-import { Divider, Modal as MtModal, ModalRootProps, Text } from "@mantine/core";
+import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
+import { Typography } from "./Typography";
 
 type ModalProps = {
   title: string;
@@ -15,9 +16,9 @@ export const Modal = ({ title, children, ...props }: ModalProps) => {
         <MtModal.Header className="bg-transparent p-0">
           <div className="w-full flex items-center justify-between pb-3">
             <MtModal.Title>
-              <Text size="lg" className="uppercase">
+              <Typography secondary size="lg" tt="uppercase">
                 {title}
-              </Text>
+              </Typography>
             </MtModal.Title>
             <button onClick={props.onClose}>
               <Image src="/img/icons/close.svg" width={24} height={24} alt="" />

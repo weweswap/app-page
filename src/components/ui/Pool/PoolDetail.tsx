@@ -1,9 +1,8 @@
-"use client";
-
-import { NumberInput, Text } from "@mantine/core";
+import { NumberInput } from "@mantine/core";
+import clsx from "clsx";
 import Image from "next/image";
-import { Button, Card } from "~/components/common";
-import { verdana } from "~/fonts";
+import { Button, Card, Typography } from "~/components/common";
+import { dogica } from "~/fonts";
 
 type PoolDetailProps = {
   onBack: () => void;
@@ -15,7 +14,9 @@ export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
     <>
       <Card>
         <button onClick={onBack}>
-          <Text size="xl">{"<"} WEWE</Text>
+          <Typography secondary size="xl">
+            {"<"} WEWE
+          </Typography>
         </button>
       </Card>
 
@@ -23,17 +24,17 @@ export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
         <NumberInput
           classNames={{
             root: "flex-1 w-full md:w-auto",
-            input:
-              "bg-gray-900 p-4 dogica text-white text-lg h-auto border-transparent rounded-none",
+            input: clsx(
+              dogica.className,
+              "bg-gray-900 p-4 text-white text-lg h-auto border-transparent rounded-none"
+            ),
           }}
           hideControls
         />
         <div className="flex-1 w-full md:w-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Image src="/img/tokens/wewe.png" width={40} height={40} alt="" />
-            <Text size="md" className={verdana.className}>
-              WEWE
-            </Text>
+            <Typography size="md">WEWE</Typography>
             <Image
               src="/img/icons/arrow_down.svg"
               width={16}
@@ -42,15 +43,17 @@ export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
             />
           </div>
           <Button onClick={onAdd}>
-            <Text size="sm" fw={700}>
+            <Typography secondary size="sm" fw={700}>
               Add
-            </Text>
+            </Typography>
           </Button>
         </div>
       </Card>
 
-      <Card className={verdana.className}>
-        <Text size="lg">When you add liquidity to an Active Pool:</Text>
+      <Card>
+        <Typography size="lg">
+          When you add liquidity to an Active Pool:
+        </Typography>
         <ul className="list-decimal list-inside pt-3 text-sm">
           <li>Your assets are swapped to be added correctly to the pool.</li>
           <li>

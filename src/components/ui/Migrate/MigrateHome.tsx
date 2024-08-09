@@ -1,9 +1,5 @@
-"use client";
-
-import { Text } from "@mantine/core";
 import Image from "next/image";
-import { Button, Card } from "~/components/common";
-import { verdana } from "~/fonts";
+import { Button, Card, Typography } from "~/components/common";
 
 type MigrateHomeProps = {
   onMigrate: () => void;
@@ -13,12 +9,12 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
   return (
     <>
       <Card>
-        <Text size="xl" className="uppercase">
+        <Typography secondary size="xl" tt="uppercase">
           EARN CHAOS COINS!
-        </Text>
-        <Text size="sm" className={`${verdana.className} uppercase pt-4`}>
+        </Typography>
+        <Typography size="sm" tt="uppercase" className="pt-4">
           1BN CHAOS COINS UP FOR GRABS TO EARN
-        </Text>
+        </Typography>
       </Card>
 
       <Card className="flex flex-col gap-4">
@@ -31,13 +27,13 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
               height={36}
               alt=""
             />
-            <Text size="md" className="uppercase">
+            <Typography secondary size="md" tt="uppercase">
               Uniswap
-            </Text>
+            </Typography>
           </div>
-          <Text size="sm" className={`flex-1 ${verdana.className} text-right`}>
+          <Typography size="sm" ta="right" flex={1}>
             Your positions (1)
-          </Text>
+          </Typography>
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -58,37 +54,35 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
                   className="-translate-x-1.5"
                 />
               </div>
-              <Text size="md" className={verdana.className}>
+              <Typography size="md">
                 WETH/WEWE <span className="text-gray-400">1.00%</span>
-              </Text>
+              </Typography>
             </div>
 
-            <div
-              className={`flex items-center gap-3 mt-3 ${verdana.className}`}
-            >
-              <Text size="xs">Min: 1,616.52 WETH per WEWE</Text>
+            <div className="flex items-center gap-3 mt-3">
+              <Typography size="xs">Min: 1,616.52 WETH per WEWE</Typography>
               <Image
                 src="/img/icons/arrow_swap.svg"
                 width={20}
                 height={9}
                 alt=""
               />
-              <Text size="xs">Max: 1,650.52 WETH per WEWE</Text>
+              <Typography size="xs">Max: 1,650.52 WETH per WEWE</Typography>
             </div>
           </div>
 
           <Button onClick={onMigrate}>
-            <Text size="md" fw={700}>
+            <Typography secondary size="md" fw={700}>
               Migrate
-            </Text>
+            </Typography>
           </Button>
         </div>
       </Card>
 
-      <Card className={verdana.className}>
-        <Text size="lg">
+      <Card>
+        <Typography size="lg">
           WEWESWAP uses a new high-performance liquidity design that:
-        </Text>
+        </Typography>
 
         <ul className="list-decimal list-inside pt-3 text-sm">
           <li>Is very simple to add or remove liquidity (yay!)</li>

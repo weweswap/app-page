@@ -1,5 +1,5 @@
-import { Text } from "@mantine/core";
 import { ConnectButton as RBConnectButton } from "@rainbow-me/rainbowkit";
+import { Typography } from "./Typography";
 
 export const ConnectButton = () => {
   return (
@@ -34,9 +34,9 @@ export const ConnectButton = () => {
                     type="button"
                     className="flex items-center bg_violet text-black px-4 h-10"
                   >
-                    <Text size="sm" fw={700}>
+                    <Typography secondary size="sm" fw={700}>
                       Connect
-                    </Text>
+                    </Typography>
                   </button>
                 );
               }
@@ -48,9 +48,9 @@ export const ConnectButton = () => {
                     type="button"
                     className="flex items-center bg_violet text-black px-4 h-10"
                   >
-                    <Text size="sm" fw={700}>
+                    <Typography secondary size="sm" fw={700}>
                       Wrong network
-                    </Text>
+                    </Typography>
                   </button>
                 );
               }
@@ -81,9 +81,6 @@ export const ConnectButton = () => {
                         )}
                       </div>
                     )}
-                    {/* <Text size="sm" fw={700}>
-                      {chain.name}
-                    </Text> */}
                   </button>
 
                   <button
@@ -91,14 +88,14 @@ export const ConnectButton = () => {
                     type="button"
                     className="flex items-center text-black"
                   >
-                    <Text size="sm" fw={700} className="truncate">
+                    <Typography
+                      secondary
+                      size="sm"
+                      fw={700}
+                      className="truncate"
+                    >
                       {account.displayName}
-                    </Text>
-                    {/* <Text size="sm" fw={700} className="hidden md:block">
-                      {account.displayBalance
-                        ? ` (${account.displayBalance})`
-                        : ""}
-                    </Text> */}
+                    </Typography>
                   </button>
                 </div>
               );

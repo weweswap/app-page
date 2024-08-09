@@ -1,50 +1,49 @@
-"use client";
-
-import { Divider, Text } from "@mantine/core";
+import { Divider } from "@mantine/core";
 import Image from "next/image";
-import { Button, Card } from "~/components/common";
-import { verdana } from "~/fonts";
+import { Button, Card, Typography } from "~/components/common";
 
 export const EarnHome = () => {
   return (
     <>
       <Card className="flex flex-col gap-10">
         <div>
-          <Text size="xxl" fw={700} className="uppercase">
+          <Typography secondary size="xxl" fw={700} tt="uppercase">
             Your Rewards
-          </Text>
-          <Text size="xs" className={`${verdana.className} pt-3`}>
+          </Typography>
+          <Typography size="xs" className="pt-3">
             View and claim your token rewards.
-          </Text>
+          </Typography>
         </div>
 
         <div>
-          <Text size="xs" className={verdana.className}>
-            Total CHAOS Earned
-          </Text>
-          <Text size="lg" fw={700} className={`${verdana.className} pt-4`}>
+          <Typography size="xs">Total CHAOS Earned</Typography>
+          <Typography size="lg" fw={700} className="pt-4">
             1200 CHAOS
-          </Text>
+          </Typography>
         </div>
 
         <div className="border_violet p-4 flex flex-col gap-6">
-          <Text size="xs">Claim CHAOS</Text>
+          <Typography secondary size="xs">
+            Claim CHAOS
+          </Typography>
           <Divider className="border-blue-700" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <Text size="sm">Claim CHAOS</Text>
+            <Typography secondary size="sm">
+              Claim CHAOS
+            </Typography>
             <Button className="w-full sm:w-auto">
-              <Text size="xs" fw={700}>
+              <Typography secondary size="xs" fw={700}>
                 Claim CHAOS
-              </Text>
+              </Typography>
             </Button>
           </div>
         </div>
       </Card>
 
       <Card>
-        <Text size="sm" className={`${verdana.className} pb-5`}>
+        <Typography size="sm" className="pb-5">
           Payout History
-        </Text>
+        </Typography>
 
         <div>
           {new Array(4).fill(0).map((_, key) => (
@@ -63,25 +62,29 @@ export const EarnHome = () => {
                   />
                 </button>
                 <div>
-                  <Text size="xs">Payout</Text>
-                  <Text size="xs" className={`${verdana.className} pt-3`}>
+                  <Typography secondary size="xs">
+                    Payout
+                  </Typography>
+                  <Typography size="xs" className="pt-3">
                     Sun Jun 19 2024
-                  </Text>
+                  </Typography>
                 </div>
               </div>
 
               <div className="flex items-center gap-4">
                 <div className="w-9 h-9 rounded-full bg_turq opacity-20" />
-                <Text size="sm">500 CHAOS</Text>
+                <Typography secondary size="sm">
+                  500 CHAOS
+                </Typography>
               </div>
             </div>
           ))}
         </div>
 
         <button>
-          <Text size="xs" className={`${verdana.className} opacity-50`}>
+          <Typography size="xs" opacity={0.5}>
             View More
-          </Text>
+          </Typography>
         </button>
       </Card>
     </>

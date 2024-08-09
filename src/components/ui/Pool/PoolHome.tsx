@@ -1,9 +1,5 @@
-"use client";
-
-import { Text } from "@mantine/core";
 import Image from "next/image";
-import { Button, Card } from "~/components/common";
-import { dogica, verdana } from "~/fonts";
+import { Button, Card, Typography } from "~/components/common";
 
 type PoolHomeProps = {
   onNext: () => void;
@@ -13,21 +9,19 @@ type PoolHomeProps = {
 export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
   return (
     <>
-      <Card
-        className={`flex flex-col md:flex-row text-center md:text-start items-center justify-between gap-3 ${verdana.className}`}
-      >
+      <Card className="flex flex-col md:flex-row text-center md:text-start items-center justify-between gap-3">
         <div className="flex-1">
-          <Text size="xl" className={`uppercase ${dogica.className}`}>
+          <Typography secondary size="xl" tt="uppercase">
             WEWESWAP ACTIVE POOLS
-          </Text>
-          <Text size="xs" className="pt-3">
+          </Typography>
+          <Typography size="xs" className="pt-3">
             Simple, passive yield earnt in USDC! Make your assets work for you.
-          </Text>
+          </Typography>
         </div>
         <Button onClick={onAdd} className="w-full md:w-auto">
-          <Text size="sm" fw={700} className={`uppercase ${dogica.className}`}>
+          <Typography secondary size="sm" fw={700} tt="uppercase">
             Add to any pool
-          </Text>
+          </Typography>
         </Button>
       </Card>
 
@@ -42,18 +36,16 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
                 height={24}
                 alt=""
               />
-              <Text size="md" >
-                WEWE
-              </Text>
+              <Typography size="md">WEWE</Typography>
             </div>
-            <Text size="xs" className="pt-3">
+            <Typography size="xs" className="pt-3">
               1% Fee Tier 6,000,000,000 WEWE ($1,000,000) $1,000,000 volume
-            </Text>
+            </Typography>
           </div>
           <Button onClick={onNext} className="w-full md:w-auto">
-            <Text size="sm" fw={700} className={`uppercase ${dogica.className}`}>
+            <Typography secondary size="sm" fw={700} tt="uppercase">
               Manage
-            </Text>
+            </Typography>
           </Button>
         </div>
 
@@ -67,13 +59,11 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
                 height={24}
                 alt=""
               />
-              <Text size="md" >
-                WETH
-              </Text>
+              <Typography size="md">WETH</Typography>
             </div>
-            <Text size="xs" className="pt-3">
+            <Typography size="xs" className="pt-3">
               0.3% Fee Tier 6,000 WETH ($1,000,000) $1,000,000 volume
-            </Text>
+            </Typography>
           </div>
         </div>
 
@@ -87,22 +77,20 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
                 height={24}
                 alt=""
               />
-              <Text size="md" >
-                USDT
-              </Text>
+              <Typography size="md">USDT</Typography>
             </div>
-            <Text size="xs" className=" pt-3">
+            <Typography size="xs" className="pt-3">
               0.05% Fee Tier 6,000,000 WETH ($1,000,000) $1,000,000 volume
-            </Text>
+            </Typography>
           </div>
         </div>
       </Card>
 
       <Card>
-        <Text size="lg" >
+        <Typography size="lg">
           WEWESWAP pools are all paired to USDC:
-        </Text>
-        <ul className="list-decimal list-inside pt-3  text-sm">
+        </Typography>
+        <ul className="list-decimal list-inside pt-3 text-sm">
           <li>
             Your can zap into a pool with either USDC, the asset, or both.
           </li>
