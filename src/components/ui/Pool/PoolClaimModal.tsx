@@ -1,32 +1,31 @@
-import { Divider, ModalRootProps, Slider, Text } from "@mantine/core";
+import { Divider, ModalRootProps, Slider } from "@mantine/core";
 import Image from "next/image";
-import { Button, Modal } from "~/components/common";
-import { dogica, verdana } from "~/fonts";
+import { Button, Modal, Typography } from "~/components/common";
 
 export const PoolClaimModal = (props: ModalRootProps) => {
   return (
     <Modal title="Zap out" {...props}>
-      <div className={`flex flex-col gap-8 ${verdana.className}`}>
+      <div className="flex flex-col gap-8">
         <div className="flex items-center gap-3">
           <Image src="/img/tokens/wewe.png" width={24} height={24} alt="" />
-          <Text size="lg" className={dogica.className}>
+          <Typography secondary size="lg">
             WEWE
-          </Text>
+          </Typography>
         </div>
 
         <div className="flex flex-col gap-3">
-          <Text size="xs" className="uppercase">
+          <Typography secondary size="xs" tt="uppercase">
             Amount
-          </Text>
+          </Typography>
 
           <div className="flex items-center justify-between">
-            <Text size="lg" fw={700}>
+            <Typography size="lg" fw={700}>
               100%
-            </Text>
+            </Typography>
             <Button className="bg_turq">
-              <Text size="xs" className={`text-black ${dogica.className}`}>
+              <Typography secondary size="xs" className="text-black">
                 MAX
-              </Text>
+              </Typography>
             </Button>
           </div>
 
@@ -39,24 +38,24 @@ export const PoolClaimModal = (props: ModalRootProps) => {
 
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <Text size="xs" className="uppercase">
+            <Typography size="xs" tt="uppercase">
               Pool tokens
-            </Text>
+            </Typography>
             <div className="flex items-center gap-2">
-              <Text size="xs" fw={700} className="text-right ">
+              <Typography size="xs" fw={700} ta="right">
                 4,283.156
-              </Text>
+              </Typography>
               <Image src="/img/tokens/wewe.png" width={40} height={40} alt="" />
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <Text size="xs" className="uppercase ">
+            <Typography size="xs" tt="uppercase">
               Pool fees
-            </Text>
+            </Typography>
             <div className="flex items-center gap-2">
-              <Text size="xs" fw={700} className="text-right ">
+              <Typography size="xs" fw={700} ta="right">
                 107.9432
-              </Text>
+              </Typography>
               <Image src="/img/tokens/usdc.png" width={40} height={40} alt="" />
             </div>
           </div>
@@ -65,9 +64,9 @@ export const PoolClaimModal = (props: ModalRootProps) => {
         <Divider className="border-blue-700" />
 
         <Button className="w-full" onClick={props.onClose}>
-          <Text size="md" fw={700} className={`uppercase ${dogica.className}`}>
+          <Typography secondary size="md" fw={700} tt="uppercase">
             Confirm
-          </Text>
+          </Typography>
         </Button>
       </div>
     </Modal>

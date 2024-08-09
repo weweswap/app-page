@@ -1,9 +1,5 @@
-"use client";
-
-import { Text } from "@mantine/core";
 import Image from "next/image";
-import { Button, Card } from "~/components/common";
-import { verdana } from "~/fonts";
+import { Button, Card, Typography } from "~/components/common";
 
 type MigrateDetailProps = {
   onBack: () => void;
@@ -16,12 +12,14 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
       <Card className="flex flex-col gap-6 p-6">
         <div>
           <button onClick={onBack} className="w-full text-start">
-            <Text size="xl">{"<"} Migrate Uniswap Liquidity</Text>
+            <Typography secondary size="xl">
+              {"<"} Migrate Uniswap Liquidity
+            </Typography>
           </button>
-          <Text size="xs" className={`${verdana.className} mt-3`}>
+          <Typography size="xs" className="mt-3">
             All WEWESWAP pools are paired in USDC - this means easy to collect
             and earn fees. This migration will move your liquidity over.
-          </Text>
+          </Typography>
         </div>
 
         <div className="flex items-center justify-between bg-gray-900 p-4 gap-4">
@@ -36,10 +34,14 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
                 className="-translate-x-1.5"
               />
             </div>
-            <Text className="text-xs sm:text-lg">WETH/WEWE</Text>
+            <Typography secondary className="text-xs sm:text-lg">
+              WETH/WEWE
+            </Typography>
           </div>
 
-          <Text size="md">{">"}</Text>
+          <Typography secondary size="md">
+            {">"}
+          </Typography>
 
           <div className="flex flex-col md:flex-row items-center gap-3">
             <div className="flex items-center">
@@ -52,71 +54,63 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
                 className="-translate-x-1.5"
               />
             </div>
-            <Text className="text-xs sm:text-lg">USDC/WEWE</Text>
+            <Typography secondary className="text-xs sm:text-lg">
+              USDC/WEWE
+            </Typography>
           </div>
         </div>
 
-        <div className={`flex flex-col gap-3 ${verdana.className}`}>
+        <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <Text size="xs" >
-              START WETH
-            </Text>
+            <Typography size="xs">START WETH</Typography>
             <div className="flex items-center gap-2">
-              <Text size="xs" fw={700} >
+              <Typography size="xs" fw={700}>
                 0.001079432
-              </Text>
+              </Typography>
               <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
             </div>
           </div>
 
           <div className="flex items-center justify-between">
-            <Text size="xs" >
-              START WEWE
-            </Text>
+            <Typography size="xs">START WEWE</Typography>
             <div className="flex items-center gap-2">
-              <Text size="xs" fw={700} >
+              <Typography size="xs" fw={700}>
                 0.428156
-              </Text>
+              </Typography>
               <Image src="/img/tokens/wewe.png" width={24} height={24} alt="" />
             </div>
           </div>
 
           <div className="flex items-center justify-between">
-            <Text size="xs" >
-              END USDC
-            </Text>
+            <Typography size="xs">END USDC</Typography>
             <div className="flex items-center gap-2">
-              <Text size="xs" fw={700} >
+              <Typography size="xs" fw={700}>
                 0.001079432
-              </Text>
+              </Typography>
               <Image src="/img/tokens/usdc.png" width={24} height={24} alt="" />
             </div>
           </div>
 
           <div className="flex items-center justify-between">
-            <Text size="xs" >
-              END WEWE
-            </Text>
+            <Typography size="xs">END WEWE</Typography>
             <div className="flex items-center gap-2">
-              <Text size="xs" fw={700}>
+              <Typography size="xs" fw={700}>
                 0.001079432
-              </Text>
+              </Typography>
               <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
             </div>
           </div>
         </div>
 
         <Button className="w-full" onClick={onMigrate}>
-          <Text size="md" fw={700}>
+          <Typography secondary size="md" fw={700}>
             Migrate
-          </Text>
+          </Typography>
         </Button>
       </Card>
 
-      <Card className={verdana.className}>
-        <Text size="lg">
-          By pairing with USDC, WEWESWAP:
-        </Text>
+      <Card>
+        <Typography size="lg">By pairing with USDC, WEWESWAP:</Typography>
         <ul className="list-decimal list-inside pt-3 text-sm">
           <li>Allows you to earn a stream of stable yield (nice!)</li>
           <li>

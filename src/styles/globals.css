@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -40,15 +39,6 @@ body:before {
   background-image: url("/img/background.svg");
   background-repeat: space;
   background-position-x: center;
-}
-
-.dogica {
-  line-height: 125%;
-  letter-spacing: -0.48px;
-}
-
-.verdana {
-  letter-spacing: -0.28px;
 }
 
 .bg_violet {

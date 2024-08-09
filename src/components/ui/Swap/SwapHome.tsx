@@ -1,9 +1,9 @@
-"use client";
-
-import { NumberInput, Text } from "@mantine/core";
+import { NumberInput } from "@mantine/core";
+import clsx from "clsx";
 import Image from "next/image";
-import { Button, Card, Dropdown } from "~/components/common";
+import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { TOKEN_LIST } from "~/constants/tokens";
+import { dogica } from "~/fonts";
 
 const tokenOptions = TOKEN_LIST.map((token) => ({
   value: token.symbol,
@@ -18,22 +18,26 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
   return (
     <>
       <div className="w-full flex items-center justify-between">
-        <Text size="xl" className="uppercase">
+        <Typography secondary size="xl" tt="uppercase">
           Swap
-        </Text>
+        </Typography>
         <Image src="/img/icons/settings.svg" width={24} height={24} alt="" />
       </div>
 
       <div className="w-full flex flex-col">
         <Card className="flex flex-col gap-4">
-          <Text size="xs">Sell</Text>
+          <Typography secondary size="xs">
+            Sell
+          </Typography>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <NumberInput
               classNames={{
                 root: "flex-1 w-full md:w-auto",
-                input:
-                  "text-center md:text-start bg-transparent dogica text-white text-2xl h-auto border-transparent rounded-none",
+                input: clsx(
+                  dogica.className,
+                  "text-center md:text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
+                ),
               }}
               defaultValue="0.030"
               hideControls
@@ -46,9 +50,7 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
           </div>
 
           <div className="flex items-center justify-between gap-3">
-            <Text size="xs" className="verdana">
-              $120.20
-            </Text>
+            <Typography size="xs">$120.20</Typography>
             <div className="flex items-center gap-1">
               <Image
                 src="/img/icons/wallet.svg"
@@ -56,9 +58,7 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
                 height={16}
                 alt=""
               />
-              <Text size="xs" className="verdana">
-                1,234,589 ETH
-              </Text>
+              <Typography size="xs">1,234,589 ETH</Typography>
             </div>
           </div>
         </Card>
@@ -75,14 +75,15 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
         </div>
 
         <Card className="flex flex-col gap-4">
-          <Text size="xs">Buy</Text>
+          <Typography secondary size="xs">
+            Buy
+          </Typography>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <NumberInput
               classNames={{
                 root: "flex-1 w-full md:w-auto",
-                input:
-                  "text-center md:text-start bg-transparent dogica text-white text-2xl h-auto border-transparent rounded-none",
+                input: `${dogica.className} text-center md:text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none`,
               }}
               defaultValue="109.925"
               hideControls
@@ -94,27 +95,25 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
             />
           </div>
 
-          <Text size="xs" ta="center" className="verdana">
+          <Typography size="xs" ta="center">
             $109.97 (-0.21%)
-          </Text>
+          </Typography>
         </Card>
       </div>
 
       <Button className="w-full" onClick={onSwap}>
-        <Text size="sm" className="uppercase">
+        <Typography secondary size="sm" tt="uppercase">
           SWAP
-        </Text>
+        </Typography>
       </Button>
 
       <div className="w-full flex items-center justify-between gap-3">
-        <Text size="xs" className="verdana">
-          1 USDC = 0.0027 ETH ($1.00)
-        </Text>
+        <Typography size="xs">1 USDC = 0.0027 ETH ($1.00)</Typography>
         <div className="flex items-center gap-1">
           <Image src="/img/icons/fee.svg" width={14} height={14} alt="" />
-          <Text size="xs" fw={700} className="verdana">
+          <Typography size="xs" fw={700}>
             $5.34
-          </Text>
+          </Typography>
           <Image
             src="/img/icons/arrow_down.svg"
             width={16}
@@ -125,10 +124,10 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
       </div>
 
       <Card>
-        <Text size="lg" className="verdana">
+        <Typography size="lg">
           WEWESWAP pools use a highly-efficient Concentrated Liquidity Formula:
-        </Text>
-        <ul className="list-decimal list-inside pt-3 verdana text-sm">
+        </Typography>
+        <ul className="list-decimal list-inside pt-3 text-sm">
           <li>The best prices when you swap!</li>
           <li>Low slip and fees.</li>
         </ul>

@@ -1,6 +1,6 @@
-import { Text } from "@mantine/core";
 import Image from "next/image";
 import Link from "next/link";
+import { Typography } from "~/components/common";
 
 type NavLinkProps = {
   icon: string;
@@ -19,9 +19,9 @@ const NavLink = ({ icon, text, href, onClick }: NavLinkProps) => {
         onClick={onClick}
       >
         <Image src={icon} width={25} height={25} alt="" />
-        <Text size="lg" className="uppercase text_yellow">
+        <Typography secondary size="lg" tt="uppercase" className="text_yellow">
           {text}
-        </Text>
+        </Typography>
       </Link>
     </li>
   );
