@@ -5,7 +5,7 @@ import {
   useWriteContract,
 } from "wagmi";
 import { CONTRACT_ADDRESSES } from "~/constants";
-import { ERC20VultABI, MergeABI } from "~/lib/abis";
+import { ERC20VultABI, ERC20WeweABI, MergeABI } from "~/lib/abis";
 import { notifications } from "@mantine/notifications";
 import { erc20Abi } from "viem";
 
@@ -82,10 +82,10 @@ export const useApproveAndCall = () => {
 
   const onWriteAsync = async (amount: bigint) => {
     await writeContractAsync({
-      abi: ERC20VultABI,
-      address: CONTRACT_ADDRESSES.vult,
+      abi: ERC20WeweABI,
+      address: CONTRACT_ADDRESSES.wewe,
       functionName: "approveAndCall",
-      args: [CONTRACT_ADDRESSES.merge, amount, "0x0"],
+      args: [CONTRACT_ADDRESSES.merge, amount, "0x"],
     });
   };
 
