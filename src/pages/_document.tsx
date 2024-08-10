@@ -5,9 +5,9 @@ const Document = () => {
   return (
     <Html lang="en">
       <Head>
-        <link rel="apple-touch-icon" sizes="180x180" href="/fav.png" />
-        <link rel="icon" type="image/svg+xml" sizes="32x32" href="/fav.png" />
-        <link rel="icon" type="image/svg+xml" sizes="16x16" href="/fav.png" />
+        <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/fav.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/fav.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/fav.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="msapplication-TileColor" content="#000" />
         <meta name="theme-color" content="#000" />
