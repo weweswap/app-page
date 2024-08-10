@@ -19,6 +19,7 @@
   --yellow: #ffd911;
   --red: #fe0000;
   --stroke: #797979;
+  --rich-dark:#090909;
 }
 
 body {
@@ -57,6 +58,10 @@ body:before {
   background: var(--turq);
 }
 
+.bg_rich_dark{
+  background: var(--rich-dark);
+}
+
 .text_violet {
   color: var(--violet);
 }
@@ -67,6 +72,10 @@ body:before {
 
 .text_blue {
   color: var(--blue);
+}
+
+.text_turq  {
+  color: var(--turq);
 }
 
 .border_stroke {
