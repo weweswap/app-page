@@ -31,25 +31,25 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
       </div>
 
       <Card className="w-full flex flex-col">
-        <div className="flex flex-col gap-4 ">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-            <Typography secondary size="sm" className="w-1/2">
+        <div className="flex md:flex-row flex-col gap-4 justify-between ">
+          <div className="flex flex-col md:w-1/2 w-full gap-5">
+            <Typography secondary size="sm" className="text-start">
               Token
             </Typography>
-            <Typography secondary size="sm" className="w-1/2">
-              From
-            </Typography>
-          </div>
-          <div className="flex flex-col md:flex-row items-center justify-between gap-10">
             <Dropdown
               defaultValue="ETH"
               options={tokenOptions}
-              className="w-full md:w-1/2"
+              className="w-full "
             />
+          </div>
+          <div className="flex flex-col md:w-1/2 w-full  gap-5">
+            <Typography secondary size="sm" className="">
+              From
+            </Typography>
             <Dropdown
               defaultValue="BASE"
               options={chainOptions}
-              className="w-full md:w-1/2"
+              className="w-full "
             />
           </div>
         </div>
@@ -61,34 +61,36 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
         </div>
 
         <div className="flex flex-col gap-4 mt-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-            <Typography secondary size="sm" className="w-1/2">
-              Token
-            </Typography>
-            <Typography secondary size="sm" className="w-1/2">
-              From
-            </Typography>
+          <div className="flex md:flex-row flex-col gap-4 justify-between ">
+            <div className="flex flex-col md:w-1/2 w-full gap-5">
+              <Typography secondary size="sm" className="text-start">
+                Token
+              </Typography>
+              <Dropdown
+                defaultValue="ETH"
+                options={tokenOptions}
+                className="w-full "
+              />
+            </div>
+            <div className="flex flex-col md:w-1/2 w-full  gap-5">
+              <Typography secondary size="sm" className="">
+                From
+              </Typography>
+              <Dropdown
+                defaultValue="BASE"
+                options={chainOptions}
+                className="w-full "
+              />
+            </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-            <Dropdown
-              defaultValue="USDC"
-              options={tokenOptions}
-              className="w-full md:w-1/2"
-            />
-            <Dropdown
-              defaultValue="BASE"
-              options={chainOptions}
-              className="w-full md:w-1/2"
-            />
-          </div>
-          <div className="flex bg_rich_dark flex-col md:flex-row items-center bg justify-between gap-10 px-2">
+          <div className="flex bg_rich_dark flex-row items-center bg justify-between px-2">
             <NumberInput
               classNames={{
-                root: "flex-1 w-full my-5 md:w-auto",
+                root: "flex-1  my-5 w-auto",
                 input: clsx(
                   verdana.className,
-                  "text-center md:text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
+                  "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
                 ),
               }}
               defaultValue="0"
@@ -115,7 +117,7 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
           <div>
             <Typography size="xs">Est. Value:- </Typography>
 
-            <div className="flex flex-row gap-10">
+            <div className="flex md:flex-row flex-col gap-10">
               <div className="w-full flex flex-col gap-5 md:w-1/2 p-2 bg_rich_dark">
                 <div className="flex flex-row justify-between gap-3">
                   <Typography size="xs">Gas Cost: </Typography>

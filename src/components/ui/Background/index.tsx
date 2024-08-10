@@ -33,6 +33,13 @@ export const Background = () => {
           alt=""
         />
       )}
+      {pathname.startsWith("/transfer") && (
+        <img
+          src="/img/patterns/swap.svg"
+          className="z-[-1] absolute w-full left-0 bottom-0"
+          alt=""
+        />
+      )}
     </>
   );
 };
