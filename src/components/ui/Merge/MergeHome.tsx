@@ -72,21 +72,44 @@ export const MergeHome = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-3">
-          <NumberInput
-            classNames={{
-              root: "flex-1 w-full md:w-auto",
-              input: clsx(
-                dogica.className,
-                "bg-gray-900 p-4 text-white text-lg h-auto border-transparent rounded-none"
-              ),
-            }}
-            hideControls
-            value={amount}
-            onChange={setAmount}
-          />
+        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
+          <div className="flex-1">
+            <NumberInput
+              classNames={{
+                root: "w-full md:w-auto",
+                input: clsx(
+                  dogica.className,
+                  "bg-gray-900 p-4 text-white text-lg h-auto border-transparent rounded-none"
+                ),
+              }}
+              hideControls
+              value={amount}
+              onChange={setAmount}
+            />
 
-          <div className="flex-1 flex items-center">
+            <div className="w-full flex items-center justify-end gap-3 mt-3">
+              <button
+                className="bg-gray-900 px-3 py-2"
+                onClick={() => handleSelect(4)}
+              >
+                <Typography size="sm">25%</Typography>
+              </button>
+              <button
+                className="bg-gray-900 px-3 py-2"
+                onClick={() => handleSelect(2)}
+              >
+                <Typography size="sm">50%</Typography>
+              </button>
+              <button
+                className="bg-gray-900 px-3 py-2"
+                onClick={() => handleSelect(1)}
+              >
+                <Typography size="sm">100%</Typography>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col sm:flex-row items-center gap-3">
             <div className="flex-1 flex items-center justify-center gap-3">
               {!isFetching && (
                 <>
@@ -114,30 +137,6 @@ export const MergeHome = () => {
               </Typography>
             </Button>
           </div>
-        </div>
-
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex-1 flex items-center justify-end gap-3">
-            <button
-              className="bg-gray-900 px-3 py-2"
-              onClick={() => handleSelect(4)}
-            >
-              <Typography size="sm">25%</Typography>
-            </button>
-            <button
-              className="bg-gray-900 px-3 py-2"
-              onClick={() => handleSelect(2)}
-            >
-              <Typography size="sm">50%</Typography>
-            </button>
-            <button
-              className="bg-gray-900 px-3 py-2"
-              onClick={() => handleSelect(1)}
-            >
-              <Typography size="sm">100%</Typography>
-            </button>
-          </div>
-          <div className="flex-1" />
         </div>
       </Card>
 
