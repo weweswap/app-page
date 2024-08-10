@@ -23,9 +23,9 @@ const Document = () => {
         />
         <meta
           property="og:title"
-          content="Together We Earn - WEWESWAP | $WEWE"
+          content="Together We Earn - WEWESWAP"
         />
-        <meta property="og:description" content="WEWESWAP | $WEWE" />
+        <meta property="og:description" content="$WEWE | | $CHAOS" />
         <meta property="og:url" content="https://app.weweswap.com" />
         <meta property="og:site_name" content="WEWE Swap" />
         <meta
@@ -37,9 +37,9 @@ const Document = () => {
         <meta name="twitter:site" content="app.weweswap.com" />
         <meta
           name="twitter:title"
-          content="Together We Earn - WEWESWAP | $WEWE"
+          content="Together We Earn - WEWESWAP"
         />
-        <meta name="twitter:description" content="WEWESWAP | $WEWE" />
+        <meta name="twitter:description" content="$WEWE | | $CHAOS" />
         <meta
           name="twitter:image"
           content="https://app.weweswap.com/img/wewe-thumbnail.png"
