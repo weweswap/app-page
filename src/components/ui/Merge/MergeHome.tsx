@@ -132,8 +132,8 @@ export const MergeHome = () => {
               onClick={handleMerge}
             >
               {isPending && <Loader color="white" size="sm" />}
-              <Typography secondary size="sm" fw={700} tt="uppercase">
-                Merge
+              <Typography secondary size="lg" fw={700} tt="uppercase">
+                Merge🔥
               </Typography>
             </Button>
           </div>
