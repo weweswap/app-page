@@ -5,9 +5,9 @@ const Document = () => {
   return (
     <Html lang="en">
       <Head>
-        <link rel="apple-touch-icon" sizes="180x180" href="/fav.svg" />
-        <link rel="icon" type="image/svg+xml" sizes="32x32" href="/fav.svg" />
-        <link rel="icon" type="image/svg+xml" sizes="16x16" href="/fav.svg" />
+        <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/fav.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/fav.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/fav.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="msapplication-TileColor" content="#000" />
         <meta name="theme-color" content="#000" />
@@ -23,9 +23,9 @@ const Document = () => {
         />
         <meta
           property="og:title"
-          content="Together We Earn - WEWESWAP | $WEWE"
+          content="Together We Earn - WEWESWAP"
         />
-        <meta property="og:description" content="WEWESWAP | $WEWE" />
+        <meta property="og:description" content="$WEWE | | $CHAOS" />
         <meta property="og:url" content="https://app.weweswap.com" />
         <meta property="og:site_name" content="WEWE Swap" />
         <meta
@@ -37,9 +37,9 @@ const Document = () => {
         <meta name="twitter:site" content="app.weweswap.com" />
         <meta
           name="twitter:title"
-          content="Together We Earn - WEWESWAP | $WEWE"
+          content="Together We Earn - WEWESWAP"
         />
-        <meta name="twitter:description" content="WEWESWAP | $WEWE" />
+        <meta name="twitter:description" content="$WEWE | | $CHAOS" />
         <meta
           name="twitter:image"
           content="https://app.weweswap.com/img/wewe-thumbnail.png"

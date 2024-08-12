@@ -94,3 +94,16 @@ body:before {
 .border_violet {
   border: 1px solid var(--violet);
 }
+
+button {
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
