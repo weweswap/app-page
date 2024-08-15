@@ -20,6 +20,10 @@ export const MergeHome = () => {
   const [amount, setAmount] = useState<string | number>("");
   const amountValue = parseEther(String(amount) ?? 0);
   const { data: quoteAmount, isFetching } = useQuoteVult(amountValue);
+  // 1000 ratio
+  const { data: ratio, isFetching: isRatioFetching } = useQuoteVult(
+    parseEther(String("1000"))
+  );
   const { onWriteAsync: onApproveAndCall, isPending } = useApproveAndCall();
 
   const handleSelect = (div: number) => {
@@ -41,13 +45,23 @@ export const MergeHome = () => {
             🔥 🔥 🔥
           </Typography>
         </div>
-        <Typography
-          size="sm"
-          tt="uppercase"
-          className="pt-4 text-center md:text-start"
-        >
-          Forever merge your coins
-        </Typography>
+        <div className="md:flex items-center justify-between gap-3 text-center md:text-start mt-5">
+          <Typography
+            size="sm"
+            tt="uppercase"
+            className="pt-4 text-center md:text-start"
+          >
+            Forever merge your coins
+          </Typography>
+          <Typography
+            size="sm"
+            tt="uppercase"
+            className="pt-4 text-center md:text-start"
+          >
+            <span className="text_yellow">TOTAL $WEWE LOCKED: </span>
+            24,214,500,960.46
+          </Typography>
+        </div>
       </Card>
 
       <Card className="flex flex-col gap-5">
@@ -104,38 +118,79 @@ export const MergeHome = () => {
                 className="bg-gray-900 px-3 py-2"
                 onClick={() => handleSelect(1)}
               >
-                <Typography size="sm">100%</Typography>
+                <Typography size="sm">MAX</Typography>
               </button>
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col sm:flex-row items-center gap-3">
-            <div className="flex-1 flex items-center justify-center gap-3">
-              {!isFetching && (
-                <>
-                  <Image
-                    src="/img/icons/arrow_right1.svg"
-                    width={19}
-                    height={9}
-                    alt=""
-                  />
-                  <Typography size="xl">
-                    {Number(formatEther(quoteAmount)).toLocaleString()} VULT
-                  </Typography>
-                </>
-              )}
+          <div className=" flex-1 flex flex-col gap-3">
+            <div className="flex-1 flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex-1 flex items-center justify-center gap-3">
+                {!isFetching && (
+                  <>
+                    <Image
+                      src="/img/icons/arrow_right.svg"
+                      width={19}
+                      height={9}
+                      alt=""
+                    />
+                    <div>
+                      <Typography size="xl">
+                        {Number(formatEther(quoteAmount)).toLocaleString()} VULT
+                      </Typography>
+                    </div>
+                  </>
+                )}
+              </div>
+              <Button
+                className="flex items-center justify-center gap-3"
+                disabled={!address || !amountValue || isPending}
+                onClick={handleMerge}
+              >
+                {isPending && <Loader color="white" size="sm" />}
+                <Typography secondary size="lg" fw={700} tt="uppercase">
+                  Merge🔥
+                </Typography>
+              </Button>
             </div>
-
-            <Button
-              className="flex items-center justify-center gap-3"
-              disabled={!address || !amountValue || isPending}
-              onClick={handleMerge}
-            >
-              {isPending && <Loader color="white" size="sm" />}
-              <Typography secondary size="lg" fw={700} tt="uppercase">
-                Merge🔥
-              </Typography>
-            </Button>
+            {!isFetching && (
+              <>
+                <div className="flex gap-2 ps-20">
+                  <Image
+                    src="/img/tokens/vult.svg"
+                    width={17}
+                    height={17}
+                    alt="Vult"
+                  />
+                  <Typography size="xs">≈ Value: $2.12</Typography>
+                </div>
+                <div className="flex gap-2 ps-20">
+                  <Typography size="xs">Ratio: 1000</Typography>
+                  <Image
+                    src="/img/tokens/wewe.png"
+                    width={17}
+                    height={17}
+                    alt="Vult"
+                  />
+                  {!isRatioFetching && (
+                    <Typography size="xs">
+                      ≈ {Number(formatEther(ratio)).toLocaleString()}
+                    </Typography>
+                  )}
+                  <Image
+                    src="/img/tokens/vult.svg"
+                    width={17}
+                    height={17}
+                    alt="Vult"
+                  />
+                </div>
+                <div className="flex gap-2 ps-20">
+                  <Typography size="xs">
+                    $VULT FDV: $1,000,300,000,000
+                  </Typography>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </Card>
