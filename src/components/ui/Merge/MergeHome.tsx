@@ -83,7 +83,9 @@ export const MergeHome = () => {
             className="pt-4 text-center md:text-start"
           >
             <span className="text_yellow">TOTAL $WEWE LOCKED: </span>
-            {!isBalanceFetching && <> {Number(formatEther(weweBalance)).toLocaleString()}</>}
+            {!isBalanceFetching && (
+              <> {Number(formatEther(weweBalance)).toLocaleString()}</>
+            )}
           </Typography>
         </div>
       </Card>
@@ -177,7 +179,7 @@ export const MergeHome = () => {
                 </Typography>
               </Button>
             </div>
-            {!isFetching && (
+            {
               <>
                 <div className="flex gap-2 ps-20">
                   <Image
@@ -187,10 +189,7 @@ export const MergeHome = () => {
                     alt="Vult"
                   />
                   <Typography size="xs">
-                    ≈ Value: ${" "}
-                    {(Number(formatEther(quoteAmount)) * vultPrice).toPrecision(
-                      4
-                    )}
+                    ≈ Value: ${vultPrice.toPrecision(4)}
                   </Typography>
                 </div>
                 <div className="flex gap-2 ps-20">
@@ -219,7 +218,7 @@ export const MergeHome = () => {
                   </Typography>
                 </div>
               </>
-            )}
+            }
           </div>
         </div>
       </Card>
