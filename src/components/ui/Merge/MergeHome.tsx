@@ -29,7 +29,7 @@ export const MergeHome = () => {
   const { data: quoteAmount, isFetching } = useQuoteVult(amountValue);
   const [wewePrice, setWewePrice] = useState<number>(0);
   const [vultPrice, setVultPrice] = useState<number>(0);
-
+  const [vultFDV, setVultFDV] = useState<number>(0);
   // 1000 ratio
   const { data: ratio, isFetching: isRatioFetching } = useQuoteVult(
     parseEther(String("1000"))
@@ -45,11 +45,27 @@ export const MergeHome = () => {
     });
   }, []);
 
+  const totalVultSupply = 100000000; //100m
+  const totalWeweSupply = 100000000000; //100bn
+  const virtualBalance = 10000000000; //10bn
   useEffect(() => {
-    if (wewePrice > 0 && ratio > 0) {
-      setVultPrice(wewePrice * (1000 / Number(formatEther(ratio))));
+    if (wewePrice > 0) {
+      const weweBalanceNumber = Number(formatEther(weweBalance));
+      const vultBalanceNumber = Number(formatEther(vultBalance));
+      const weweFDV = wewePrice * totalWeweSupply;
+      setVultFDV(
+        ((weweBalanceNumber + virtualBalance) / totalWeweSupply) *
+          weweFDV *
+          (totalVultSupply / vultBalanceNumber)
+      );
     }
-  }, [ratio, wewePrice]);
+  }, [weweBalance, vultBalance, wewePrice]);
+
+  useEffect(() => {
+    if (vultFDV > 0) {
+      setVultPrice(vultFDV / totalVultSupply);
+    }
+  }, [vultFDV, totalVultSupply]);
   const { onWriteAsync: onApproveAndCall, isPending } = useApproveAndCall();
 
   const handleSelect = (div: number) => {
@@ -217,10 +233,7 @@ export const MergeHome = () => {
                 <div className="flex gap-2 ps-20">
                   {!isVultBalanceFetching && (
                     <Typography size="xs">
-                      $VULT FDV: ${" "}
-                      {(
-                        Number(formatEther(vultBalance)) * vultPrice
-                      ).toLocaleString()}
+                      $VULT FDV: ${vultFDV.toLocaleString()}
                     </Typography>
                   )}
                 </div>
