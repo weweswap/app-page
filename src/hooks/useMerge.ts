@@ -40,6 +40,17 @@ export const useQuoteVult = (amount: bigint) => {
   };
 };
 
+export const useWeweBalance = () => {
+  const { data, isFetching } = useReadContract({
+    abi: MergeABI,
+    address: CONTRACT_ADDRESSES.merge,
+    functionName: "weweBalance",
+  });
+  return {
+    data: data ?? 0n,
+    isFetching,
+  };
+};
 export const useApproveAndCall = () => {
   const {
     data: hash,

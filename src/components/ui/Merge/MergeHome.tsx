@@ -3,13 +3,19 @@
 import { Loader, NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
+import { fetchWewePrice } from "~/api/wewePrice";
 import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { dogica } from "~/fonts";
-import { useApproveAndCall, useQuoteVult, useTokenBalance } from "~/hooks";
+import {
+  useApproveAndCall,
+  useQuoteVult,
+  useTokenBalance,
+  useWeweBalance,
+} from "~/hooks";
 
 export const MergeHome = () => {
   const { address } = useAccount();
@@ -20,10 +26,28 @@ export const MergeHome = () => {
   const [amount, setAmount] = useState<string | number>("");
   const amountValue = parseEther(String(amount) ?? 0);
   const { data: quoteAmount, isFetching } = useQuoteVult(amountValue);
+  const [wewePrice, setWewePrice] = useState<number>(0);
+  const [vultPrice, setVultPrice] = useState<number>(0);
+  const [vultFDV, setVultFDV] = useState<number>(0);
   // 1000 ratio
   const { data: ratio, isFetching: isRatioFetching } = useQuoteVult(
     parseEther(String("1000"))
   );
+  const { data: weweBalance, isFetching: isBalanceFetching } = useWeweBalance();
+  // fetch wewe price
+  useEffect(() => {
+    fetchWewePrice().then((price) => {
+      setWewePrice(price);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (wewePrice > 0 && ratio > 0) {
+      setVultPrice(wewePrice * (1000 / Number(formatEther(ratio))));
+      // vult fdv = 100m*priceV
+      setVultFDV(100000000 * wewePrice * (1000 / Number(formatEther(ratio))));
+    }
+  }, [ratio, wewePrice]);
   const { onWriteAsync: onApproveAndCall, isPending } = useApproveAndCall();
 
   const handleSelect = (div: number) => {
@@ -59,7 +83,7 @@ export const MergeHome = () => {
             className="pt-4 text-center md:text-start"
           >
             <span className="text_yellow">TOTAL $WEWE LOCKED: </span>
-            24,214,500,960.46
+            {!isBalanceFetching && <> {Number(formatEther(weweBalance)).toLocaleString()}</>}
           </Typography>
         </div>
       </Card>
@@ -162,7 +186,12 @@ export const MergeHome = () => {
                     height={17}
                     alt="Vult"
                   />
-                  <Typography size="xs">≈ Value: $2.12</Typography>
+                  <Typography size="xs">
+                    ≈ Value: ${" "}
+                    {(Number(formatEther(quoteAmount)) * vultPrice).toPrecision(
+                      4
+                    )}
+                  </Typography>
                 </div>
                 <div className="flex gap-2 ps-20">
                   <Typography size="xs">Ratio: 1000</Typography>
@@ -186,7 +215,7 @@ export const MergeHome = () => {
                 </div>
                 <div className="flex gap-2 ps-20">
                   <Typography size="xs">
-                    $VULT FDV: $1,000,300,000,000
+                    $VULT FDV: ${Math.floor(vultFDV).toLocaleString()}
                   </Typography>
                 </div>
               </>
