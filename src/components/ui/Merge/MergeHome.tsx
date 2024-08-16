@@ -14,6 +14,7 @@ import {
   useApproveAndCall,
   useQuoteVult,
   useTokenBalance,
+  useVultBalance,
   useWeweBalance,
 } from "~/hooks";
 
@@ -28,12 +29,15 @@ export const MergeHome = () => {
   const { data: quoteAmount, isFetching } = useQuoteVult(amountValue);
   const [wewePrice, setWewePrice] = useState<number>(0);
   const [vultPrice, setVultPrice] = useState<number>(0);
-  const [vultFDV, setVultFDV] = useState<number>(0);
+
   // 1000 ratio
   const { data: ratio, isFetching: isRatioFetching } = useQuoteVult(
     parseEther(String("1000"))
   );
-  const { data: weweBalance, isFetching: isBalanceFetching } = useWeweBalance();
+  const { data: weweBalance, isFetching: isWeweBalanceFetching } =
+    useWeweBalance();
+  const { data: vultBalance, isFetching: isVultBalanceFetching } =
+    useVultBalance();
   // fetch wewe price
   useEffect(() => {
     fetchWewePrice().then((price) => {
@@ -44,8 +48,6 @@ export const MergeHome = () => {
   useEffect(() => {
     if (wewePrice > 0 && ratio > 0) {
       setVultPrice(wewePrice * (1000 / Number(formatEther(ratio))));
-      // vult fdv = 100m*priceV
-      setVultFDV(100000000 * wewePrice * (1000 / Number(formatEther(ratio))));
     }
   }, [ratio, wewePrice]);
   const { onWriteAsync: onApproveAndCall, isPending } = useApproveAndCall();
@@ -83,7 +85,7 @@ export const MergeHome = () => {
             className="pt-4 text-center md:text-start"
           >
             <span className="text_yellow">TOTAL $WEWE LOCKED: </span>
-            {!isBalanceFetching && (
+            {!isWeweBalanceFetching && (
               <> {Number(formatEther(weweBalance)).toLocaleString()}</>
             )}
           </Typography>
@@ -213,9 +215,14 @@ export const MergeHome = () => {
                   />
                 </div>
                 <div className="flex gap-2 ps-20">
-                  <Typography size="xs">
-                    $VULT FDV: ${Math.floor(vultFDV).toLocaleString()}
-                  </Typography>
+                  {!isVultBalanceFetching && (
+                    <Typography size="xs">
+                      $VULT FDV: ${" "}
+                      {(
+                        Number(formatEther(vultBalance)) * vultPrice
+                      ).toLocaleString()}
+                    </Typography>
+                  )}
                 </div>
               </>
             }
