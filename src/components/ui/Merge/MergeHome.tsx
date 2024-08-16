@@ -3,13 +3,20 @@
 import { Loader, NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
+import { fetchWewePrice } from "~/api/wewePrice";
 import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { dogica } from "~/fonts";
-import { useApproveAndCall, useQuoteVult, useTokenBalance } from "~/hooks";
+import {
+  useApproveAndCall,
+  useQuoteVult,
+  useTokenBalance,
+  useVultBalance,
+  useWeweBalance,
+} from "~/hooks";
 
 export const MergeHome = () => {
   const { address } = useAccount();
@@ -20,6 +27,45 @@ export const MergeHome = () => {
   const [amount, setAmount] = useState<string | number>("");
   const amountValue = parseEther(String(amount) ?? 0);
   const { data: quoteAmount, isFetching } = useQuoteVult(amountValue);
+  const [wewePrice, setWewePrice] = useState<number>(0);
+  const [vultPrice, setVultPrice] = useState<number>(0);
+  const [vultFDV, setVultFDV] = useState<number>(0);
+  // 1000 ratio
+  const { data: ratio, isFetching: isRatioFetching } = useQuoteVult(
+    parseEther(String("1000"))
+  );
+  const { data: weweBalance, isFetching: isWeweBalanceFetching } =
+    useWeweBalance();
+  const { data: vultBalance, isFetching: isVultBalanceFetching } =
+    useVultBalance();
+  // fetch wewe price
+  useEffect(() => {
+    fetchWewePrice().then((price) => {
+      setWewePrice(price);
+    });
+  }, []);
+
+  const totalVultSupply = 100000000; //100m
+  const totalWeweSupply = 100000000000; //100bn
+  const virtualBalance = 10000000000; //10bn
+  useEffect(() => {
+    if (wewePrice > 0) {
+      const weweBalanceNumber = Number(formatEther(weweBalance));
+      const vultBalanceNumber = Number(formatEther(vultBalance));
+      const weweFDV = wewePrice * totalWeweSupply;
+      setVultFDV(
+        ((weweBalanceNumber + virtualBalance) / totalWeweSupply) *
+          weweFDV *
+          (totalVultSupply / vultBalanceNumber)
+      );
+    }
+  }, [weweBalance, vultBalance, wewePrice]);
+
+  useEffect(() => {
+    if (vultFDV > 0) {
+      setVultPrice(vultFDV / totalVultSupply);
+    }
+  }, [vultFDV, totalVultSupply]);
   const { onWriteAsync: onApproveAndCall, isPending } = useApproveAndCall();
 
   const handleSelect = (div: number) => {
@@ -41,13 +87,25 @@ export const MergeHome = () => {
             🔥 🔥 🔥
           </Typography>
         </div>
-        <Typography
-          size="sm"
-          tt="uppercase"
-          className="pt-4 text-center md:text-start"
-        >
-          Forever merge your coins
-        </Typography>
+        <div className="md:flex items-center justify-between gap-3 text-center md:text-start mt-5">
+          <Typography
+            size="sm"
+            tt="uppercase"
+            className="pt-4 text-center md:text-start"
+          >
+            Forever merge your coins
+          </Typography>
+          <Typography
+            size="sm"
+            tt="uppercase"
+            className="pt-4 text-center md:text-start"
+          >
+            <span className="text_yellow">TOTAL $WEWE LOCKED: </span>
+            {!isWeweBalanceFetching && (
+              <> {Number(formatEther(weweBalance)).toLocaleString()}</>
+            )}
+          </Typography>
+        </div>
       </Card>
 
       <Card className="flex flex-col gap-5">
@@ -104,38 +162,83 @@ export const MergeHome = () => {
                 className="bg-gray-900 px-3 py-2"
                 onClick={() => handleSelect(1)}
               >
-                <Typography size="sm">100%</Typography>
+                <Typography size="sm">MAX</Typography>
               </button>
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col sm:flex-row items-center gap-3">
-            <div className="flex-1 flex items-center justify-center gap-3">
-              {!isFetching && (
-                <>
-                  <Image
-                    src="/img/icons/arrow_right1.svg"
-                    width={19}
-                    height={9}
-                    alt=""
-                  />
-                  <Typography size="xl">
-                    {Number(formatEther(quoteAmount)).toLocaleString()} VULT
-                  </Typography>
-                </>
-              )}
+          <div className=" flex-1 flex flex-col gap-3">
+            <div className="flex-1 flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex-1 flex items-center justify-center gap-3">
+                {!isFetching && (
+                  <>
+                    <Image
+                      src="/img/icons/arrow_right.svg"
+                      width={19}
+                      height={9}
+                      alt=""
+                    />
+                    <div>
+                      <Typography size="xl">
+                        {Number(formatEther(quoteAmount)).toLocaleString()} VULT
+                      </Typography>
+                    </div>
+                  </>
+                )}
+              </div>
+              <Button
+                className="flex items-center justify-center gap-3"
+                disabled={!address || !amountValue || isPending}
+                onClick={handleMerge}
+              >
+                {isPending && <Loader color="white" size="sm" />}
+                <Typography secondary size="lg" fw={700} tt="uppercase">
+                  Merge🔥
+                </Typography>
+              </Button>
             </div>
-
-            <Button
-              className="flex items-center justify-center gap-3"
-              disabled={!address || !amountValue || isPending}
-              onClick={handleMerge}
-            >
-              {isPending && <Loader color="white" size="sm" />}
-              <Typography secondary size="lg" fw={700} tt="uppercase">
-                Merge🔥
-              </Typography>
-            </Button>
+            {
+              <>
+                <div className="flex gap-2 ps-20">
+                  <Image
+                    src="/img/tokens/vult.svg"
+                    width={17}
+                    height={17}
+                    alt="Vult"
+                  />
+                  <Typography size="xs">
+                    ≈ Value: ${vultPrice.toPrecision(4)}
+                  </Typography>
+                </div>
+                <div className="flex gap-2 ps-20">
+                  <Typography size="xs">Ratio: 1000</Typography>
+                  <Image
+                    src="/img/tokens/wewe.png"
+                    width={17}
+                    height={17}
+                    alt="Vult"
+                  />
+                  {!isRatioFetching && (
+                    <Typography size="xs">
+                      ≈ {Number(formatEther(ratio)).toLocaleString()}
+                    </Typography>
+                  )}
+                  <Image
+                    src="/img/tokens/vult.svg"
+                    width={17}
+                    height={17}
+                    alt="Vult"
+                  />
+                </div>
+                <div className="flex gap-2 ps-20">
+                  {!isVultBalanceFetching && (
+                    <Typography size="xs">
+                      $VULT FDV: ${vultFDV.toLocaleString()}
+                    </Typography>
+                  )}
+                </div>
+              </>
+            }
           </div>
         </div>
       </Card>
