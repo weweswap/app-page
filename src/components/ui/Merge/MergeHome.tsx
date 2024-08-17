@@ -102,7 +102,7 @@ export const MergeHome = () => {
           >
             <span className="text_yellow">TOTAL $WEWE LOCKED: </span>
             {!isWeweBalanceFetching && (
-              <> {Number(formatEther(weweBalance)).toLocaleString()}</>
+              <> {Math.trunc(Number(formatEther(weweBalance))).toLocaleString()}</>
             )}
           </Typography>
         </div>
@@ -233,7 +233,7 @@ export const MergeHome = () => {
                 <div className="flex gap-2 ps-20">
                   {!isVultBalanceFetching && (
                     <Typography size="xs">
-                      $VULT FDV: ${vultFDV.toLocaleString()}
+                      $VULT FDV: ${Math.trunc(vultFDV).toLocaleString()}
                     </Typography>
                   )}
                 </div>
