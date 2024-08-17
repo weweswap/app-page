@@ -131,18 +131,38 @@ export const MergeHome = () => {
 
             <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
               <div className="flex-1">
-                <NumberInput
-                  classNames={{
-                    root: "w-full md:w-auto",
-                    input: clsx(
-                      dogica.className,
-                      "bg-gray-900 p-4 text-white text-lg h-auto border-transparent rounded-none"
-                    ),
-                  }}
-                  hideControls
-                  value={amount}
-                  onChange={setAmount}
-                />
+                <div className="bg-gray-900 md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
+                  <div className="flex-1 flex items-center gap-3">
+                    <NumberInput
+                      classNames={{
+                        root: "w-full md:w-full",
+                        input: clsx(
+                          dogica.className,
+                          "bg-gray-900 md:p-4 p-0 text-white text-lg h-auto border-transparent rounded-none"
+                        ),
+                      }}
+                      hideControls
+                      value={amount}
+                      onChange={setAmount}
+                    />
+                  </div>
+                  <Image
+                    src="/img/icons/arrow_right.svg"
+                    width={16}
+                    height={16}
+                    alt=""
+                  />
+                  <div className="flex-1 md:flex-none flex items-center justify-end gap-3">
+                    {!isFetching && (
+                      <div>
+                        <Typography size="xl">
+                          {Number(formatEther(quoteAmount)).toLocaleString()}{" "}
+                          VULT
+                        </Typography>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
                 <div className="w-full flex items-center justify-end gap-3 mt-3">
                   <button
@@ -166,28 +186,10 @@ export const MergeHome = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3">
-                <div className="flex-1 flex flex-col sm:flex-row items-center gap-3">
-                  <div className="flex-1 flex items-center justify-center gap-3">
-                    {!isFetching && (
-                      <>
-                        <Image
-                          src="/img/icons/arrow_right.svg"
-                          width={19}
-                          height={9}
-                          alt=""
-                        />
-                        <div>
-                          <Typography size="xl">
-                            {Number(formatEther(quoteAmount)).toLocaleString()}
-                            VULT
-                          </Typography>
-                        </div>
-                      </>
-                    )}
-                  </div>
+              <div className="flex flex-col gap-3 w-full md:w-auto ">
+                <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
                   <Button
-                    className="flex items-center justify-center gap-3"
+                    className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
                     disabled={!address || !amountValue || isPending}
                     onClick={handleMerge}
                   >
