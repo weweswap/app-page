@@ -6,8 +6,10 @@ import { DirectionProvider, MantineProvider } from "@mantine/core";
 import WagmiProviderComp from "~/lib/wagmiProvider";
 import { Background, Footer, NavBar } from "~/components/ui";
 import { theme } from "~/theme";
+import { usePathname } from "next/navigation";
 
 const App: AppType = ({ Component, pageProps }) => {
+  const path = usePathname();
   return (
     <DirectionProvider>
       <MantineProvider theme={theme} defaultColorScheme="dark">
@@ -16,9 +18,15 @@ const App: AppType = ({ Component, pageProps }) => {
             <Background />
             <div className="w-full flex flex-col items-center">
               <NavBar />
-              <div className="w-full max-w-[845px] flex flex-col items-center p-4 gap-5">
-                <Component {...pageProps} />
-              </div>
+              {path === "/merge" ? (
+                <div className="w-full max-w-[1245px] flex flex-col items-center p-4 gap-5">
+                  <Component {...pageProps} />
+                </div>
+              ) : (
+                <div className="w-full max-w-[845px] flex flex-col items-center p-4 gap-5">
+                  <Component {...pageProps} />
+                </div>
+              )}
             </div>
             <Footer />
           </main>
