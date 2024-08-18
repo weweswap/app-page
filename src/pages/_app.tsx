@@ -18,7 +18,7 @@ const App: AppType = ({ Component, pageProps }) => {
             <Background />
             <div className="w-full flex flex-col items-center">
               <NavBar />
-              {path === "/merge" ? (
+              {path === "/merge" || "redeem" ? (
                 <div className="w-full max-w-[1245px] flex flex-col items-center p-4 gap-5">
                   <Component {...pageProps} />
                 </div>
