@@ -83,7 +83,7 @@ export const MergeHome = () => {
           <Card>
             <div className="md:flex items-center justify-between gap-3 text-center md:text-start  ">
               <Typography secondary size="xl" tt="uppercase">
-                MERGE NOW
+                MERGE NO&ensp;W
               </Typography>
             </div>
             <div className="md:flex items-center justify-between gap-3 text-center md:text-start mt-5">
@@ -131,8 +131,8 @@ export const MergeHome = () => {
 
             <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
               <div className="flex-1">
-                <div className="bg-gray-900 md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
-                  <div className="flex-1 flex items-center gap-3">
+                <div className="grid grid-cols-11 bg-gray-900 md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
+                  <div className="col-span-5 flex-1 flex items-center gap-3">
                     <NumberInput
                       classNames={{
                         root: "w-full md:w-full",
@@ -147,14 +147,15 @@ export const MergeHome = () => {
                     />
                   </div>
                   <Image
+                    className="col-span-1"
                     src="/img/icons/arrow_right.svg"
                     width={16}
                     height={16}
                     alt=""
                   />
-                  <div className="flex-1 md:flex-none flex items-center justify-end gap-3">
+                  <div className="col-span-5 items-center flex-1  md:flex-none flex items-center justify-end gap-3">
                     {!isFetching && (
-                      <div>
+                      <div className="overflow-x-auto">
                         <Typography size="xl">
                           {Number(formatEther(quoteAmount)).toLocaleString()}{" "}
                           VULT
