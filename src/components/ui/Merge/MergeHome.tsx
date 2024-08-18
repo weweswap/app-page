@@ -92,7 +92,7 @@ export const MergeHome = () => {
                 tt="uppercase"
                 className="pt-4 text-center md:text-start"
               >
-                Forever merge your coins
+                Merge your coins
               </Typography>
             </div>
           </Card>
