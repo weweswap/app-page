@@ -207,7 +207,7 @@ export const MergeHome = () => {
             <Typography size="lg">MERGE your WEWE into VULT</Typography>
 
             <ul className="list-decimal list-inside pt-3 text-sm">
-              <li>Click MERGE to burn your $WEWE and receive $VULT</li>
+              <li>Merge your $WEWE to secure your $VULT</li>
               <li>
                 Starting price is 1,000 $WEWE to 1 $VULT, but this will rise
               </li>
