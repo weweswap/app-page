@@ -155,7 +155,7 @@ export const RedeemHome = () => {
                   />
                   <div className="col-span-5 items-center flex-1  md:flex-none flex items-center justify-end gap-3">
                     <div className="overflow-x-auto">
-                      <Typography size="xl">1000 VULT</Typography>
+                      <Typography size="xl">{amount} VULT</Typography>
                     </div>
                   </div>
                 </div>
