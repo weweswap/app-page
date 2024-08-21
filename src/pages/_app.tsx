@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 
 const App: AppType = ({ Component, pageProps }) => {
   const path = usePathname();
+
   return (
     <DirectionProvider>
       <MantineProvider theme={theme} defaultColorScheme="dark">
@@ -18,7 +19,7 @@ const App: AppType = ({ Component, pageProps }) => {
             <Background />
             <div className="w-full flex flex-col items-center">
               <NavBar />
-              {path === "/merge" || "redeem" ? (
+              {path === "/merge" || path === "/redeem" ? (
                 <div className="w-full max-w-[1245px] flex flex-col items-center p-4 gap-5">
                   <Component {...pageProps} />
                 </div>

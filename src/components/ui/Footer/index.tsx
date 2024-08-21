@@ -8,7 +8,7 @@ export const Footer = () => {
   const path = usePathname();
   return (
     <div className="flex flex-col items-center gap-9 p-4">
-      {path === "/merge" ? (
+      {path === "/merge" || "/swap" ? (
         <div className="w-full sm:w-[500px]">
           <Lottie animationData={animation} />
         </div>
