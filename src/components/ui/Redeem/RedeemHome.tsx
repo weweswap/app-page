@@ -11,22 +11,21 @@ import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { dogica } from "~/fonts";
 import {
-  useApproveAndCall,
   useQuoteVult,
   useTokenBalance,
   useVultBalance,
   useWeweBalance,
 } from "~/hooks";
 
-export const MergeHome = () => {
+export const RedeemHome = () => {
   const { address } = useAccount();
-  const { data: balanceWewe } = useTokenBalance(
+  const { data: balanceVult } = useTokenBalance(
     address,
-    CONTRACT_ADDRESSES.wewe
+    CONTRACT_ADDRESSES.vult
   );
   const [amount, setAmount] = useState<string | number>("");
   const amountValue = parseEther(String(amount) ?? 0);
-  const { data: quoteAmount, isFetching } = useQuoteVult(amountValue);
+
   const [wewePrice, setWewePrice] = useState<number>(0);
   const [vultPrice, setVultPrice] = useState<number>(0);
   const [vultFDV, setVultFDV] = useState<number>(0);
@@ -66,33 +65,34 @@ export const MergeHome = () => {
       setVultPrice(vultFDV / totalVultSupply);
     }
   }, [vultFDV, totalVultSupply]);
-  const { onWriteAsync: onApproveAndCall, isPending } = useApproveAndCall();
 
   const handleSelect = (div: number) => {
-    setAmount(Number(formatEther(balanceWewe)) / div);
+    setAmount(Number(formatEther(balanceVult)) / div);
   };
-
-  const handleMerge = () => {
-    onApproveAndCall(amountValue);
+  const [state, setState] = useState(0);
+  const handleRedeem = () => {
+    if (state == 0) setState(1);
+    else {
+      setState(0);
+    }
   };
-
   return (
     <>
       <div className=" gap-5 grid grid-cols-12">
         <div className="md:col-span-8 col-span-12 md:order-1 order-2">
           <Card>
-            <div className="md:flex items-center justify-between gap-3 text-center md:text-start  ">
+            <div className="md:flex items-center py-3 justify-between gap-3 text-center md:text-start  ">
               <Typography secondary size="xl" tt="uppercase">
-                MERGE NO&ensp;W
+                REDEEM YOUR COINS
               </Typography>
             </div>
-            <div className="md:flex items-center justify-between gap-3 text-center md:text-start mt-5">
+            <div className="md:flex items-center py-3 justify-between gap-3 text-center md:text-start mt-2">
               <Typography
                 size="sm"
                 tt="uppercase"
-                className="pt-4 text-center md:text-start"
+                className="pt-2 text-center md:text-start"
               >
-                Merge your coins
+                GET YOUR WAITED $VULT
               </Typography>
             </div>
           </Card>
@@ -101,13 +101,13 @@ export const MergeHome = () => {
             <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
               <div className="flex-1 flex items-center gap-3">
                 <Image
-                  src="/img/tokens/wewe.png"
+                  src="/img/tokens/iou-vult.svg"
                   width={32}
                   height={32}
                   alt=""
                 />
                 <Typography secondary size="md">
-                  WEWE
+                  IOU-VULT
                 </Typography>
               </div>
               <Image
@@ -129,7 +129,7 @@ export const MergeHome = () => {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-5">
               <div className="flex-1">
                 <div className="grid grid-cols-11 bg-gray-900 md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
                   <div className="col-span-5 flex-1 flex items-center gap-3">
@@ -154,30 +154,13 @@ export const MergeHome = () => {
                     alt=""
                   />
                   <div className="col-span-5 items-center flex-1  md:flex-none flex items-center justify-end gap-3">
-                    {!isFetching && (
-                      <div className="overflow-x-auto">
-                        <Typography size="xl">
-                          {Number(formatEther(quoteAmount)).toLocaleString()}{" "}
-                          VULT
-                        </Typography>
-                      </div>
-                    )}
+                    <div className="overflow-x-auto">
+                      <Typography size="xl">{amount} VULT</Typography>
+                    </div>
                   </div>
                 </div>
 
                 <div className="w-full flex items-center justify-end gap-3 mt-3">
-                  <button
-                    className="bg-gray-900 px-3 py-2"
-                    onClick={() => handleSelect(4)}
-                  >
-                    <Typography size="sm">25%</Typography>
-                  </button>
-                  <button
-                    className="bg-gray-900 px-3 py-2"
-                    onClick={() => handleSelect(2)}
-                  >
-                    <Typography size="sm">50%</Typography>
-                  </button>
                   <button
                     className="bg-gray-900 px-3 py-2"
                     onClick={() => handleSelect(1)}
@@ -187,17 +170,21 @@ export const MergeHome = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 w-full md:w-auto ">
-                <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
+              <div className="flex flex-col gap-3">
+                <div className="flex-1 flex flex-col sm:flex-row items-center gap-3">
                   <Button
+                    onClick={handleRedeem}
                     className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
-                    disabled={!address || !amountValue || isPending}
-                    onClick={handleMerge}
                   >
-                    {isPending && <Loader color="white" size="sm" />}
-                    <Typography secondary size="lg" fw={700} tt="uppercase">
-                      Merge🔥
-                    </Typography>
+                    {state == 0 ? (
+                      <Typography secondary size="lg" fw={700} tt="uppercase">
+                        redeem
+                      </Typography>
+                    ) : (
+                      <Typography secondary size="lg" fw={700} tt="uppercase">
+                        approve
+                      </Typography>
+                    )}
                   </Button>
                 </div>
               </div>
@@ -205,15 +192,10 @@ export const MergeHome = () => {
           </Card>
 
           <Card>
-            <Typography size="lg">MERGE your WEWE into VULT</Typography>
-
-            <ul className="list-decimal list-inside pt-3 text-sm">
-              <li>Merge your $WEWE to secure your $VULT</li>
-              <li>
-                Starting price is 1,000 $WEWE to 1 $VULT, but this will rise
-              </li>
-              <li>Your $VULT will be locked until the public launch</li>
-            </ul>
+            <Typography size="lg" ta="center" className="my-20">
+              Redeem at 1:1 Your $IOU.VULT into $VULT <br />
+              Bridge Your $BASE.VULT To $ETH.VULT
+            </Typography>
           </Card>
         </div>
         <div className="md:col-span-4 col-span-12 md:order-2 order-1">
@@ -237,10 +219,39 @@ export const MergeHome = () => {
               )}
             </Typography>
 
-            <div className="md:mt-10 mt-2">
-              <div className="flex gap-2 justify-center">
+            <div className="md:mt-5 mt-2">
+              <div className="flex gap-2 md:justify-start justify-center ">
+                <Image
+                  src="/img/tokens/vult-border.svg"
+                  width={17}
+                  height={17}
+                  alt="Vult"
+                />
                 <Typography size="md" fw={600} className="md:py-5 py-2">
-                  ≈ Value: ${vultPrice.toPrecision(4)}{" "}
+                  ≈ Value: ${vultPrice.toPrecision(4)}
+                </Typography>
+              </div>
+
+              <div className="flex gap-2 md:justify-start justify-center ">
+                <Image
+                  src="/img/tokens/vult-border.svg"
+                  width={17}
+                  height={17}
+                  alt="Vult"
+                />
+                <Typography size="md" fw={600} className="md:py-5 py-2">
+                  Balance: {Number(formatEther(balanceVult)).toLocaleString()}
+                </Typography>
+              </div>
+              <div className="flex gap-2 md:my-5 my-2 md:mb-5 md:justify-start justify-center ">
+                <Image
+                  src="/img/tokens/vult.svg"
+                  width={17}
+                  height={17}
+                  alt="Vult"
+                />
+                <Typography size="md" fw={600}>
+                  Ratio: 1000 ≈ 1000
                 </Typography>
                 <Image
                   src="/img/tokens/vult-border.svg"
@@ -249,36 +260,32 @@ export const MergeHome = () => {
                   alt="Vult"
                 />
               </div>
-              {!isVultBalanceFetching && (
+              <div className="flex gap-2 md:justify-start justify-center  ">
+                <Image
+                  src="/img/tokens/vult-border.svg"
+                  width={17}
+                  height={17}
+                  alt="Vult"
+                />
                 <Typography size="md" fw={600} className="md:py-5 py-2">
+                  Balance ≈ Value: $
+                  {(
+                    Number(formatEther(balanceVult)) * vultPrice
+                  ).toLocaleString()}
+                </Typography>
+              </div>
+              {!isVultBalanceFetching && (
+                <Typography
+                  size="md"
+                  fw={600}
+                  className="md:py-5 py-2 text_yellow"
+                >
                   FDV: ${Math.trunc(vultFDV).toLocaleString()}
                 </Typography>
               )}
-              <div className="flex justify-center gap-2 md:my-5 my-2 md:mb-5 mb-10">
-                <Typography size="md" fw={600}>
-                  Ratio: 1000
-                </Typography>
-                <Image
-                  src="/img/tokens/wewe.svg"
-                  width={17}
-                  height={17}
-                  alt="Vult"
-                />
-                {!isRatioFetching && (
-                  <Typography size="md" fw={600}>
-                    ≈ {Number(formatEther(ratio)).toLocaleString()}
-                  </Typography>
-                )}
-                <Image
-                  src="/img/tokens/vult-border.svg"
-                  width={17}
-                  height={17}
-                  alt="Vult"
-                />
-              </div>
             </div>
 
-            <div className="mt-10 absolute md:bottom-10 bottom-5 right-0 left-0">
+            <div className="  right-0 left-0">
               <Typography secondary size="xl">
                 🔥 🔥 🔥
               </Typography>

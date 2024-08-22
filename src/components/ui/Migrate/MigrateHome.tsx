@@ -1,3 +1,6 @@
+
+"use client"
+
 import Image from "next/image";
 import { Button, Card, Typography } from "~/components/common";
 
@@ -9,14 +12,31 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
   return (
     <>
       <Card>
-        <Typography secondary size="xl" tt="uppercase">
-          EARN CHAOS COINS!
+        <Typography className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap" secondary size="lg" tt="uppercase">
+        <div>
+          MIGRATE AND EARN CHAOS!
+          </div>
+          <div className="flex items-center gap-3">
+          <Button>
+            <Typography secondary size="xs" fw={700}>
+              MIGRATE
+            </Typography>
+          </Button>
+          <Button disabled>
+            <Typography secondary size="xs" fw={700}>
+              NEW POOL
+            </Typography>
+          </Button>
+          </div>
         </Typography>
         <Typography size="sm" tt="uppercase" className="pt-4">
           1BN CHAOS COINS UP FOR GRABS TO EARN
         </Typography>
       </Card>
 
+      <div className="py-2">
+        YOUR UNISWAP ACTIVE POSITIONS
+      </div>
       <Card className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex-1 bg-gray-900 px-4 py-3 flex items-center gap-3">
