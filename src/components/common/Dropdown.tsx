@@ -10,9 +10,11 @@ type DropdownProps = {
     value: string;
     icon?: string;
     text?: string;
+    index?: number;
   }[];
   placeholder?: string;
   className?: string;
+  setIndexValue?: (value: number) => void;
 };
 
 export const Dropdown = ({
@@ -21,6 +23,7 @@ export const Dropdown = ({
   options,
   placeholder,
   className,
+  setIndexValue,
 }: DropdownProps) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -37,6 +40,8 @@ export const Dropdown = ({
       store={combobox}
       onOptionSubmit={(val) => {
         setVal(val);
+        setIndexValue &&
+          setIndexValue(options.find((o) => o.value === val)?.index ?? 0);
         combobox.closeDropdown();
       }}
     >

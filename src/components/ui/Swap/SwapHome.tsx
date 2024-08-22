@@ -1,15 +1,28 @@
 import { NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { TOKEN_LIST } from "~/constants/tokens";
 import { dogica } from "~/fonts";
-import { SwapStateProps } from ".";
+import api from "~/api/swap";
+import { Chain } from "~/constants/chains";
+import { RouterMessageType, RouteSummary } from "~/models";
+import { formatUnits } from "viem";
+import { formatStringUnits } from "~/utils";
+import { useAccount } from "wagmi";
+import { useTokenBalance } from "~/hooks";
 
-const tokenOptions = TOKEN_LIST.map((token) => ({
+let inTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
   icon: token.icon,
+  index: index,
+}));
+
+let outTokenOptions = TOKEN_LIST.map((token, index) => ({
+  value: token.symbol,
+  icon: token.icon,
+  index: index,
 }));
 
 type SwapHomeProps = {
@@ -18,8 +31,66 @@ type SwapHomeProps = {
 };
 
 export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
-  const [inputValue, setInputValue] = useState<number>(0);
+  const { address } = useAccount();
 
+  const [state, setState] = useState({
+    loading: false,
+  });
+  const [inputValue, setInputValue] = useState<number>(0);
+  const [routeInfo, setRouteInfo] = useState<RouteSummary>();
+  const [inputTokenIndex, setInputTokenIndex] = useState<number>(0);
+  const [outputTokenIndex, setOutputTokenIndex] = useState<number>(0);
+  let { data: inputBalance } = useTokenBalance(
+    address,
+    TOKEN_LIST[inTokenOptions[inputTokenIndex].index].address
+  );
+  const useDebounce = (value: number, delay: number) => {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+
+      return () => {
+        clearTimeout(handler);
+      };
+    }, [value, delay]);
+    return debouncedValue;
+  };
+
+  const debouncedInputValue = useDebounce(inputValue, 500);
+
+  useEffect(() => {
+    if (debouncedInputValue == 0) return;
+    setState({ ...state, loading: true });
+    api.router
+      .get(
+        Chain.BASE,
+        TOKEN_LIST[inputTokenIndex],
+        debouncedInputValue,
+        TOKEN_LIST[outputTokenIndex]
+      )
+      .then((res) => {
+        setState({ ...state, loading: false });
+        res.data.message == RouterMessageType.Succussful
+          ? setRouteInfo(res.data.data.routeSummary)
+          : console.log(res.data.message);
+      })
+      .catch((err) => {
+        setState({ ...state, loading: false });
+        console.error(err);
+      });
+  }, [inputTokenIndex, outputTokenIndex, debouncedInputValue]);
+
+  useEffect(() => {
+    outTokenOptions = TOKEN_LIST.map((token, index) => ({
+      value: token.symbol,
+      icon: token.icon,
+      index: index,
+    }));
+    outTokenOptions.splice(inputTokenIndex, 1);
+    setOutputTokenIndex(outTokenOptions[0].index);
+  }, [inputTokenIndex]);
   return (
     <>
       <div className="w-full flex items-center justify-between">
@@ -57,14 +128,20 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
               onChange={(value) => setInputValue(value as number)}
             />
             <Dropdown
-              defaultValue="ETH"
-              options={tokenOptions}
+              defaultValue={inTokenOptions[inputTokenIndex].value}
+              options={inTokenOptions}
               className="md:col-span-3 col-span-6"
+              setIndexValue={setInputTokenIndex}
             />
           </div>
 
           <div className="flex items-center justify-between gap-3">
-            <Typography size="xs">$120.20</Typography>
+            <Typography size="xs">
+              $
+              {routeInfo
+                ? Number(routeInfo.amountInUsd).toLocaleString()
+                : "0.00"}
+            </Typography>
             <div className="flex items-center gap-1">
               <Image
                 src="/img/icons/wallet.svg"
@@ -72,7 +149,10 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
                 height={16}
                 alt=""
               />
-              <Typography size="xs">1,234,589 ETH</Typography>
+              <Typography size="xs">
+                {inputBalance.toLocaleString()}{" "}
+                {inTokenOptions[inputTokenIndex].value}
+              </Typography>
             </div>
           </div>
         </Card>
@@ -94,18 +174,24 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
           </Typography>
 
           <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
-            <NumberInput
-              classNames={{
-                root: "md:col-span-9 col-span-6",
-                input: `${dogica.className} text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none`,
-              }}
-              defaultValue="109.925"
-              hideControls
-            />
+            <Typography
+              className={` md:col-span-9 col-span-6 ${dogica.className}
+              text-start bg-transparent text-white text-2xl h-auto
+              border-transparent rounded-none`}
+            >
+              {routeInfo
+                ? formatStringUnits(
+                    routeInfo.amountOut,
+                    TOKEN_LIST[outputTokenIndex].decimals
+                  )
+                : "0.0"}
+            </Typography>
+
             <Dropdown
-              defaultValue="USDC"
-              options={tokenOptions}
+              value={outTokenOptions[0].value}
+              options={outTokenOptions}
               className="md:col-span-3 col-span-6"
+              setIndexValue={setOutputTokenIndex}
             />
           </div>
 
@@ -120,11 +206,32 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
           SWAP
         </Typography>
       </Button>
-      {inputValue != 0 && (
+      {inputValue != 0 && !state.loading && routeInfo && (
         <>
           <div className="flex justify-between w-full">
             <Typography size="xs">Rate</Typography>
-            <Typography size="xs">1 USDC = 0.0027 ETH ($1.00)</Typography>
+            <Typography size="xs">
+              1 {TOKEN_LIST[inputTokenIndex].symbol} ={" "}
+              {(
+                Number(
+                  formatStringUnits(
+                    routeInfo.amountOut,
+                    TOKEN_LIST[outputTokenIndex].decimals
+                  )
+                ) /
+                Number(
+                  formatStringUnits(
+                    routeInfo.amountIn,
+                    TOKEN_LIST[inputTokenIndex].decimals
+                  )
+                )
+              ).toLocaleString()}{" "}
+              {TOKEN_LIST[outputTokenIndex].symbol} ($
+              {(Number(routeInfo.amountInUsd) / inputValue)
+                .toFixed(5)
+                .toLocaleString()}
+              )
+            </Typography>
           </div>
           <div className="flex justify-between w-full">
             <Typography size="xs">Route</Typography>
@@ -141,7 +248,7 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
             <div className="flex items-center gap-1">
               <Image src="/img/icons/fee.svg" width={14} height={14} alt="" />
               <Typography size="xs" fw={700}>
-                $5.34
+                ${Number(routeInfo.gasUsd).toLocaleString()}
               </Typography>
               <Image
                 src="/img/icons/arrow_down.svg"
@@ -152,10 +259,15 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
             </div>
           </div>
           <div className="flex justify-between w-full">
-            <Typography size="xs">Total Fee: 0.35%</Typography>
+            <Typography size="xs">
+              Total Fee:{" "}
+              {routeInfo.extraFee.chargeFeeBy == ""
+                ? "0.0%"
+                : `${routeInfo.extraFee.chargeFeeBy}%`}
+            </Typography>
             <div className="flex items-center gap-1">
               <Typography size="xs" fw={700}>
-                $0.04
+                ${Number(routeInfo.extraFee.feeAmount).toLocaleString()}
               </Typography>
               <Image
                 src="/img/icons/arrow_down.svg"
