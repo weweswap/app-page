@@ -1,9 +1,11 @@
 import { NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import Image from "next/image";
+import { useState } from "react";
 import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { TOKEN_LIST } from "~/constants/tokens";
 import { dogica } from "~/fonts";
+import { SwapStateProps } from ".";
 
 const tokenOptions = TOKEN_LIST.map((token) => ({
   value: token.symbol,
@@ -12,16 +14,26 @@ const tokenOptions = TOKEN_LIST.map((token) => ({
 
 type SwapHomeProps = {
   onSwap: () => void;
+  onSetting: () => void;
 };
 
-export const SwapHome = ({ onSwap }: SwapHomeProps) => {
+export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
+  const [inputValue, setInputValue] = useState<number>(0);
+
   return (
     <>
       <div className="w-full flex items-center justify-between">
         <Typography secondary size="xl" tt="uppercase">
           Swap
         </Typography>
-        <Image src="/img/icons/settings.svg" width={24} height={24} alt="" />
+        <Image
+          src="/img/icons/settings.svg"
+          className="cursor-pointer"
+          onClick={onSetting}
+          width={24}
+          height={24}
+          alt=""
+        />
       </div>
 
       <div className="w-full flex flex-col">
@@ -30,22 +42,24 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
             Sell
           </Typography>
 
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
             <NumberInput
               classNames={{
-                root: "flex-1 w-full md:w-auto",
+                root: "md:col-span-9 col-span-6",
                 input: clsx(
                   dogica.className,
-                  "text-center md:text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
+                  "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
                 ),
               }}
-              defaultValue="0.030"
+              defaultValue={inputValue}
               hideControls
+              value={inputValue}
+              onChange={(value) => setInputValue(value as number)}
             />
             <Dropdown
               defaultValue="ETH"
               options={tokenOptions}
-              className="w-full md:w-auto"
+              className="md:col-span-3 col-span-6"
             />
           </div>
 
@@ -63,7 +77,7 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
           </div>
         </Card>
 
-        <div className="h-1 flex items-center justify-center">
+        <div className=" flex items-center justify-center">
           <button className="absolute bg-black border border-[3px] border_turq p-3">
             <Image
               src="/img/icons/arrow_swap1.svg"
@@ -79,11 +93,11 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
             Buy
           </Typography>
 
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
             <NumberInput
               classNames={{
-                root: "flex-1 w-full md:w-auto",
-                input: `${dogica.className} text-center md:text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none`,
+                root: "md:col-span-9 col-span-6",
+                input: `${dogica.className} text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none`,
               }}
               defaultValue="109.925"
               hideControls
@@ -91,7 +105,7 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
             <Dropdown
               defaultValue="USDC"
               options={tokenOptions}
-              className="w-full md:w-auto"
+              className="md:col-span-3 col-span-6"
             />
           </div>
 
@@ -102,30 +116,61 @@ export const SwapHome = ({ onSwap }: SwapHomeProps) => {
       </div>
 
       <Button className="w-full" onClick={onSwap}>
-        <Typography secondary size="sm" tt="uppercase">
+        <Typography secondary size="sm" tt="uppercase" fw={600}>
           SWAP
         </Typography>
       </Button>
-
-      <div className="w-full flex items-center justify-between gap-3">
-        <Typography size="xs">1 USDC = 0.0027 ETH ($1.00)</Typography>
-        <div className="flex items-center gap-1">
-          <Image src="/img/icons/fee.svg" width={14} height={14} alt="" />
-          <Typography size="xs" fw={700}>
-            $5.34
-          </Typography>
-          <Image
-            src="/img/icons/arrow_down.svg"
-            width={16}
-            height={16}
-            alt=""
-          />
-        </div>
-      </div>
+      {inputValue != 0 && (
+        <>
+          <div className="flex justify-between w-full">
+            <Typography size="xs">Rate</Typography>
+            <Typography size="xs">1 USDC = 0.0027 ETH ($1.00)</Typography>
+          </div>
+          <div className="flex justify-between w-full">
+            <Typography size="xs">Route</Typography>
+            <Typography size="xs">Kyber Swap Aggregator</Typography>
+            <Image
+              src="/img/icons/arrow_down.svg"
+              width={16}
+              height={16}
+              alt=""
+            />
+          </div>
+          <div className="flex justify-between w-full">
+            <Typography size="xs">Total cost:</Typography>
+            <div className="flex items-center gap-1">
+              <Image src="/img/icons/fee.svg" width={14} height={14} alt="" />
+              <Typography size="xs" fw={700}>
+                $5.34
+              </Typography>
+              <Image
+                src="/img/icons/arrow_down.svg"
+                width={16}
+                height={16}
+                alt=""
+              />
+            </div>
+          </div>
+          <div className="flex justify-between w-full">
+            <Typography size="xs">Total Fee: 0.35%</Typography>
+            <div className="flex items-center gap-1">
+              <Typography size="xs" fw={700}>
+                $0.04
+              </Typography>
+              <Image
+                src="/img/icons/arrow_down.svg"
+                width={16}
+                height={16}
+                alt=""
+              />
+            </div>
+          </div>
+        </>
+      )}
 
       <Card>
         <Typography size="lg">
-          WEWESWAP pools use a highly-efficient Concentrated Liquidity Formula:
+          WEWESWAP uses a highly-efficient Aggregator and Zaps.
         </Typography>
         <ul className="list-decimal list-inside pt-3 text-sm">
           <li>The best prices when you swap!</li>
