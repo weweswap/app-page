@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 3px;
 }
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px transparent;
@@ -107,4 +107,12 @@ input[type='range']::-ms-thumb {
 
 .selected {
   border: 1px solid #0439c7;
+}
+
+.pool_nav > div {
+  cursor: pointer;
+}
+
+.text_green {
+  color: var(--turq)
 }

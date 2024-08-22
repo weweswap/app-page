@@ -1,4 +1,6 @@
-import { NumberInput } from "@mantine/core";
+
+"use client"
+
 import Image from "next/image";
 import { useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
@@ -9,20 +11,18 @@ type MigrateDetailProps = {
 };
 
 export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
-  const [migrateRange, setMigrateRange] = useState(0);
+  const [migrateRange, setMigrateRange] = useState<number>(0);
 
   return (
     <>
       <Card className="flex flex-col gap-6 p-6">
         <div>
           <button onClick={onBack} className="w-full text-start">
-            <Typography
-              className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap"
-              secondary
+            <div
+              className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap">
+              <Typography secondary
               size="md"
-              tt="uppercase"
-            >
-              <div>MIGRATE UNISWAP LIQUIDITY</div>
+              tt="uppercase">MIGRATE UNISWAP LIQUIDITY</Typography>
               <div className="flex items-center gap-3">
                 <Button>
                   <Typography secondary size="xs" fw={700}>
@@ -35,7 +35,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
                   </Typography>
                 </Button>
               </div>
-            </Typography>
+            </div>
           </button>
           <Typography size="xs" className="mt-3">
             All WEWESWAP pools are paired in USDC - this means easy to collect

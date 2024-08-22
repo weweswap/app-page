@@ -1,3 +1,6 @@
+
+"use client"
+
 import Image from "next/image";
 import { Button, Card, Typography } from "~/components/common";
 
