@@ -21,13 +21,13 @@ const ActivePoolTable = () => {
           ))}
         </tr>
       </thead>
-      <tbody>
+      <tbody >
         {DUMMY_TABLE_CONTENT.map(({ logo, type, pool, tvl, volume, apr }, index) => (
           <tr key={pool} className="bg-[#1c1c1c] w-[full] " style={{borderBottom: '2rem solid black'}}>
             <td className="p-4 flex items-center gap-2 font-bold text-[]">
               <div className='flex items-center'>
-                <Image src={logo.first} alt='' width={32} height={32} />
-                <Image src={logo.second} alt=''  width={32} height={32} className='ml-[-15px]' />
+                <Image className='min-w-6 min-h-6' src={logo.first} alt='' width={32} height={32} />
+                <Image className='ml-[-10px] min-w-6 min-h-6' src={logo.second} alt=''  width={32} height={32} />
               </div>
               <div>
 
@@ -46,7 +46,7 @@ const ActivePoolTable = () => {
                 {apr}
             </td>
             <td className="p-4" align='right'>
-            <Button  className="w-full md:w-auto">
+            <Button  className="w-full md:w-auto min-w-[6rem]">
             ZAP-IN
         </Button>
             </td>

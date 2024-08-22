@@ -52,10 +52,21 @@ export const PoolHome = ({ onNext, onAdd }: PoolHomeProps) => {
           <div onClick={() => setPoolTypes(4)} className={`${poolTypes === 4 && "text_green"}`}>Blue Chips</div>
       </div>
       </div>
-      <Card className="flex item-center justify-center p-5 h-[25rem] overflow-y-scroll">
-        {poolTypes === 0 && <Image src="/img/icons/home.svg" width={150} height={150} alt=""/>}
-        {poolTypes === 1 && <ActivePoolTable/> }
-      </Card>
+      {poolTypes === 0
+         && 
+         <Card className="flex item-center justify-center p-5 h-[25rem] ">
+            <Image src="/img/icons/home.svg" width={150} height={150} alt=""/>
+         </Card>
+      }
+      {poolTypes === 1 
+        &&
+        <Card className="overflow-x-scroll">
+            <ActivePoolTable/>
+        </Card> 
+      }
+      
+      
+  
 
 
       {/* <Card className="flex flex-col gap-4">
