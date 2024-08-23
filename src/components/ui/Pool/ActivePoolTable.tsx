@@ -47,7 +47,9 @@ const ActivePoolTable = () => {
             </td>
             <td className="p-4" align='right'>
             <Button  className="w-full md:w-auto min-w-[6rem]">
-            ZAP-IN
+            <Typography secondary size='xs'>
+            ADD
+            </Typography>
         </Button>
             </td>
           </tr>
