@@ -19,8 +19,10 @@
   --yellow: #ffd911;
   --red: #fe0000;
   --stroke: #797979;
+  --dark: #0F0F0F;
   --rich-dark:#090909;
   --light-gray:#D4D4D4;
+  --active: #21a88b;
 }
 
 body {
@@ -61,6 +63,18 @@ body:before {
 
 .bg_rich_dark{
   background: var(--rich-dark);
+}
+
+.bg_dark {
+  background: var(--dark);
+}
+
+.bg_active {
+  background: var(--active);
+}
+
+.bg_inactive {
+  background: var(--stroke);
 }
 
 .text_violet {

@@ -124,7 +124,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
           MIGRATE
         </Typography>
       </Button>
-      <Typography className="w-full">
+      <div className="w-full">
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <Typography size="xs">TOTAL LP</Typography>
@@ -203,7 +203,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
             </div>
           </div>
         </div>
-      </Typography>
+      </div>
       <Card>
         <Typography size="lg">By pairing with USDC, WEWESWAP:</Typography>
         <ul className="list-decimal list-inside pt-3 text-sm">

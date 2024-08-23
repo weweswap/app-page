@@ -3,6 +3,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import { Button, Card, Typography } from "~/components/common";
 import { dogica } from "~/fonts";
+import { DUMMY_POOL_TYPES } from "./dummy";
 
 type PoolDetailProps = {
   onBack: () => void;
@@ -12,42 +13,50 @@ type PoolDetailProps = {
 export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
   return (
     <>
-      <Card>
+      <div className="flex items-center justify-between gap-4 w-full p-6 bg_rich_dark">
         <button onClick={onBack}>
           <Typography secondary size="xl">
-            {"<"} WEWE
+            {"<"} POOL TYPES
           </Typography>
         </button>
-      </Card>
-
-      <Card className="flex flex-col md:flex-row items-center gap-4">
-        <NumberInput
-          classNames={{
-            root: "flex-1 w-full md:w-auto",
-            input: clsx(
-              dogica.className,
-              "bg-gray-900 p-4 text-white text-lg h-auto border-transparent rounded-none"
-            ),
-          }}
-          hideControls
-        />
-        <div className="flex-1 w-full md:w-auto flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Image src="/img/tokens/wewe.png" width={40} height={40} alt="" />
-            <Typography size="md">WEWE</Typography>
-            <Image
-              src="/img/icons/arrow_down.svg"
-              width={16}
-              height={16}
-              alt=""
-            />
-          </div>
+        <div className="flex gap-4">
+        <Button disabled onClick={onAdd}>
+            <Typography secondary size="xs" fw={700}>
+              MIGRATE
+            </Typography>
+          </Button>
           <Button onClick={onAdd}>
-            <Typography secondary size="sm" fw={700}>
-              Add
+            <Typography secondary size="xs" fw={700}>
+              NEW POOL
             </Typography>
           </Button>
         </div>
+      </div>
+
+      <Card className="flex flex-col gap-4">
+        {DUMMY_POOL_TYPES.map(({icon, title, description}) => {
+          return   <div key={description} className="flex items-center justify-between gap-3 w-full">
+          <div>
+            <div className="flex gap-2">
+              <Image src={icon} alt="" height={24} width={24} />
+              <Typography size="sm">
+                {title}
+              </Typography>
+            </div>
+            <div className="py-2">
+              <Typography size="xs">
+              {description}
+              </Typography>
+            </div>
+          </div>
+          <Button onClick={onAdd} className="sm:px-12">
+          <Typography secondary size="sm">
+            ADD
+          </Typography>
+        </Button>
+        </div>
+        })}
+      
       </Card>
 
       <Card>
