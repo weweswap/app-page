@@ -83,6 +83,7 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
             value={props.swapSlippage}
             onChange={(value) => props.setSwapSlippage(value as number)}
             hideControls
+            max={19.99}
           />
           <Typography
             secondary
@@ -98,10 +99,10 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
       <Slider
         color="#33E6BF"
         classNames={classes}
-        defaultValue={40}
         label={null}
         onChange={(value) => props.setSwapSlippage(value)}
         value={props.swapSlippage}
+        max={19.99}
       />
 
       <div className="flex justify-between items-center ps-2">
@@ -161,6 +162,7 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
             hideControls
             value={props.zapSlippage}
             onChange={(value) => props.setZapSlippage(value as number)}
+            max={19.99}
           />
           <Typography
             secondary
@@ -180,6 +182,7 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
         label={null}
         onChange={(value) => props.setZapSlippage(value)}
         value={props.zapSlippage}
+        max={19.99}
       />
     </Modal>
   );

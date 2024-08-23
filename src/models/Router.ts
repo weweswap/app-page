@@ -1,3 +1,11 @@
+import { TokenItem } from "./Token";
+
+export interface RouteData {
+  routeSummary: RouteSummary;
+  inputToken: TokenItem;
+  outputToken: TokenItem;
+}
+
 export enum RouterMessageType {
   Succussful = "successfully",
 }

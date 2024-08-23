@@ -2,27 +2,44 @@ import { Divider, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
 import { Button, Modal, Typography } from "~/components/common";
 import { SwapStateProps } from ".";
+import { RouteData, RouteSummary } from "~/models";
+import { formatStringUnits } from "~/utils";
 type SwapModalProps = {
   onClose: () => void;
-  onSwap: () => void;
+  onApprove: () => void;
+  onConfirm: () => void;
+  routeData: RouteData;
   swapState: SwapStateProps;
   setSwapState: React.Dispatch<React.SetStateAction<SwapStateProps>>;
 } & ModalRootProps;
 
 export const SwapModal = (props: SwapModalProps) => {
   return (
-    <Modal title="Review swap" onClose={props.onClose} opened={props.opened} >
+    <Modal title="Review swap" onClose={props.onClose} opened={props.opened}>
       <div className="flex flex-col gap-4">
         <Typography secondary size="xs">
           Sell
         </Typography>
         <div className="flex items-center justify-between gap-3">
           <Typography secondary size="xl">
-            0.030 ETH
+            {Number(
+              formatStringUnits(
+                props.routeData.routeSummary.amountIn,
+                props.routeData.inputToken.decimals
+              )
+            ).toLocaleString()}{" "}
+            {props.routeData.inputToken.symbol}
           </Typography>
-          <Image src="/img/tokens/eth.png" width={36} height={36} alt="" />
+          <Image
+            src={props.routeData.inputToken.icon}
+            width={36}
+            height={36}
+            alt={props.routeData.inputToken.symbol}
+          />
         </div>
-        <Typography size="xs">$120.20</Typography>
+        <Typography size="xs">
+          ${Number(props.routeData.routeSummary.amountInUsd).toLocaleString()}
+        </Typography>
       </div>
 
       <div className="flex flex-col gap-4">
@@ -31,18 +48,48 @@ export const SwapModal = (props: SwapModalProps) => {
         </Typography>
         <div className="flex items-center justify-between gap-3">
           <Typography secondary size="xl">
-            109.925 USDC
+            {Number(
+              formatStringUnits(
+                props.routeData.routeSummary.amountOut,
+                props.routeData.outputToken.decimals
+              )
+            ).toLocaleString()}{" "}
+            {props.routeData.outputToken.symbol}
           </Typography>
-          <Image src="/img/tokens/usdc.png" width={36} height={36} alt="" />
+          <Image
+            src={props.routeData.outputToken.icon}
+            width={36}
+            height={36}
+            alt={props.routeData.outputToken.symbol}
+          />
         </div>
-        <Typography size="xs">$109.97</Typography>
+        <Typography size="xs">
+          ${Number(props.routeData.routeSummary.amountOutUsd).toLocaleString()}
+        </Typography>
       </div>
 
       <Divider className="border-blue-700" />
 
       <div className="flex items-center justify-between gap-3">
         <Typography size="xs">Rate</Typography>
-        <Typography size="xs">1 USDC = 0.0027 ETH ($1.00)</Typography>
+        <Typography size="xs">
+          1 {props.routeData.inputToken.symbol} ={" "}
+          {(
+            Number(
+              formatStringUnits(
+                props.routeData.routeSummary.amountOut,
+                props.routeData.outputToken.decimals
+              )
+            ) /
+            Number(
+              formatStringUnits(
+                props.routeData.routeSummary.amountIn,
+                props.routeData.inputToken.decimals
+              )
+            )
+          ).toLocaleString()}{" "}
+          {props.routeData.outputToken.symbol} ($1.00)
+        </Typography>
       </div>
       <div className="flex justify-between w-full">
         <Typography size="xs">Route</Typography>
@@ -50,9 +97,17 @@ export const SwapModal = (props: SwapModalProps) => {
         <Image src="/img/icons/arrow_down.svg" width={16} height={16} alt="" />
       </div>
       <div className="flex items-center justify-between gap-3">
-        <Typography size="xs">Total Fee: 0.25%</Typography>
+        <Typography size="xs">
+          Total Fee:{" "}
+          {props.routeData.routeSummary.extraFee.chargeFeeBy == ""
+            ? "0.0%"
+            : `${props.routeData.routeSummary.extraFee.chargeFeeBy}%`}
+        </Typography>
         <Typography size="xs" fw={700}>
-          {"<"}$0.01
+          {"<"}$
+          {Number(
+            props.routeData.routeSummary.extraFee.feeAmount
+          ).toLocaleString()}
         </Typography>
       </div>
 
@@ -61,19 +116,21 @@ export const SwapModal = (props: SwapModalProps) => {
         <div className="flex items-center gap-1">
           <Image src="/img/icons/fee.svg" width={14} height={14} alt="" />
           <Typography size="xs" fw={700}>
-            $5.34
+            ${Number(props.routeData.routeSummary.gasUsd).toLocaleString()}
           </Typography>
         </div>
       </div>
 
       <Button
         className="w-full"
-        onClick={() =>
+        onClick={() => {
+          // @TODO: move to index
           props.setSwapState((prevState: SwapStateProps) => ({
             ...prevState,
             approved: true,
-          }))
-        }
+          }));
+          props.onApprove();
+        }}
         disabled={props.swapState.approved}
       >
         <Typography secondary size="md" fw={700} tt="uppercase">
@@ -83,7 +140,7 @@ export const SwapModal = (props: SwapModalProps) => {
 
       <Button
         className="w-full"
-        onClick={props.onSwap}
+        onClick={props.onConfirm}
         disabled={!props.swapState.approved}
       >
         <Typography secondary size="md" fw={700} tt="uppercase">

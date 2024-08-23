@@ -7,7 +7,7 @@ import { TOKEN_LIST } from "~/constants/tokens";
 import { dogica } from "~/fonts";
 import api from "~/api/swap";
 import { Chain } from "~/constants/chains";
-import { RouterMessageType, RouteSummary } from "~/models";
+import { RouteData, RouterMessageType, RouteSummary } from "~/models";
 import { formatUnits } from "viem";
 import { formatStringUnits } from "~/utils";
 import { useAccount } from "wagmi";
@@ -26,7 +26,7 @@ let outTokenOptions = TOKEN_LIST.map((token, index) => ({
 }));
 
 type SwapHomeProps = {
-  onSwap: () => void;
+  onSwap: (routeData: RouteData) => void;
   onSetting: () => void;
 };
 
@@ -88,7 +88,7 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
       icon: token.icon,
       index: index,
     }));
-    outTokenOptions.splice(inputTokenIndex, 1);
+    outTokenOptions.splice(inTokenOptions[inputTokenIndex].index, 1);
     setOutputTokenIndex(outTokenOptions[0].index);
   }, [inputTokenIndex]);
   return (
@@ -128,7 +128,7 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
               onChange={(value) => setInputValue(value as number)}
             />
             <Dropdown
-              defaultValue={inTokenOptions[inputTokenIndex].value}
+              defaultValue={TOKEN_LIST[inputTokenIndex].symbol}
               options={inTokenOptions}
               className="md:col-span-3 col-span-6"
               setIndexValue={setInputTokenIndex}
@@ -188,7 +188,8 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
             </Typography>
 
             <Dropdown
-              value={outTokenOptions[0].value}
+              defaultValue={TOKEN_LIST[outputTokenIndex].symbol}
+              value={TOKEN_LIST[outputTokenIndex].symbol}
               options={outTokenOptions}
               className="md:col-span-3 col-span-6"
               setIndexValue={setOutputTokenIndex}
@@ -196,12 +197,28 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
           </div>
 
           <Typography size="xs" ta="center">
-            $109.97 (-0.21%)
+          $
+              {routeInfo
+                ? Number(routeInfo.amountOutUsd).toLocaleString()
+                : "0.00"}{" "}
+                (-{routeInfo
+                  ? (((1-(Number(routeInfo.amountOutUsd)/Number(routeInfo.amountInUsd)))*100)).toLocaleString()
+                  : "0.00"}%)
           </Typography>
         </Card>
       </div>
 
-      <Button className="w-full" onClick={onSwap}>
+      <Button
+        className="w-full"
+        disabled={state.loading || !routeInfo}
+        onClick={() =>
+          onSwap({
+            routeSummary: routeInfo!,
+            inputToken: TOKEN_LIST[inputTokenIndex],
+            outputToken: TOKEN_LIST[outputTokenIndex],
+          })
+        }
+      >
         <Typography secondary size="sm" tt="uppercase" fw={600}>
           SWAP
         </Typography>
