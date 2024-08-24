@@ -17,13 +17,22 @@ import {
   useVultBalance,
   useWeweBalance,
 } from "~/hooks";
+import MergeOperation from "./MergeOperation";
+import RedeemOperation from "./RedeemOperation";
+import BridgeOperation from "./BridgeOperation";
 
-export const MergeHome = () => {
+type MergeHomeProps = {
+  onConversion: () => void
+}
+
+export const MergeHome = (props: MergeHomeProps) => {
   const { address } = useAccount();
   const { data: balanceWewe } = useTokenBalance(
     address,
     CONTRACT_ADDRESSES.wewe
   );
+
+  const [operations, setOperations] = useState<number>(0)
   const [amount, setAmount] = useState<string | number>("");
   const amountValue = parseEther(String(amount) ?? 0);
   const { data: quoteAmount, isFetching } = useQuoteVult(amountValue);
@@ -90,14 +99,27 @@ export const MergeHome = () => {
               <Typography
                 size="sm"
                 tt="uppercase"
-                className="pt-4 text-center md:text-start"
+                className="text-center md:text-start"
               >
                 Merge your coins
               </Typography>
             </div>
           </Card>
 
-          <Card className="flex flex-col gap-5">
+          <Card>
+            <div className="w-full bg-[#0F0F0F] pool_nav overflow-x-scroll pt-4">
+              <div className=" flex items-center h-[3rem] gap-3 justify-evenly  min-w-[30rem] ">
+                <div onClick={() => setOperations(0)} className={`${operations === 0 && "text_green"}`}>MERGE</div>
+                <div onClick={() => setOperations(1)} className={`${operations === 1 && "text_green"}`}>REDEEM</div>
+                <div onClick={() => setOperations(2)} className={`${operations === 2 && "text_green"}`}>BRIDGE</div>
+              </div>
+            </div>
+          </Card>
+
+          {operations === 0 && <MergeOperation/> }
+          {operations === 1 && <RedeemOperation />}
+          {operations === 2 && <BridgeOperation onConversion={props.onConversion} />}
+          {/* <Card className="flex flex-col gap-5">
             <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
               <div className="flex-1 flex items-center gap-3">
                 <Image
@@ -202,7 +224,9 @@ export const MergeHome = () => {
                 </div>
               </div>
             </div>
-          </Card>
+          </Card> */}
+
+          {/* {<MergeOperation />} */}
 
           <Card>
             <Typography size="lg">MERGE your WEWE into VULT</Typography>

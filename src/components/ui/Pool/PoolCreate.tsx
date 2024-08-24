@@ -5,14 +5,15 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { DUMMY_POOL_OPTIONS } from './dummy';
+import { Input } from '@mantine/core';
 
-type NewPoolAddProps = {
-  // onNext: () => void;
+type NewPoolCreateProps = {
+  onNext: () => void;
   // onAdd: () => void;
-  onZap: () => void;
+  onBack: () => void;
 };
 
-const NewPoolAdd = ({ onZap }: NewPoolAddProps) => {
+const PoolCreate = ({ onNext, onBack }: NewPoolCreateProps) => {
 
     const [poolRange, setPoolRange] = useState<number>(0);
 
@@ -24,9 +25,9 @@ const NewPoolAdd = ({ onZap }: NewPoolAddProps) => {
   return (
     <>
      <div className="flex items-center justify-between gap-4 w-full p-6 bg_rich_dark">
-        <button >
-          <Typography secondary size="xl">
-            {"<"} POOL TYPES
+        <button onClick={onBack}>
+          <Typography secondary size="sm">
+            {"<"}  CREATE POOL
           </Typography>
         </button>
         <div className="flex gap-4">
@@ -35,7 +36,7 @@ const NewPoolAdd = ({ onZap }: NewPoolAddProps) => {
               MIGRATE
             </Typography>
           </Button>
-          <Button >
+          <Button disabled>
             <Typography secondary size="xs" fw={700}>
               NEW POOL
             </Typography>
@@ -44,9 +45,9 @@ const NewPoolAdd = ({ onZap }: NewPoolAddProps) => {
       </div>
       <Card>
         
-          <Typography size="lg" secondary className='py-3'>SELECT POOL AND RANGE</Typography>
+          <Typography size="lg" secondary className='py-3'>CREATE POOL AND RANGE</Typography>
         <div className="flex flex-col gap-5">
-          <div className="bg_dark flex items-center justify-between gap-3 p-4">
+          <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
           <div className="flex md:flex-row flex-col gap-4 justify-between w-full">
           <div className="flex flex-col md:w-1/3  gap-5">
             <Dropdown
@@ -55,9 +56,7 @@ const NewPoolAdd = ({ onZap }: NewPoolAddProps) => {
               className="w-full"
             />
           </div>
-          <Typography secondary size="xl"className='pt-2'>
-            {"<"}
-          </Typography>
+         
           <div className="flex flex-col md:w-1/3   gap-5">   
             <Dropdown
               defaultValue="BASE"
@@ -68,30 +67,55 @@ const NewPoolAdd = ({ onZap }: NewPoolAddProps) => {
         </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-3 pt-3">
+        <div className="bg_light_dark flex items-center justify-between mt-4 gap-3 p-4">
+          <div className="flex md:flex-row flex-col items-center gap-4 justify-between w-full">
+           <Input />
+         <Typography size='xs'>
+            AMOUNT
+         </Typography> 
+           <Input />
+        </div>
+          </div>
+          <Typography size='sm' className='text-center py-4'>
+            SELECT FEE TYPE
+          </Typography>
+        <div className="grid grid-cols-3 gap-3 p-3  bg_light_dark">
           <button
-            className={`bg_stroke px-3 py-2 ${poolRange === 0 && "selected"}`}
+            className={`bg_gray px-3 py-2 ${poolRange === 0 && "border_turq"}`}
             onClick={() => setPoolRange(0)}
           >
-            <Typography size="sm">WIDE 170%</Typography>
+            <Typography size="sm">EXOTIC 1%</Typography>
           </button>
           <button
-            className={`bg_dark px-3 py-2 ${poolRange === 1 && "selected"}`}
+            className={`bg_gray px-3 py-2 ${poolRange === 1 && "border_turq"}`}
             onClick={() => setPoolRange(1)}
           >
-            <Typography size="sm">MID 100%</Typography>
+            <Typography size="sm">BLUE CHIP 0.3%</Typography>
           </button>
           <button
-            className={`bg_dark px-3 py-2 ${poolRange === 2 && "selected"}`}
+            className={`bg_gray px-3 py-2 ${poolRange === 2 && "border_turq"}`}
             onClick={() => setPoolRange(2)}
           >
-            <Typography size="sm">NARROW 40%</Typography>
+            <Typography size="sm">STABLES 0.05%</Typography>
           </button>
         </div>
-
+        <div className='grid grid-cols-3 text-center mt-5 mb-3'>
+        <Typography size='xs'>RANGE</Typography>
+        <Typography size='xs'>MIN RATE</Typography>
+        <Typography size='xs'>MAX RATE</Typography>
+        </div>
+        <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
+          <div className="flex items-center gap-2 justify-between w-full">
+          <Typography className='w-[33%] text-sm lg:text-lg'>
+            Current Rate: 0,000012
+         </Typography> 
+           <Input className='w-[33%]' value={"0,0001"} />
+           <Input className='w-[33%]' value={"0,0002"} />
+        </div>
+        </div>
         <div className='py-5'>
-        <Button onClick={onZap} className='w-full'>
-            <Typography secondary size="sm">ADD</Typography>
+        <Button onClick={onNext} className='w-full'>
+            <Typography secondary size="sm">CREATE POOL</Typography>
           </Button>
         </div>
       </Card>
@@ -115,4 +139,4 @@ const NewPoolAdd = ({ onZap }: NewPoolAddProps) => {
   )
 }
 
-export default NewPoolAdd
+export default PoolCreate
