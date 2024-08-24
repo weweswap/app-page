@@ -6,13 +6,17 @@ import { SwapModal } from "./SwapModal";
 import { SwapCompleteModal } from "./SwapCompleteModal";
 import { SwapSettingModal } from "./SwapSettingModal";
 import { useState } from "react";
-import { RouteData, RouteSummary } from "~/models";
-
+import { RouteData, RouterMessageType, RouteSummary } from "~/models";
+import { useAccount } from "wagmi";
+import api from "~/api/swap";
+import { Chain } from "~/constants";
 export type SwapStateProps = {
   approved: boolean;
+  loading?: boolean;
 };
 
 export const Swap = () => {
+  const { address } = useAccount();
   const [openedSwapModal, { open: openSwapModal, close: closeSwapModal }] =
     useDisclosure(false);
   const [
@@ -28,7 +32,22 @@ export const Swap = () => {
     setRouteData(routeData);
     openSwapModal();
   };
-  const handleApprove = () => {};
+  const handleApprove = () => {
+    setSwapState({ ...swapState, loading: true });
+    api.router
+      .build(Chain.BASE, routeData!.routeSummary, address!, swapSlippage)
+      .then((res) => {
+        setSwapState({ ...swapState, loading: false });
+        const data = res.data;
+        if (data.message == RouterMessageType.Succussful) {
+          setSwapState({ ...swapState, approved: true });
+        }
+      })
+      .catch((err) => {
+        console.log("err:", err);
+        setSwapState({ ...swapState, approved: false, loading: false });
+      });
+  };
   const handleConfirm = () => {};
   const [swapSlippage, setSwapSlippage] = useState<number>(1);
   const [zapSlippage, setZapSlippage] = useState<number>(1);

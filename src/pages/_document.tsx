@@ -8,7 +8,6 @@ const Document = () => {
         <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/fav.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/fav.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/fav.png" />
-        <link rel="manifest" href="/site.webmanifest" />
         <meta name="msapplication-TileColor" content="#000" />
         <meta name="theme-color" content="#000" />
         <title>WEWE Swap</title>

@@ -7,7 +7,12 @@ import { TOKEN_LIST } from "~/constants/tokens";
 import { dogica } from "~/fonts";
 import api from "~/api/swap";
 import { Chain } from "~/constants/chains";
-import { RouteData, RouterMessageType, RouteSummary } from "~/models";
+import {
+  RouteData,
+  RouterMessageType,
+  RouteSummary,
+  RoutingData,
+} from "~/models";
 import { formatUnits } from "viem";
 import { formatStringUnits } from "~/utils";
 import { useAccount } from "wagmi";
@@ -73,7 +78,7 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
       .then((res) => {
         setState({ ...state, loading: false });
         res.data.message == RouterMessageType.Succussful
-          ? setRouteInfo(res.data.data.routeSummary)
+          ? setRouteInfo((res.data.data as RoutingData).routeSummary)
           : console.log(res.data.message);
       })
       .catch((err) => {
@@ -197,13 +202,20 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
           </div>
 
           <Typography size="xs" ta="center">
-          $
-              {routeInfo
-                ? Number(routeInfo.amountOutUsd).toLocaleString()
-                : "0.00"}{" "}
-                (-{routeInfo
-                  ? (((1-(Number(routeInfo.amountOutUsd)/Number(routeInfo.amountInUsd)))*100)).toLocaleString()
-                  : "0.00"}%)
+            $
+            {routeInfo
+              ? Number(routeInfo.amountOutUsd).toLocaleString()
+              : "0.00"}{" "}
+            (-
+            {routeInfo
+              ? (
+                  (1 -
+                    Number(routeInfo.amountOutUsd) /
+                      Number(routeInfo.amountInUsd)) *
+                  100
+                ).toLocaleString()
+              : "0.00"}
+            %)
           </Typography>
         </Card>
       </div>

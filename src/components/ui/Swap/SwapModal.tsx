@@ -124,14 +124,9 @@ export const SwapModal = (props: SwapModalProps) => {
       <Button
         className="w-full"
         onClick={() => {
-          // @TODO: move to index
-          props.setSwapState((prevState: SwapStateProps) => ({
-            ...prevState,
-            approved: true,
-          }));
           props.onApprove();
         }}
-        disabled={props.swapState.approved}
+        disabled={props.swapState.approved || props.swapState.loading}
       >
         <Typography secondary size="md" fw={700} tt="uppercase">
           approve swap
@@ -141,7 +136,7 @@ export const SwapModal = (props: SwapModalProps) => {
       <Button
         className="w-full"
         onClick={props.onConfirm}
-        disabled={!props.swapState.approved}
+        disabled={!props.swapState.approved || props.swapState.loading}
       >
         <Typography secondary size="md" fw={700} tt="uppercase">
           Confirm Swap

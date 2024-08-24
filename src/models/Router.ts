@@ -13,11 +13,11 @@ export enum RouterMessageType {
 export interface RouterApiResponse {
   code: number;
   message: string;
-  data: Data;
-  requestId: string;
+  data: RoutingData | BuildData;
+  requestId?: string;
 }
 
-export interface Data {
+export interface RoutingData {
   routeSummary: RouteSummary;
   routerAddress: string;
 }
@@ -61,4 +61,22 @@ export interface Route {
 
 export interface PoolExtra {
   blockNumber: number;
+}
+
+export interface OutputChange {
+  amount: string;
+  percent: number;
+  level: number;
+}
+
+export interface BuildData {
+  amountIn: string;
+  amountInUsd: string;
+  amountOut: string;
+  amountOutUsd: string;
+  gas: string;
+  gasUsd: string;
+  outputChange: OutputChange;
+  data: string;
+  routerAddress: string;
 }

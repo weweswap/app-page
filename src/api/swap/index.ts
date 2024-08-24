@@ -38,7 +38,7 @@ export default {
     build: async (
       chain: Chain,
       routeSummary: RouteSummary,
-      address: string,
+      address: `0x${string}`,
       slippage: number
     ) => {
       const requestBody = {
@@ -47,9 +47,8 @@ export default {
         recipient: address,
         slippageTolerance: slippage,
       };
-      console.log("requestBody:", requestBody);
       return await api.post<RouterApiResponse>(
-        `/${chain}/api/v1/route/build`,
+        `/${chain.toLocaleLowerCase()}/api/v1/route/build`,
         JSON.stringify(requestBody)
       );
     },
