@@ -42,13 +42,15 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
     loading: false,
   });
   const [inputValue, setInputValue] = useState<number>(0);
-  const [routeInfo, setRouteInfo] = useState<RouteSummary>();
+  const [routeInfo, setRouteInfo] = useState<RoutingData>();
   const [inputTokenIndex, setInputTokenIndex] = useState<number>(0);
   const [outputTokenIndex, setOutputTokenIndex] = useState<number>(0);
-  let { data: inputBalance } = useTokenBalance(
+  
+  let { data: inputBalance, isFetching: isFetchingBalance } = useTokenBalance(
     address,
     TOKEN_LIST[inTokenOptions[inputTokenIndex].index].address
   );
+
   const useDebounce = (value: number, delay: number) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
     useEffect(() => {
@@ -78,7 +80,7 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
       .then((res) => {
         setState({ ...state, loading: false });
         res.data.message == RouterMessageType.Succussful
-          ? setRouteInfo((res.data.data as RoutingData).routeSummary)
+          ? setRouteInfo(res.data.data as RoutingData)
           : console.log(res.data.message);
       })
       .catch((err) => {
@@ -96,6 +98,7 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
     outTokenOptions.splice(inTokenOptions[inputTokenIndex].index, 1);
     setOutputTokenIndex(outTokenOptions[0].index);
   }, [inputTokenIndex]);
+
   return (
     <>
       <div className="w-full flex items-center justify-between">
@@ -144,7 +147,7 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
             <Typography size="xs">
               $
               {routeInfo
-                ? Number(routeInfo.amountInUsd).toLocaleString()
+                ? Number(routeInfo.routeSummary.amountInUsd).toLocaleString()
                 : "0.00"}
             </Typography>
             <div className="flex items-center gap-1">
@@ -155,7 +158,10 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
                 alt=""
               />
               <Typography size="xs">
-                {inputBalance.toLocaleString()}{" "}
+                {formatUnits(
+                  inputBalance,
+                  TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+                ).toLocaleString()}{" "}
                 {inTokenOptions[inputTokenIndex].value}
               </Typography>
             </div>
@@ -186,7 +192,7 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
             >
               {routeInfo
                 ? formatStringUnits(
-                    routeInfo.amountOut,
+                    routeInfo.routeSummary.amountOut,
                     TOKEN_LIST[outputTokenIndex].decimals
                   )
                 : "0.0"}
@@ -204,14 +210,14 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
           <Typography size="xs" ta="center">
             $
             {routeInfo
-              ? Number(routeInfo.amountOutUsd).toLocaleString()
+              ? Number(routeInfo.routeSummary.amountOutUsd).toLocaleString()
               : "0.00"}{" "}
             (-
             {routeInfo
               ? (
                   (1 -
-                    Number(routeInfo.amountOutUsd) /
-                      Number(routeInfo.amountInUsd)) *
+                    Number(routeInfo.routeSummary.amountOutUsd) /
+                      Number(routeInfo.routeSummary.amountInUsd)) *
                   100
                 ).toLocaleString()
               : "0.00"}
@@ -225,9 +231,10 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
         disabled={state.loading || !routeInfo}
         onClick={() =>
           onSwap({
-            routeSummary: routeInfo!,
+            routeSummary: routeInfo!.routeSummary,
             inputToken: TOKEN_LIST[inputTokenIndex],
             outputToken: TOKEN_LIST[outputTokenIndex],
+            routerAddress: routeInfo!.routerAddress,
           })
         }
       >
@@ -244,19 +251,19 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
               {(
                 Number(
                   formatStringUnits(
-                    routeInfo.amountOut,
+                    routeInfo.routeSummary.amountOut,
                     TOKEN_LIST[outputTokenIndex].decimals
                   )
                 ) /
                 Number(
                   formatStringUnits(
-                    routeInfo.amountIn,
+                    routeInfo.routeSummary.amountIn,
                     TOKEN_LIST[inputTokenIndex].decimals
                   )
                 )
               ).toLocaleString()}{" "}
               {TOKEN_LIST[outputTokenIndex].symbol} ($
-              {(Number(routeInfo.amountInUsd) / inputValue)
+              {(Number(routeInfo.routeSummary.amountInUsd) / inputValue)
                 .toFixed(5)
                 .toLocaleString()}
               )
@@ -277,7 +284,7 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
             <div className="flex items-center gap-1">
               <Image src="/img/icons/fee.svg" width={14} height={14} alt="" />
               <Typography size="xs" fw={700}>
-                ${Number(routeInfo.gasUsd).toLocaleString()}
+                ${Number(routeInfo.routeSummary.gasUsd).toLocaleString()}
               </Typography>
               <Image
                 src="/img/icons/arrow_down.svg"
@@ -290,13 +297,16 @@ export const SwapHome = ({ onSwap, onSetting }: SwapHomeProps) => {
           <div className="flex justify-between w-full">
             <Typography size="xs">
               Total Fee:{" "}
-              {routeInfo.extraFee.chargeFeeBy == ""
+              {routeInfo.routeSummary.extraFee.chargeFeeBy == ""
                 ? "0.0%"
-                : `${routeInfo.extraFee.chargeFeeBy}%`}
+                : `${routeInfo.routeSummary.extraFee.chargeFeeBy}%`}
             </Typography>
             <div className="flex items-center gap-1">
               <Typography size="xs" fw={700}>
-                ${Number(routeInfo.extraFee.feeAmount).toLocaleString()}
+                $
+                {Number(
+                  routeInfo.routeSummary.extraFee.feeAmount
+                ).toLocaleString()}
               </Typography>
               <Image
                 src="/img/icons/arrow_down.svg"

@@ -2,6 +2,7 @@ import { TokenItem } from "./Token";
 
 export interface RouteData {
   routeSummary: RouteSummary;
+  routerAddress: `0x${string}`;
   inputToken: TokenItem;
   outputToken: TokenItem;
 }
@@ -19,7 +20,7 @@ export interface RouterApiResponse {
 
 export interface RoutingData {
   routeSummary: RouteSummary;
-  routerAddress: string;
+  routerAddress:  `0x${string}`;
 }
 
 export interface RouteSummary {
@@ -77,6 +78,6 @@ export interface BuildData {
   gas: string;
   gasUsd: string;
   outputChange: OutputChange;
-  data: string;
+  data: `0x${string}`;
   routerAddress: string;
 }

@@ -44,7 +44,7 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
         </Typography>
         <Button
           className="bg_turq col-span-2"
-          onClick={() => props.setSwapSlippage(100)}
+          onClick={() => props.setSwapSlippage(1)}
         >
           <Typography
             secondary
@@ -58,7 +58,7 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
         </Button>
         <Button
           className="bg_turq col-span-2"
-          onClick={() => props.setSwapSlippage(200)}
+          onClick={() => props.setSwapSlippage(2)}
         >
           <Typography
             secondary
@@ -81,7 +81,7 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
             }}
             defaultValue={props.swapSlippage}
             value={props.swapSlippage}
-            onChange={(value) => props.setSwapSlippage((value as number) * 100)}
+            onChange={(value) => props.setSwapSlippage(value as number)}
             hideControls
             max={19.99}
           />

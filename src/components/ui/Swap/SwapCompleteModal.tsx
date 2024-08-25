@@ -3,9 +3,13 @@ import Image from "next/image";
 import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
 import { Typography } from "~/components/common/Typography";
 import { Button } from "~/components/common/Button";
+import { BuildData, TokenItem } from "~/models";
 
 type SwapCompleteProps = {
   onClose: () => void;
+  onDetails: () => void;
+  data:BuildData
+  outputToken:TokenItem
 } & ModalRootProps;
 
 export const SwapCompleteModal = (props: SwapCompleteProps) => {
@@ -35,13 +39,13 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
           </Typography>
 
           <div className="flex items-center justify-center gap-2">
-            <img src="/img/tokens/usdc.png" alt="USDC" />
+            <img src={props.outputToken.icon} alt={props.outputToken.symbol} />
             <div className="flex flex-col">
               <Typography size="md" fw={700}>
-                $109.92
+                ${props.data.amountOutUsd}
               </Typography>
               <Typography size="xs" className="text_light_gray">
-                US$ 0.00 estimated fees
+                US$ {props.data.gasUsd} estimated fees
               </Typography>
             </div>
           </div>
@@ -52,7 +56,7 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
               </Typography>
             </Button>
 
-            <Button className="w-full opacity-60" onClick={props.onClose}>
+            <Button className="w-full" onClick={props.onDetails}>
               <Typography secondary size="md" fw={700} tt="uppercase">
                 view details
               </Typography>

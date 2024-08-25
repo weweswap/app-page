@@ -27,7 +27,7 @@ export const SwapModal = (props: SwapModalProps) => {
                 props.routeData.routeSummary.amountIn,
                 props.routeData.inputToken.decimals
               )
-            ).toLocaleString()}{" "}
+            )}{" "}
             {props.routeData.inputToken.symbol}
           </Typography>
           <Image
@@ -136,10 +136,10 @@ export const SwapModal = (props: SwapModalProps) => {
       <Button
         className="w-full"
         onClick={props.onConfirm}
-        disabled={!props.swapState.approved || props.swapState.loading}
+        disabled={!props.swapState.approved || props.swapState.loading || props.swapState.pendingSwap}
       >
         <Typography secondary size="md" fw={700} tt="uppercase">
-          Confirm Swap
+          {props.swapState.pendingSwap ? "Pending wallet confirm" :  " Confirm Swap"}
         </Typography>
       </Button>
     </Modal>

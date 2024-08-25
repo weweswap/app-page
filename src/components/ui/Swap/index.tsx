@@ -5,18 +5,45 @@ import { SwapHome } from "./SwapHome";
 import { SwapModal } from "./SwapModal";
 import { SwapCompleteModal } from "./SwapCompleteModal";
 import { SwapSettingModal } from "./SwapSettingModal";
-import { useState } from "react";
-import { RouteData, RouterMessageType, RouteSummary } from "~/models";
+import { useEffect, useState } from "react";
+import { BuildData, RouteData, RouterMessageType } from "~/models";
+
+import {
+  useSendTransaction,
+  useSignMessage,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { useAccount } from "wagmi";
 import api from "~/api/swap";
 import { Chain } from "~/constants";
 export type SwapStateProps = {
   approved: boolean;
   loading?: boolean;
+  pendingSwap?: boolean;
+  confirmingSwap?: boolean;
+  swapDone?: boolean;
 };
 
 export const Swap = () => {
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
+
+  const {
+    data: hash,
+    error,
+    isPending,
+    sendTransaction,
+  } = useSendTransaction();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+  const [swapSlippage, setSwapSlippage] = useState<number>(100);
+  const [zapSlippage, setZapSlippage] = useState<number>(100);
+  const [routeData, setRouteData] = useState<RouteData>();
+  const [encodedData, setEncodedData] = useState<BuildData>();
+  const [swapState, setSwapState] = useState<SwapStateProps>({
+    approved: false,
+  });
   const [openedSwapModal, { open: openSwapModal, close: closeSwapModal }] =
     useDisclosure(false);
   const [
@@ -30,9 +57,10 @@ export const Swap = () => {
 
   const handleSwap = (routeData: RouteData) => {
     setRouteData(routeData);
+    setSwapState({ approved: false });
     openSwapModal();
   };
-  const handleApprove = () => {
+  const handleApprove = async () => {
     setSwapState({ ...swapState, loading: true });
     api.router
       .build(Chain.BASE, routeData!.routeSummary, address!, swapSlippage)
@@ -41,20 +69,55 @@ export const Swap = () => {
         const data = res.data;
         if (data.message == RouterMessageType.Succussful) {
           setSwapState({ ...swapState, approved: true });
+          setEncodedData(data.data as BuildData);
+        } else {
+          setSwapState({ ...swapState, approved: false });
+          setEncodedData(undefined);
         }
       })
       .catch((err) => {
         console.log("err:", err);
         setSwapState({ ...swapState, approved: false, loading: false });
+        setEncodedData(undefined);
       });
   };
-  const handleConfirm = () => {};
-  const [swapSlippage, setSwapSlippage] = useState<number>(1);
-  const [zapSlippage, setZapSlippage] = useState<number>(1);
-  const [routeData, setRouteData] = useState<RouteData>();
-  const [swapState, setSwapState] = useState<SwapStateProps>({
-    approved: false,
-  });
+
+  const handleConfirm = async () => {
+    if (!encodedData) return;
+    console.log("sign");
+    console.log({
+      to: routeData?.routerAddress,
+      value: BigInt(encodedData.amountIn),
+      data: encodedData.data,
+    });
+
+    sendTransaction({
+      to: routeData?.routerAddress,
+      value: BigInt(encodedData.amountIn),
+      data: encodedData.data,
+    });
+  };
+  useEffect(() => {
+    setSwapState({
+      ...swapState,
+      pendingSwap: isPending,
+      confirmingSwap: isConfirming,
+      swapDone: isConfirmed,
+    });
+    if (isConfirmed) {
+      closeSwapModal();
+      openSwapCompleteModal();
+    }
+    console.log(swapState);
+  }, [isPending, isConfirming, isConfirmed]);
+
+  const handleDetails = () => {
+    window.open(
+      `https://basescan.org/tx/${hash}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
   return (
     <>
       <SwapHome onSwap={handleSwap} onSetting={openSwapSettingModal} />
@@ -70,8 +133,11 @@ export const Swap = () => {
             setSwapState={setSwapState}
           />
           <SwapCompleteModal
+            onDetails={handleDetails}
             opened={openedSwapCompleteModal}
             onClose={closeSwapCompleteModal}
+            data={encodedData as BuildData}
+            outputToken={routeData.outputToken}
           />
         </>
       )}
