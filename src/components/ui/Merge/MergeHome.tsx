@@ -88,7 +88,7 @@ export const MergeHome = (props: MergeHomeProps) => {
   return (
     <>
       <div className=" gap-5 grid grid-cols-12">
-        <div className="md:col-span-8 col-span-12 md:order-1 order-2">
+        <div className="md:col-span-8 col-span-12 md:order-1 order-2 xl:w-[45rem] ">
           <Card>
             <div className="md:flex items-center justify-between gap-3 text-center md:text-start  ">
               <Typography secondary size="xl" tt="uppercase">
@@ -106,12 +106,18 @@ export const MergeHome = (props: MergeHomeProps) => {
             </div>
           </Card>
 
-          <Card>
+          <Card className="my-4">
             <div className="w-full bg-[#0F0F0F] pool_nav overflow-x-scroll pt-4">
               <div className=" flex items-center h-[3rem] gap-3 justify-evenly  min-w-[30rem] ">
-                <div onClick={() => setOperations(0)} className={`${operations === 0 && "text_green"}`}>MERGE</div>
-                <div onClick={() => setOperations(1)} className={`${operations === 1 && "text_green"}`}>REDEEM</div>
-                <div onClick={() => setOperations(2)} className={`${operations === 2 && "text_green"}`}>BRIDGE</div>
+                <div onClick={() => setOperations(0)} className={`${operations === 0 && "text_green"}`}>
+                <nav className="nav">MERGE</nav>
+                </div>
+                <div onClick={() => setOperations(1)} className={`${operations === 1 && "text_green"}`}>
+                <nav className="nav">REDEEM</nav>
+                </div>
+                <div onClick={() => setOperations(2)} className={`${operations === 2 && "text_green"}`}>
+                <nav className="nav">BRIDGE</nav>
+                </div>
               </div>
             </div>
           </Card>
@@ -119,126 +125,7 @@ export const MergeHome = (props: MergeHomeProps) => {
           {operations === 0 && <MergeOperation/> }
           {operations === 1 && <RedeemOperation />}
           {operations === 2 && <BridgeOperation onConversion={props.onConversion} />}
-          {/* <Card className="flex flex-col gap-5">
-            <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
-              <div className="flex-1 flex items-center gap-3">
-                <Image
-                  src="/img/tokens/wewe.png"
-                  width={32}
-                  height={32}
-                  alt=""
-                />
-                <Typography secondary size="md">
-                  WEWE
-                </Typography>
-              </div>
-              <Image
-                src="/img/icons/arrow_right.svg"
-                width={16}
-                height={16}
-                alt=""
-              />
-              <div className="flex-1 flex items-center justify-end gap-3">
-                <Image
-                  src="/img/tokens/vult.svg"
-                  width={32}
-                  height={32}
-                  alt=""
-                />
-                <Typography secondary size="md">
-                  VULT
-                </Typography>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
-              <div className="flex-1">
-                <div className="grid grid-cols-11 bg-gray-900 md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
-                  <div className="col-span-5 flex-1 flex items-center gap-3">
-                    <NumberInput
-                      classNames={{
-                        root: "w-full md:w-full",
-                        input: clsx(
-                          dogica.className,
-                          "bg-gray-900 md:p-4 p-0 text-white text-lg h-auto border-transparent rounded-none"
-                        ),
-                      }}
-                      hideControls
-                      value={amount}
-                      onChange={setAmount}
-                    />
-                  </div>
-                  <Image
-                    className="col-span-1"
-                    src="/img/icons/arrow_right.svg"
-                    width={16}
-                    height={16}
-                    alt=""
-                  />
-                  <div className="col-span-5 items-center flex-1  md:flex-none flex items-center justify-end gap-3">
-                    {!isFetching && (
-                      <div className="overflow-x-auto">
-                        <Typography size="xl">
-                          {Number(formatEther(quoteAmount)).toLocaleString()}{" "}
-                          VULT
-                        </Typography>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="w-full flex items-center justify-end gap-3 mt-3">
-                  <button
-                    className="bg-gray-900 px-3 py-2"
-                    onClick={() => handleSelect(4)}
-                  >
-                    <Typography size="sm">25%</Typography>
-                  </button>
-                  <button
-                    className="bg-gray-900 px-3 py-2"
-                    onClick={() => handleSelect(2)}
-                  >
-                    <Typography size="sm">50%</Typography>
-                  </button>
-                  <button
-                    className="bg-gray-900 px-3 py-2"
-                    onClick={() => handleSelect(1)}
-                  >
-                    <Typography size="sm">MAX</Typography>
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-3 w-full md:w-auto ">
-                <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
-                  <Button
-                    className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
-                    disabled={!address || !amountValue || isPending}
-                    onClick={handleMerge}
-                  >
-                    {isPending && <Loader color="white" size="sm" />}
-                    <Typography secondary size="lg" fw={700} tt="uppercase">
-                      Merge🔥
-                    </Typography>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Card> */}
-
-          {/* {<MergeOperation />} */}
-
-          <Card>
-            <Typography size="lg">MERGE your WEWE into VULT</Typography>
-
-            <ul className="list-decimal list-inside pt-3 text-sm">
-              <li>Merge your $WEWE to secure your $VULT</li>
-              <li>
-                Starting price is 1,000 $WEWE to 1 $VULT, but this will rise
-              </li>
-              <li>Your $VULT will be locked until the public launch</li>
-            </ul>
-          </Card>
+         
         </div>
         <div className="md:col-span-4 col-span-12 md:order-2 order-1">
           <Card className="text-center h-full relative">
@@ -252,6 +139,7 @@ export const MergeHome = (props: MergeHomeProps) => {
               <span className="text_yellow leading-10">
                 TOTAL $WEWE <br /> LOCKED: <br />
               </span>
+              
               {!isWeweBalanceFetching && (
                 <>
                   {Math.trunc(

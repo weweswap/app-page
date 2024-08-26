@@ -51,7 +51,7 @@ const PoolZapIn = ({ onZap, onBack }: PoolZapInProps) => {
           <div className="flex md:flex-row flex-col gap-4 justify-between w-full">
           <div className="flex flex-col md:w-1/3  gap-5">
             <Dropdown
-              defaultValue="BASE"
+              defaultValue="USDC"
               options={poolOptions}
               className="w-full"
             />

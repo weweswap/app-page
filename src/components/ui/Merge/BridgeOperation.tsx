@@ -23,6 +23,7 @@ const chainOptions = CHAIN_LIST.map((chain) => ({
 
 const BridgeOperation = (props: BridgeOperationProps) => {
   return (
+    <div className='flex flex-col gap-4'>
     <Card className="w-full flex flex-col">
         <div className="flex md:flex-row flex-col gap-4 justify-between ">
           <div className="flex flex-col md:w-1/2 w-full gap-5">
@@ -152,6 +153,18 @@ const BridgeOperation = (props: BridgeOperationProps) => {
           </Typography>
         </Button>
       </Card>
+      <Card>
+            <Typography size="lg">MERGE your WEWE into VULT</Typography>
+
+            <ul className="list-decimal list-inside pt-3 text-sm">
+              <li>Merge your $WEWE to secure your $VULT</li>
+              <li>
+                Starting price is 1,000 $WEWE to 1 $VULT, but this will rise
+              </li>
+              <li>Your $VULT will be locked until the public launch</li>
+            </ul>
+          </Card>
+      </div>
   )
 }
 

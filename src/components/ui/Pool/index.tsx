@@ -29,7 +29,7 @@ export const Pool = () => {
     openZapModal()
   }
 
-
+  
   return (
     <>
       {step === 0 && <PoolHome onZap={handleZapModal} onNext={() => setStep(1)} onAdd={openAdd} />}

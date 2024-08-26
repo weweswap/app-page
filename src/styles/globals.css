@@ -39,7 +39,7 @@ body {
 
 body:before {
   content: "";
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -49,6 +49,8 @@ body:before {
   background-image: url("/img/background.svg");
   background-repeat: space;
   background-position-x: center;
+  background-position: fixed;
+  z-index: -2;
 }
 
 .bg_violet {
@@ -147,7 +149,7 @@ input[type='range']::-ms-thumb {
   border: 1px solid #0439c7;
 }
 
-.pool_nav > div {
+.nav{
   cursor: pointer;
 }
 

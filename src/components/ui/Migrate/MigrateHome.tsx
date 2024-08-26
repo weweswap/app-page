@@ -92,7 +92,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
           </div>
 
           <Button onClick={onMigrate}>
-            <Typography secondary size="md" fw={700}>
+            <Typography secondary size="sm" fw={700}>
               Migrate
             </Typography>
           </Button>
