@@ -46,6 +46,9 @@ export default {
         sender: address,
         recipient: address,
         slippageTolerance: slippage,
+        enableGasEstmation: true,
+        skipSimulateTx: false,
+        deadline: Math.floor(new Date().getTime() / 1000) + 1200,
       };
       return await api.post<RouterApiResponse>(
         `/${chain.toLocaleLowerCase()}/api/v1/route/build`,

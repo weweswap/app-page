@@ -4,15 +4,23 @@ import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
 import { Typography } from "~/components/common/Typography";
 import { Button } from "~/components/common/Button";
 import { BuildData, TokenItem } from "~/models";
+import { useSwapContext } from "./SwapContext";
+import { Hex } from "viem";
 
 type SwapCompleteProps = {
+  hash: Hex;
   onClose: () => void;
-  onDetails: () => void;
-  data:BuildData
-  outputToken:TokenItem
 } & ModalRootProps;
 
 export const SwapCompleteModal = (props: SwapCompleteProps) => {
+  const { encodedData, routeData } = useSwapContext();
+  const handleDetails = () => {
+    window.open(
+      `https://basescan.org/tx/${props.hash}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
   return (
     <MtModal.Root centered {...props}>
       <MtModal.Overlay />
@@ -39,13 +47,16 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
           </Typography>
 
           <div className="flex items-center justify-center gap-2">
-            <img src={props.outputToken.icon} alt={props.outputToken.symbol} />
+            <img
+              src={routeData!.outputToken.icon}
+              alt={routeData!.outputToken.symbol}
+            />
             <div className="flex flex-col">
               <Typography size="md" fw={700}>
-                ${props.data.amountOutUsd}
+                ${encodedData!.amountOutUsd}
               </Typography>
               <Typography size="xs" className="text_light_gray">
-                US$ {props.data.gasUsd} estimated fees
+                US$ {encodedData!.gasUsd} estimated fees
               </Typography>
             </div>
           </div>
@@ -56,7 +67,7 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
               </Typography>
             </Button>
 
-            <Button className="w-full" onClick={props.onDetails}>
+            <Button className="w-full" onClick={handleDetails}>
               <Typography secondary size="md" fw={700} tt="uppercase">
                 view details
               </Typography>
