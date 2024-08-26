@@ -8,15 +8,16 @@ import { DUMMY_POOL_TYPES } from "./dummy";
 type PoolDetailProps = {
   onBack: () => void;
   onAdd: () => void;
+  onZapIn: () => void;
 };
 
-export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
+export const PoolDetail = ({ onBack, onAdd, onZapIn }: PoolDetailProps) => {
   return (
     <>
       <div className="flex items-center justify-between gap-4 w-full p-6 bg_rich_dark">
         <button onClick={onBack}>
-          <Typography secondary size="xl">
-            {"<"} POOL TYPES
+          <Typography secondary size="sm">
+            {"<"} NEW POOL
           </Typography>
         </button>
         <div className="flex gap-4">
@@ -27,7 +28,7 @@ export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
           </Button>
           <Button onClick={onAdd}>
             <Typography secondary size="xs" fw={700}>
-              NEW POOL
+              CREATE POOL
             </Typography>
           </Button>
         </div>
@@ -49,9 +50,9 @@ export const PoolDetail = ({ onBack, onAdd }: PoolDetailProps) => {
               </Typography>
             </div>
           </div>
-          <Button onClick={onAdd} className="sm:px-12">
+          <Button onClick={onZapIn} className="sm:px-12">
           <Typography secondary size="sm">
-            ADD
+            ZAP-IN
           </Typography>
         </Button>
         </div>

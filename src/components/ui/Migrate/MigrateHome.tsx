@@ -12,10 +12,10 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
   return (
     <>
       <Card>
-        <Typography className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap" secondary size="lg" tt="uppercase">
-        <div>
+        <div className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap" >
+        <Typography secondary>
           MIGRATE AND EARN CHAOS!
-          </div>
+          </Typography>
           <div className="flex items-center gap-3">
           <Button>
             <Typography secondary size="xs" fw={700}>
@@ -28,7 +28,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
             </Typography>
           </Button>
           </div>
-        </Typography>
+        </div>
         <Typography size="sm" tt="uppercase" className="pt-4">
           1BN CHAOS COINS UP FOR GRABS TO EARN
         </Typography>
@@ -92,7 +92,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
           </div>
 
           <Button onClick={onMigrate}>
-            <Typography secondary size="md" fw={700}>
+            <Typography secondary size="sm" fw={700}>
               Migrate
             </Typography>
           </Button>

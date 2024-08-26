@@ -4,6 +4,7 @@ import { Button, Card, Typography } from "~/components/common";
 import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT, DUMMY_POOLS } from "./dummy";
 import ActivePoolTable from "./ActivePoolTable";
 import PoolBox from "./PoolBox";
+import Link from "next/link";
 
 type PoolHomeProps = {
   onNext: () => void;
@@ -23,18 +24,18 @@ export const PoolHome = ({ onNext, onAdd, onZap }: PoolHomeProps) => {
             POOLS
           </Typography>
         </div>
-        <Button onClick={onAdd} className="w-full md:w-auto">
+        {/* <Button onClick={onAdd} className="w-full md:w-auto">
           <Typography secondary size="xs" fw={700} tt="uppercase">
             Incentive
           </Typography>
-        </Button>
-
-        <Button onClick={onAdd} className="w-full md:w-auto">
+        </Button> */}
+        <Link href="/migrate">
+        <Button className="w-full md:w-auto">
           <Typography secondary size="xs" fw={700} tt="uppercase">
             Migrate
           </Typography>
         </Button>
-
+        </Link>
         <Button onClick={onNext} className="w-full md:w-auto">
           <Typography secondary size="xs" fw={700} tt="uppercase">
             New Pool

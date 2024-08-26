@@ -160,7 +160,7 @@ export const RedeemHome = () => {
                   </div>
                 </div>
 
-                <div className="w-full flex items-center justify-end gap-3 mt-3">
+                <div className="w-full flex items-center gap-3 mt-3">
                   <button
                     className="bg-gray-900 px-3 py-2"
                     onClick={() => handleSelect(1)}
@@ -177,11 +177,11 @@ export const RedeemHome = () => {
                     className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
                   >
                     {state == 0 ? (
-                      <Typography secondary size="lg" fw={700} tt="uppercase">
+                      <Typography secondary size="md" fw={700} tt="uppercase">
                         redeem
                       </Typography>
                     ) : (
-                      <Typography secondary size="lg" fw={700} tt="uppercase">
+                      <Typography secondary size="md" fw={700} tt="uppercase">
                         approve
                       </Typography>
                     )}
