@@ -21,7 +21,7 @@ export const TOKEN_LIST = [
 export const TO_TOKEN_LIST = [
   {
     symbol: "VULT",
-    icon: "/img/tokens/vult.base.svg",
+    icon: "/img/tokens/vult.eth.svg",
   },
 ];
 
@@ -29,6 +29,6 @@ export const TO_TOKEN_LIST = [
 export const FROM_TOKEN_LIST = [
   {
     symbol: "VULT",
-    icon: "/img/tokens/vult.eth.svg",
+    icon: "/img/tokens/vult.base.svg",
   },
 ];
