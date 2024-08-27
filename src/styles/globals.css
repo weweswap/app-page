@@ -170,3 +170,7 @@ input[type='range']::-ms-thumb {
   text-align: center;
 }
 
+.input_default {
+  border-radius: 0;
+  background-color: var(--light-dark);
+}

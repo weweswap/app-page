@@ -3,20 +3,30 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import React from 'react'
 import { Button, Card, Dropdown, Typography } from '~/components/common'
-import { TOKEN_LIST } from '~/constants'
-import { CHAIN_LIST } from '~/constants/chains'
+import { FROM_TOKEN_LIST, TO_TOKEN_LIST } from '~/constants'
+import { TO_CHAIN_LIST, FROM_CHAIN_LIST } from '~/constants/chains'
 import { verdana } from '~/fonts'
 
 type BridgeOperationProps = {
   onConversion: () => void
 }
 
-const tokenOptions = TOKEN_LIST.map((token) => ({
+const fromTokenOptions = FROM_TOKEN_LIST.map((token) => ({
   value: token.symbol,
   icon: token.icon,
 }));
 
-const chainOptions = CHAIN_LIST.map((chain) => ({
+const ToTokenOptions = TO_TOKEN_LIST.map((token) => ({
+  value: token.symbol,
+  icon: token.icon,
+}));
+
+const fromChainOptions = FROM_CHAIN_LIST.map((chain) => ({
+  value: chain.symbol,
+  icon: chain.icon,
+}));
+
+const toChainOptions = TO_CHAIN_LIST.map((chain) => ({
   value: chain.symbol,
   icon: chain.icon,
 }));
@@ -31,8 +41,9 @@ const BridgeOperation = (props: BridgeOperationProps) => {
               Token
             </Typography>
             <Dropdown
-              defaultValue="ETH"
-              options={tokenOptions}
+              value='VULT'
+              defaultValue="VULT"
+              options={fromTokenOptions}
               className="w-full "
             />
           </div>
@@ -41,8 +52,9 @@ const BridgeOperation = (props: BridgeOperationProps) => {
               From
             </Typography>
             <Dropdown
-              defaultValue="BASE"
-              options={chainOptions}
+            value='BASE'
+              defaultValue='BASE'
+              options={fromChainOptions}
               className="w-full "
             />
           </div>
@@ -61,18 +73,20 @@ const BridgeOperation = (props: BridgeOperationProps) => {
                 Token
               </Typography>
               <Dropdown
-                defaultValue="ETH"
-                options={tokenOptions}
+              value='VULT'
+                defaultValue="VULT"
+                options={ToTokenOptions}
                 className="w-full "
               />
             </div>
             <div className="flex flex-col md:w-1/2 w-full  gap-5">
               <Typography secondary size="sm" className="">
-                From
+                To
               </Typography>
               <Dropdown
-                defaultValue="BASE"
-                options={chainOptions}
+              value='ETH'
+                defaultValue="ETH"
+                options={toChainOptions}
                 className="w-full "
               />
             </div>
