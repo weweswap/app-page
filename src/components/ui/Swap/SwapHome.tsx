@@ -14,6 +14,7 @@ import { useAccount } from "wagmi";
 import { useTokenBalance } from "~/hooks";
 import { SwapButton } from "./SwapButton";
 import { useSwapContext } from "./SwapContext";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 let inTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
@@ -34,7 +35,8 @@ type SwapHomeProps = {
 export const SwapHome = ({ onSetting }: SwapHomeProps) => {
   const { initialSwapState, swapState, setSwapState, setRouteData, routeData } =
     useSwapContext();
-  const { address } = useAccount();
+  const {openConnectModal} = useConnectModal()
+  const { address, isConnected } = useAccount();
   const [inputValue, setInputValue] = useState<number>(0);
   // const [routeData, setrouteData] = useState<RoutingData>();
   const [inputTokenIndex, setInputTokenIndex] = useState<number>(0);
@@ -229,14 +231,26 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           </Typography>
         </Card>
       </div>
-      {routeData ? (
-        <SwapButton />
+      {isConnected ? (
+        <>
+          {routeData ? (
+            <SwapButton />
+          ) : (
+            <Button className="w-full" disabled>
+              <Typography secondary size="sm" tt="uppercase" fw={600}>
+                SWAP
+              </Typography>
+            </Button>
+          )}
+        </>
       ) : (
-        <Button className="w-full" disabled>
-          <Typography secondary size="sm" tt="uppercase" fw={600}>
-            SWAP
-          </Typography>
-        </Button>
+        <>
+          <Button className="w-full" onClick={openConnectModal}>
+            <Typography secondary size="sm" tt="uppercase" fw={600}>
+              CONNECT WALLET
+            </Typography>
+          </Button>
+        </>
       )}
 
       {inputValue != 0 && !swapState.loading && routeData && (

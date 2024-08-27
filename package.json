@@ -27,8 +27,7 @@
     "react-dom": "^18",
     "sass": "^1.77.8",
     "viem": "^2.13.8",
-    "wagmi": "^2.10.0",
-    "wagmi-permit": "^1.0.19"
+    "wagmi": "^2.10.0"
   },
   "devDependencies": {
     "@types/node": "22.1.0",

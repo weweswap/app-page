@@ -53,7 +53,7 @@ export const SwapModal = (props: SwapModalProps) => {
               Sell
             </Typography>
             <div className="flex items-center justify-between gap-3">
-              <Typography secondary size="xl">
+              <Typography secondary size="lg">
                 {Number(
                   formatStringUnits(
                     routeData.routeSummary.amountIn,
@@ -79,13 +79,13 @@ export const SwapModal = (props: SwapModalProps) => {
               Buy
             </Typography>
             <div className="flex items-center justify-between gap-3">
-              <Typography secondary size="xl">
+              <Typography secondary size="lg">
                 {Number(
                   formatStringUnits(
                     routeData.routeSummary.amountOut,
                     routeData.outputToken.decimals
                   )
-                ).toLocaleString()}{" "}
+                )}{" "}
                 {routeData.outputToken.symbol}
               </Typography>
               <Image
@@ -162,7 +162,10 @@ export const SwapModal = (props: SwapModalProps) => {
             className="w-full"
             onClick={handleConfirm}
             disabled={
-              !swapState.approved || swapState.loading || swapState.pendingSwap
+              !swapState.approved ||
+              swapState.loading ||
+              swapState.pendingSwap ||
+              swapState.confirmingSwap
             }
           >
             <Typography secondary size="md" fw={700} tt="uppercase">
