@@ -79,17 +79,6 @@ const RedeemOperation = () => {
   };
 
   return (
-<<<<<<< HEAD
-    <div className='flex flex-col gap-4'>
-        {/* <Card className="flex flex-col gap-5"> */}
-            <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
-              <div className="flex-1 flex items-center gap-3">
-                <Image
-                   src="/img/tokens/vult.svg"
-                  width={32}
-                  height={32}
-                  alt=""
-=======
     <div className="flex flex-col gap-4">
       <Card className="flex flex-col gap-5">
         <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
@@ -129,7 +118,6 @@ const RedeemOperation = () => {
                   hideControls
                   value={amount}
                   onChange={setAmount}
->>>>>>> main
                 />
               </div>
               <Image
@@ -149,16 +137,6 @@ const RedeemOperation = () => {
                 )}
               </div>
             </div>
-<<<<<<< HEAD
-          {/* </Card> */}
-        <Card className='h-[8rem] text-center'>
-            <Typography size="lg">Redeem your IOU VULT for $VULT</Typography>
-          </Card>
-    </div>
-  )
-}
-=======
->>>>>>> main
 
             <div className="w-full flex items-center gap-3 mt-3">
               <button
