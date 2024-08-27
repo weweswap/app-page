@@ -35,7 +35,7 @@ type SwapHomeProps = {
 export const SwapHome = ({ onSetting }: SwapHomeProps) => {
   const { initialSwapState, swapState, setSwapState, setRouteData, routeData } =
     useSwapContext();
-  const {openConnectModal} = useConnectModal()
+  const { openConnectModal } = useConnectModal();
   const { address, isConnected } = useAccount();
   const [inputValue, setInputValue] = useState<number>(0);
   // const [routeData, setrouteData] = useState<RoutingData>();
@@ -103,7 +103,28 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     }));
     outTokenOptions.splice(inTokenOptions[inputTokenIndex].index, 1);
     setOutputTokenIndex(outTokenOptions[0].index);
+    console.log("inputTokenIndex:", inputTokenIndex);
+    console.log("outputTokenIndex:", outputTokenIndex);
   }, [inputTokenIndex]);
+
+  const handleReverse = () => {
+    let inToken = inputTokenIndex;
+    if (routeData) {
+      setInputTokenIndex(outputTokenIndex);
+      setInputValue(
+        Number(
+          formatUnits(
+            BigInt(routeData.routeSummary.amountOut),
+            routeData.outputToken.decimals
+          )
+        )
+      );
+      setOutputTokenIndex(inToken);
+    } else {
+      setInputTokenIndex(outputTokenIndex);
+      setOutputTokenIndex(inToken);
+    }
+  };
 
   return (
     <>
@@ -142,7 +163,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               onChange={(value) => setInputValue(value as number)}
             />
             <Dropdown
-              defaultValue={TOKEN_LIST[inputTokenIndex].symbol}
+              value={TOKEN_LIST[inputTokenIndex].symbol}
               options={inTokenOptions}
               className="md:col-span-3 col-span-6"
               setIndexValue={setInputTokenIndex}
@@ -175,7 +196,10 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         </Card>
 
         <div className=" flex items-center justify-center">
-          <button className="absolute bg-black border border-[3px] border_turq p-3">
+          <button
+            className="absolute bg-black border border-[3px] border_turq p-3"
+            onClick={handleReverse}
+          >
             <Image
               src="/img/icons/arrow_swap1.svg"
               width={16}
