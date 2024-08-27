@@ -50,7 +50,7 @@ export const Dropdown = ({
           classNames={{
             root: className,
             input:
-              "rounded-none flex items-center justify-between gap-3 px-3 py-1 h-auto",
+              "rounded-none flex items-center justify-between gap-3 px-3 py-1 h-[3rem]",
           }}
         >
           <div className="flex items-center gap-3">

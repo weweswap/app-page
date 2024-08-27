@@ -5,6 +5,7 @@ import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT, DUMMY_POOLS } from "./dummy";
 import ActivePoolTable from "./ActivePoolTable";
 import PoolBox from "./PoolBox";
 import Link from "next/link";
+import ComingSoon from "~/components/common/ComingSoon";
 
 type PoolHomeProps = {
   onNext: () => void;
@@ -24,11 +25,6 @@ export const PoolHome = ({ onNext, onAdd, onZap }: PoolHomeProps) => {
             POOLS
           </Typography>
         </div>
-        {/* <Button onClick={onAdd} className="w-full md:w-auto">
-          <Typography secondary size="xs" fw={700} tt="uppercase">
-            Incentive
-          </Typography>
-        </Button> */}
         <Link href="/migrate">
         <Button className="w-full md:w-auto">
           <Typography secondary size="xs" fw={700} tt="uppercase">
@@ -42,16 +38,21 @@ export const PoolHome = ({ onNext, onAdd, onZap }: PoolHomeProps) => {
           </Typography>
         </Button>
       </Card>
-
-      <div className="w-full bg-[#0F0F0F] pool_nav overflow-x-scroll pt-4">
-        <div className=" flex items-center h-[3rem] gap-3 justify-evenly  min-w-[30rem] ">
-          <div onClick={() => setPoolTypes(0)} className={`${poolTypes === 0 && "text_green"}`}>My Pools</div>
-          <div onClick={() => setPoolTypes(1)} className={`${poolTypes === 1 && "text_green"}`}>Active</div>
-          <div onClick={() => setPoolTypes(2)} className={`${poolTypes === 2 && "text_green"}`}>Exotic</div>
-          <div onClick={() => setPoolTypes(3)} className={`${poolTypes === 3 && "text_green"}`}>Stables</div>
-          <div onClick={() => setPoolTypes(4)} className={`${poolTypes === 4 && "text_green"}`}>Blue Chips</div>
-      </div>
-      </div>
+    <div className="flex items-center justify-between w-full">
+        <div className="bg_light_dark w-[30rem] flex items-center justify-between gap-3 h-[3rem]">
+            <div onClick={() => setPoolTypes(0)} className={`${poolTypes === 0 && "nav_selected"} nav`}>
+                <Typography size="sm">ACTIVE</Typography>
+                </div>
+                <div onClick={() => setPoolTypes(1)} className={`${poolTypes === 1 && "nav_selected"} nav`}>
+                <Typography size="sm">MY POOLS</Typography>
+                </div>
+        </div>
+         <Button>
+          <Typography secondary size="xs">
+            NEW POOL+
+          </Typography>
+          </Button> 
+    </div>
       {poolTypes === 0
          && 
          <Card className="flex item-center justify-center p-5 min-h-[25rem] ">
@@ -141,6 +142,9 @@ export const PoolHome = ({ onNext, onAdd, onZap }: PoolHomeProps) => {
         <Card className="overflow-x-scroll h-[25rem]">
             <ActivePoolTable/>
         </Card> 
+      }
+      {
+        poolTypes >= 2 && <ComingSoon />
       }
     </>
   );

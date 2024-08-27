@@ -107,25 +107,23 @@ export const MergeHome = (props: MergeHomeProps) => {
           </Card>
 
           <Card className="my-4">
-            <div className="w-full bg-[#0F0F0F] pool_nav overflow-x-scroll pt-4">
-              <div className=" flex items-center h-[3rem] gap-3 justify-evenly  min-w-[30rem] ">
-                <div onClick={() => setOperations(0)} className={`${operations === 0 && "text_green"}`}>
-                <nav className="nav">MERGE</nav>
+            <div className="bg_light_dark flex items-center justify-between gap-3 h-[3rem] mb-5">
+            <div onClick={() => setOperations(0)} className={`${operations === 0 && "nav_selected"} nav`}>
+                <Typography size="sm">MERGE</Typography>
                 </div>
-                <div onClick={() => setOperations(1)} className={`${operations === 1 && "text_green"}`}>
-                <nav className="nav">REDEEM</nav>
+                <div onClick={() => setOperations(1)} className={`${operations === 1 && "nav_selected"} nav`}>
+                <Typography size="sm">REDEEM</Typography>
                 </div>
-                <div onClick={() => setOperations(2)} className={`${operations === 2 && "text_green"}`}>
-                <nav className="nav">BRIDGE</nav>
+                <div onClick={() => setOperations(2)} className={`${operations === 2 && "nav_selected"} nav`}>
+                <Typography size="sm">BRIDGE</Typography>
                 </div>
-              </div>
             </div>
-          </Card>
-
+          
+              
           {operations === 0 && <MergeOperation/> }
           {operations === 1 && <RedeemOperation />}
           {operations === 2 && <BridgeOperation onConversion={props.onConversion} />}
-         
+          </Card>
         </div>
         <div className="md:col-span-4 col-span-12 md:order-2 order-1">
           <Card className="text-center h-full relative">
