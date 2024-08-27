@@ -74,7 +74,6 @@ export const SwapButton = (props: SwapButtonProps) => {
       });
   };
   useEffect(() => {
-    console.log("allowance:", allowance);
     refetch();
   }, [approvalReceiptData]);
 

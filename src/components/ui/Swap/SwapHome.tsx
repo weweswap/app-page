@@ -1,20 +1,21 @@
 import { NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { TOKEN_LIST } from "~/constants/tokens";
 import { dogica } from "~/fonts";
 import api from "~/api/swap";
 import { Chain } from "~/constants/chains";
 import { RouterMessageType, RoutingData } from "~/models";
-import { formatUnits } from "viem";
+import { formatUnits, parseEther, parseUnits } from "viem";
 import { formatStringUnits } from "~/utils";
-import { useAccount } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import { useTokenBalance } from "~/hooks";
 import { SwapButton } from "./SwapButton";
 import { useSwapContext } from "./SwapContext";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { config } from "~/lib/config";
 
 let inTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
@@ -37,20 +38,53 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     useSwapContext();
   const { openConnectModal } = useConnectModal();
   const { address, isConnected } = useAccount();
+
   const [inputValue, setInputValue] = useState<number>(0);
   // const [routeData, setrouteData] = useState<RoutingData>();
   const [inputTokenIndex, setInputTokenIndex] = useState<number>(0);
   const [outputTokenIndex, setOutputTokenIndex] = useState<number>(0);
+  const { data: tokenBalance, isFetching: isBalanceFetching } = useTokenBalance(
+    address,
+    TOKEN_LIST[inTokenOptions[inputTokenIndex].index].address
+  );
+
+  const { data: ethBalance } = useBalance({
+    address: address,
+  });
 
   let { data: inputBalance, isFetching: isFetchingBalance } = useTokenBalance(
     address,
     TOKEN_LIST[inTokenOptions[inputTokenIndex].index].address
   );
 
+  const getCurrentBalance = (): bigint => {
+    if (TOKEN_LIST[inTokenOptions[inputTokenIndex].index].symbol == "ETH") {
+      if (!ethBalance) return 0n;
+      return ethBalance!.value;
+    }
+    return inputBalance;
+  };
   const useDebounce = (value: number, delay: number) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
     useEffect(() => {
       const handler = setTimeout(() => {
+        if (
+          
+          parseUnits(
+            String(value),
+            TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+          ) > getCurrentBalance()
+        ) {
+          setInputValue(
+            Number(
+              formatUnits(
+                getCurrentBalance(),
+                TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+              )
+            )
+          );
+          return;
+        }
         setDebouncedValue(value);
       }, delay);
 
@@ -103,8 +137,6 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     }));
     outTokenOptions.splice(inTokenOptions[inputTokenIndex].index, 1);
     setOutputTokenIndex(outTokenOptions[0].index);
-    console.log("inputTokenIndex:", inputTokenIndex);
-    console.log("outputTokenIndex:", outputTokenIndex);
   }, [inputTokenIndex]);
 
   const handleReverse = () => {
@@ -186,7 +218,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               />
               <Typography size="xs">
                 {formatUnits(
-                  inputBalance,
+                  getCurrentBalance(),
                   TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
                 ).toLocaleString()}{" "}
                 {inTokenOptions[inputTokenIndex].value}
