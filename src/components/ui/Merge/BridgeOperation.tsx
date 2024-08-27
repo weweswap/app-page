@@ -147,7 +147,7 @@ const BridgeOperation = (props: BridgeOperationProps) => {
             </div>
           </div>
         </div>
-        <Button className="w-full my-2" onClick={props.onConversion}>
+        <Button className="w-full my-2" disabled>
           <Typography secondary size="sm" tt="uppercase" fw="bold">
             Bridge
           </Typography>
