@@ -81,7 +81,7 @@ const MergeOperation = () => {
 
   return (
     <div className="flex flex-col gap-4">
-           <Card className="flex flex-col gap-5">
+           {/* <Card className="flex flex-col gap-5"> */}
             <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
               <div className="flex-1 flex items-center gap-3">
                 <Image
@@ -186,11 +186,11 @@ const MergeOperation = () => {
                 </div>
               </div>
             </div>
-          </Card>
+          {/* </Card> */}
           <Card>
             <Typography size="lg">MERGE your WEWE into VULT</Typography>
 
-            <ul className="list-decimal list-inside pt-3 text-sm">
+            <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
               <li>Merge your $WEWE to secure your $VULT</li>
               <li>
                 Starting price is 1,000 $WEWE to 1 $VULT, but this will rise

@@ -97,7 +97,7 @@ export const RedeemHome = () => {
             </div>
           </Card>
 
-          <Card className="flex flex-col gap-5">
+          <Card className="flex flex-col gap-5 my-5">
             <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
               <div className="flex-1 flex items-center gap-3">
                 <Image
@@ -192,7 +192,7 @@ export const RedeemHome = () => {
           </Card>
 
           <Card>
-            <Typography size="lg" ta="center" className="my-20">
+            <Typography size="lg" ta="center" className="my-20 text_light_gray">
               Redeem at 1:1 Your $IOU.VULT into $VULT <br />
               Bridge Your $BASE.VULT To $ETH.VULT
             </Typography>

@@ -29,7 +29,7 @@ export const Pool = () => {
     openZapModal()
   }
 
-  
+
   return (
     <>
       {step === 0 && <PoolHome onZap={handleZapModal} onNext={() => setStep(1)} onAdd={openAdd} />}
@@ -42,6 +42,7 @@ export const Pool = () => {
       {/* <PoolAddModal opened={addOpened} onClose={closeAdd} onAdd={handleAdd} /> */}
       {/* <PoolClaimModal opened={claimOpened} onClose={closeClaim} /> */}
       <PoolZapModal onConfirm={() => setStep(4)} opened={openedZapModal} onOpen={handleZapModal} onClose={closeZapModal} />
+      
     </>
   );
 };

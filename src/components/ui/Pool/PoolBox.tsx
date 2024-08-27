@@ -9,7 +9,7 @@ const PoolBox = () => {
     <>
     <div className='w-full flex flex-col gap-6'>
         {DUMMY_POOLS.map(({title, exchangePair, state, range, lpValue, rewards, positionId}) => {
-            return  <div className='bg_dark w-full min-h-[10rem] p-4'>
+            return  <div key={title} className='bg_dark w-full min-h-[10rem] p-4'>
             <Typography>{title}</Typography> 
             <div className='sm:py-4 py-7 flex items-center justify-between gap-3 flex-wrap'>
              <div className='flex items-center gap-2'>
