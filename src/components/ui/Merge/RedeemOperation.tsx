@@ -128,13 +128,11 @@ const RedeemOperation = () => {
                 alt=""
               />
               <div className="col-span-5 items-center flex-1  md:flex-none flex justify-end gap-3">
-                {!isFetching && (
+                {
                   <div className="overflow-x-auto">
-                    <Typography size="xl">
-                      {Number(formatEther(quoteAmount)).toLocaleString()} VULT
-                    </Typography>
+                    <Typography size="xl">{amount} VULT</Typography>
                   </div>
-                )}
+                }
               </div>
             </div>
 
