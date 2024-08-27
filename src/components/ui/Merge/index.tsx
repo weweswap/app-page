@@ -18,7 +18,7 @@ export const Merge = () => {
 
   return (
     <>
-      <MergeHome  />
+      <MergeHome onConversion={handleConversionModal} />
       <ConversionModal onConfirm={handleConfirm} opened={openedConversionModal} onOpen={openConversionModal} onClose={closeConversionModal} />
       <SuccessModal opened={openedSuccessModal} onOpen={openSuccessModal} onClose={closeSuccessModal} />
     </>
