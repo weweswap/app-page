@@ -32,9 +32,9 @@ export const PoolHome = ({ onNext, onAdd, onZap }: PoolHomeProps) => {
           </Typography>
         </Button>
         </Link>
-        <Button onClick={onNext} className="w-full md:w-auto">
+        <Button  className="w-full md:w-auto">
           <Typography secondary size="xs" fw={700} tt="uppercase">
-            New Pool
+            INCENTIVIZE
           </Typography>
         </Button>
       </Card>
@@ -47,7 +47,7 @@ export const PoolHome = ({ onNext, onAdd, onZap }: PoolHomeProps) => {
                 <Typography size="sm">MY POOLS</Typography>
                 </div>
         </div>
-         <Button>
+         <Button onClick={onNext}>
           <Typography secondary size="xs">
             NEW POOL+
           </Typography>
