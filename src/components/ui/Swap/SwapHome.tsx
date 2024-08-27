@@ -40,7 +40,6 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
   const { address, isConnected } = useAccount();
 
   const [inputValue, setInputValue] = useState<number>(0);
-  // const [routeData, setrouteData] = useState<RoutingData>();
   const [inputTokenIndex, setInputTokenIndex] = useState<number>(0);
   const [outputTokenIndex, setOutputTokenIndex] = useState<number>(0);
   const { data: tokenBalance, isFetching: isBalanceFetching } = useTokenBalance(
