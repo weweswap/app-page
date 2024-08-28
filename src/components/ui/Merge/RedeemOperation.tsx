@@ -81,7 +81,7 @@ const RedeemOperation = () => {
   return (
     <div className="flex flex-col gap-4">
       <Card className="flex flex-col gap-5">
-        <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
+        <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
           <div className="flex-1 flex items-center gap-3">
             <Image src="/img/tokens/vult.svg" width={32} height={32} alt="" />
             <Typography secondary size="md">
@@ -104,7 +104,7 @@ const RedeemOperation = () => {
 
         <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
           <div className="flex-1">
-            <div className="grid grid-cols-11 bg-gray-900 md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
+            <div className="grid grid-cols-11 bg_light_dark md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
               <div className="col-span-5 flex-1 flex items-center gap-3">
                 <NumberInput
                   defaultValue={"10000"}
@@ -112,7 +112,7 @@ const RedeemOperation = () => {
                     root: "w-full md:w-full",
                     input: clsx(
                       dogica.className,
-                      "bg-gray-900 md:p-4 p-0 text-white text-lg h-auto border-transparent rounded-none"
+                      "bg_light_dark md:p-4 p-0 text-white text-lg h-auto border-transparent rounded-none"
                     ),
                   }}
                   hideControls
@@ -138,9 +138,19 @@ const RedeemOperation = () => {
               </div>
             </div>
 
-            <div className="w-full flex items-center gap-3 mt-3">
+            <div className="w-full flex items-center gap-5 mt-3">
+                 <div>
+                    <Typography size="xs" className="text_light_gray">
+                      Available:
+                    </Typography>
+                    <Typography size="xs" className="text_light_gray">
+                    {Math.trunc(
+                    Number(formatEther(weweBalance))
+                  ).toLocaleString()}
+                    </Typography>
+                 </div>
               <button
-                className="bg-gray-900 px-3 py-2"
+                className="bg_light_dark px-3 py-2"
                 onClick={() => handleSelect(1)}
               >
                 <Typography size="sm">MAX</Typography>
@@ -164,7 +174,7 @@ const RedeemOperation = () => {
         </div>
       </Card>
       <Card className="h-[8rem] text-center">
-        <Typography size="lg">Redeem your IOU VULT for $VULT</Typography>
+        <Typography className="text_light_gray" size="md">Redeem 1:1 IOU.VULT for $VULT</Typography>
       </Card>
     </div>
   );
