@@ -20,9 +20,9 @@ import {
 
 const RedeemOperation = () => {
   const { address } = useAccount();
-  const { data: balanceWewe } = useTokenBalance(
+  const { data: balanceVult } = useTokenBalance(
     address,
-    CONTRACT_ADDRESSES.wewe
+    CONTRACT_ADDRESSES.vult
   );
 
   const [operations, setOperations] = useState<number>(0);
@@ -71,7 +71,7 @@ const RedeemOperation = () => {
   const { onWriteAsync: onApproveAndCall, isPending } = useApproveAndCall();
 
   const handleSelect = (div: number) => {
-    setAmount(Number(formatEther(balanceWewe)) / div);
+    setAmount(Number(formatEther(balanceVult)) / div);
   };
 
   const handleMerge = () => {
@@ -128,13 +128,11 @@ const RedeemOperation = () => {
                 alt=""
               />
               <div className="col-span-5 items-center flex-1  md:flex-none flex justify-end gap-3">
-                {!isFetching && (
+                {
                   <div className="overflow-x-auto">
-                    <Typography size="xl">
-                      {Number(formatEther(quoteAmount)).toLocaleString()} VULT
-                    </Typography>
+                    <Typography size="xl">{amount} VULT</Typography>
                   </div>
-                )}
+                }
               </div>
             </div>
 
@@ -145,7 +143,7 @@ const RedeemOperation = () => {
                     </Typography>
                     <Typography size="xs" className="text_light_gray">
                     {Math.trunc(
-                    Number(formatEther(weweBalance))
+                    Number(formatEther(balanceVult))
                   ).toLocaleString()}
                     </Typography>
                  </div>
