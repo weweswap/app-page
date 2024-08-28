@@ -81,8 +81,8 @@ const MergeOperation = () => {
 
   return (
     <div className="flex flex-col gap-4">
-           <Card className="flex flex-col gap-5">
-            <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
+           {/* <Card className="flex flex-col gap-5"> */}
+            <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
               <div className="flex-1 flex items-center gap-3">
                 <Image
                   src="/img/tokens/wewe.png"
@@ -115,14 +115,14 @@ const MergeOperation = () => {
 
             <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
               <div className="flex-1">
-                <div className="grid grid-cols-11 bg-gray-900 md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
+                <div className="grid grid-cols-11  md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
                   <div className="col-span-5 flex-1 flex items-center gap-3">
                     <NumberInput
                       classNames={{
                         root: "w-full md:w-full",
                         input: clsx(
                           dogica.className,
-                          "bg-gray-900 md:p-4 p-0 text-white text-lg h-auto border-transparent rounded-none"
+                          "bg_light_dark md:p-4 p-0 text-white text-lg h-auto border-transparent rounded-none lg:w-[20.8rem]"
                         ),
                       }}
                       hideControls
@@ -149,25 +149,38 @@ const MergeOperation = () => {
                   </div>
                 </div>
 
-                <div className="w-full flex items-center justify-end gap-3 mt-3">
+                <div className="w-full flex items-center gap-4 mt-3">
+                 <div>
+                    <Typography size="xs" className="text_light_gray">
+                      Available:
+                    </Typography>
+                    <Typography size="xs" className="text_light_gray">
+                    {/* $4,690,420,090.00 */}
+                    {Math.trunc(
+                    Number(formatEther(weweBalance))
+                  ).toLocaleString()}
+                    </Typography>
+                 </div>
+                  <div className="flex gap-3 items-center">
                   <button
-                    className="bg-gray-900 px-3 py-2"
+                    className="bg_light_dark px-3 py-2"
                     onClick={() => handleSelect(4)}
                   >
-                    <Typography size="sm">25%</Typography>
+                    <Typography size="xs">25%</Typography>
                   </button>
                   <button
-                    className="bg-gray-900 px-3 py-2"
+                    className="bg_light_dark px-3 py-2"
                     onClick={() => handleSelect(2)}
                   >
-                    <Typography size="sm">50%</Typography>
+                    <Typography size="xs">50%</Typography>
                   </button>
                   <button
-                    className="bg-gray-900 px-3 py-2"
+                    className="bg_light_dark px-3 py-2"
                     onClick={() => handleSelect(1)}
                   >
-                    <Typography size="sm">MAX</Typography>
+                    <Typography size="xs">MAX</Typography>
                   </button>
+                  </div>
                 </div>
               </div>
 
@@ -186,11 +199,11 @@ const MergeOperation = () => {
                 </div>
               </div>
             </div>
-          </Card>
+          {/* </Card> */}
           <Card>
             <Typography size="lg">MERGE your WEWE into VULT</Typography>
 
-            <ul className="list-decimal list-inside pt-3 text-sm">
+            <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
               <li>Merge your $WEWE to secure your $VULT</li>
               <li>
                 Starting price is 1,000 $WEWE to 1 $VULT, but this will rise

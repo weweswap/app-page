@@ -16,3 +16,19 @@ export const TOKEN_LIST = [
     icon: "/img/tokens/wewe.png",
   },
 ];
+
+
+export const TO_TOKEN_LIST = [
+  {
+    symbol: "VULT",
+    icon: "/img/tokens/vult.eth.svg",
+  },
+];
+
+
+export const FROM_TOKEN_LIST = [
+  {
+    symbol: "VULT",
+    icon: "/img/tokens/vult.base.svg",
+  },
+];
