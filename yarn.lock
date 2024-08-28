@@ -5993,11 +5993,14 @@ viem@^2.1.1, viem@^2.13.8:
     isows "1.0.4"
     ws "8.17.1"
 
+<<<<<<< HEAD
 wagmi-permit@^1.0.19:
   version "1.0.19"
   resolved "https://registry.yarnpkg.com/wagmi-permit/-/wagmi-permit-1.0.19.tgz#4a8ed2a087ca6bbcaf1453641be82577887c75ac"
   integrity sha512-FNrZkr3b7FnhnkPKlXHR2jidlI39Zv/4jOqv3bK6jnCSGQAeIeXHE1WGS4Ab+zETH4h/LB2qAHTCKRLtsClsag==
 
+=======
+>>>>>>> fb7b4657a0bef3db7c6736305b3ea3bad9d6f34f
 wagmi@^2.10.0:
   version "2.11.2"
   resolved "https://registry.npmjs.org/wagmi/-/wagmi-2.11.2.tgz"

@@ -25,3 +25,19 @@ export const TOKEN_LIST: TokenItem[] = [
     decimals: 18,
   },
 ];
+
+
+export const TO_TOKEN_LIST = [
+  {
+    symbol: "VULT",
+    icon: "/img/tokens/vult.eth.svg",
+  },
+];
+
+
+export const FROM_TOKEN_LIST = [
+  {
+    symbol: "VULT",
+    icon: "/img/tokens/vult.base.svg",
+  },
+];

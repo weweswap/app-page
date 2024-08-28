@@ -1,63 +1,13 @@
-import Image from "next/image";
-import { useState } from "react";
-import { Button, Card, Typography } from "~/components/common";
-import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT, DUMMY_POOLS } from "./dummy";
-import ActivePoolTable from "./ActivePoolTable";
-import PoolBox from "./PoolBox";
-import Link from "next/link";
-import ComingSoon from "~/components/common/ComingSoon";
 
-type PoolHomeProps = {
-  onNext: () => void;
-  onAdd: () => void;
-  onZap: () => void;
-};
+import Image from 'next/image'
+import React from 'react'
+import { Typography, Button } from '~/components/common'
+import {DUMMY_POOLS} from "./dummy"
 
-export const PoolHome = ({ onNext, onAdd, onZap }: PoolHomeProps) => {
-
-  const [poolTypes, setPoolTypes] = useState<number>(0)
-
+const PoolBox = () => {
   return (
     <>
-      <Card className="flex flex-col md:flex-row text-center md:text-start items-center justify-between gap-5">
-        <div className="flex-1">
-          <Typography secondary size="xl" tt="uppercase">
-            POOLS
-          </Typography>
-        </div>
-        <Link href="/migrate">
-        <Button className="w-full md:w-auto">
-          <Typography secondary size="xs" fw={700} tt="uppercase">
-            Migrate
-          </Typography>
-        </Button>
-        </Link>
-        <Button  className="w-full md:w-auto">
-          <Typography secondary size="xs" fw={700} tt="uppercase">
-            INCENTIVIZE
-          </Typography>
-        </Button>
-      </Card>
-    <div className="flex items-center justify-between w-full">
-        <div className="bg_light_dark w-[30rem] flex items-center justify-between gap-3 h-[3rem]">
-            <div onClick={() => setPoolTypes(0)} className={`${poolTypes === 0 && "nav_selected"} nav`}>
-                <Typography size="sm">ACTIVE</Typography>
-                </div>
-                <div onClick={() => setPoolTypes(1)} className={`${poolTypes === 1 && "nav_selected"} nav`}>
-                <Typography size="sm">MY POOLS</Typography>
-                </div>
-        </div>
-         <Button onClick={onNext}>
-          <Typography secondary size="xs">
-            NEW POOL+
-          </Typography>
-          </Button> 
-    </div>
-      {poolTypes === 0
-         && 
-         <Card className="flex item-center justify-center p-5 min-h-[25rem] ">
-            {/* <Image src="/img/icons/home.svg" width={150} height={150} alt=""/> */}
-            <div className='w-full flex flex-col gap-6'>
+    <div className='w-full flex flex-col gap-6'>
         {DUMMY_POOLS.map(({title, exchangePair, state, range, lpValue, rewards, positionId}) => {
             return  <div key={title} className='bg_dark w-full min-h-[10rem] p-4'>
             <Typography>{title}</Typography> 
@@ -118,7 +68,7 @@ export const PoolHome = ({ onNext, onAdd, onZap }: PoolHomeProps) => {
              </Typography>
             </div>
             <div className='flex items-center justify-end gap-4 py-3 flex-wrap'>
-                <Button  className="w-full md:w-auto">
+                <Button className="w-full md:w-auto">
                      <Typography secondary size="xs" fw={700} tt="uppercase">MANAGE</Typography>
                 </Button>
  
@@ -135,17 +85,8 @@ export const PoolHome = ({ onNext, onAdd, onZap }: PoolHomeProps) => {
         })}
        
     </div>
-         </Card>
-      }
-      {poolTypes === 1 
-        &&
-        <Card className="overflow-x-scroll h-[25rem]">
-            <ActivePoolTable/>
-        </Card> 
-      }
-      {
-        poolTypes >= 2 && <ComingSoon />
-      }
     </>
-  );
-};
+  )
+}
+
+export default PoolBox

@@ -29,11 +29,12 @@ export const Dropdown = ({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
 
-  const [val, setVal] = useState<string | undefined>(defaultValue);
+  const [val, setVal] = useState<string | undefined>("USDC");
 
   const selected = options.find((option) =>
     value ? option.value === value : option.value === val
   );
+
 
   return (
     <Combobox
@@ -54,7 +55,7 @@ export const Dropdown = ({
           classNames={{
             root: className,
             input:
-              "rounded-none flex items-center justify-between gap-3 px-3 py-1 h-auto",
+              "rounded-none flex items-center justify-between gap-3 px-3 py-1 h-[3rem]",
           }}
         >
           <div className="flex items-center gap-3">
