@@ -199,6 +199,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               hideControls
               value={inputValue}
               onChange={(value) => setInputValue(value as number)}
+              allowNegative={false}
             />
             <Dropdown
               value={TOKEN_LIST[inputTokenIndex].symbol}
@@ -280,14 +281,16 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
             {routeData
               ? Number(routeData.routeSummary.amountOutUsd).toLocaleString()
               : "0.00"}{" "}
-            (-
+            (
             {routeData
-              ? (
-                  (1 -
-                    Number(routeData.routeSummary.amountOutUsd) /
-                      Number(routeData.routeSummary.amountInUsd)) *
-                  100
-                ).toLocaleString()
+              ? Number(routeData.routeSummary.amountInUsd) == 0
+                ? "0.0"
+                : (
+                    (1 -
+                      Number(routeData.routeSummary.amountOutUsd) /
+                        Number(routeData.routeSummary.amountInUsd)) *
+                    -100
+                  ).toLocaleString()
               : "0.00"}
             %)
           </Typography>
