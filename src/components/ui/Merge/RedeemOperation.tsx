@@ -143,7 +143,7 @@ const RedeemOperation = () => {
                     </Typography>
                     <Typography size="xs" className="text_light_gray">
                     {Math.trunc(
-                    Number(formatEther(weweBalance))
+                    Number(formatEther(balanceVult))
                   ).toLocaleString()}
                     </Typography>
                  </div>

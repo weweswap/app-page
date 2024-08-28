@@ -157,7 +157,7 @@ const MergeOperation = () => {
                     <Typography size="xs" className="text_light_gray">
                     {/* $4,690,420,090.00 */}
                     {Math.trunc(
-                    Number(formatEther(weweBalance))
+                    Number(formatEther(balanceWewe))
                   ).toLocaleString()}
                     </Typography>
                  </div>
