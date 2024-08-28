@@ -67,23 +67,22 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
     useEffect(() => {
       const handler = setTimeout(() => {
-        if (
-          
-          parseUnits(
-            String(value),
-            TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
-          ) > getCurrentBalance()
-        ) {
-          setInputValue(
-            Number(
-              formatUnits(
-                getCurrentBalance(),
-                TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
-              )
-            )
-          );
-          return;
-        }
+        // if (
+        //   parseUnits(
+        //     String(value),
+        //     TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+        //   ) > getCurrentBalance()
+        // ) {
+        //   setInputValue(
+        //     Number(
+        //       formatUnits(
+        //         getCurrentBalance(),
+        //         TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+        //       )
+        //     )
+        //   );
+        //   return;
+        // }
         setDebouncedValue(value);
       }, delay);
 
@@ -94,6 +93,14 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     return debouncedValue;
   };
 
+  const checkHasBalance = (): boolean => {
+    return (
+      parseUnits(
+        String(debouncedInputValue),
+        TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+      ) <= getCurrentBalance()
+    );
+  };
   const debouncedInputValue = useDebounce(inputValue, 500);
 
   useEffect(() => {
@@ -248,7 +255,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
             <Typography
               className={` md:col-span-9 col-span-6 ${dogica.className}
-              text-start bg-transparent text-white text-2xl h-auto
+              text-start bg-transparent text-white text-2xl h-auto overflow-x-auto
               border-transparent rounded-none`}
             >
               {routeData
@@ -289,7 +296,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       {isConnected ? (
         <>
           {routeData ? (
-            <SwapButton />
+            <SwapButton hasBalance={checkHasBalance()} />
           ) : (
             <Button className="w-full" disabled>
               <Typography secondary size="sm" tt="uppercase" fw={600}>

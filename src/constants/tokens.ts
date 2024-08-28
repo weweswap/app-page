@@ -6,7 +6,7 @@ export const TOKEN_LIST: TokenItem[] = [
     chain: Chain.BASE,
     symbol: "ETH",
     address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" as `0x${string}`,
-    icon: "/img/tokens/eth.png",
+    icon: "/img/tokens/eth.base.svg",
     decimals: 18,
   },
   {
