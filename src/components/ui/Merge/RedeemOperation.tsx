@@ -20,9 +20,9 @@ import {
 
 const RedeemOperation = () => {
   const { address } = useAccount();
-  const { data: balanceWewe } = useTokenBalance(
+  const { data: balanceVult } = useTokenBalance(
     address,
-    CONTRACT_ADDRESSES.wewe
+    CONTRACT_ADDRESSES.vult
   );
 
   const [operations, setOperations] = useState<number>(0);
@@ -71,7 +71,7 @@ const RedeemOperation = () => {
   const { onWriteAsync: onApproveAndCall, isPending } = useApproveAndCall();
 
   const handleSelect = (div: number) => {
-    setAmount(Number(formatEther(balanceWewe)) / div);
+    setAmount(Number(formatEther(balanceVult)) / div);
   };
 
   const handleMerge = () => {
