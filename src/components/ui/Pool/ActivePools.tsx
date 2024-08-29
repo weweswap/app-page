@@ -22,16 +22,13 @@ const A = () => {
           ))}
         </tr>
       </thead>
-      <tbody >
+      <tbody>
         {DUMMY_TABLE_CONTENT.map(({ poolType, logo, type, pool, tvl, volume, apr }, index) => (
           <>
-          <div className='px-4 py-2'>
-          <Typography size='xs' >
+          {/* <tr key={type} className='px-4 text-sm py-2'>
             {poolType}
-          </Typography>
-        </div>
+        </tr> */}
           <tr key={pool} className="bg-[#1c1c1c] w-[full]" style={{borderBottom: '1rem solid black'}}>
-
             <td className="p-4 font-bold ">
               <div className='flex items-center gap-2'>
               <div className='flex items-center'>
