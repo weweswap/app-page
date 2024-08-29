@@ -52,7 +52,10 @@ export const SwapFailModal = (props: SwapFailProps) => {
               </Typography>
             </Button>
 
-            <Button className="w-full" onClick={handleDetails}>
+            <Button
+              className="w-full bg-black border border-1 border-white"
+              onClick={handleDetails}
+            >
               <Typography secondary size="md" fw={700} tt="uppercase">
                 view details
               </Typography>

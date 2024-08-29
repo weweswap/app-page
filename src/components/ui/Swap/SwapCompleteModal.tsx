@@ -68,7 +68,7 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
             </Button>
 
             <Button
-              className="w-full bg-black border-1 border-white"
+              className="w-full bg-black border border-1 border-white"
               onClick={handleDetails}
             >
               <Typography secondary size="md" fw={700} tt="uppercase">
