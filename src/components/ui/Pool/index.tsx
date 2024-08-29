@@ -11,6 +11,7 @@ import { PoolZapModal } from "./PoolZapModal";
 import PoolZapIn from "./PoolZapIn";
 import SuccessModal from "./SuccessModal";
 import PoolCreate from "./PoolCreate";
+import PoolsManage from "./PoolsManage";
 
 export const Pool = () => {
   const [step, setStep] = useState(0);
@@ -32,11 +33,12 @@ export const Pool = () => {
 
   return (
     <>
-      {step === 0 && <PoolHome onZap={handleZapModal} onNext={() => setStep(1)} onAdd={openAdd} />}
+      {step === 0 && <PoolHome onManage={() => setStep(5)}  onZap={handleZapModal} onNext={() => setStep(1)} onAdd={openAdd} />}
       {step === 1 && <PoolDetail onBack={() => setStep(0)} onAdd={() => setStep(3)} onZapIn={() => setStep(2)} />}
       {step === 2 && ( <PoolZapIn onBack={() => setStep(1)} onZap={handleZapModal} />)}
       {step === 3 && ( <PoolCreate onBack={() => setStep(1)} onNext={handleAdd} /> )}
       {step === 4 && (<SuccessModal onConfirm={handleAdd} />)}
+      {step === 5 && (<PoolsManage onBack={() => setStep(0)}/>)}
 
       {/* <PoolClaim onBack={() => setStep(1)} onClaim={openClaim} /> */}
       {/* <PoolAddModal opened={addOpened} onClose={closeAdd} onAdd={handleAdd} /> */}

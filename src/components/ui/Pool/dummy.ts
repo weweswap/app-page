@@ -2,6 +2,7 @@ export const DUMMY_TABLE_HEAD = ["POOL", "TVL", "VOLUME", "APR", "" ]
 
 export const DUMMY_TABLE_CONTENT = [
     {
+        poolType: "MEMES 1%",
         pool: "EXOTIC",
         tvl: "$10,000,000,000.00",
         volume: "$1,000,000",
@@ -14,6 +15,7 @@ export const DUMMY_TABLE_CONTENT = [
     },
 
     {
+        poolType: "BLUE CHIPS 0.3%",
         pool: "STABLES",
         tvl: "$10,000,000,000.00",
         volume: "$1,000,000",
@@ -26,6 +28,7 @@ export const DUMMY_TABLE_CONTENT = [
     },
 
     {
+        poolType: "STABLES",
         pool: "BLUE CHIP",
         tvl: "$10,000,000,000.00",
         volume: "$1,000,000",

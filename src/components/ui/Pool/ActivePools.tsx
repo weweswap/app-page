@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
 import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT } from "./dummy";
 
-const ActivePoolTable = () => {
+const A = () => {
   return (
+    <Card className='overflow-x-scroll'>
     <table className="w-[fit-content] min-w-[100%] table-auto text-left">
       <thead>
         <tr>
@@ -22,42 +23,48 @@ const ActivePoolTable = () => {
         </tr>
       </thead>
       <tbody >
-        {DUMMY_TABLE_CONTENT.map(({ logo, type, pool, tvl, volume, apr }, index) => (
-          <tr key={pool} className="bg-[#1c1c1c] w-[full] " style={{borderBottom: '2rem solid black'}}>
-            <td className="p-4 flex items-center gap-2 font-bold text-[]">
+        {DUMMY_TABLE_CONTENT.map(({ poolType, logo, type, pool, tvl, volume, apr }, index) => (
+          <>
+          <div className='px-4 py-2'>
+          <Typography size='xs' >
+            {poolType}
+          </Typography>
+        </div>
+          <tr key={pool} className="bg-[#1c1c1c] w-[full]" style={{borderBottom: '1rem solid black'}}>
+
+            <td className="p-4 font-bold ">
+              <div className='flex items-center gap-2'>
               <div className='flex items-center'>
                 <Image className='min-w-6 min-h-6' src={logo.first} alt='' width={32} height={32} />
                 <Image className='ml-[-10px] min-w-6 min-h-6' src={logo.second} alt=''  width={32} height={32} />
               </div>
-              <div>
-
-              <Typography size='lg'>{pool}</Typography>
-              <Typography className='font-bold' size='xs'>{type}</Typography>
-
+              <Typography size='xs'>{type}</Typography>
               </div>
             </td>
             <td className="p-4">
-                {tvl}
+            <Typography size='xs'>{tvl}</Typography>
             </td>
             <td className="p-4">
-                {volume}
+            <Typography size='xs'>{volume}</Typography>
             </td>
             <td className="p-4">
-                {apr}
+            <Typography size='xs'>{apr}</Typography>
             </td>
             <td className="p-4" align='right'>
-            <Button  className="w-full md:w-auto min-w-[6rem]">
-            <Typography secondary size='xs'>
-            ADD
+            <Button  className="w-full md:w-auto min-w-[6rem] ">
+            <Typography secondary size='xs' ff="900">
+            ZAP-IN
             </Typography>
         </Button>
             </td>
           </tr>
+          </>
         ))}
       </tbody>
     </table>
+    </Card>
   
   )
 }
 
-export default ActivePoolTable
+export default A
