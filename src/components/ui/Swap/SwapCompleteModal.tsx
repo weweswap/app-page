@@ -53,10 +53,10 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
             />
             <div className="flex flex-col">
               <Typography size="md" fw={700}>
-                ${encodedData!.amountOutUsd}
+                ${Number(encodedData!.amountOutUsd).toFixed(2)}
               </Typography>
               <Typography size="xs" className="text_light_gray">
-                US$ {encodedData!.gasUsd} estimated fees
+                US$ {Number(encodedData!.gasUsd).toFixed(2)} estimated fees
               </Typography>
             </div>
           </div>

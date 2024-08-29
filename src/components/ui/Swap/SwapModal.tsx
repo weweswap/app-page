@@ -59,7 +59,7 @@ export const SwapModal = (props: SwapModalProps) => {
                     routeData.routeSummary.amountIn,
                     routeData.inputToken.decimals
                   )
-                )}{" "}
+                ).toFixed(6)}{" "}
                 {routeData.inputToken.symbol}
               </Typography>
               <Image
@@ -85,7 +85,7 @@ export const SwapModal = (props: SwapModalProps) => {
                     routeData.routeSummary.amountOut,
                     routeData.outputToken.decimals
                   )
-                )}{" "}
+                ).toFixed(6)}{" "}
                 {routeData.outputToken.symbol}
               </Typography>
               <Image

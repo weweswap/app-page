@@ -40,8 +40,8 @@ export const SwapProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [swapState, setSwapState] = useState<SwapStateProps>(initialSwapState);
-  const [swapSlippage, setSwapSlippage] = useState<number>(100);
-  const [zapSlippage, setZapSlippage] = useState<number>(100);
+  const [swapSlippage, setSwapSlippage] = useState<number>(1);
+  const [zapSlippage, setZapSlippage] = useState<number>(2);
   const [routeData, setRouteData] = useState<RouteData>();
   const [encodedData, setEncodedData] = useState<BuildData>();
   const [openedSwapModal, { open: openSwapModal, close: closeSwapModal }] = useDisclosure(false);

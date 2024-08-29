@@ -200,6 +200,9 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               value={inputValue}
               onChange={(value) => setInputValue(value as number)}
               allowNegative={false}
+              trimLeadingZeroesOnBlur
+              thousandSeparator
+              decimalScale={6}
             />
             <Dropdown
               value={TOKEN_LIST[inputTokenIndex].symbol}
