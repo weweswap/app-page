@@ -7,13 +7,12 @@ import { BuildData, TokenItem } from "~/models";
 import { useSwapContext } from "./SwapContext";
 import { Hex } from "viem";
 
-type SwapCompleteProps = {
+type SwapFailProps = {
   hash: Hex;
   onClose: () => void;
 } & ModalRootProps;
 
-export const SwapCompleteModal = (props: SwapCompleteProps) => {
-  const { encodedData, routeData } = useSwapContext();
+export const SwapFailModal = (props: SwapFailProps) => {
   const handleDetails = () => {
     window.open(
       `https://basescan.org/tx/${props.hash}`,
@@ -30,7 +29,7 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
         <MtModal.Body className="flex flex-col gap-5 p-0">
           <div className="flex flex-col items-center">
             <img
-              src="/img/icons/check.svg"
+              src="/img/icons/fail.svg"
               className="w-[76px]"
               alt="succesful"
             />
@@ -43,34 +42,17 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
             className="text_light_gray"
             ta="center"
           >
-            successfuly swapped
+            failed TX
           </Typography>
 
-          <div className="flex items-center justify-center gap-2">
-            <img
-              src={routeData!.outputToken.icon}
-              alt={routeData!.outputToken.symbol}
-            />
-            <div className="flex flex-col">
-              <Typography size="md" fw={700}>
-                ${Number(encodedData!.amountOutUsd).toFixed(2)}
-              </Typography>
-              <Typography size="xs" className="text_light_gray">
-                US$ {Number(encodedData!.gasUsd).toFixed(2)} estimated fees
-              </Typography>
-            </div>
-          </div>
           <div className="flex flex-col gap-2">
             <Button className="w-full" onClick={props.onClose}>
               <Typography secondary size="md" fw={700} tt="uppercase">
-                completed
+                close
               </Typography>
             </Button>
 
-            <Button
-              className="w-full bg-black border-1 border-white"
-              onClick={handleDetails}
-            >
+            <Button className="w-full" onClick={handleDetails}>
               <Typography secondary size="md" fw={700} tt="uppercase">
                 view details
               </Typography>

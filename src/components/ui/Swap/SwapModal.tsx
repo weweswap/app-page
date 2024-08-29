@@ -9,13 +9,17 @@ import { Hash } from "viem";
 type SwapModalProps = {
   onClose: () => void;
   openSwapComplete: () => void;
+  openSwapFail: () => void;
   setHash: (value: Hash) => void;
 } & ModalRootProps;
 
 export const SwapModal = (props: SwapModalProps) => {
   const { data: hash, isPending, sendTransaction } = useSendTransaction();
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({ hash });
+  const {
+    isLoading: isConfirming,
+    isSuccess: isConfirmed,
+    isError,
+  } = useWaitForTransactionReceipt({ hash });
   const { swapState, routeData, encodedData, setSwapState } = useSwapContext();
 
   const handleConfirm = async () => {
@@ -36,6 +40,7 @@ export const SwapModal = (props: SwapModalProps) => {
       pendingSwap: isPending,
       confirmingSwap: isConfirming,
       swapDone: isConfirmed,
+      swapError:isError
     });
 
     if (isConfirmed) {
@@ -43,7 +48,12 @@ export const SwapModal = (props: SwapModalProps) => {
       props.onClose();
       props.openSwapComplete();
     }
-  }, [isPending, isConfirming, isConfirmed]);
+    if (isError) {
+      props.setHash(hash!);
+      props.onClose();
+      props.openSwapFail();
+    }
+  }, [isPending, isConfirming, isConfirmed, , isError]);
   return (
     <Modal title="Review swap" onClose={props.onClose} opened={props.opened}>
       {routeData && (

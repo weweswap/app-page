@@ -27,6 +27,7 @@ export type SwapStateProps = {
   pendingSwap?: boolean;
   confirmingSwap?: boolean;
   swapDone?: boolean;
+  swapError: boolean;
 };
 const initialSwapState = {
   approved: false,
@@ -35,6 +36,7 @@ const initialSwapState = {
   pendingSwap: false,
   confirmingSwap: false,
   swapDone: false,
+  swapError: false,
 };
 export const SwapProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -44,7 +46,8 @@ export const SwapProvider: React.FC<{ children: React.ReactNode }> = ({
   const [zapSlippage, setZapSlippage] = useState<number>(2);
   const [routeData, setRouteData] = useState<RouteData>();
   const [encodedData, setEncodedData] = useState<BuildData>();
-  const [openedSwapModal, { open: openSwapModal, close: closeSwapModal }] = useDisclosure(false);
+  const [openedSwapModal, { open: openSwapModal, close: closeSwapModal }] =
+    useDisclosure(false);
 
   const value = {
     initialSwapState,
@@ -60,7 +63,7 @@ export const SwapProvider: React.FC<{ children: React.ReactNode }> = ({
     setEncodedData,
     openSwapModal,
     closeSwapModal,
-    openedSwapModal
+    openedSwapModal,
   };
 
   return <SwapContext.Provider value={value}>{children}</SwapContext.Provider>;
