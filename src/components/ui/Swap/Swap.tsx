@@ -6,6 +6,7 @@ import { SwapCompleteModal } from "./SwapCompleteModal";
 import { SwapSettingModal } from "./SwapSettingModal";
 import { useSwapContext } from "./SwapContext";
 import { Hash } from "viem";
+import { SwapFailModal } from "./SwapFailModal";
 
 export const Swap: React.FC = () => {
   const {
@@ -25,6 +26,11 @@ export const Swap: React.FC = () => {
     openedSwapSettingModal,
     { open: openSwapSettingModal, close: closeSwapSettingModal },
   ] = useDisclosure(false);
+  const [
+    openedSwapFailModal,
+    { open: openSwapFailModal, close: closeSwapFailModal },
+  ] = useDisclosure(false);
+
   const [hash, setHash] = useState<Hash>();
 
   return (
@@ -35,6 +41,7 @@ export const Swap: React.FC = () => {
           opened={openedSwapModal}
           onClose={closeSwapModal}
           openSwapComplete={openSwapCompleteModal}
+          openSwapFail={openSwapFailModal}
           setHash={setHash}
         />
       )}
@@ -42,6 +49,13 @@ export const Swap: React.FC = () => {
         <SwapCompleteModal
           opened={openedSwapCompleteModal}
           onClose={closeSwapCompleteModal}
+          hash={hash!}
+        />
+      )}
+      {swapState.swapError && encodedData && routeData && (
+        <SwapFailModal
+          opened={openedSwapFailModal}
+          onClose={closeSwapFailModal}
           hash={hash!}
         />
       )}

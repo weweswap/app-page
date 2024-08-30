@@ -67,23 +67,22 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
     useEffect(() => {
       const handler = setTimeout(() => {
-        if (
-          
-          parseUnits(
-            String(value),
-            TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
-          ) > getCurrentBalance()
-        ) {
-          setInputValue(
-            Number(
-              formatUnits(
-                getCurrentBalance(),
-                TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
-              )
-            )
-          );
-          return;
-        }
+        // if (
+        //   parseUnits(
+        //     String(value),
+        //     TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+        //   ) > getCurrentBalance()
+        // ) {
+        //   setInputValue(
+        //     Number(
+        //       formatUnits(
+        //         getCurrentBalance(),
+        //         TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+        //       )
+        //     )
+        //   );
+        //   return;
+        // }
         setDebouncedValue(value);
       }, delay);
 
@@ -94,6 +93,14 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     return debouncedValue;
   };
 
+  const checkHasBalance = (): boolean => {
+    return (
+      parseUnits(
+        String(debouncedInputValue),
+        TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+      ) <= getCurrentBalance()
+    );
+  };
   const debouncedInputValue = useDebounce(inputValue, 500);
 
   useEffect(() => {
@@ -192,6 +199,10 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               hideControls
               value={inputValue}
               onChange={(value) => setInputValue(value as number)}
+              allowNegative={false}
+              trimLeadingZeroesOnBlur
+              thousandSeparator
+              decimalScale={6}
             />
             <Dropdown
               value={TOKEN_LIST[inputTokenIndex].symbol}
@@ -248,7 +259,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
             <Typography
               className={` md:col-span-9 col-span-6 ${dogica.className}
-              text-start bg-transparent text-white text-2xl h-auto
+              text-start bg-transparent text-white text-2xl h-auto overflow-x-auto
               border-transparent rounded-none`}
             >
               {routeData
@@ -273,14 +284,16 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
             {routeData
               ? Number(routeData.routeSummary.amountOutUsd).toLocaleString()
               : "0.00"}{" "}
-            (-
+            (
             {routeData
-              ? (
-                  (1 -
-                    Number(routeData.routeSummary.amountOutUsd) /
-                      Number(routeData.routeSummary.amountInUsd)) *
-                  100
-                ).toLocaleString()
+              ? Number(routeData.routeSummary.amountInUsd) == 0
+                ? "0.0"
+                : (
+                    (1 -
+                      Number(routeData.routeSummary.amountOutUsd) /
+                        Number(routeData.routeSummary.amountInUsd)) *
+                    -100
+                  ).toLocaleString()
               : "0.00"}
             %)
           </Typography>
@@ -289,7 +302,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       {isConnected ? (
         <>
           {routeData ? (
-            <SwapButton />
+            <SwapButton hasBalance={checkHasBalance()} />
           ) : (
             <Button className="w-full" disabled>
               <Typography secondary size="sm" tt="uppercase" fw={600}>

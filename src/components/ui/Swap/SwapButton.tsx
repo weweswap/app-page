@@ -11,7 +11,9 @@ import { Button, Typography } from "~/components/common";
 import { useEffect } from "react";
 import { useSwapContext } from "./SwapContext";
 import api from "~/api/swap";
-type SwapButtonProps = {};
+type SwapButtonProps = {
+  hasBalance: boolean;
+};
 
 export const SwapButton = (props: SwapButtonProps) => {
   const {
@@ -79,31 +81,44 @@ export const SwapButton = (props: SwapButtonProps) => {
 
   return (
     <>
-      {allowance==undefined || ((allowance as bigint) >= BigInt(routeData!.routeSummary.amountIn)) ? (
+      {!props.hasBalance ? (
         <>
-          <Button
-            className="w-full"
-            disabled={!routeData}
-            onClick={handleBuild}
-          >
+          <Button className="w-full" disabled>
             <Typography secondary size="md" fw={700} tt="uppercase">
-              Swap
+              Not Enough Balance
             </Typography>
           </Button>
         </>
       ) : (
         <>
-          <Button
-            className="w-full"
-            disabled={isApproving || !routeData}
-            onClick={handleApprove}
-          >
-            <Typography secondary size="md" fw={700} tt="uppercase">
-              {isApproving
-                ? "Approving..."
-                : ` Approve ${routeData!.inputToken.symbol}`}
-            </Typography>
-          </Button>
+          {allowance == undefined ||
+          (allowance as bigint) >= BigInt(routeData!.routeSummary.amountIn) ? (
+            <>
+              <Button
+                className="w-full"
+                disabled={!routeData}
+                onClick={handleBuild}
+              >
+                <Typography secondary size="md" fw={700} tt="uppercase">
+                  Swap
+                </Typography>
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                className="w-full"
+                disabled={isApproving || !routeData}
+                onClick={handleApprove}
+              >
+                <Typography secondary size="md" fw={700} tt="uppercase">
+                  {isApproving
+                    ? "Approving..."
+                    : ` Approve ${routeData!.inputToken.symbol}`}
+                </Typography>
+              </Button>
+            </>
+          )}
         </>
       )}
     </>
