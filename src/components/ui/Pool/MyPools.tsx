@@ -12,8 +12,9 @@ type MyPoolProps = {
 } 
 
 const MyPools = ({onManage}: MyPoolProps) => {
+
   return (
-    <Card className="flex item-center justify-center p-5 min-h-[25rem]">
+    <div className="flex item-center justify-center p-5 min-h-[25rem]">
             {/* <Image src="/img/icons/home.svg" width={150} height={150} alt=""/> */}
             <div className='w-full flex flex-col gap-6'>
         {DUMMY_POOLS.map(({title, exchangePair, state, range, lpValue, rewards, positionId}) => {
@@ -97,15 +98,12 @@ const MyPools = ({onManage}: MyPoolProps) => {
                 <Button className="w-full md:w-auto">
                      <Typography secondary size="xs" fw={700} tt="uppercase">CLAIM</Typography>
                 </Button>
- 
-                
-                 
             </div>
          </div>
         })}
        
     </div>
-         </Card>
+         </div>
   )
 }
 

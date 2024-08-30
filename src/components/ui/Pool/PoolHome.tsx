@@ -51,11 +51,11 @@ export const PoolHome = ({ onNext, onAdd, onZap, onManage,  }: PoolHomeProps) =>
                 <Typography size="sm">MY POOLS</Typography>
                 </div>
         </div>
-         <Button onClick={onNext} className="w-full md:w-fit">
-          <Typography secondary size="xs">
-            NEW POOL+
+         <button onClick={onNext} className="w-full md:w-fit custom_btn p-3">
+          <Typography secondary size="xs" >
+            +NEW POOL
           </Typography>
-          </Button> 
+          </button> 
     </div>
       {poolTypes === 0
          && 
@@ -63,12 +63,14 @@ export const PoolHome = ({ onNext, onAdd, onZap, onManage,  }: PoolHomeProps) =>
       }
       {poolTypes === 1 
         &&
-        <Card className="overflow-y-scroll h-[25rem]">
+        <Card>
             <MyPools onManage={onManage}/>
         </Card> 
       }
       {
-        poolTypes >= 2 && <ComingSoon />
+        poolTypes >= 2 && <Card>
+          <ComingSoon />
+        </Card>
       }
     </>
   );

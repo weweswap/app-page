@@ -29,7 +29,7 @@ export const Dropdown = ({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
 
-  const [val, setVal] = useState<string | undefined>("USDC");
+  const [val, setVal] = useState<string | undefined>(defaultValue);
 
   const selected = options.find((option) =>
     value ? option.value === value : option.value === val

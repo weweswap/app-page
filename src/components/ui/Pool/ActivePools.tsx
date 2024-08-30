@@ -4,10 +4,20 @@ import { useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
 import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT } from "./dummy";
 
-const A = () => {
+const ActivePools = () => {
+
+  const [poolDetail, setPoolDetail] = useState();
+  const [showDetails, setShowDetails] = useState();
+
+  const handleShowDetails = (value:any) => {
+    setPoolDetail(value)
+    console.log(value)
+  }
+
   return (
+    <>
     <Card className='overflow-x-scroll'>
-    <table className="w-[fit-content] min-w-[100%] table-auto text-left">
+    <table className="w-[fit-content] min-w-[100%] table-auto text-left bg_dark">
       <thead>
         <tr>
           {DUMMY_TABLE_HEAD.map((head) => (
@@ -22,13 +32,16 @@ const A = () => {
           ))}
         </tr>
       </thead>
+       <Typography className='px-4 text-sm py-2'>
+            MEMES 1%
+        </Typography>
       <tbody>
         {DUMMY_TABLE_CONTENT.map(({ poolType, logo, type, pool, tvl, volume, apr }, index) => (
           <>
           {/* <tr key={type} className='px-4 text-sm py-2'>
             {poolType}
         </tr> */}
-          <tr key={pool} className="bg-[#1c1c1c] w-[full]" style={{borderBottom: '1rem solid black'}}>
+          <tr onClick={() => handleShowDetails(poolType)} key={pool} className="bg-[#1c1c1c] w-[full]" style={{borderBottom: '1rem solid black'}}>
             <td className="p-4 font-bold ">
               <div className='flex items-center gap-2'>
               <div className='flex items-center'>
@@ -60,8 +73,8 @@ const A = () => {
       </tbody>
     </table>
     </Card>
-  
+    </>
   )
 }
 
-export default A
+export default ActivePools

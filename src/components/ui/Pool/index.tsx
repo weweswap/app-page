@@ -34,9 +34,10 @@ export const Pool = () => {
   return (
     <>
       {step === 0 && <PoolHome onManage={() => setStep(5)}  onZap={handleZapModal} onNext={() => setStep(1)} onAdd={openAdd} />}
-      {step === 1 && <PoolDetail onBack={() => setStep(0)} onAdd={() => setStep(3)} onZapIn={() => setStep(2)} />}
+      {/* {step === 1 && <PoolDetail onBack={() => setStep(0)} onAdd={() => setStep(3)} onZapIn={() => setStep(2)} />} */}
+      {step === 1 &&<PoolCreate onBack={() => setStep(1)} onNext={handleAdd} />}
       {step === 2 && ( <PoolZapIn onBack={() => setStep(1)} onZap={handleZapModal} />)}
-      {step === 3 && ( <PoolCreate onBack={() => setStep(1)} onNext={handleAdd} /> )}
+      {/* {step === 3 && ( <PoolCreate onBack={() => setStep(1)} onNext={handleAdd} /> )} */}
       {step === 4 && (<SuccessModal onConfirm={handleAdd} />)}
       {step === 5 && (<PoolsManage onBack={() => setStep(0)}/>)}
 

@@ -26,19 +26,19 @@ const PoolCreate = ({ onNext, onBack }: NewPoolCreateProps) => {
     <>
      <div className="flex items-center justify-between gap-4 w-full p-6 bg_rich_dark">
         <button onClick={onBack}>
-          <Typography secondary size="sm">
-            {"<"}  CREATE POOL
+          <Typography secondary size="md">
+           POOLS {"<"}  NEW POOL
           </Typography>
         </button>
         <div className="flex gap-4">
         <Button disabled >
             <Typography secondary size="xs" fw={700}>
-              MIGRATE
+              INCENTIVIZE
             </Typography>
           </Button>
           <Button disabled>
             <Typography secondary size="xs" fw={700}>
-              NEW POOL
+              MIGRATE
             </Typography>
           </Button>
         </div>
@@ -51,7 +51,7 @@ const PoolCreate = ({ onNext, onBack }: NewPoolCreateProps) => {
           <div className="flex md:flex-row flex-col gap-4 justify-between w-full">
           <div className="flex flex-col md:w-1/3  gap-5">
             <Dropdown
-              defaultValue="BASE"
+              defaultValue="Select"
               options={poolOptions}
               className="w-full"
             />
@@ -59,7 +59,7 @@ const PoolCreate = ({ onNext, onBack }: NewPoolCreateProps) => {
          
           <div className="flex flex-col md:w-1/3   gap-5">   
             <Dropdown
-              defaultValue="BASE"
+              defaultValue="USDC"
               options={poolOptions}
               className="w-full"
             />
@@ -67,13 +67,27 @@ const PoolCreate = ({ onNext, onBack }: NewPoolCreateProps) => {
         </div>
           </div>
         </div>
-        <div className="bg_light_dark flex items-center justify-between mt-4 gap-3 p-4">
-          <div className="flex md:flex-row flex-col items-center gap-4 justify-between w-full">
-           <Input />
-         <Typography size='xs'>
-            AMOUNT
-         </Typography> 
-           <Input />
+        <div className="flex items-center justify-between mt-4 gap-3 p-4">
+        <div className="grid grid-cols-3 gap-3 p-3  bg_light_dark w-full">
+          <button
+            className={`bg_gray px-3 py-2 ${poolRange === 0 && "border_turq"}`}
+            // onClick={() => setPoolRange(0)}
+          >
+            <Image src="/img/icons/rocket.svg" width={20} height={20} alt="" />
+            <Typography size="sm">MEMES 1%</Typography>
+          </button>
+          <button
+            className={`bg_gray px-3 py-2 ${poolRange === 1 && "border_turq"}`}
+            // onClick={() => setPoolRange(1)}
+          >
+            <Typography size="sm">BLUE CHIP 0.3%</Typography>
+          </button>
+          <button
+            className={`bg_gray px-3 py-2 ${poolRange === 2 && "border_turq"}`}
+            // onClick={() => setPoolRange(2)}
+          >
+            <Typography size="sm">STABLES 0.05%</Typography>
+          </button>
         </div>
           </div>
           <Typography size='sm' className='text-center py-4'>

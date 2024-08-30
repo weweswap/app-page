@@ -17,14 +17,14 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
           MIGRATE AND EARN CHAOS!
           </Typography>
           <div className="flex items-center gap-3">
-          <Button>
+          <Button disabled>
             <Typography secondary size="xs" fw={700}>
-              MIGRATE
+              INCENTIVIZE
             </Typography>
           </Button>
           <Button disabled>
             <Typography secondary size="xs" fw={700}>
-              NEW POOL
+              MIGRATE
             </Typography>
           </Button>
           </div>
@@ -34,12 +34,12 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
         </Typography>
       </Card>
 
-      <div className="py-2">
+      <div className="py-2 w-full">
         YOUR UNISWAP ACTIVE POSITIONS
       </div>
       <Card className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex-1 bg-gray-900 px-4 py-3 flex items-center gap-3">
+          <div className="flex-1 bg_light_dark px-4 py-3 flex items-center gap-3">
             <Image
               className="rounded"
               src="/img/tokens/uniswap.png"
