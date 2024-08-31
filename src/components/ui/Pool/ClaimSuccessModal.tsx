@@ -27,7 +27,7 @@ const ClaimSuccessModal = (props: ClaimSuccessModalProps) => {
           </div>
 
           <div className="flex items-center gap-1">
-              <Image src="/img/icons/infinity.svg" width={20} height={20} alt="" />
+              <Image src="/img/icons/Infinity.svg" width={20} height={20} alt="" />
               <Typography size="xs" className="translate-x-1">
                 INFINITY
               </Typography>

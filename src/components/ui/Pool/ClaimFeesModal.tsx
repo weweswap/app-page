@@ -19,7 +19,7 @@ const ClaimedFeesModal = (props: ClaimedFeesModalProps) => {
           <Typography size="xs">MEMES 1%</Typography>
         </div>
         <div className="flex items-center gap-2">
-          <Image src="/img/icons/infinity.svg" alt="" height={20} width={20} />
+          <Image src="/img/icons/Infinity.svg" alt="" height={20} width={20} />
           <Typography size="xs">INFINITY</Typography>
         </div>
       </div>
