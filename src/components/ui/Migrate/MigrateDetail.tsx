@@ -15,7 +15,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
 
   return (
     <>
-      <Card className="flex flex-col gap-6 p-6">
+      <Card className="flex flex-col gap-6 p-5">
         <div>
           <button onClick={onBack} className="w-full text-start">
             <div
@@ -24,27 +24,27 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
               size="md"
               tt="uppercase">MIGRATE UNISWAP LIQUIDITY</Typography>
               <div className="flex items-center gap-3">
-                <Button>
+                <Button disabled>
                   <Typography secondary size="xs" fw={700}>
-                    MIGRATE
+                    INCENTIVIZE
                   </Typography>
                 </Button>
                 <Button disabled>
                   <Typography secondary size="xs" fw={700}>
-                    NEW POOL
+                    MIGRATE
                   </Typography>
                 </Button>
               </div>
             </div>
           </button>
           <Typography size="xs" className="mt-3">
-            All WEWESWAP pools are paired in USDC - this means easy to collect
-            and earn fees. <br />
+            All WEWESWAP pools are paired in USDC - this means easy to collect <br />
+            and earn fees.
             This migration will move your liquidity over.
           </Typography>
         </div>
       </Card>
-      <div className="py-2">UNISWAP MIGRATION STATUS</div>
+      <div className="py-2 w-full">UNISWAP MIGRATION STATUS</div>
       <Card>
         <div className="flex items-center justify-between">
           <Typography size="lg">VALUE</Typography>
@@ -61,7 +61,9 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
           <Typography size="sm" className="font-bold">
             100%
           </Typography>
+          
           <div className="flex items-center gap-2 font-extrabold text-black text-sm">
+          <Typography className="text-white">$34.56</Typography>
             <button className="bg-[#33E6BF]  px-3 py-2">50%</button>
             <button className="bg-[#33E6BF] px-3 py-2">MAX</button>
           </div>
@@ -77,7 +79,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
         </div>
 
         <div className="flex flex-col gap-5">
-          <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
+          <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
             <div className="flex-1 flex items-center gap-3">
               <Image src="/img/tokens/wewe.png" width={32} height={32} alt="" />
               <Typography secondary size="xs">
@@ -98,7 +100,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-3 pt-3">
+        {/* <div className="grid grid-cols-3 gap-3 pt-3">
           <button
             className={`bg-gray-900 px-3 py-2 ${migrateRange === 0 && "selected"}`}
             onClick={() => setMigrateRange(0)}
@@ -117,13 +119,14 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
           >
             <Typography size="sm">NARROW 40%</Typography>
           </button>
-        </div>
-      </Card>
-      <Button onClick={onMigrate} className="outline px-10">
+        </div> */}
+         <Button onClick={onMigrate} className="outline px-10 my-5 w-full">
         <Typography secondary size="xs" fw={700}>
           MIGRATE
         </Typography>
       </Button>
+      </Card>
+     
       <div className="w-full">
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">

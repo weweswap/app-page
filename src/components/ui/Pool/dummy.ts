@@ -2,6 +2,7 @@ export const DUMMY_TABLE_HEAD = ["POOL", "TVL", "VOLUME", "APR", "" ]
 
 export const DUMMY_TABLE_CONTENT = [
     {
+        poolType: "MEMES 1%",
         pool: "EXOTIC",
         tvl: "$10,000,000,000.00",
         volume: "$1,000,000",
@@ -13,29 +14,31 @@ export const DUMMY_TABLE_CONTENT = [
         }
     },
 
-    {
-        pool: "STABLES",
-        tvl: "$10,000,000,000.00",
-        volume: "$1,000,000",
-        apr: "110%",
-        type: "USDT/USDC",
-        logo: {
-            first: "/img/tokens/wewe.png",
-            second: "/img/tokens/usdc.png"
-        }
-    },
+    // {
+    //     poolType: "BLUE CHIPS 0.3%",
+    //     pool: "STABLES",
+    //     tvl: "$10,000,000,000.00",
+    //     volume: "$1,000,000",
+    //     apr: "110%",
+    //     type: "USDT/USDC",
+    //     logo: {
+    //         first: "/img/tokens/wewe.png",
+    //         second: "/img/tokens/usdc.png"
+    //     }
+    // },
 
-    {
-        pool: "BLUE CHIP",
-        tvl: "$10,000,000,000.00",
-        volume: "$1,000,000",
-        apr: "110%",
-        type: "ETH/USDC",
-        logo: {
-            first: "/img/tokens/wewe.png",
-            second: "/img/tokens/usdc.png"
-        }
-    },
+    // {
+    //     poolType: "STABLES",
+    //     pool: "BLUE CHIP",
+    //     tvl: "$10,000,000,000.00",
+    //     volume: "$1,000,000",
+    //     apr: "110%",
+    //     type: "ETH/USDC",
+    //     logo: {
+    //         first: "/img/tokens/wewe.png",
+    //         second: "/img/tokens/usdc.png"
+    //     }
+    // },
   ];
   
   export const DUMMY_POOLS = [
@@ -48,24 +51,24 @@ export const DUMMY_TABLE_CONTENT = [
         rewards: "45,65",
         positionId: "69",
     },
-    {
-        title: "EXOTIC 1%",
-        exchangePair: "WEWE/USDC",
-        state: "Inactive",
-        range: "NARROW",
-        lpValue: "34,56",
-        rewards: "45,65",
-        positionId: "69",
-    },
-    {
-        title: "EXOTIC 1%",
-        exchangePair: "WEWE/USDC",
-        state: "Active",
-        range: "MID",
-        lpValue: "34,56",
-        rewards: "45,65",
-        positionId: "69",
-    },
+    // {
+    //     title: "EXOTIC 1%",
+    //     exchangePair: "WEWE/USDC",
+    //     state: "Inactive",
+    //     range: "NARROW",
+    //     lpValue: "34,56",
+    //     rewards: "45,65",
+    //     positionId: "69",
+    // },
+    // {
+    //     title: "EXOTIC 1%",
+    //     exchangePair: "WEWE/USDC",
+    //     state: "Active",
+    //     range: "MID",
+    //     lpValue: "34,56",
+    //     rewards: "45,65",
+    //     positionId: "69",
+    // },
   ]
 
   export const DUMMY_POOL_TYPES = [

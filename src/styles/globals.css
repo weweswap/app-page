@@ -25,7 +25,8 @@
   --light-dark: #191919;
   --light-gray:#b9b9b9;
   --active: #02bf87;
-  --gray: #303030
+  --gray: #303030;
+  --green: rgb(68, 238, 65, 29%);
 }
 
 body {
@@ -174,4 +175,40 @@ input[type='range']::-ms-thumb {
 .input_default {
   border-radius: 0;
   background-color: var(--light-dark);
+}
+
+.table_body {
+  overflow: auto;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+}
+
+.table_body::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+
+}
+
+.bg_green {
+  background-color: var(--green);
+}
+
+.custom_btn {
+  border: 1px solid white;
+  background-color: transparent;
+  padding: 10px 15px;
+}
+
+.inputField {
+  background-color: var(--gray);
+  height: 3rem;
+  padding: 5px;
+  width: 100%;
+}
+
+.turq_btn {
+  background-color: var(--turq);
+  color: black;
+  height: 3rem;
+  padding: 5px 20px;
+  font-weight: bolder;
 }
