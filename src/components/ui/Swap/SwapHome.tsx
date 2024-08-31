@@ -257,8 +257,8 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           </Typography>
 
           <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
-            <Typography
-              className={` md:col-span-9 col-span-6 ${dogica.className}
+            <Typography secondary
+              className={` md:col-span-9 col-span-6 
               text-start bg-transparent text-white text-2xl h-auto overflow-x-auto
               border-transparent rounded-none`}
             >
