@@ -123,7 +123,7 @@ export const PoolZapModal = (props: ZapModalProps) => {
           <button 
             className={`bg_gray flex items-center justify-center gap-2 px-3 py-2`}
           >
-            <Image src="/img/icons/infinity.svg" width={12} height={12} alt="" />
+            <Image src="/img/icons/Infinity.svg" width={12} height={12} alt="" />
             <Typography size="xs">INFINITY</Typography>
           </button>
         </div>

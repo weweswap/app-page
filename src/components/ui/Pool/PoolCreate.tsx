@@ -120,7 +120,7 @@ const PoolCreate = ({ onNext, onBack }: NewPoolCreateProps) => {
             className={`bg_gray flex items-center justify-center gap-2 px-3 py-2 ${poolRange === 3 && "border_turq"}`}
             onClick={() => setPoolRange(3)}
           >
-            <Image src="/img/icons/infinity.svg" width={20} height={20} alt="" />
+            <Image src="/img/icons/Infinity.svg" width={20} height={20} alt="" />
             <Typography size="sm">INFINITY</Typography>
           </button>
         </div>
