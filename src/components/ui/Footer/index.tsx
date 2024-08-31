@@ -13,7 +13,12 @@ export const Footer = () => {
           <Lottie animationData={animation} />
         </div>
       ) : (
-        <Image src="/img/footer-logo.svg" width={400} height={60} alt="" />
+        <>
+        <div className="w-full sm:w-[500px]">
+          {/* <video animationData={animation2} /> */}
+        </div>
+        <Image src="/videos/pool-animation.gif" width={550} height={60} alt="" />
+        </>
       )}
       <div className="flex items-center gap-6">
         <Link href="https://x.com/weweswap" target="_blank">
