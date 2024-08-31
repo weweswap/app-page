@@ -12,19 +12,28 @@ type PoolHomeProps = {
   onNext: () => void;
   onAdd: () => void;
   onZap: () => void;
+  onZapOut: () => void;
   onManage: () => void;
 };
 
-export const PoolHome = ({ onNext, onAdd, onZap, onManage,  }: PoolHomeProps) => {
+export const PoolHome = ({ onNext, onAdd, onZap, onManage, onZapOut }: PoolHomeProps) => {
 
   const [poolTypes, setPoolTypes] = useState<number>(0)
+  const [backOption, setBackOption] = useState(false)
+
+  const showDetailsHandler = () => {
+    setBackOption(!backOption)
+
+  
+  }
+
 
   return (
     <>
       <Card className="flex flex-col md:flex-row text-center md:text-start items-center justify-between gap-5">
         <div className="">
           <Typography secondary size="xl" tt="uppercase">
-            POOLS
+            <>{backOption ? <span >{"<"}</span> : ""}</>POOLS
           </Typography>
         </div>
         <div className="flex sm:flex-row flex-col sm:w-fit w-full gap-5">
@@ -35,14 +44,14 @@ export const PoolHome = ({ onNext, onAdd, onZap, onManage,  }: PoolHomeProps) =>
           </Typography>
         </Button>
         </Link>
-        <Button  className="w-full md:w-auto">
+        {/* <Button  className="w-full md:w-auto">
           <Typography secondary size="xs" fw={700} tt="uppercase">
             INCENTIVIZE
           </Typography>
-        </Button>
+        </Button> */}
         </div>
       </Card>
-    <div className="flex items-center justify-between w-full gap-6 md:flex-row flex-col">
+    {/* <div className="flex items-center justify-between w-full gap-6 md:flex-row flex-col">
         <div className="bg_light_dark w-[30rem] flex items-center justify-between gap-3 h-[3rem]">
             <div onClick={() => setPoolTypes(0)} className={`${poolTypes === 0 && "nav_selected"} nav`}>
                 <Typography size="sm">ACTIVE</Typography>
@@ -56,22 +65,18 @@ export const PoolHome = ({ onNext, onAdd, onZap, onManage,  }: PoolHomeProps) =>
             +NEW POOL
           </Typography>
           </button> 
-    </div>
+    </div> */}
       {poolTypes === 0
          && 
-        <ActivePools />
+        <ActivePools onZap={onZap} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
       }
       {poolTypes === 1 
         &&
         <Card>
-            <MyPools onManage={onManage}/>
+            <MyPools onZapOut={onZapOut} onManage={onManage} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
         </Card> 
       }
-      {
-        poolTypes >= 2 && <Card>
-          <ComingSoon />
-        </Card>
-      }
+   
     </>
   );
 };

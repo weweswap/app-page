@@ -3,19 +3,17 @@ import Link from "next/link";
 import React from "react";
 import { Button, Card, Typography } from "~/components/common";
 
-type PoolDetailProps = {
-  onBack: () => void;
-  onZap: () => void
+type MyPoolDetailProps = {
+    onBack: () => void
 }
 
-const PoolDetail = ({onBack, onZap}: PoolDetailProps) => {
+const MyPoolDetail = ({onBack}: MyPoolDetailProps) => {
   return (
     <>
-    <Card>
       <div className=" w-full min-h-[10rem]">
         <div className="sm:py-4  flex items-center justify-between gap-3 flex-wrap">
-          <div className="flex items-center gap-2">
-            <button onClick={onBack}>
+          <div className="flex items-center gap-2 ">
+          <button onClick={onBack}>
             <Typography secondary size="xl">{"<"}</Typography>
             </button>
             <div className="flex items-center">
@@ -72,13 +70,13 @@ const PoolDetail = ({onBack, onZap}: PoolDetailProps) => {
             >
               IN RANGE
             </Typography>
-            <div className="flex items-center gap-1">
-              <Image src="/img/links/wide.svg" width={20} height={20} alt="" />
+          </div>
+          <div className="flex items-center gap-1">
+              <Image src="/img/icons/infinity.svg" width={20} height={20} alt="" />
               <Typography size="xs" className="translate-x-1">
-                WIDE
+                INFINITY
               </Typography>
             </div>
-          </div>
           <div className="flex items-center gap-1">
             <Image src="/img/icons/memes.svg" width={20} height={20} alt="" />
             <Typography size="xs" className="translate-x-1">
@@ -129,14 +127,45 @@ const PoolDetail = ({onBack, onZap}: PoolDetailProps) => {
           </div>
           </div>
         </div>
-            <Button onClick={onZap} className="w-full mt-4">
+          <Link href="/migrate" className="w-full">
+            <Button className="w-full mt-4">
               <Typography secondary size="xs" fw={700} tt="uppercase">
                 ZAP-IN
               </Typography>
             </Button>
+          </Link>
       </div>
-    </Card>
-    <Card>
+      <div className="flex  justify-evenly gap-3 flex-wrap py-10">
+        <div className="flex flex-col items-center gap-1">
+            <Typography className="text_light_gray">POSITION SHARES</Typography>
+            <Typography size="lg" fw={1000}>0.0000001231231</Typography>
+            <button className="custom_btn mt-4">
+              <Typography size="xs" secondary>ZAP-OUT</Typography>
+            </button>
+        </div>
+        <div className="flex flex-col items-center  lg:mt-[-5px]">
+          <div className="flex gap-2 items-center">
+          <Typography className="text_light_gray">PENDING FEES</Typography>
+          <Image src="/img/tokens/usdc.png" width={32} height={32} alt="" />
+          </div>
+            <Typography size="lg" fw={1000}>$2.36</Typography>
+            <Button className="mt-4">
+              <Typography size="xs" secondary>CLAIM</Typography>
+            </Button>
+        </div>
+
+        <div className="flex flex-col items-center  lg:mt-[-5px]">
+          <div className="flex gap-2 items-center">
+          <Typography className="text_light_gray">REWARDS</Typography>
+          <Image src="/img/tokens/rewards.svg" width={32} height={32} alt="" />
+          </div>
+            <Typography size="lg" fw={1000}>$2.36</Typography>
+            <Button className="mt-4">
+              <Typography size="xs" secondary>CLAIM</Typography>
+            </Button>
+        </div>
+        
+      </div>
         <Typography size="lg">
         When you add liquidity to an Active Pool:
         </Typography>
@@ -146,10 +175,9 @@ const PoolDetail = ({onBack, onZap}: PoolDetailProps) => {
         <li>Any assets that can’t fit in the pool are refunded back to you.</li>
         <li>You may experience a small slip when you enter a pool that is out-of-balance.</li>
         </ul>
-    </Card>
     </>
 
   );
 };
 
-export default PoolDetail;
+export default MyPoolDetail;

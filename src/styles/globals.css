@@ -195,5 +195,20 @@ input[type='range']::-ms-thumb {
 .custom_btn {
   border: 1px solid white;
   background-color: transparent;
-  padding: 3;
+  padding: 10px 15px;
+}
+
+.inputField {
+  background-color: var(--gray);
+  height: 3rem;
+  padding: 5px;
+  width: 100%;
+}
+
+.turq_btn {
+  background-color: var(--turq);
+  color: black;
+  height: 3rem;
+  padding: 5px 20px;
+  font-weight: bolder;
 }

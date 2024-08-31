@@ -153,13 +153,13 @@ const PoolsManage = ({onBack}: PoolsManageProps) => {
         <div className="flex items-center justify-between my-5">
           <Typography size="xs">PENDING FEES: $2,36</Typography>
           <div className="flex sm:flex-row flex-col sm:w-fit w-full gap-5">
-          <Link href="/migrate" className="w-full">
+          {/* <Link href="/migrate" className="w-full"> */}
             <Button className="w-full md:w-auto">
               <Typography secondary size="xs" fw={700} tt="uppercase">
                 ZAP-IN
               </Typography>
             </Button>
-          </Link>
+          {/* </Link> */}
           <Button className="w-full md:w-auto">
             <Typography secondary size="xs" fw={700} tt="uppercase">
               CLAIM

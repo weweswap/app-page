@@ -1,22 +1,64 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Image from "next/image";
 import { useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
 import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT } from "./dummy";
+import PoolDetail from './PoolDetail';
 
-const ActivePools = () => {
+type ActivePoolProps = {
+  setPoolTypes: (number:number) => void;
+  poolTypes: number;
+  onNext: () => void;
+  onZap: () => void
+}
+
+const ActivePools = ({setPoolTypes, poolTypes, onNext, onZap}: ActivePoolProps) => {
 
   const [poolDetail, setPoolDetail] = useState();
-  const [showDetails, setShowDetails] = useState();
+  const [showDetails, setShowDetails] = useState<boolean>(false);
 
   const handleShowDetails = (value:any) => {
+    console.log(showDetails)
     setPoolDetail(value)
     console.log(value)
   }
 
+  useEffect(() => {
+    if(poolDetail !== undefined) {
+      setShowDetails(true)
+    }
+  }, [poolDetail])
+
+  const handleHideDetails = () => {
+    setShowDetails(false)
+    setPoolDetail(undefined)
+  }
+
+  const handleZapIn = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    onZap()
+
+
+  }
+
   return (
     <>
-    <Card className='overflow-x-scroll'>
+    {!showDetails ? <Card className='overflow-x-scroll'>
+      <div className="flex items-center justify-between w-full gap-6 md:flex-row flex-col">
+        <div className="bg_light_dark w-[30rem] flex items-center justify-between gap-3 h-[3rem]">
+            <div onClick={() => setPoolTypes(0)} className={`${poolTypes === 0 && "nav_selected"} nav`}>
+                <Typography size="sm">ACTIVE</Typography>
+                </div>
+                <div onClick={() => setPoolTypes(1)} className={`${poolTypes === 1 && "nav_selected"} nav`}>
+                <Typography size="sm">MY POOLS</Typography>
+                </div>
+        </div>
+         <button onClick={onNext} className="w-full md:w-fit custom_btn p-3">
+          <Typography secondary size="xs" >
+            +NEW POOL
+          </Typography>
+          </button> 
+    </div>
     <table className="w-[fit-content] min-w-[100%] table-auto text-left bg_dark">
       <thead>
         <tr>
@@ -41,7 +83,7 @@ const ActivePools = () => {
           {/* <tr key={type} className='px-4 text-sm py-2'>
             {poolType}
         </tr> */}
-          <tr onClick={() => handleShowDetails(poolType)} key={pool} className="bg-[#1c1c1c] w-[full]" style={{borderBottom: '1rem solid black'}}>
+          <tr onClick={() => handleShowDetails({ poolType, logo, type, pool, tvl, volume, apr })} key={pool} className="bg-[#1c1c1c] w-[full] cursor-pointer hover:bg-[#202020]" style={{borderBottom: '1rem solid black'}}>
             <td className="p-4 font-bold ">
               <div className='flex items-center gap-2'>
               <div className='flex items-center'>
@@ -61,7 +103,7 @@ const ActivePools = () => {
             <Typography size='xs'>{apr}</Typography>
             </td>
             <td className="p-4" align='right'>
-            <Button  className="w-full md:w-auto min-w-[6rem] ">
+            <Button onClick={handleZapIn}  className="w-full md:w-auto min-w-[6rem]">
             <Typography secondary size='xs' ff="900">
             ZAP-IN
             </Typography>
@@ -73,6 +115,9 @@ const ActivePools = () => {
       </tbody>
     </table>
     </Card>
+    :
+      <PoolDetail onBack={handleHideDetails} onZap={onZap} />
+    }
     </>
   )
 }
