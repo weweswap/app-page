@@ -28,6 +28,7 @@ export type SwapStateProps = {
   confirmingSwap?: boolean;
   swapDone?: boolean;
   swapError: boolean;
+  buildErrorCode?: string;
 };
 const initialSwapState = {
   approved: false,
@@ -37,6 +38,7 @@ const initialSwapState = {
   confirmingSwap: false,
   swapDone: false,
   swapError: false,
+  buildErrorCode: undefined,
 };
 export const SwapProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

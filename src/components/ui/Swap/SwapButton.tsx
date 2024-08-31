@@ -56,7 +56,7 @@ export const SwapButton = (props: SwapButtonProps) => {
 
   const handleBuild = () => {
     api.router
-      .build(Chain.BASE, routeData!.routeSummary, address!, swapSlippage)
+      .build(Chain.BASE, routeData!.routeSummary, address!, swapSlippage * 100)
       .then((res) => {
         setSwapState({ ...swapState, loading: false });
         const data = res.data;
@@ -70,9 +70,20 @@ export const SwapButton = (props: SwapButtonProps) => {
         }
       })
       .catch((err) => {
-        console.log("err:", err);
-        setSwapState({ ...swapState, approved: false, loading: false });
-        setEncodedData(undefined);
+        if (err.status == 422) {
+          setSwapState({
+            ...swapState,
+            approved: false,
+            loading: false,
+            buildErrorCode: "422",
+          });
+          setEncodedData(undefined);
+          openSwapModal();
+        } else {
+          console.log("err:", err);
+          setSwapState({ ...swapState, approved: false, loading: false });
+          setEncodedData(undefined);
+        }
       });
   };
   useEffect(() => {
