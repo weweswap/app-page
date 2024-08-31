@@ -9,6 +9,7 @@ import ComingSoon from "~/components/common/ComingSoon";
 import MyPoolDetail from "./MyPoolDetails";
 
 type MyPoolProps = {
+  onClaim: () => void
   onManage: () => void;
   setPoolTypes: (number: number) => void;
   poolTypes: number;
@@ -16,7 +17,7 @@ type MyPoolProps = {
   onZapOut: () => void
 };
 
-const MyPools = ({onManage,setPoolTypes,poolTypes,onNext,onZapOut}: MyPoolProps) => {
+const MyPools = ({onClaim,onManage,setPoolTypes,poolTypes,onNext,onZapOut}: MyPoolProps) => {
 
   const [poolDetail, setPoolDetail] = useState();
   const [showDetails, setShowDetails] = useState<boolean>(false);
@@ -41,6 +42,11 @@ const MyPools = ({onManage,setPoolTypes,poolTypes,onNext,onZapOut}: MyPoolProps)
   const handleZapOut = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onZapOut()
+  }
+
+  const handleClaim = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    onClaim()
   }
 
   
@@ -70,7 +76,7 @@ const MyPools = ({onManage,setPoolTypes,poolTypes,onNext,onZapOut}: MyPoolProps)
             </Typography>
           </button>
         </div>
-        <div className="flex item-center justify-center p-5 min-h-[25rem]">
+        <div className="flex item-center justify-center py-5 min-h-[25rem]">
           {/* <Image src="/img/icons/home.svg" width={150} height={150} alt=""/> */}
           <div className="w-full flex flex-col gap-6">
             {DUMMY_POOLS.map(
@@ -78,7 +84,7 @@ const MyPools = ({onManage,setPoolTypes,poolTypes,onNext,onZapOut}: MyPoolProps)
               }) => {
                 return (
                   <div onClick={() => handleShowDetails({title, exchangePair, state, range, lpValue, rewards, positionId,
-              })} key={title} className="bg_dark w-full min-h-[10rem] p-4">
+              })} key={title} className="bg_dark w-full min-h-[10rem] p-4 hover:bg-[#181818] cursor-pointer">
                     <Typography>{title}</Typography>
                     <div className="sm:py-4 py-7 flex items-center justify-between gap-3 flex-wrap">
                       <div className="flex items-center gap-2">
@@ -199,7 +205,7 @@ const MyPools = ({onManage,setPoolTypes,poolTypes,onNext,onZapOut}: MyPoolProps)
                         </Typography>
                       </Button>
 
-                      <Button className="w-full md:w-auto">
+                      <Button onClick={handleClaim} className="w-full md:w-auto">
                         <Typography secondary size="xs" fw={700} tt="uppercase">
                           CLAIM
                         </Typography>

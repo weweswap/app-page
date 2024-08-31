@@ -9,6 +9,7 @@ import ActivePools from "./ActivePools";
 import MyPools from "./MyPools";
 
 type PoolHomeProps = {
+  onClaim: () => void;
   onNext: () => void;
   onAdd: () => void;
   onZap: () => void;
@@ -16,15 +17,13 @@ type PoolHomeProps = {
   onManage: () => void;
 };
 
-export const PoolHome = ({ onNext, onAdd, onZap, onManage, onZapOut }: PoolHomeProps) => {
+export const PoolHome = ({ onClaim, onNext, onAdd, onZap, onManage, onZapOut }: PoolHomeProps) => {
 
   const [poolTypes, setPoolTypes] = useState<number>(0)
   const [backOption, setBackOption] = useState(false)
 
   const showDetailsHandler = () => {
-    setBackOption(!backOption)
-
-  
+    setBackOption(!backOption)  
   }
 
 
@@ -73,7 +72,7 @@ export const PoolHome = ({ onNext, onAdd, onZap, onManage, onZapOut }: PoolHomeP
       {poolTypes === 1 
         &&
         <Card>
-            <MyPools onZapOut={onZapOut} onManage={onManage} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
+            <MyPools onClaim={onClaim} onZapOut={onZapOut} onManage={onManage} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
         </Card> 
       }
    

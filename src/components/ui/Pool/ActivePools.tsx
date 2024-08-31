@@ -59,7 +59,7 @@ const ActivePools = ({setPoolTypes, poolTypes, onNext, onZap}: ActivePoolProps) 
           </Typography>
           </button> 
     </div>
-    <table className="w-[fit-content] min-w-[100%] table-auto text-left bg_dark">
+    <table className="w-[fit-content] min-w-[100%] table-auto text-left bg_dark mt-5">
       <thead>
         <tr>
           {DUMMY_TABLE_HEAD.map((head) => (
