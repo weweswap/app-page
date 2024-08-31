@@ -38,7 +38,7 @@ const initialSwapState = {
   confirmingSwap: false,
   swapDone: false,
   swapError: false,
-  buildErrorCode: undefined,
+  buildErrorCode: "",
 };
 export const SwapProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

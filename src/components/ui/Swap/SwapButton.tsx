@@ -23,6 +23,7 @@ export const SwapButton = (props: SwapButtonProps) => {
     swapSlippage,
     setEncodedData,
     openSwapModal,
+    initialSwapState,
   } = useSwapContext();
   const { address, chain } = useAccount();
   const { data: allowance, refetch } = useReadContract({
@@ -61,7 +62,7 @@ export const SwapButton = (props: SwapButtonProps) => {
         setSwapState({ ...swapState, loading: false });
         const data = res.data;
         if (data.message == RouterMessageType.Succussful) {
-          setSwapState({ ...swapState, approved: true });
+          setSwapState({ ...swapState, approved: true, buildErrorCode: "" });
           setEncodedData(data.data as BuildData);
           openSwapModal();
         } else {
