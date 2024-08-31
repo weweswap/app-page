@@ -263,10 +263,10 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               border-transparent rounded-none`}
             >
               {routeData
-                ? formatStringUnits(
+                ? Number(formatStringUnits(
                     routeData.routeSummary.amountOut,
                     TOKEN_LIST[outputTokenIndex].decimals
-                  )
+                  )).toLocaleString()
                 : "0.0"}
             </Typography>
 
