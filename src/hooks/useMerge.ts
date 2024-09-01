@@ -13,7 +13,7 @@ export const useTokenBalance = (
   address: `0x${string}` | undefined,
   contractAddress: `0x${string}`
 ) => {
-  const { data, isFetching } = useReadContract({
+  const { data, isFetching, refetch } = useReadContract({
     abi: erc20Abi,
     address: contractAddress,
     functionName: "balanceOf",
@@ -23,6 +23,7 @@ export const useTokenBalance = (
   return {
     data: data ?? 0n,
     isFetching,
+    refetch,
   };
 };
 

@@ -40,7 +40,7 @@ export const SwapModal = (props: SwapModalProps) => {
       pendingSwap: isPending,
       confirmingSwap: isConfirming,
       swapDone: isConfirmed,
-      swapError:isError
+      swapError: isError,
     });
 
     if (isConfirmed) {
@@ -168,24 +168,42 @@ export const SwapModal = (props: SwapModalProps) => {
             </div>
           </div>
 
-          <Button
-            className="w-full"
-            onClick={handleConfirm}
-            disabled={
-              !swapState.approved ||
-              swapState.loading ||
-              swapState.pendingSwap ||
-              swapState.confirmingSwap
-            }
-          >
-            <Typography secondary size="md" fw={700} tt="uppercase">
-              {swapState.pendingSwap
-                ? "Pending wallet confirm"
-                : swapState.confirmingSwap
-                ? "Pending ..."
-                : " Confirm Swap"}
-            </Typography>
-          </Button>
+          {swapState.buildErrorCode == "422" && (
+            <div className="rounded rounded-lg bg-orange-600 p-2">
+              <Typography size="xs">
+                There was an issue while confirming your price and minimum
+                amount received. You may consider adjusting your Max Slippage
+                and then trying to swap again.
+              </Typography>
+            </div>
+          )}
+
+          {swapState.buildErrorCode ? (
+            <Button className="w-full" onClick={props.onClose}>
+              <Typography secondary size="md" fw={700} tt="uppercase">
+                Dismiss
+              </Typography>
+            </Button>
+          ) : (
+            <Button
+              className="w-full"
+              onClick={handleConfirm}
+              disabled={
+                !swapState.approved ||
+                swapState.loading ||
+                swapState.pendingSwap ||
+                swapState.confirmingSwap
+              }
+            >
+              <Typography secondary size="md" fw={700} tt="uppercase">
+                {swapState.pendingSwap
+                  ? "Pending wallet confirm"
+                  : swapState.confirmingSwap
+                  ? "Pending ..."
+                  : " Confirm Swap"}
+              </Typography>
+            </Button>
+          )}
         </>
       )}
     </Modal>
