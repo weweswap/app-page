@@ -15,26 +15,14 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
 
   return (
     <>
-      <Card className="flex flex-col gap-6 p-5">
-        <div>
+
+        <div className="w-full">
           <button onClick={onBack} className="w-full text-start">
             <div
               className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap">
               <Typography secondary
               size="md"
               tt="uppercase">MIGRATE UNISWAP LIQUIDITY</Typography>
-              <div className="flex items-center gap-3">
-                <Button disabled>
-                  <Typography secondary size="xs" fw={700}>
-                    INCENTIVIZE
-                  </Typography>
-                </Button>
-                <Button disabled>
-                  <Typography secondary size="xs" fw={700}>
-                    MIGRATE
-                  </Typography>
-                </Button>
-              </div>
             </div>
           </button>
           <Typography size="xs" className="mt-3">
@@ -43,7 +31,6 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
             This migration will move your liquidity over.
           </Typography>
         </div>
-      </Card>
       <div className="py-2 w-full">UNISWAP MIGRATION STATUS</div>
       <Card>
         <div className="flex items-center justify-between">
@@ -80,9 +67,12 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
 
         <div className="flex flex-col gap-5">
           <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
-            <div className="flex-1 flex items-center gap-3">
-              <Image src="/img/tokens/wewe.png" width={32} height={32} alt="" />
-              <Typography secondary size="xs">
+            <div className="flex-1 flex items-center">
+              <div className="flex items-center">
+              <Image src="/img/tokens/wewe.png"  width={32} height={32} alt="" />
+              <Image src="/img/tokens/eth.png" className="translate-x-[-12px]" width={32} height={32} alt="" />
+              </div>
+              <Typography size="sm">
                 WEWE/WETH
               </Typography>
             </div>
@@ -93,8 +83,11 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
               alt=""
             />
             <div className="flex-1 flex items-center justify-end gap-3">
-              <Image src="/img/tokens/vult.svg" width={32} height={32} alt="" />
-              <Typography secondary size="xs">
+            <div className="flex items-center">
+              <Image src="/img/tokens/wewe.png" className="translate-x-[12px]"  width={32} height={32} alt="" />
+              <Image src="/img/tokens/usdc.png"  width={32} height={32} alt="" />
+              </div>
+              <Typography size="sm">
                 WEWE/USDC
               </Typography>
             </div>
