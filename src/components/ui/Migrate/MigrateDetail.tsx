@@ -15,26 +15,14 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
 
   return (
     <>
-      <Card className="flex flex-col gap-6 p-5">
-        <div>
+
+        <div className="w-full">
           <button onClick={onBack} className="w-full text-start">
             <div
               className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap">
               <Typography secondary
               size="md"
               tt="uppercase">MIGRATE UNISWAP LIQUIDITY</Typography>
-              <div className="flex items-center gap-3">
-                <Button disabled>
-                  <Typography secondary size="xs" fw={700}>
-                    INCENTIVIZE
-                  </Typography>
-                </Button>
-                <Button disabled>
-                  <Typography secondary size="xs" fw={700}>
-                    MIGRATE
-                  </Typography>
-                </Button>
-              </div>
             </div>
           </button>
           <Typography size="xs" className="mt-3">
@@ -43,7 +31,6 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
             This migration will move your liquidity over.
           </Typography>
         </div>
-      </Card>
       <div className="py-2 w-full">UNISWAP MIGRATION STATUS</div>
       <Card>
         <div className="flex items-center justify-between">
@@ -80,9 +67,12 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
 
         <div className="flex flex-col gap-5">
           <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
-            <div className="flex-1 flex items-center gap-3">
-              <Image src="/img/tokens/wewe.png" width={32} height={32} alt="" />
-              <Typography secondary size="xs">
+            <div className="flex-1 flex items-center">
+              <div className="flex items-center">
+              <Image src="/img/tokens/wewe.png"  width={32} height={32} alt="" />
+              <Image src="/img/tokens/eth.png" className="translate-x-[-12px]" width={32} height={32} alt="" />
+              </div>
+              <Typography size="sm">
                 WEWE/WETH
               </Typography>
             </div>
@@ -93,8 +83,11 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
               alt=""
             />
             <div className="flex-1 flex items-center justify-end gap-3">
-              <Image src="/img/tokens/vult.svg" width={32} height={32} alt="" />
-              <Typography secondary size="xs">
+            <div className="flex items-center">
+              <Image src="/img/tokens/wewe.png" className="translate-x-[12px]"  width={32} height={32} alt="" />
+              <Image src="/img/tokens/usdc.png"  width={32} height={32} alt="" />
+              </div>
+              <Typography size="sm">
                 WEWE/USDC
               </Typography>
             </div>
@@ -120,7 +113,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
             <Typography size="sm">NARROW 40%</Typography>
           </button>
         </div> */}
-         <Button onClick={onMigrate} className="outline px-10 my-5 w-full">
+         <Button disabled onClick={onMigrate} className="px-10 my-5 w-full">
         <Typography secondary size="xs" fw={700}>
           MIGRATE
         </Typography>
@@ -135,7 +128,11 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
               <Typography size="xs" fw={700}>
                 0.001079432
               </Typography>
-              <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
+              <div className="flex items-center gap-2">
+              <Image src="/img/tokens/eth.png" width={24} height={24} alt="" />
+              <Image src="/img/tokens/wewe.svg" width={24} height={24} alt="" />
+              </div>
+              
             </div>
           </div>
 
@@ -145,7 +142,6 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
               <Typography size="xs" fw={700}>
                 0.428156
               </Typography>
-              <Image src="/img/tokens/wewe.png" width={24} height={24} alt="" />
             </div>
           </div>
 
@@ -153,50 +149,82 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
             <Typography size="xs">INITIAL WEWE</Typography>
             <div className="flex items-center gap-2">
               <Typography size="xs" fw={700}>
-                0.001079432
+                0.428156
               </Typography>
-              <Image src="/img/tokens/usdc.png" width={24} height={24} alt="" />
             </div>
           </div>
 
+          <div className="flex items-center justify-between py-4">
+            <Typography size="xs">POOL TYPE</Typography>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-8">
+                <div className="flex items-center gap-2">
+              <Image src="/img/icons/rocket.svg" width={24} height={24} alt="" />
+                <Typography size="xs" fw={700}>
+                MEMES 1%
+              </Typography>
+                </div>  
+                <div className="flex items-center gap-2">
+              <Image src="/img/icons/Infinity.svg" width={24} height={24} alt="" />
+                <Typography size="xs" fw={700}>
+               INFINITY
+              </Typography>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Typography size="xs">RATE</Typography>
+            <div className="flex items-center gap-2">
+              <Typography size="xs" fw={700}>
+                1 USDC = 1000 WEWE ($1.00)
+              </Typography>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Typography size="xs">RANGE</Typography>
+            <div className="flex items-center gap-2">
+              <Typography size="xs" fw={700}>
+                Min. 0 - Max. 999999+
+              </Typography>
+              <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
+            </div>
+          </div>
           <div className="flex items-center justify-between">
             <Typography size="xs">END USDC</Typography>
             <div className="flex items-center gap-2">
               <Typography size="xs" fw={700}>
-                0.001079432
+                20.00
               </Typography>
               <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
             </div>
           </div>
+
           <div className="flex items-center justify-between">
             <Typography size="xs">END WEWE</Typography>
             <div className="flex items-center gap-2">
               <Typography size="xs" fw={700}>
-                0.001079432
+                1,000,000.00
               </Typography>
               <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
             </div>
           </div>
 
           <div className="flex items-center justify-between">
-            <Typography size="xs">NEW LP</Typography>
+            <Typography className="font-bold" size="xs">WEWE SHARES</Typography>
             <div className="flex items-center gap-2">
               <Typography size="xs" fw={700}>
                 0.001079432
               </Typography>
-              <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
+              <div className="flex items-center gap-2">
+              <Image src="/img/tokens/eth.png" width={24} height={24} alt="" />
+              <Image src="/img/tokens/wewe.svg" width={24} height={24} alt="" />
+              </div>
+              
             </div>
           </div>
-
-          <div className="flex items-center justify-between">
-            <Typography size="xs">Slippage 1.05%</Typography>
-            <div className="flex items-center gap-2">
-              <Typography size="xs" fw={700}>
-                Estimated amount: $0.017
-              </Typography>
-            </div>
-          </div>
-
           <div className="flex items-center justify-between">
             <Typography size="xs">Slippage 1.05%</Typography>
             <div className="flex items-center gap-2">

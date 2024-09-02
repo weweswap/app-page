@@ -5,9 +5,10 @@ import { Button, Card, Typography } from "~/components/common";
 
 type MyPoolDetailProps = {
     onBack: () => void
+    onClaim: () => void
 }
 
-const MyPoolDetail = ({onBack}: MyPoolDetailProps) => {
+const MyPoolDetail = ({onBack, onClaim}: MyPoolDetailProps) => {
   return (
     <>
       <div className=" w-full min-h-[10rem]">
@@ -149,7 +150,7 @@ const MyPoolDetail = ({onBack}: MyPoolDetailProps) => {
           <Image src="/img/tokens/usdc.png" width={32} height={32} alt="" />
           </div>
             <Typography size="lg" fw={1000}>$2.36</Typography>
-            <Button className="mt-4">
+            <Button onClick={() => onClaim()} className="mt-4">
               <Typography size="xs" secondary>CLAIM</Typography>
             </Button>
         </div>
@@ -160,7 +161,7 @@ const MyPoolDetail = ({onBack}: MyPoolDetailProps) => {
           <Image src="/img/tokens/rewards.svg" width={32} height={32} alt="" />
           </div>
             <Typography size="lg" fw={1000}>$2.36</Typography>
-            <Button className="mt-4">
+            <Button onClick={() => onClaim()} className="mt-4">
               <Typography size="xs" secondary>CLAIM</Typography>
             </Button>
         </div>

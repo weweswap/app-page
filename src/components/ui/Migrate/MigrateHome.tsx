@@ -11,28 +11,16 @@ type MigrateHomeProps = {
 export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
   return (
     <>
-      <Card>
+      <div className="w-full py-5">
         <div className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap" >
         <Typography secondary>
           MIGRATE AND EARN CHAOS!
           </Typography>
-          <div className="flex items-center gap-3">
-          <Button disabled>
-            <Typography secondary size="xs" fw={700}>
-              INCENTIVIZE
-            </Typography>
-          </Button>
-          <Button disabled>
-            <Typography secondary size="xs" fw={700}>
-              MIGRATE
-            </Typography>
-          </Button>
-          </div>
         </div>
         <Typography size="sm" tt="uppercase" className="pt-4">
           1BN CHAOS COINS UP FOR GRABS TO EARN
         </Typography>
-      </Card>
+      </div>
 
       <div className="py-2 w-full">
         YOUR UNISWAP ACTIVE POSITIONS
@@ -75,7 +63,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
                 />
               </div>
               <Typography size="md">
-                WETH/WEWE <span className="text-gray-400">1.00%</span>
+                WETH/WEWE- <span className="text-gray-400">1.00%</span>
               </Typography>
             </div>
 

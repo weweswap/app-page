@@ -199,7 +199,7 @@ const MyPools = ({onClaim,onManage,setPoolTypes,poolTypes,onNext,onZapOut}: MyPo
                           ZAP-OUT
                         </Typography>
                       </Button>
-                      <Button onClick={onManage} className="w-full md:w-auto">
+                      <Button className="w-full md:w-auto">
                         <Typography secondary size="xs" fw={700} tt="uppercase">
                           MANAGE
                         </Typography>
@@ -220,7 +220,7 @@ const MyPools = ({onClaim,onManage,setPoolTypes,poolTypes,onNext,onZapOut}: MyPo
       </>
       :
       <>
-      <MyPoolDetail onBack={handleHideDetails} />
+      <MyPoolDetail onClaim={onClaim} onBack={handleHideDetails} />
       </>
 }
     </>
