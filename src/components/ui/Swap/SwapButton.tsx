@@ -23,6 +23,7 @@ export const SwapButton = (props: SwapButtonProps) => {
     swapSlippage,
     setEncodedData,
     openSwapModal,
+    initialSwapState,
   } = useSwapContext();
   const { address, chain } = useAccount();
   const { data: allowance, refetch } = useReadContract({
@@ -56,12 +57,12 @@ export const SwapButton = (props: SwapButtonProps) => {
 
   const handleBuild = () => {
     api.router
-      .build(Chain.BASE, routeData!.routeSummary, address!, swapSlippage)
+      .build(Chain.BASE, routeData!.routeSummary, address!, swapSlippage * 100)
       .then((res) => {
         setSwapState({ ...swapState, loading: false });
         const data = res.data;
         if (data.message == RouterMessageType.Succussful) {
-          setSwapState({ ...swapState, approved: true });
+          setSwapState({ ...swapState, approved: true, buildErrorCode: "" });
           setEncodedData(data.data as BuildData);
           openSwapModal();
         } else {
@@ -70,9 +71,20 @@ export const SwapButton = (props: SwapButtonProps) => {
         }
       })
       .catch((err) => {
-        console.log("err:", err);
-        setSwapState({ ...swapState, approved: false, loading: false });
-        setEncodedData(undefined);
+        if (err.status == 422) {
+          setSwapState({
+            ...swapState,
+            approved: false,
+            loading: false,
+            buildErrorCode: "422",
+          });
+          setEncodedData(undefined);
+          openSwapModal();
+        } else {
+          console.log("err:", err);
+          setSwapState({ ...swapState, approved: false, loading: false });
+          setEncodedData(undefined);
+        }
       });
   };
   useEffect(() => {

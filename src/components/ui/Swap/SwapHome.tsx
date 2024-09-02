@@ -22,6 +22,8 @@ let inTokenOptions = TOKEN_LIST.map((token, index) => ({
   icon: token.icon,
   index: index,
 }));
+// interval ref
+let intervalId: any = null;
 
 let outTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
@@ -38,20 +40,18 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     useSwapContext();
   const { openConnectModal } = useConnectModal();
   const { address, isConnected } = useAccount();
-
   const [inputValue, setInputValue] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState<number>(0);
   const [outputTokenIndex, setOutputTokenIndex] = useState<number>(0);
-  const { data: tokenBalance, isFetching: isBalanceFetching } = useTokenBalance(
-    address,
-    TOKEN_LIST[inTokenOptions[inputTokenIndex].index].address
-  );
-
   const { data: ethBalance } = useBalance({
     address: address,
   });
 
-  let { data: inputBalance, isFetching: isFetchingBalance } = useTokenBalance(
+  let {
+    data: inputBalance,
+    isFetching: isFetchingBalance,
+    refetch: refetchBalance,
+  } = useTokenBalance(
     address,
     TOKEN_LIST[inTokenOptions[inputTokenIndex].index].address
   );
@@ -63,6 +63,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     }
     return inputBalance;
   };
+
   const useDebounce = (value: number, delay: number) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
     useEffect(() => {
@@ -101,13 +102,27 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       ) <= getCurrentBalance()
     );
   };
+
   const debouncedInputValue = useDebounce(inputValue, 500);
+
+  const clearRouteChecking = () => {
+    if (intervalId) clearInterval(intervalId);
+  };
+
+  useEffect(() => {
+    setInterval(() => refetchBalance(), 5000);
+    return () => {
+      clearRouteChecking();
+    };
+  }, []);
 
   useEffect(() => {
     if (debouncedInputValue == 0) {
       setRouteData(undefined);
+      clearRouteChecking();
       return;
     }
+    clearRouteChecking();
     setSwapState({ ...initialSwapState, loading: true });
 
     api.router
@@ -133,6 +148,33 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         setSwapState({ ...swapState, loading: false });
         console.error(err);
       });
+    intervalId = setInterval(() => {
+      setSwapState({ ...initialSwapState, loading: true });
+
+      api.router
+        .get(
+          Chain.BASE,
+          TOKEN_LIST[inputTokenIndex],
+          debouncedInputValue,
+          TOKEN_LIST[outputTokenIndex]
+        )
+        .then((res) => {
+          setSwapState({ ...swapState, loading: false });
+          res.data.message == RouterMessageType.Succussful
+            ? setRouteData({
+                inputToken: TOKEN_LIST[inputTokenIndex],
+                outputToken: TOKEN_LIST[outputTokenIndex],
+                routeSummary: (res.data.data as RoutingData).routeSummary,
+                routerAddress: (res.data.data as RoutingData).routerAddress,
+              })
+            : //  setrouteData(res.data.data as RoutingData)
+              console.log(res.data.message);
+        })
+        .catch((err) => {
+          setSwapState({ ...swapState, loading: false });
+          console.error(err);
+        });
+    }, 5000);
   }, [inputTokenIndex, outputTokenIndex, debouncedInputValue]);
 
   useEffect(() => {
@@ -258,15 +300,18 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
 
           <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
             <Typography
-              className={` md:col-span-9 col-span-6 ${dogica.className}
+              secondary
+              className={` md:col-span-9 col-span-6 
               text-start bg-transparent text-white text-2xl h-auto overflow-x-auto
               border-transparent rounded-none`}
             >
               {routeData
-                ? formatStringUnits(
-                    routeData.routeSummary.amountOut,
-                    TOKEN_LIST[outputTokenIndex].decimals
-                  )
+                ? Number(
+                    formatStringUnits(
+                      routeData.routeSummary.amountOut,
+                      TOKEN_LIST[outputTokenIndex].decimals
+                    )
+                  ).toLocaleString()
                 : "0.0"}
             </Typography>
 
@@ -302,7 +347,9 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       {isConnected ? (
         <>
           {routeData ? (
-            <SwapButton hasBalance={checkHasBalance()} />
+            <div className="w-full" onClick={() => clearRouteChecking()}>
+              <SwapButton hasBalance={checkHasBalance()} />
+            </div>
           ) : (
             <Button className="w-full" disabled>
               <Typography secondary size="sm" tt="uppercase" fw={600}>
@@ -321,7 +368,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         </>
       )}
 
-      {inputValue != 0 && !swapState.loading && routeData && (
+      {inputValue != 0 && routeData && (
         <>
           <div className="flex justify-between w-full">
             <Typography size="xs">Rate</Typography>

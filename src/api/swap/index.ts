@@ -46,7 +46,7 @@ export default {
         sender: address,
         recipient: address,
         slippageTolerance: slippage,
-        enableGasEstmation: true,
+        enableGasEstimation: true,
         skipSimulateTx: false,
         deadline: Math.floor(new Date().getTime() / 1000) + 1200,
       };
