@@ -56,7 +56,7 @@ const MyPools = ({onClaim,onManage,setPoolTypes,poolTypes,onNext,onZapOut}: MyPo
     {!showDetails ? 
       <>
         <div className="flex items-center justify-between w-full gap-6 md:flex-row flex-col">
-          <div className="bg_light_dark w-[30rem] flex items-center justify-between gap-3 h-[3rem]">
+          <div className="bg_light_dark sm:w-[30rem] w-full flex items-center justify-between gap-3 h-[3rem]">
             <div
               onClick={() => setPoolTypes(0)}
               className={`${poolTypes === 0 && "nav_selected"} nav`}

@@ -80,7 +80,7 @@ const RedeemOperation = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <Card className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5">
         <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
           <div className="flex-1 flex items-center gap-3">
             <Image src="/img/tokens/vult.svg" width={32} height={32} alt="" />
@@ -170,7 +170,7 @@ const RedeemOperation = () => {
             </div>
           </div>
         </div>
-      </Card>
+      </div>
       <Card className="h-[8rem] text-center">
         <Typography className="text_light_gray" size="md">Redeem 1:1 IOU.VULT for $VULT</Typography>
       </Card>
