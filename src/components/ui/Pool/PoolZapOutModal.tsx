@@ -89,7 +89,7 @@ export const PoolZapOutModal = (props: ZapOutModalProps) => {
       </div>
     </Card>
 
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between text-center">
       <Typography size="xs">Zap Route</Typography>
       <Image src="/img/icons/arrow_right.svg" alt="" height={12} width={12} />
       <Typography size="xs">Kyber Swap Aggregator</Typography>

@@ -91,7 +91,7 @@ export const PoolZapModal = (props: ZapModalProps) => {
         </div>
       </Card>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between text-center">
         <Typography size="xs">Zap Route</Typography>
         <Image src="/img/icons/arrow_right.svg" alt="" height={12} width={12} />
         <Typography size="xs">Kyber Swap Aggregator</Typography>
@@ -101,7 +101,7 @@ export const PoolZapModal = (props: ZapModalProps) => {
 
       <div className="w-full">
         <Typography secondary size="xs">RANGE</Typography>
-      <div className="grid grid-cols-4 gap-2 py-3  w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 py-3  w-full">
           <button disabled
             className={`bg_gray flex items-center justify-center gap-2 px-3 py-2`}
           >

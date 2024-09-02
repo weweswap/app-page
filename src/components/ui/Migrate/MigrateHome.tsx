@@ -27,7 +27,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
       </div>
       <Card className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex-1 bg_light_dark px-4 py-3 flex items-center gap-3">
+          <div className="flex-1 bg_light_dark px-4 py-3 flex items-center gap-3 lg:w-fit w-full">
             <Image
               className="rounded"
               src="/img/tokens/uniswap.png"
@@ -79,7 +79,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
             </div>
           </div>
 
-          <Button onClick={onMigrate}>
+          <Button onClick={onMigrate} className="sm:w-fit w-full">
             <Typography secondary size="sm" fw={700}>
               Migrate
             </Typography>

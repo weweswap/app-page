@@ -114,8 +114,8 @@ export const MergeHome = (props: MergeHomeProps) => {
             </div>
           </Card>
 
-          <Card className="mt-4">
-            <div className="bg_light_dark flex items-center justify-between gap-3 h-[3rem] mb-5">
+          <Card className="mt-4 ">
+            <div className="bg_light_dark flex items-center justify-between gap-3 h-[3.3rem] mb-5 overflow-x-scroll">
               <div
                 onClick={() => setOperations(0)}
                 className={`${operations === 0 && "nav_selected"} nav`}

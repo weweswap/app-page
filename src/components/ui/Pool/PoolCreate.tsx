@@ -28,7 +28,7 @@ const PoolCreate = ({ onNext, onBack }: NewPoolCreateProps) => {
     <>
      <div className="flex items-center justify-between gap-4 w-full p-6 bg_rich_dark">
         <button onClick={onBack}>
-          <Typography secondary size="md">
+          <Typography secondary size="xs">
            POOLS {"<"}  NEW POOL
           </Typography>
         </button>
@@ -42,7 +42,7 @@ const PoolCreate = ({ onNext, onBack }: NewPoolCreateProps) => {
       </div>
       <Card>
         
-          <Typography size="lg" secondary className='py-3'>CREATE POOL AND RANGE</Typography>
+          <Typography size="lg" secondary className='py-3 '>CREATE POOL AND RANGE</Typography>
         <div className="flex flex-col gap-5">
           <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
           <div className="flex md:flex-row flex-col gap-4 justify-between w-full">
@@ -64,8 +64,8 @@ const PoolCreate = ({ onNext, onBack }: NewPoolCreateProps) => {
         </div>
           </div>
         </div>
-        <div className="flex items-center justify-between mt-4 gap-3 p-4 w-full">
-        <div className="grid grid-cols-3 gap-3 p-3  bg_light_dark w-full">
+        <div className="flex items-center justify-between mt-4 gap-3 lg:p-4 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3  bg_light_dark w-full">
           <button
             className={`bg_gray flex items-center justify-center gap-2 px-3 py-2 ${poolType === 0 && "border_turq"}`}
             onClick={() => setPoolType(0)}
@@ -94,7 +94,7 @@ const PoolCreate = ({ onNext, onBack }: NewPoolCreateProps) => {
         </div>
         <div className='my-5'>
           <Typography className='text_light_gray' size='xs'>Select pool range</Typography>
-        <div className="grid grid-cols-4 gap-3 py-3  w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 py-3  w-full">
           <button
             className={`bg_gray flex items-center justify-center gap-2 px-3 py-2 ${poolRange === 0 && "border_turq"}`}
             onClick={() => setPoolRange(0)}
