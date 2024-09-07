@@ -23,7 +23,11 @@ const App: AppType = ({ Component, pageProps }) => {
                 <div className="w-full max-w-[1245px] flex flex-col items-center p-4 gap-5">
                   <Component {...pageProps} />
                 </div>
-              ) : (
+              ) : path === "/swap" ? (
+                <div className="w-full max-w-[600px] flex flex-col items-center p-4 gap-5">
+                  <Component {...pageProps} />
+                </div>
+              ): (
                 <div className="w-full max-w-[845px] flex flex-col items-center p-4 gap-5">
                   <Component {...pageProps} />
                 </div>
