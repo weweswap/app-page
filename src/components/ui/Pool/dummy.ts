@@ -44,11 +44,11 @@ export const DUMMY_TABLE_CONTENT = [
 
 export const DUMMY_POOLS = [
   {
-
+    title: "EXOTIC 1%",
     exchangePair: "WEWE/USDC",
     state: "Active",
     range: "INFINITY",
-    apr:"420%",
+    apr: "420%",
     lpValue: "34,54",
     rewards: "45,65",
     positionId: "69",
