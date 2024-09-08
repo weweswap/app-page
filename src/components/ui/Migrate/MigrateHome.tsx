@@ -1,7 +1,8 @@
-
-"use client"
+"use client";
 
 import Image from "next/image";
+import { useEffect } from "react";
+import { useAccount } from "wagmi";
 import { Button, Card, Typography } from "~/components/common";
 
 type MigrateHomeProps = {
@@ -9,22 +10,20 @@ type MigrateHomeProps = {
 };
 
 export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
+
   return (
     <>
       <div className="w-full py-5">
-        <div className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap" >
-        <Typography secondary>
-          MIGRATE AND EARN CHAOS!
-          </Typography>
+        <div className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap">
+          <Typography secondary>MIGRATE AND EARN CHAOS!</Typography>
         </div>
         <Typography size="sm" tt="uppercase" className="pt-4">
           1BN CHAOS COINS UP FOR GRABS TO EARN
         </Typography>
       </div>
 
-      <div className="py-2 w-full">
-        YOUR UNISWAP ACTIVE POSITIONS
-      </div>
+      <div className="py-2 w-full">YOUR UNISWAP ACTIVE POSITIONS</div>
+
       <Card className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex-1 bg_light_dark px-4 py-3 flex items-center gap-3 lg:w-fit w-full">
@@ -86,6 +85,7 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
           </Button>
         </div>
       </Card>
+
 
       <Card>
         <Typography size="lg">

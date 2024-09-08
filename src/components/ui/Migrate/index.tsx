@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MigrateDetail } from "./MigrateDetail";
 import { MigrateHome } from "./MigrateHome";
 import { MigrateDone } from "./MigrateDone";
 
 export const Migrate = () => {
   const [step, setStep] = useState(0);
-
   return (
     <>
       {step === 0 && <MigrateHome onMigrate={() => setStep(1)} />}
