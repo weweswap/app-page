@@ -6,7 +6,8 @@ import { SwapCompleteModal } from "./SwapCompleteModal";
 import { SwapSettingModal } from "./SwapSettingModal";
 import { useSwapContext } from "./SwapContext";
 import { Hash } from "viem";
-import { SwapFailModal } from "./SwapFailModal";
+import { FailTXModal } from "~/components/common/FailTXModal";
+
 
 export const Swap: React.FC = () => {
   const {
@@ -53,7 +54,7 @@ export const Swap: React.FC = () => {
         />
       )}
       {swapState.swapError && encodedData && routeData && (
-        <SwapFailModal
+        <FailTXModal
           opened={openedSwapFailModal}
           onClose={closeSwapFailModal}
           hash={hash!}

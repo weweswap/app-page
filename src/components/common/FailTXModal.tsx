@@ -4,15 +4,14 @@ import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
 import { Typography } from "~/components/common/Typography";
 import { Button } from "~/components/common/Button";
 import { BuildData, TokenItem } from "~/models";
-import { useSwapContext } from "./SwapContext";
 import { Hex } from "viem";
 
-type SwapFailProps = {
+type FailTXProps = {
   hash: Hex;
   onClose: () => void;
 } & ModalRootProps;
 
-export const SwapFailModal = (props: SwapFailProps) => {
+export const FailTXModal = (props: FailTXProps) => {
   const handleDetails = () => {
     window.open(
       `https://basescan.org/tx/${props.hash}`,
