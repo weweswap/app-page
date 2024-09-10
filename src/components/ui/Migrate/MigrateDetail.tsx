@@ -7,10 +7,10 @@ import { Button, Card, Typography } from "~/components/common";
 
 type MigrateDetailProps = {
   onBack: () => void;
-  onMigrate: () => void;
+  // onMigrate: () => void;
 };
 
-export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
+export const MigrateDetail = ({ onBack}: MigrateDetailProps) => {
   const [migrateRange, setMigrateRange] = useState<number>(0);
 
   return (
@@ -113,7 +113,7 @@ export const MigrateDetail = ({ onBack, onMigrate }: MigrateDetailProps) => {
             <Typography size="sm">NARROW 40%</Typography>
           </button>
         </div> */}
-         <Button disabled onClick={onMigrate} className="px-10 my-5 w-full">
+         <Button disabled  className="px-10 my-5 w-full">
         <Typography secondary size="xs" fw={700}>
           MIGRATE
         </Typography>

@@ -8,17 +8,17 @@ import { Button, Card, Typography } from "~/components/common";
 import { usePositions } from "~/hooks/useMigrate";
 
 type MigrateHomeProps = {
-  onMigrate: () => void;
+  onMigrate: (tokenId: bigint) => void;
 };
 
 export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
   const { address } = useAccount();
-  // sample address
-  // 0xAF6FDD04967CfE791D655fa119aa01d25637dCCa
   const { data: positions, isLoading: positionsLoading } = usePositions(
-    "0xAF6FDD04967CfE791D655fa119aa01d25637dCCa"
+    address!
   );
-
+  useEffect(() => {
+    console.log(positions);
+  }, [positions]);
   return (
     <>
       <div className="w-full py-5">
@@ -86,7 +86,10 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
               </div>
             </div>
 
-            <Button onClick={onMigrate} className="sm:w-fit w-full">
+            <Button
+              onClick={() => onMigrate(positions[0].tokenId)}
+              className="sm:w-fit w-full"
+            >
               <Typography secondary size="sm" fw={700}>
                 Migrate
               </Typography>

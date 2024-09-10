@@ -1,11 +1,17 @@
 import { ethers } from "ethers";
 import { erc20Abi, Hex } from "viem";
-import INONFUNGIBLE_POSITION_MANAGER from "@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json";
 import { useQuery } from "wagmi/query";
+import { useWriteContract, useReadContract } from "wagmi";
+import { CONTRACT_ADDRESSES } from "~/constants";
+import { NonFungiblePositionManagerAbi } from "~/lib/abis/NonFungiblePositionManager";
+import { Position } from "~/models";
+
 const provider = new ethers.JsonRpcProvider(
-  `https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_APIKEY}`
+  `https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`
 );
-const positionManagerAddress = "0xc36442b4a4522e871399cd717abdd847ab11fe88";
+
+const NonFungiblePositionManagerAddress =
+  "0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1";
 
 export function useTokenNames(token0Address: string, token1Address: string) {
   return useQuery({
@@ -58,12 +64,12 @@ export function useTokenSymbols(token0Address: string, token1Address: string) {
 }
 
 export function usePositions(address: Hex) {
-  return useQuery({
+  return useQuery<Position[], unknown, Position[], string[]>({
     queryKey: ["positions", address],
     queryFn: async () => {
       const positionManager = new ethers.Contract(
-        positionManagerAddress,
-        INONFUNGIBLE_POSITION_MANAGER.abi,
+        NonFungiblePositionManagerAddress,
+        NonFungiblePositionManagerAbi,
         provider
       );
       const balance = await positionManager.balanceOf(address);
@@ -72,24 +78,57 @@ export function usePositions(address: Hex) {
       for (let i = 0; i < balance; i++) {
         const tokenId = await positionManager.tokenOfOwnerByIndex(address, i);
         const position = await positionManager.positions(tokenId);
-        positions.push(position);
+        if (
+          position.token0 == CONTRACT_ADDRESSES.wethAddress &&
+          position.token1 == CONTRACT_ADDRESSES.wewe
+          && BigInt(position.liquidity)>0
+        )
+          positions.push({ position, tokenId });
       }
-
-      return positions.map((position) => ({
-        token0Address: position.token0,
-        token1Address: position.token1,
-        tickLower: Number(position.tickLower),
-        tickUpper: Number(position.tickUpper),
-        liquidity: BigInt(position.liquidity).toString(),
-        feeGrowthInside0LastX128: BigInt(
-          position.feeGrowthInside0LastX128
-        ).toString(),
-        feeGrowthInside1LastX128: BigInt(
-          position.feeGrowthInside1LastX128
-        ).toString(),
-        tokensOwed0: BigInt(position.tokensOwed0).toString(),
-        tokensOwed1: BigInt(position.tokensOwed1).toString(),
-      }));
+      return positions.map(({ position, tokenId }) => {
+        return {
+          tokenId: tokenId,
+          token0Address: position.token0,
+          token1Address: position.token1,
+          tickLower: Number(position.tickLower),
+          tickUpper: Number(position.tickUpper),
+          liquidity: BigInt(position.liquidity).toString(),
+          feeGrowthInside0LastX128: BigInt(
+            position.feeGrowthInside0LastX128
+          ).toString(),
+          feeGrowthInside1LastX128: BigInt(
+            position.feeGrowthInside1LastX128
+          ).toString(),
+          tokensOwed0: BigInt(position.tokensOwed0).toString(),
+          tokensOwed1: BigInt(position.tokensOwed1).toString(),
+        };
+      });
     },
   });
+}
+
+export function useSafeTransfer() {
+  const migrationAddress = CONTRACT_ADDRESSES.migration;
+  const {
+    data: hash,
+    error: errorCreation,
+    isPending: isTxCreating,
+    isError: isCreationError,
+    writeContractAsync,
+  } = useWriteContract();
+
+  const safeTransferFrom = async (userAddress: Hex, tokenID: bigint) => {
+    await writeContractAsync({
+      abi: NonFungiblePositionManagerAbi,
+      address: NonFungiblePositionManagerAddress,
+      functionName: "safeTransferFrom",
+      args: [userAddress, migrationAddress, tokenID],
+    });
+  };
+  return {
+    hash: hash,
+    isPending: isTxCreating,
+    isError: isCreationError,
+    safeTransferFrom,
+  };
 }
