@@ -8,4 +8,5 @@ export const CONTRACT_ADDRESSES = {
   feeManager: "0x30157e46b919EEC3E5d46bDc17c360b8bb442C30" as `0x${string}`,
   weweVault: "0xb13688c877268e32cc4584B6e06A3984d016dBB2" as `0x${string}`,
   wethAddress: "0x4200000000000000000000000000000000000006" as `0x${string}`,
+  wethWeweContract: "0x5E9BB3d7682A9537DB831060176C4247aB80D1Ec" as `0x${string}`,
 };

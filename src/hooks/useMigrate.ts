@@ -1,7 +1,11 @@
 import { ethers } from "ethers";
 import { erc20Abi, Hex } from "viem";
 import { useQuery } from "wagmi/query";
-import { useWriteContract, useReadContract } from "wagmi";
+import {
+  useWriteContract,
+  useReadContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { NonFungiblePositionManagerAbi } from "~/lib/abis/NonFungiblePositionManager";
 import { Position } from "~/models";
@@ -9,6 +13,9 @@ import { Position } from "~/models";
 const provider = new ethers.JsonRpcProvider(
   `https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`
 );
+const RESOLVER_ABI = [
+  "function getMintAmounts(address vaultV2_, uint256 amount0Max_, uint256 amount1Max_) external view returns (uint256 amount0, uint256 amount1, uint256 mintAmount)",
+];
 
 const NonFungiblePositionManagerAddress =
   "0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1";
@@ -80,8 +87,8 @@ export function usePositions(address: Hex) {
         const position = await positionManager.positions(tokenId);
         if (
           position.token0 == CONTRACT_ADDRESSES.wethAddress &&
-          position.token1 == CONTRACT_ADDRESSES.wewe
-          && BigInt(position.liquidity)>0
+          position.token1 == CONTRACT_ADDRESSES.wewe &&
+          BigInt(position.liquidity) > 0
         )
           positions.push({ position, tokenId });
       }
@@ -92,6 +99,7 @@ export function usePositions(address: Hex) {
           token1Address: position.token1,
           tickLower: Number(position.tickLower),
           tickUpper: Number(position.tickUpper),
+          feePercent: Number(position.fee) / 10000,
           liquidity: BigInt(position.liquidity).toString(),
           feeGrowthInside0LastX128: BigInt(
             position.feeGrowthInside0LastX128
@@ -111,11 +119,15 @@ export function useSafeTransfer() {
   const migrationAddress = CONTRACT_ADDRESSES.migration;
   const {
     data: hash,
-    error: errorCreation,
     isPending: isTxCreating,
     isError: isCreationError,
     writeContractAsync,
   } = useWriteContract();
+  const {
+    isLoading: isTxConfirming,
+    isError: isConfirmError,
+    isSuccess: isConfirmed,
+  } = useWaitForTransactionReceipt({ hash });
 
   const safeTransferFrom = async (userAddress: Hex, tokenID: bigint) => {
     await writeContractAsync({
@@ -125,10 +137,34 @@ export function useSafeTransfer() {
       args: [userAddress, migrationAddress, tokenID],
     });
   };
+
   return {
     hash: hash,
     isPending: isTxCreating,
-    isError: isCreationError,
+    isError: isCreationError || isConfirmError,
+    isTxConfirming,
+    isConfirmed,
     safeTransferFrom,
+  };
+}
+
+export function useMintAmounts() {
+  const { error, isPending, writeContractAsync } = useWriteContract();
+
+  const getMintAmounts = async () => {
+    const amountToDeposit0 = ethers.parseEther("1");
+    const amountToDeposit1 = ethers.parseUnits("1", 6);
+    await writeContractAsync({
+      abi: RESOLVER_ABI,
+      address: CONTRACT_ADDRESSES.resolver,
+      functionName: "getMintAmounts",
+      args: [CONTRACT_ADDRESSES.weweVault, amountToDeposit0, amountToDeposit1],
+    });
+  };
+
+  return {
+    error,
+    isPending,
+    getMintAmounts,
   };
 }

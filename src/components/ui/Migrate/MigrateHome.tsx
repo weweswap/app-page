@@ -1,24 +1,38 @@
 "use client";
 
+import { Loader } from "@mantine/core";
 import Image from "next/image";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 import { getPositions } from "~/api/migrate";
 import { Button, Card, Typography } from "~/components/common";
-import { usePositions } from "~/hooks/useMigrate";
+import { usePositions, useSafeTransfer } from "~/hooks/useMigrate";
+import { calculateAmounts, formatPrice, tickToPrice } from "~/utils";
 
-type MigrateHomeProps = {
-  onMigrate: (tokenId: bigint) => void;
-};
+type MigrateHomeProps = {};
 
-export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
+export const MigrateHome = ({}: MigrateHomeProps) => {
   const { address } = useAccount();
+  const {
+    hash,
+    isPending,
+    isError,
+    isTxConfirming,
+    isConfirmed,
+    safeTransferFrom,
+  } = useSafeTransfer();
   const { data: positions, isLoading: positionsLoading } = usePositions(
     address!
   );
   useEffect(() => {
     console.log(positions);
+    if (positions) calculateAmounts(positions[1]);
   }, [positions]);
+
+  const handleMigrate = (tokenId: bigint) => {
+    safeTransferFrom(address!, tokenId);
+  };
+
   return (
     <>
       <div className="w-full py-5">
@@ -50,51 +64,67 @@ export const MigrateHome = ({ onMigrate }: MigrateHomeProps) => {
               Your positions ({(positions as any).length})
             </Typography>
           </div>
-
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex-1 flex flex-col items-center md:items-start">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center">
-                  <Image
-                    src="/img/tokens/weth.png"
-                    width={24}
-                    height={24}
-                    alt=""
-                  />
-                  <Image
-                    src="/img/tokens/wewe.png"
-                    width={24}
-                    height={24}
-                    alt=""
-                    className="-translate-x-1.5"
-                  />
-                </div>
-                <Typography size="md">
-                  WETH/WEWE- <span className="text-gray-400">1.00%</span>
-                </Typography>
-              </div>
-
-              <div className="flex items-center gap-3 mt-3">
-                <Typography size="xs">Min: 1,616.52 WETH per WEWE</Typography>
-                <Image
-                  src="/img/icons/arrow_swap.svg"
-                  width={20}
-                  height={9}
-                  alt=""
-                />
-                <Typography size="xs">Max: 1,650.52 WETH per WEWE</Typography>
-              </div>
-            </div>
-
-            <Button
-              onClick={() => onMigrate(positions[0].tokenId)}
-              className="sm:w-fit w-full"
+          {positions.map((position, index) => (
+            <div
+              key={index}
+              className="flex flex-col md:flex-row items-center justify-between gap-4 my-2"
             >
-              <Typography secondary size="sm" fw={700}>
-                Migrate
-              </Typography>
-            </Button>
-          </div>
+              <div className="flex-1 flex flex-col items-center md:items-start">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center">
+                    <Image
+                      src="/img/tokens/weth.png"
+                      width={24}
+                      height={24}
+                      alt=""
+                    />
+                    <Image
+                      src="/img/tokens/wewe.png"
+                      width={24}
+                      height={24}
+                      alt=""
+                      className="-translate-x-1.5"
+                    />
+                  </div>
+                  <Typography size="md">
+                    WETH/WEWE -{" "}
+                    <span className="text-gray-400">
+                      {position.feePercent.toFixed(2)}%
+                    </span>
+                  </Typography>
+                </div>
+
+                <div className="flex items-center gap-3 mt-3">
+                  <Typography size="xs">
+                    Min: {formatPrice(tickToPrice(position.tickLower))} WETH per
+                    WEWE
+                  </Typography>
+                  <Image
+                    src="/img/icons/arrow_swap.svg"
+                    width={20}
+                    height={9}
+                    alt=""
+                  />
+                  <Typography size="xs">
+                    Max: {formatPrice(tickToPrice(position.tickUpper))} WETH per
+                    WEWE
+                  </Typography>
+                </div>
+              </div>
+
+              <Button
+                key={index}
+                disabled={isPending}
+                onClick={() => handleMigrate(position.tokenId)}
+                className="sm:w-fit w-full md:w-auto flex gap-2"
+              >
+                <Typography secondary size="sm" fw={700}>
+                  Migrate
+                </Typography>
+                {isPending && <Loader color="white" size="sm" />}
+              </Button>
+            </div>
+          ))}
         </Card>
       )}
 
