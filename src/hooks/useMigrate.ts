@@ -127,6 +127,7 @@ export function useSafeTransfer() {
     isLoading: isTxConfirming,
     isError: isConfirmError,
     isSuccess: isConfirmed,
+    data: receipt,
   } = useWaitForTransactionReceipt({ hash });
 
   const safeTransferFrom = async (userAddress: Hex, tokenID: bigint) => {
@@ -144,27 +145,7 @@ export function useSafeTransfer() {
     isError: isCreationError || isConfirmError,
     isTxConfirming,
     isConfirmed,
+    receipt,
     safeTransferFrom,
-  };
-}
-
-export function useMintAmounts() {
-  const { error, isPending, writeContractAsync } = useWriteContract();
-
-  const getMintAmounts = async () => {
-    const amountToDeposit0 = ethers.parseEther("1");
-    const amountToDeposit1 = ethers.parseUnits("1", 6);
-    await writeContractAsync({
-      abi: RESOLVER_ABI,
-      address: CONTRACT_ADDRESSES.resolver,
-      functionName: "getMintAmounts",
-      args: [CONTRACT_ADDRESSES.weweVault, amountToDeposit0, amountToDeposit1],
-    });
-  };
-
-  return {
-    error,
-    isPending,
-    getMintAmounts,
   };
 }

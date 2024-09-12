@@ -7,32 +7,19 @@ import { useAccount } from "wagmi";
 import { getPositions } from "~/api/migrate";
 import { Button, Card, Typography } from "~/components/common";
 import { usePositions, useSafeTransfer } from "~/hooks/useMigrate";
-import { calculateAmounts, formatPrice, tickToPrice } from "~/utils";
+import { Position } from "~/models";
+import {  formatPrice, tickToPrice } from "~/utils";
 
-type MigrateHomeProps = {};
+type MigrateHomeProps = {
+  onSelectPosition: (position: Position) => void;
+};
 
-export const MigrateHome = ({}: MigrateHomeProps) => {
+export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
   const { address } = useAccount();
-  const {
-    hash,
-    isPending,
-    isError,
-    isTxConfirming,
-    isConfirmed,
-    safeTransferFrom,
-  } = useSafeTransfer();
+
   const { data: positions, isLoading: positionsLoading } = usePositions(
     address!
   );
-  useEffect(() => {
-    console.log(positions);
-    if (positions) calculateAmounts(positions[1]);
-  }, [positions]);
-
-  const handleMigrate = (tokenId: bigint) => {
-    safeTransferFrom(address!, tokenId);
-  };
-
   return (
     <>
       <div className="w-full py-5">
@@ -96,6 +83,9 @@ export const MigrateHome = ({}: MigrateHomeProps) => {
 
                 <div className="flex items-center gap-3 mt-3">
                   <Typography size="xs">
+                    ID: {Number(position.tokenId)}
+                  </Typography>
+                  <Typography size="xs">
                     Min: {formatPrice(tickToPrice(position.tickLower))} WETH per
                     WEWE
                   </Typography>
@@ -114,14 +104,12 @@ export const MigrateHome = ({}: MigrateHomeProps) => {
 
               <Button
                 key={index}
-                disabled={isPending}
-                onClick={() => handleMigrate(position.tokenId)}
+                onClick={() => onSelectPosition(position)}
                 className="sm:w-fit w-full md:w-auto flex gap-2"
               >
                 <Typography secondary size="sm" fw={700}>
                   Migrate
                 </Typography>
-                {isPending && <Loader color="white" size="sm" />}
               </Button>
             </div>
           ))}
