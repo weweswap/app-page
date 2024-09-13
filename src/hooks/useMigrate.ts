@@ -3,22 +3,15 @@ import { erc20Abi, Hex } from "viem";
 import { useQuery } from "wagmi/query";
 import {
   useWriteContract,
-  useReadContract,
   useWaitForTransactionReceipt,
 } from "wagmi";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { NonFungiblePositionManagerAbi } from "~/lib/abis/NonFungiblePositionManager";
 import { Position } from "~/models";
 
-const provider = new ethers.JsonRpcProvider(
+export const provider = new ethers.JsonRpcProvider(
   `https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`
 );
-const RESOLVER_ABI = [
-  "function getMintAmounts(address vaultV2_, uint256 amount0Max_, uint256 amount1Max_) external view returns (uint256 amount0, uint256 amount1, uint256 mintAmount)",
-];
-
-const NonFungiblePositionManagerAddress =
-  "0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1";
 
 export function useTokenNames(token0Address: string, token1Address: string) {
   return useQuery({
@@ -75,7 +68,7 @@ export function usePositions(address: Hex) {
     queryKey: ["positions", address],
     queryFn: async () => {
       const positionManager = new ethers.Contract(
-        NonFungiblePositionManagerAddress,
+        CONTRACT_ADDRESSES.nonFungiblePositionManagerAddress,
         NonFungiblePositionManagerAbi,
         provider
       );
@@ -133,7 +126,7 @@ export function useSafeTransfer() {
   const safeTransferFrom = async (userAddress: Hex, tokenID: bigint) => {
     await writeContractAsync({
       abi: NonFungiblePositionManagerAbi,
-      address: NonFungiblePositionManagerAddress,
+      address: CONTRACT_ADDRESSES.nonFungiblePositionManagerAddress,
       functionName: "safeTransferFrom",
       args: [userAddress, migrationAddress, tokenID],
     });

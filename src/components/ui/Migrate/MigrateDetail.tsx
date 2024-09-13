@@ -10,10 +10,10 @@ import { CONTRACT_ADDRESSES } from "~/constants";
 import { ethers, formatEther, formatUnits, parseEther } from "ethers";
 import { WETH_WEWE_CONTRACT_ABI } from "~/lib/abis/WETHWEWE";
 import { formatPrice, formatStringUnits, tickToPrice } from "~/utils";
-import { fetchWewePrice } from "~/api/wewePrice";
+import { fetchWewePrice } from "~/api/price";
 import { MigrateCompleteModal } from "./MigrateCompleteModal";
 import { useDisclosure } from "@mantine/hooks";
-import { useSafeTransfer } from "~/hooks/useMigrate";
+import { provider, useSafeTransfer } from "~/hooks/useMigrate";
 import { useAccount } from "wagmi";
 import { MigrateFailModal } from "./MigrateFailModal";
 import { Loader } from "@mantine/core";
@@ -21,7 +21,6 @@ import { Loader } from "@mantine/core";
 type MigrateDetailProps = {
   onBack: () => void;
   position: any;
-  // onMigrate: () => void;
 };
 
 export const MigrateDetail = ({
@@ -51,8 +50,6 @@ export const MigrateDetail = ({
     receipt,
     safeTransferFrom,
   } = useSafeTransfer();
-
-  const [migrateRange, setMigrateRange] = useState<number>(0);
   const [currentTick, setCurrentTick] = useState<number>(0);
   const [sqrtPriceX96, setSqrtPriceX96] = useState<BigintIsh>(0);
   const [poolLiquidity, setPoolLiquidity] = useState<BigintIsh>(0);
@@ -66,9 +63,7 @@ export const MigrateDetail = ({
     amount1: bigint;
     mintAmount: bigint;
   }>();
-  const provider = new ethers.JsonRpcProvider(
-    `https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`
-  );
+
   const handleCloseCompleteModal = () => {
     closeMigrateCompleteModal();
     onBack();
@@ -198,7 +193,7 @@ export const MigrateDetail = ({
               src="/img/icons/settings.svg"
               width={24}
               height={24}
-              alt=""
+              alt="Migrate Settings"
             />
           </div>
         </div>
@@ -257,7 +252,7 @@ export const MigrateDetail = ({
           <Typography secondary size="xs" fw={700}>
             MIGRATE
           </Typography>
-          {isPending && <Loader color="white" size="sm" />}
+          {isPending || (isTxConfirming && <Loader color="white" size="sm" />)}
         </Button>
       </Card>
 
@@ -454,4 +449,3 @@ export const MigrateDetail = ({
     </>
   );
 };
-

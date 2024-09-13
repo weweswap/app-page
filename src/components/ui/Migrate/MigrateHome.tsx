@@ -2,13 +2,11 @@
 
 import { Loader } from "@mantine/core";
 import Image from "next/image";
-import { useEffect } from "react";
 import { useAccount } from "wagmi";
-import { getPositions } from "~/api/migrate";
 import { Button, Card, Typography } from "~/components/common";
 import { usePositions, useSafeTransfer } from "~/hooks/useMigrate";
 import { Position } from "~/models";
-import {  formatPrice, tickToPrice } from "~/utils";
+import { formatPrice, tickToPrice } from "~/utils";
 
 type MigrateHomeProps = {
   onSelectPosition: (position: Position) => void;
@@ -16,7 +14,6 @@ type MigrateHomeProps = {
 
 export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
   const { address } = useAccount();
-
   const { data: positions, isLoading: positionsLoading } = usePositions(
     address!
   );
@@ -113,6 +110,16 @@ export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
               </Button>
             </div>
           ))}
+        </Card>
+      )}
+      {positionsLoading && (
+        <Card className="flex flex-col gap-4">
+          <Loader color="white" size="lg" className="mx-auto" />
+        </Card>
+      )}
+      {!positionsLoading && !positions && (
+        <Card className="flex flex-col gap-4">
+          <Typography size="lg" className="mx-auto" >No Available Positions!</Typography>
         </Card>
       )}
 
