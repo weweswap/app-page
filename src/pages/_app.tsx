@@ -24,7 +24,7 @@ const App: AppType = ({ Component, pageProps }) => {
                   <Component {...pageProps} />
                 </div>
               ) : (
-                <div className="w-full max-w-[845px] flex flex-col items-center p-4 gap-5">
+                <div className={`w-full ${path == "/swap" ? "max-w-[600px]" : path == "/pools" ? "max-w-[1000px]" : "max-w-[845px]"}  flex flex-col items-center p-4 gap-5`} >
                   <Component {...pageProps} />
                 </div>
               )}
@@ -33,7 +33,7 @@ const App: AppType = ({ Component, pageProps }) => {
           </main>
         </WagmiProviderComp>
       </MantineProvider>
-    </DirectionProvider>
+    </DirectionProvider >
   );
 };
 

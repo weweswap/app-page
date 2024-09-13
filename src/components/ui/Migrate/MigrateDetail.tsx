@@ -15,8 +15,8 @@ import { MigrateCompleteModal } from "./MigrateCompleteModal";
 import { useDisclosure } from "@mantine/hooks";
 import { provider, useSafeTransfer } from "~/hooks/useMigrate";
 import { useAccount } from "wagmi";
-import { MigrateFailModal } from "./MigrateFailModal";
 import { Loader } from "@mantine/core";
+import { FailTXModal } from "~/components/common/FailTXModal";
 
 type MigrateDetailProps = {
   onBack: () => void;
@@ -440,7 +440,7 @@ export const MigrateDetail = ({
         />
       )}
       {isError && (
-        <MigrateFailModal
+        <FailTXModal
           hash={hash!}
           opened={openedMigrateFailModal}
           onClose={closeMigrateFailModal}

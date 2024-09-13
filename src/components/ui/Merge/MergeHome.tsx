@@ -207,7 +207,7 @@ export const MergeHome = (props: MergeHomeProps) => {
 
               <div className="flex justify-center gap-2 md:my-5 my-2 md:mb-5 mb-10">
                 <Typography size="md" fw={600}>
-                  Ratio: 1
+                  Ratio: 1000
                 </Typography>
                 <Image
                   src="/img/tokens/wewe.svg"

@@ -79,26 +79,26 @@ export const useApproveAndCall = () => {
   } = useWaitForTransactionReceipt({ hash });
 
   useEffect(() => {
-    if (isConfirmed) {
-      notifications.show({
-        title: "Merge",
-        message: "Merge success!",
-      });
-    }
+    // if (isConfirmed) {
+    //   notifications.show({
+    //     title: "Merge",
+    //     message: "Merge success!",
+    //   });
+    // }
     if (isCreationError) {
-      notifications.show({
-        title: "Merge",
-        message: "Merge fail!",
-        color: "red",
-      });
+      // notifications.show({
+      //   title: "Merge",
+      //   message: "Merge fail!",
+      //   color: "red",
+      // });
       console.log(errorCreation?.message);
     }
     if (isConfirmError) {
-      notifications.show({
-        title: "Merge",
-        message: "Merge fail!",
-        color: "red",
-      });
+      // notifications.show({
+      //   title: "Merge",
+      //   message: "Merge fail!",
+      //   color: "red",
+      // });
       console.log(errorConfirm?.message);
     }
   }, [isConfirmed, isCreationError, isConfirmError]);
@@ -117,5 +117,6 @@ export const useApproveAndCall = () => {
     hash,
     onWriteAsync,
     isConfirmed,
+    isError: isConfirmError || isCreationError
   };
 };

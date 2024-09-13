@@ -136,13 +136,13 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         setSwapState({ ...swapState, loading: false });
         res.data.message == RouterMessageType.Succussful
           ? setRouteData({
-              inputToken: TOKEN_LIST[inputTokenIndex],
-              outputToken: TOKEN_LIST[outputTokenIndex],
-              routeSummary: (res.data.data as RoutingData).routeSummary,
-              routerAddress: (res.data.data as RoutingData).routerAddress,
-            })
+            inputToken: TOKEN_LIST[inputTokenIndex],
+            outputToken: TOKEN_LIST[outputTokenIndex],
+            routeSummary: (res.data.data as RoutingData).routeSummary,
+            routerAddress: (res.data.data as RoutingData).routerAddress,
+          })
           : //  setrouteData(res.data.data as RoutingData)
-            console.log(res.data.message);
+          console.log(res.data.message);
       })
       .catch((err) => {
         setSwapState({ ...swapState, loading: false });
@@ -162,13 +162,13 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           setSwapState({ ...swapState, loading: false });
           res.data.message == RouterMessageType.Succussful
             ? setRouteData({
-                inputToken: TOKEN_LIST[inputTokenIndex],
-                outputToken: TOKEN_LIST[outputTokenIndex],
-                routeSummary: (res.data.data as RoutingData).routeSummary,
-                routerAddress: (res.data.data as RoutingData).routerAddress,
-              })
+              inputToken: TOKEN_LIST[inputTokenIndex],
+              outputToken: TOKEN_LIST[outputTokenIndex],
+              routeSummary: (res.data.data as RoutingData).routeSummary,
+              routerAddress: (res.data.data as RoutingData).routerAddress,
+            })
             : //  setrouteData(res.data.data as RoutingData)
-              console.log(res.data.message);
+            console.log(res.data.message);
         })
         .catch((err) => {
           setSwapState({ ...swapState, loading: false });
@@ -231,7 +231,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
             <NumberInput
               classNames={{
-                root: "md:col-span-9 col-span-6",
+                root: "md:col-span-8 col-span-6",
                 input: clsx(
                   dogica.className,
                   "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
@@ -249,7 +249,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
             <Dropdown
               value={TOKEN_LIST[inputTokenIndex].symbol}
               options={inTokenOptions}
-              className="md:col-span-3 col-span-6"
+              className="md:col-span-4 col-span-6"
               setIndexValue={setInputTokenIndex}
             />
           </div>
@@ -261,7 +261,12 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
                 ? Number(routeData.routeSummary.amountInUsd).toLocaleString()
                 : "0.00"}
             </Typography>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 cursor-pointer" onClick={() => {
+              setInputValue(Number(formatUnits(
+                getCurrentBalance(),
+                TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+              )))
+            }}>
               <Image
                 src="/img/icons/wallet.svg"
                 width={16}
@@ -269,10 +274,10 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
                 alt=""
               />
               <Typography size="xs">
-                {formatUnits(
+                {Number(formatUnits(
                   getCurrentBalance(),
                   TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
-                ).toLocaleString()}{" "}
+                )).toFixed(6).toLocaleString()}{" "}
                 {inTokenOptions[inputTokenIndex].value}
               </Typography>
             </div>
@@ -301,17 +306,17 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
             <Typography
               secondary
-              className={` md:col-span-9 col-span-6 
+              className={` md:col-span-8 col-span-6 
               text-start bg-transparent text-white text-2xl h-auto overflow-x-auto
               border-transparent rounded-none`}
             >
               {routeData
                 ? Number(
-                    formatStringUnits(
-                      routeData.routeSummary.amountOut,
-                      TOKEN_LIST[outputTokenIndex].decimals
-                    )
-                  ).toLocaleString()
+                  formatStringUnits(
+                    routeData.routeSummary.amountOut,
+                    TOKEN_LIST[outputTokenIndex].decimals
+                  )
+                ).toLocaleString()
                 : "0.0"}
             </Typography>
 
@@ -319,7 +324,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               defaultValue={TOKEN_LIST[outputTokenIndex].symbol}
               value={TOKEN_LIST[outputTokenIndex].symbol}
               options={outTokenOptions}
-              className="md:col-span-3 col-span-6"
+              className="md:col-span-4 col-span-6"
               setIndexValue={setOutputTokenIndex}
             />
           </div>
@@ -334,11 +339,11 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               ? Number(routeData.routeSummary.amountInUsd) == 0
                 ? "0.0"
                 : (
-                    (1 -
-                      Number(routeData.routeSummary.amountOutUsd) /
-                        Number(routeData.routeSummary.amountInUsd)) *
-                    -100
-                  ).toLocaleString()
+                  (1 -
+                    Number(routeData.routeSummary.amountOutUsd) /
+                    Number(routeData.routeSummary.amountInUsd)) *
+                  -100
+                ).toLocaleString()
               : "0.00"}
             %)
           </Typography>

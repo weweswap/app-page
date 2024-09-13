@@ -6,12 +6,12 @@ import { Button } from "~/components/common/Button";
 import { BuildData, TokenItem } from "~/models";
 import { Hex } from "viem";
 
-type MigrateFailProps = {
+type FailTXProps = {
   hash: Hex;
   onClose: () => void;
 } & ModalRootProps;
 
-export const MigrateFailModal = (props: MigrateFailProps) => {
+export const FailTXModal = (props: FailTXProps) => {
   const handleDetails = () => {
     window.open(
       `https://basescan.org/tx/${props.hash}`,

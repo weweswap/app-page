@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader, NumberInput } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import clsx from "clsx";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -24,7 +25,11 @@ const RedeemOperation = () => {
     address,
     CONTRACT_ADDRESSES.vult
   );
-
+  const [openedRedeemCompleteModal, { open: openRedeemCompleteModal, close: closeRedeemCompleteModal }] = useDisclosure(false)
+  const [
+    openedRedeemFailModal,
+    { open: openRedeemFailModal, close: closeRedeemFailModal },
+  ] = useDisclosure(false);
   const [operations, setOperations] = useState<number>(0);
   const [amount, setAmount] = useState<string | number>("");
   const amountValue = parseEther(String(amount) ?? 0);
@@ -57,8 +62,8 @@ const RedeemOperation = () => {
       const weweFDV = wewePrice * totalWeweSupply;
       setVultFDV(
         ((weweBalanceNumber + virtualBalance) / totalWeweSupply) *
-          weweFDV *
-          (totalVultSupply / vultBalanceNumber)
+        weweFDV *
+        (totalVultSupply / vultBalanceNumber)
       );
     }
   }, [weweBalance, vultBalance, wewePrice]);
@@ -137,16 +142,16 @@ const RedeemOperation = () => {
             </div>
 
             <div className="w-full flex items-center gap-5 mt-3">
-                 <div>
-                    <Typography size="xs" className="text_light_gray">
-                      Available:
-                    </Typography>
-                    <Typography size="xs" className="text_light_gray">
-                    {Math.trunc(
+              <div>
+                <Typography size="xs" className="text_light_gray">
+                  Available:
+                </Typography>
+                <Typography size="xs" className="text_light_gray">
+                  {Math.trunc(
                     Number(formatEther(balanceVult))
                   ).toLocaleString()}
-                    </Typography>
-                 </div>
+                </Typography>
+              </div>
               <button
                 className="bg_light_dark px-3 py-2"
                 onClick={() => handleSelect(1)}
