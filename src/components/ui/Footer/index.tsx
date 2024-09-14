@@ -3,7 +3,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Lottie from "lottie-react";
 import animation from "../../../../public/videos/burn-animation.json";
-
 export const Footer = () => {
   const path = usePathname();
   return (
