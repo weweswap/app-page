@@ -54,7 +54,7 @@ const RedeemOperation = () => {
 
   const totalVultSupply = 100000000; //100m
   const totalWeweSupply = 100000000000; //100bn
-  const virtualBalance = 10000000000; //10bn
+  const virtualBalance = 10000000000 - 10000000000; //10bn - 10bn
   useEffect(() => {
     if (wewePrice > 0) {
       const weweBalanceNumber = Number(formatEther(weweBalance));
