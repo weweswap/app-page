@@ -18,7 +18,6 @@ const ClaimSuccessModal = (props: ClaimSuccessModalProps) => {
             SUCCESSFULLY CLAIMED FEES
         </Typography>
         <div className='flex items-center justify-between w-full gap-2'>
-          <Typography>ID: XYZ</Typography>
           <div className="flex items-center gap-1">
             <Image src="/img/icons/memes.svg" width={20} height={20} alt="" />
             <Typography size="xs" className="translate-x-1">
@@ -44,9 +43,18 @@ const ClaimSuccessModal = (props: ClaimSuccessModalProps) => {
           <Typography size="xs">
             1020,02 USDC 
           </Typography>
-          <Image src="/img/tokens/usdc.png" alt="" height={20} width={20} />
+          <Image src="/img/tokens/usdc.png" alt="" height={30} width={30} />
         </div>
-      
+        <Typography size="sm" secondary className="mt-5">
+        CLAIMED CHAOS
+        </Typography>
+        <Typography size="lg" className="font-bold">
+          $2,34
+        </Typography>
+        <div className="flex items-center gap-2">
+          <Typography size="xs">1020,02 CHAOS</Typography>
+          <Image src="/img/icons/chaos.svg" alt="" height={30} width={30} />
+        </div>
       </div>
 
 <Typography className='flex justify-end w-full mb-3' size='xs'>Total fee cost: $ 0.10</Typography>
