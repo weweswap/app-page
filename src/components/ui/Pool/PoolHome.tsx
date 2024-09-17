@@ -75,7 +75,6 @@ export const PoolHome = ({ onClaim, onNext, onAdd, onZap, onManage, onZapOut }: 
             <Liquidity onClaim={onClaim} onZapOut={onZapOut} onManage={onManage} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
         </Card> 
       }
-   
     </>
   );
 };

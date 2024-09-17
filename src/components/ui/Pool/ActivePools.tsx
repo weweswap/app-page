@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
 import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT } from "./dummy";
 import PoolDetail from "./PoolDetail";
+import { usePosition } from "~/hooks/usePool";
 
 type ActivePoolProps = {
   setPoolTypes: (number: number) => void;
@@ -42,6 +43,10 @@ const ActivePools = ({
     event.stopPropagation();
     onDeposit();
   };
+
+  const { data: position } = usePosition()
+
+  console.log('position', position?.position.liquidity)
 
   return (
     <>
