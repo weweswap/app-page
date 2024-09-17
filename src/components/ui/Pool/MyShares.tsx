@@ -3,12 +3,9 @@ import { useEffect, useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
 import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT, DUMMY_POOLS } from "./dummy";
 
-import PoolBox from "./PoolBox";
-import Link from "next/link";
-import ComingSoon from "~/components/common/ComingSoon";
 import LiquidityDetails from "./MySharesDetails";
 
-type LiquidityProps = {
+type MySharesProps = {
   onClaim: () => void;
   onManage: () => void;
   setPoolTypes: (number: number) => void;
@@ -17,14 +14,14 @@ type LiquidityProps = {
   onZapOut: () => void;
 };
 
-const Liquidity = ({
+const MyShares = ({
   onClaim,
   onManage,
   setPoolTypes,
   poolTypes,
   onNext,
   onZapOut,
-}: LiquidityProps) => {
+}: MySharesProps) => {
   const [poolDetail, setPoolDetail] = useState();
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
@@ -300,4 +297,4 @@ const Liquidity = ({
   );
 };
 
-export default Liquidity;
+export default MyShares;

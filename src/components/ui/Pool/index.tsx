@@ -27,7 +27,7 @@ export const Pool = () => {
   const [openedClaimFeesModal, {open: openClaimFeesModal, close: closeClaimFeesModal}] = useDisclosure(false)
   const [openedClaimSuccessModal, {open: openClaimSuccessModal, close: closeClaimSuccessModal}] = useDisclosure(false)
   const [addOpened, { open: openAdd, close: closeAdd }] = useDisclosure(false);
-  const [claimOpened, { open: openClaim, close: closeClaim }] =
+
     useDisclosure(false);
 
   const handleAdd = () => {
@@ -70,7 +70,7 @@ export const Pool = () => {
 
   return (
     <>
-      {step === 0 && <PoolHome onClaim={handleClaimFeesModal} onZapOut={handleZapOutModal} onZap={handleZapModal} onManage={() => setStep(5)} onNext={() => setStep(1)} onAdd={openAdd} />}
+      {step === 0 && <PoolHome onClaim={handleClaimFeesModal} onZapOut={handleZapOutModal} onDeposit={handleZapModal} onManage={() => setStep(5)} onNext={() => setStep(1)} onAdd={openAdd} />}
       {step === 1 && <PoolCreate onBack={() => setStep(0)} onNext={handleAdd} />}
       {/* {step === 2 && ( <PoolZapIn onBack={() => setStep(1)} onZap={handleZapModal} />)} */}
       {/* {step === 4 && (<SuccessModal onConfirm={handleAdd} />)} */}

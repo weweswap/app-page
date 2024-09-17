@@ -12,7 +12,7 @@ type ActivePoolProps = {
   onDeposit: () => void;
 };
 
-const ActivePools = ({
+const Liquidity = ({
   setPoolTypes,
   poolTypes,
   onNext,
@@ -38,7 +38,7 @@ const ActivePools = ({
     setPoolDetail(undefined);
   };
 
-  const handleZapIn = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDeposit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onDeposit();
   };
@@ -147,10 +147,15 @@ const ActivePools = ({
                       </td>
                       <td className="p-4" align="right">
                         <Button
-                          onClick={handleZapIn}
+                          onClick={handleDeposit}
                           className="w-full md:w-auto min-w-[6rem]"
                         >
-                          <Typography secondary size="xs" fw="700" tt="uppercase">
+                          <Typography
+                            secondary
+                            size="xs"
+                            fw="700"
+                            tt="uppercase"
+                          >
                             Deposit
                           </Typography>
                         </Button>
@@ -169,4 +174,4 @@ const ActivePools = ({
   );
 };
 
-export default ActivePools;
+export default Liquidity;
