@@ -31,7 +31,7 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
           <div className="flex flex-col items-center">
             <img
               src="/img/icons/check.svg"
-              className="w-[76px]"
+              className="w-[60px]"
               alt="succesful"
             />
           </div>
@@ -45,21 +45,43 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
           >
             successfuly swapped
           </Typography>
+          <div className="flex items-center justify-center gap-3">
+            <Image
+              src={routeData!.inputToken.icon}
+              alt={routeData!.inputToken.symbol}
+              width={40}
+              height={40}
+            />
+            <div className="flex flex-col">
+              <Typography size="md" fw={700}>
+                ${Number(encodedData!.amountInUsd).toFixed(2)}
+              </Typography>
+            </div>
+          </div>
 
-          <div className="flex items-center justify-center gap-2">
+          <Image
+            src="img/icons/chevron-down.svg"
+            width={20}
+            height={20}
+            alt=""
+            className="mx-auto"
+          />
+          <div className="flex items-center justify-center gap-3">
             <img
               src={routeData!.outputToken.icon}
               alt={routeData!.outputToken.symbol}
+              width={40}
+              height={40}
             />
             <div className="flex flex-col">
               <Typography size="md" fw={700}>
                 ${Number(encodedData!.amountOutUsd).toFixed(2)}
               </Typography>
-              <Typography size="xs" className="text_light_gray">
-                US$ {Number(encodedData!.gasUsd).toFixed(2)} estimated fees
-              </Typography>
             </div>
           </div>
+          <Typography size="xs" className="text_light_gray mx-auto">
+            US$ {Number(encodedData!.gasUsd).toFixed(2)} estimated fees
+          </Typography>
           <div className="flex flex-col gap-2">
             <Button className="w-full" onClick={props.onClose}>
               <Typography secondary size="md" fw={700} tt="uppercase">
