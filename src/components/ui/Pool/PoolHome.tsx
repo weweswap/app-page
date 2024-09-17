@@ -5,8 +5,8 @@ import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT, DUMMY_POOLS } from "./dummy";
 import PoolBox from "./PoolBox";
 import Link from "next/link";
 import ComingSoon from "~/components/common/ComingSoon";
-import ActivePools from "./ActivePools";
-import Liquidity from "./Liquidity";
+import ActivePools from "./Liquidity";
+import Liquidity from "./MyShares";
 
 type PoolHomeProps = {
   onClaim: () => void;

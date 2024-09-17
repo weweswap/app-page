@@ -3,12 +3,12 @@ import Link from "next/link";
 import React from "react";
 import { Button, Card, Typography } from "~/components/common";
 
-type LiquidityDetailsProps = {
+type MyPoolDetailProps = {
     onBack: () => void
     onClaim: () => void
 }
 
-const LiquidityDetails = ({onBack, onClaim}: LiquidityDetailsProps) => {
+const LiquidityDetails = ({onBack, onClaim}: MyPoolDetailProps) => {
   return (
     <>
       <div className=" w-full min-h-[10rem]">

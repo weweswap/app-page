@@ -3,19 +3,18 @@ import Link from "next/link";
 import React from "react";
 import { Button, Card, Typography } from "~/components/common";
 
-type PoolDetailProps = {
-  onBack: () => void;
-  onZap: () => void;
+type PoolDepositProps = {
+  
 };
 
-const PoolDetail = ({ onBack, onZap }: PoolDetailProps) => {
+const PoolDeposit = ( ) => {
   return (
     <>
       <Card>
         <div className=" w-full min-h-[10rem]">
           <div className="sm:py-4  flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2">
-              <button onClick={onBack}>
+              <button >
                 <Typography secondary size="xl">
                   {"<"}
                 </Typography>
@@ -146,11 +145,11 @@ const PoolDetail = ({ onBack, onZap }: PoolDetailProps) => {
               </div>
             </div>
           </div>
-          <Button onClick={onZap} className="w-full mt-4">
+          {/* <Button onClick={onZap} className="w-full mt-4">
             <Typography secondary size="xs" fw={700} tt="uppercase">
               ZAP-IN
             </Typography>
-          </Button>
+          </Button> */}
         </div>
       </Card>
       <Card>
@@ -173,4 +172,4 @@ const PoolDetail = ({ onBack, onZap }: PoolDetailProps) => {
   );
 };
 
-export default PoolDetail;
+export default PoolDeposit;

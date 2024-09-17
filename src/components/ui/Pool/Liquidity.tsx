@@ -1,30 +1,23 @@
+import React, { useEffect } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
-import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT, DUMMY_POOLS } from "./dummy";
+import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT } from "./dummy";
+import PoolDetail from "./PoolDetail";
 
-import PoolBox from "./PoolBox";
-import Link from "next/link";
-import ComingSoon from "~/components/common/ComingSoon";
-import LiquidityDetails from "./LiquidityDetails";
-
-type LiquidityProps = {
-  onClaim: () => void;
-  onManage: () => void;
+type ActivePoolProps = {
   setPoolTypes: (number: number) => void;
   poolTypes: number;
   onNext: () => void;
-  onZapOut: () => void;
+  onDeposit: () => void;
 };
 
-const Liquidity = ({
-  onClaim,
-  onManage,
+const ActivePools = ({
   setPoolTypes,
   poolTypes,
   onNext,
-  onZapOut,
-}: LiquidityProps) => {
+  onDeposit,
+}: ActivePoolProps) => {
   const [poolDetail, setPoolDetail] = useState();
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
@@ -45,20 +38,15 @@ const Liquidity = ({
     setPoolDetail(undefined);
   };
 
-  const handleZapOut = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleZapIn = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    onZapOut();
-  };
-
-  const handleClaim = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    onClaim();
+    onDeposit();
   };
 
   return (
     <>
       {!showDetails ? (
-        <>
+        <Card className="overflow-x-scroll">
           <div className="flex items-center justify-between w-full gap-6 md:flex-row flex-col">
             <div className="bg_light_dark sm:w-[30rem] w-full flex items-center justify-between gap-3 h-[3rem]">
               <div
@@ -75,230 +63,110 @@ const Liquidity = ({
               </div>
             </div>
           </div>
-          <div className="flex item-center justify-center py-5">
-            {/* <Image src="/img/icons/home.svg" width={150} height={150} alt=""/> */}
-            <div className="w-full flex flex-col">
-              <Typography size="lg">MEMES 1%</Typography>
-              {DUMMY_POOLS.map(
-                ({
-                  exchangePair,
-                  state,
-                  range,
-                  lpValue,
-                  rewards,
-                  positionId,
-                  apr,
-                  shares,
-                }) => {
-                  return (
-                    <div
+          <table className="w-[fit-content] min-w-[100%] table-auto text-left bg_dark mt-5">
+            <thead>
+              <tr>
+                {DUMMY_TABLE_HEAD.map((head) => (
+                  <th key={head} className="bg-blue-gray-50 p-4">
+                    <Typography size="sm" className="leading-none opacity-70">
+                      {head}
+                    </Typography>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <Typography className="px-4 text-sm py-2">MEMES 1%</Typography>
+            <tbody>
+              {DUMMY_TABLE_CONTENT.map(
+                (
+                  { poolType, logo, type, pool, tvl, range, volume, apr },
+                  index
+                ) => (
+                  <>
+                    {/* <tr key={type} className='px-4 text-sm py-2'>
+            {poolType}
+        </tr> */}
+                    <tr
                       onClick={() =>
                         handleShowDetails({
-                          exchangePair,
-                          state,
-                          range,
-                          lpValue,
-                          rewards,
-                          positionId,
+                          poolType,
+                          logo,
+                          type,
+                          pool,
+                          tvl,
+                          volume,
+                          apr,
                         })
                       }
-                      className="bg_dark w-full min-h-[10rem] p-4 hover:bg-[#181818] cursor-pointer"
+                      key={pool}
+                      className="bg-[#1c1c1c] w-[full] cursor-pointer hover:bg-[#202020]"
+                      style={{ borderBottom: "1rem solid black" }}
                     >
-                      <div className="pb-4  flex items-center justify-between gap-3 flex-wrap">
+                      <td className="p-4 font-bold ">
                         <div className="flex items-center gap-2">
                           <div className="flex items-center">
                             <Image
-                              src="/img/tokens/wewe.png"
-                              width={24}
-                              height={24}
+                              className="min-w-6 min-h-6"
+                              src={logo.first}
                               alt=""
-                              className="-translate-x-1.5"
+                              width={32}
+                              height={32}
                             />
                             <Image
-                              src="/img/tokens/usdc.png"
-                              className="translate-x-[-12px]"
-                              width={24}
-                              height={24}
+                              className="ml-[-10px] min-w-6 min-h-6"
+                              src={logo.second}
                               alt=""
+                              width={32}
+                              height={32}
                             />
                           </div>
-                          <Typography secondary fs="md" tt="uppercase">
-                            {exchangePair}
-                          </Typography>
-                        </div>
-                        <div></div>
-                        <div className="lg:text-right flex flex-col gap-2">
-                          <Typography
-                            size="xs"
-                            ta="center"
-                            className="text_light_gray"
-                          >
-                            SHARES
-                          </Typography>
-                          <Typography
-                            fs="md"
-                            ta="center"
-                            className="font-extrabold"
-                          >
-                            {shares}
-                          </Typography>
-                        </div>
-                        <div className="lg:text-right flex flex-col gap-2">
-                          <Typography
-                            size="xs"
-                            ta="center"
-                            className="text_light_gray"
-                          >
-                            APR
-                          </Typography>
-                          <Typography
-                            fs="md"
-                            ta="center"
-                            className="font-extrabold"
-                          >
-                            {apr}
-                          </Typography>
-                        </div>
-
-                        <div className="text-right flex flex-col gap-2">
-                          <Typography
-                            size="xs"
-                            ta="center"
-                            className="text_light_gray"
-                          >
-                            REWARDS
-                          </Typography>
-                          <Typography
-                            fs="md"
-                            ta="end"
-                            className="font-extrabold"
-                          >
-                            ${rewards}
-                          </Typography>
-                        </div>
-
-                        <div className="lg:text-right flex flex-col gap-2">
-                          <Typography
-                            size="xs"
-                            ta="center"
-                            className="text_light_gray"
-                          >
-                            TOTAL VALUE
-                          </Typography>
-                          <Typography
-                            fs="md"
-                            ta="center"
-                            className="font-extrabold"
-                          >
-                            ${lpValue}
-                          </Typography>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1 ">
-                        <div className="flex w-full justify-between items-center">
-                          {/* <Typography
-                            size="xs"
-                            opacity={0.7}
-                            className={`bg_green flex justify-center rounded-full w-[6rem] py-1 `}
-                          >
-                            IN RANGE
-                          </Typography> */}
-                          <div className="flex items-center gap-1">
-                            <Image
-                              src="/img/icons/memes.svg"
-                              width={20}
-                              height={20}
-                              alt=""
-                            />
-                            <Typography size="xs" className="translate-x-1">
-                              MEMES: 1%
-                            </Typography>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            {range === "NARROW" ? (
-                              <Image
-                                src="/img/links/narrow.svg"
-                                width={20}
-                                height={20}
-                                alt=""
-                              />
-                            ) : range === "MID" ? (
-                              <Image
-                                src="/img/links/mid.svg"
-                                width={20}
-                                height={20}
-                                alt=""
-                              />
-                            ) : range === "INFINITY" ? (
-                              <Image
-                                src="/img/icons/Infinity.svg"
-                                width={20}
-                                height={20}
-                                alt=""
-                              />
-                            ) : (
-                              <Image
-                                src="/img/links/wide.svg"
-                                width={20}
-                                height={20}
-                                alt=""
-                              />
-                            )}
-                            <Typography size="xs" className="translate-x-1">
-                              {range}
-                            </Typography>
-                          </div>
-                          {/* <Typography size="xs" opacity={0.7}>
-                            Position ID: {positionId}
-                          </Typography>
                           <Typography size="xs" opacity={0.7}>
-                            {`RANGE: 0.0006900>0.007000`}
-                          </Typography> */}
+                            {type}
+                          </Typography>
                         </div>
-                      </div>
-                      <div className="flex items-center justify-end gap-5 py-5 flex-wrap">
+                      </td>
+                      <td className="p-4">
+                        <Typography size="xs" opacity={0.7}>
+                          {tvl}
+                        </Typography>
+                      </td>
+                      <td className="p-4">
+                        <Typography size="xs" opacity={0.7}>
+                          {range}
+                        </Typography>
+                      </td>
+                      <td className="p-4">
+                        <Typography size="xs" opacity={0.7}>
+                          {volume}
+                        </Typography>
+                      </td>
+                      <td className="p-4">
+                        <Typography size="xs" opacity={0.7}>
+                          {apr}
+                        </Typography>
+                      </td>
+                      <td className="p-4" align="right">
                         <Button
-                          onClick={handleZapOut}
-                          className="w-full md:w-auto"
+                          onClick={handleZapIn}
+                          className="w-full md:w-auto min-w-[6rem]"
                         >
-                          <Typography
-                            secondary
-                            size="xs"
-                            fw={700}
-                            tt="uppercase"
-                          >
-                            manage
+                          <Typography secondary size="xs" fw="700" tt="uppercase">
+                            Deposit
                           </Typography>
                         </Button>
-
-                        <Button
-                          onClick={handleClaim}
-                          className="w-full md:w-auto"
-                        >
-                          <Typography
-                            secondary
-                            size="xs"
-                            fw={700}
-                            tt="uppercase"
-                          >
-                            CLAIM
-                          </Typography>
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                }
+                      </td>
+                    </tr>
+                  </>
+                )
               )}
-            </div>
-          </div>
-        </>
+            </tbody>
+          </table>
+        </Card>
       ) : (
-        <>
-          <LiquidityDetails onClaim={onClaim} onBack={handleHideDetails} />
-        </>
+        <PoolDetail onBack={handleHideDetails} onZap={onDeposit} />
       )}
     </>
   );
 };
 
-export default Liquidity;
+export default ActivePools;
