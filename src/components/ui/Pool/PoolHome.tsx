@@ -6,7 +6,7 @@ import PoolBox from "./PoolBox";
 import Link from "next/link";
 import ComingSoon from "~/components/common/ComingSoon";
 import ActivePools from "./ActivePools";
-import MyPools from "./MyPools";
+import Liquidity from "./Liquidity";
 
 type PoolHomeProps = {
   onClaim: () => void;
@@ -67,12 +67,12 @@ export const PoolHome = ({ onClaim, onNext, onAdd, onZap, onManage, onZapOut }: 
     </div> */}
       {poolTypes === 0
          && 
-        <ActivePools onZap={onZap} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
+        <ActivePools onDeposit={onZap} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
       }
       {poolTypes === 1 
         &&
         <Card>
-            <MyPools onClaim={onClaim} onZapOut={onZapOut} onManage={onManage} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
+            <Liquidity onClaim={onClaim} onZapOut={onZapOut} onManage={onManage} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
         </Card> 
       }
    

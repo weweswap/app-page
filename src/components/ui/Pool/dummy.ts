@@ -49,6 +49,7 @@ export const DUMMY_POOLS = [
     state: "Active",
     range: "INFINITY",
     apr: "420%",
+    shares:"0.0000023434234",
     lpValue: "34,54",
     rewards: "45,65",
     positionId: "69",
