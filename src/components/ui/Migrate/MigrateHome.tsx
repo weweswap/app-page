@@ -35,7 +35,7 @@ export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
             <div className="flex-1 bg_light_dark px-4 py-3 flex items-center gap-3 lg:w-fit w-full">
               <Image
                 className="rounded"
-                src="/img/tokens/uniswap.png"
+                src="/img/tokens/uniswap-migrate.png"
                 width={36}
                 height={36}
                 alt=""
@@ -57,16 +57,16 @@ export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
                 <div className="flex items-center gap-3">
                   <div className="flex items-center">
                     <Image
-                      src="/img/tokens/weth.png"
+                      src="/img/tokens/eth.png"
                       width={24}
                       height={24}
-                      alt=""
+                      alt="WETH"
                     />
                     <Image
                       src="/img/tokens/wewe.png"
                       width={24}
                       height={24}
-                      alt=""
+                      alt="WEWE"
                       className="-translate-x-1.5"
                     />
                   </div>
@@ -119,7 +119,9 @@ export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
       )}
       {!positionsLoading && !positions && (
         <Card className="flex flex-col gap-4">
-          <Typography size="lg" className="mx-auto" >No Available Positions!</Typography>
+          <Typography size="lg" className="mx-auto">
+            No Available Positions!
+          </Typography>
         </Card>
       )}
 
