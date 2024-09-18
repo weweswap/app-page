@@ -23,6 +23,34 @@ export type WewePool = {
   }
 }
 
+export async function calculateTlvForTokens(
+  vaultAddress: string,
+  arrakisHelper: ethers.Contract,
+  provider: ethers.JsonRpcProvider,
+  token0: string,
+  token1: string
+) {
+  const totalUnderlying = await arrakisHelper.totalUnderlying(vaultAddress);
+
+  const token0Contract = new ethers.Contract(token0, erc20Abi, provider);
+  const token1Contract = new ethers.Contract(token1, erc20Abi, provider);
+
+  const token0decimals = await token0Contract.decimals();
+  const token1decimals = await token1Contract.decimals();
+
+  const priceInUsdToken0 = await fetchPricePercontractAddress(token0);
+  const priceInUsdToken1 = await fetchPricePercontractAddress(token1);
+
+  const tlvToken0 =
+    Number(ethers.formatUnits(totalUnderlying[0].toString(), token0decimals)) *
+    priceInUsdToken0;
+  const tlvToken1 =
+    Number(ethers.formatUnits(totalUnderlying[1].toString(), token1decimals)) *
+    priceInUsdToken1;
+
+  return tlvToken0 + tlvToken1;
+}
+
 export const provider = new ethers.JsonRpcProvider(
     `https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`
   );
@@ -57,25 +85,14 @@ export const provider = new ethers.JsonRpcProvider(
             );
             const token0 = await arrakisVault.token0()
             const token1 = await arrakisVault.token1()
-            const priceInUsdToken0 = await fetchPricePercontractAddress(token0)
-            const priceInUsdToken1 = await fetchPricePercontractAddress(token1)
-            const totalUnderlying = await arrakisHelper.totalUnderlying(weweVults[key])
-            const token0Contract = new ethers.Contract(
+
+            const tlv = await calculateTlvForTokens(
+              weweVults[key],
+              arrakisHelper,
+              provider,
               token0,
-              erc20Abi,
-              provider
+              token1
             );
-            const token1Contract = new ethers.Contract(
-              token1,
-              erc20Abi,
-              provider
-            );
-
-            const token0decimals = await token0Contract.decimals()
-            const token1decimals = await token1Contract.decimals()
-
-            const tlvToken0 =  Number(ethers.formatUnits(totalUnderlying[0].toString(), token0decimals)) * priceInUsdToken0
-            const tlvToken1 =  Number(ethers.formatUnits(totalUnderlying[1].toString(), token1decimals)) * priceInUsdToken1
 
             const token0info = TOKEN_LIST.find(({ address }) => address.toLowerCase() === token0.toLowerCase() )
             const token1info = TOKEN_LIST.find(({ address }) => address.toLowerCase() === token1.toLowerCase() )
@@ -84,9 +101,9 @@ export const provider = new ethers.JsonRpcProvider(
               address: weweVults[key],
               poolType: "MEMES 1%",
               pool: "EXOTIC",
-              tvl: (tlvToken0 + tlvToken1).toString(),
+              tvl: tlv.toString(),
               volume: "-",
-              range: "0>999999+",
+              range: "INFINITY",
               apr: "-",
               type: `${token0info?.symbol}/${token1info?.symbol}`,
               logo: {
