@@ -1,4 +1,4 @@
-const ArrakisResolver = [
+const ArrakisResolverABI = [
     {
       inputs: [
         {
@@ -307,4 +307,4 @@ const ArrakisResolver = [
     }
   ];
 
-export default ArrakisResolver
+export default ArrakisResolverABI
