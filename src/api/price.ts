@@ -9,14 +9,12 @@ const getApiBaseUrl = () => {
 
 const callCoingeckoApi = (url: string) => {
   if (process.env.NEXT_PUBLIC_API_KEY) {
-    console.log('Private request')
     return axios.get(url, {
       headers: {
         'x-cg-pro-api-key': process.env.NEXT_PUBLIC_API_KEY,
       },
     });
   }
-  console.log('Public request')
   return axios.get(url)
 }
 
