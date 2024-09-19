@@ -4,8 +4,10 @@ export const CONTRACT_ADDRESSES = {
   merge: "0x30091c97Fd47873c44D03F7F1b960473D300D269" as `0x${string}`,
   kyberSwapAgg: "0x6131b5fae19ea4f9d964eac0408e4408b66337b5" as `0x${string}`,
   migration: "0x0C157a19eDB32b96A44Fa7EaE4D207522958f32c" as `0x${string}`,
+  helper: "0x17d48B94B993a10D2fA9D39E21FCd0E01588B68e" as `0x${string}`,
   resolver: "0xaeDeDB25120C80818E9CdF6375B21379f88b8F80" as `0x${string}`,
   feeManager: "0xFA255938e6297d19Fd73E05400dF5f899614D788" as `0x${string}`,
+  weweVaultFactory: "0x27CaAE96101c86E10aB85C393aE236C895C464aF" as `0x${string}`,
   weweVault: "0x6bAffADA267Ef0FbdDEFc05592271bED9a0B4a5E" as `0x${string}`,
   wethAddress: "0x4200000000000000000000000000000000000006" as `0x${string}`,
   wethWeweContract:

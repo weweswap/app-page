@@ -395,7 +395,7 @@ export const MigrateDetail = ({
                   </Typography>
                   <div className="flex items-center gap-2">
                     <Image
-                      src="/img/tokens/eth.png"
+                      src="/img/tokens/usdc.png"
                       width={24}
                       height={24}
                       alt=""

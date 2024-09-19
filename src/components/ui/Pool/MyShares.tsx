@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
-import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT, DUMMY_POOLS } from "./dummy";
-
-import LiquidityDetails from "./MySharesDetails";
+import MySharesDetails from "./MySharesDetails";
+import { useWewePositions } from "~/hooks/useWewePositions";
+import { useAccount } from "wagmi";
+import { useWewePools } from "~/hooks/usePool";
 
 type MySharesProps = {
   onClaim: () => void;
@@ -42,14 +43,23 @@ const MyShares = ({
     setPoolDetail(undefined);
   };
 
-  const handleManage = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleZapOut = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+    onZapOut();
   };
 
   const handleClaim = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onClaim();
   };
+
+  const { address } = useAccount();
+  const { data: wewePools } = useWewePools();
+
+  const { data: wewePositions } = useWewePositions(
+    wewePools?.wewePools,
+    address
+  );
 
   return (
     <>
@@ -75,7 +85,7 @@ const MyShares = ({
             {/* <Image src="/img/icons/home.svg" width={150} height={150} alt=""/> */}
             <div className="w-full flex flex-col">
               <Typography size="lg">MEMES 1%</Typography>
-              {DUMMY_POOLS.map(
+              {wewePositions?.wewePositions.map(
                 ({
                   exchangePair,
                   state,
@@ -169,7 +179,7 @@ const MyShares = ({
                             ta="end"
                             className="font-extrabold"
                           >
-                            ${rewards}
+                            {rewards}
                           </Typography>
                         </div>
 
@@ -186,7 +196,11 @@ const MyShares = ({
                             ta="center"
                             className="font-extrabold"
                           >
-                            ${lpValue}
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                              minimumFractionDigits: 2,
+                            }).format(Number(lpValue))}
                           </Typography>
                         </div>
                       </div>
@@ -254,7 +268,7 @@ const MyShares = ({
                       </div>
                       <div className="flex items-center justify-end gap-5 py-5 flex-wrap">
                         <Button
-                          onClick={handleManage}
+                          onClick={handleZapOut}
                           className="w-full md:w-auto"
                         >
                           <Typography
@@ -290,7 +304,7 @@ const MyShares = ({
         </>
       ) : (
         <>
-          <LiquidityDetails onClaim={onClaim} onBack={handleHideDetails} />
+          <MySharesDetails onClaim={onClaim} onBack={handleHideDetails} />
         </>
       )}
     </>
