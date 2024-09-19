@@ -3,18 +3,16 @@ import Link from "next/link";
 import React from "react";
 import { Button, Card, Typography } from "~/components/common";
 
-type PoolDepositProps = {
-  
-};
+type PoolDepositProps = {};
 
-const PoolDeposit = ( ) => {
+const PoolDeposit = () => {
   return (
     <>
       <Card>
         <div className=" w-full min-h-[10rem]">
           <div className="sm:py-4  flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2">
-              <button >
+              <button>
                 <Typography secondary size="xl">
                   {"<"}
                 </Typography>

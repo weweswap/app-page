@@ -1,7 +1,12 @@
 import { Pool } from "~/components/ui";
+import { PoolProvider } from "~/components/ui/Pool/PoolContext";
 
 const PoolPage = () => {
-  return <Pool />;
+  return (
+    <PoolProvider>
+      <Pool />
+    </PoolProvider>
+  );
 };
 
 export default PoolPage;

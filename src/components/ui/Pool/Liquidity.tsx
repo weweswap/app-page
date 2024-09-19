@@ -5,7 +5,7 @@ import { Button, Card, Typography } from "~/components/common";
 import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT } from "./dummy";
 import PoolDetail from "./PoolDetail";
 
-type ActivePoolProps = {
+type LiquidityProps = {
   setPoolTypes: (number: number) => void;
   poolTypes: number;
   onNext: () => void;
@@ -17,7 +17,7 @@ const Liquidity = ({
   poolTypes,
   onNext,
   onDeposit,
-}: ActivePoolProps) => {
+}: LiquidityProps) => {
   const [poolDetail, setPoolDetail] = useState();
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
