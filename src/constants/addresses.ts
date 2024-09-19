@@ -12,6 +12,10 @@ export const CONTRACT_ADDRESSES = {
   wethAddress: "0x4200000000000000000000000000000000000006" as `0x${string}`,
   wethWeweContract:
     "0x5E9BB3d7682A9537DB831060176C4247aB80D1Ec" as `0x${string}`,
+  wethUsdcContract:
+    "0xd0b53d9277642d899df5c87a3966a349a798f224" as `0x${string}`,
+  weweUsdcContract:
+    "0x6f71796114b9cdaef29a801bc5cdbcb561990eeb" as `0x${string}`,
   nonFungiblePositionManagerAddress:
     "0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1" as `0x${string}`,
 };

@@ -8,15 +8,15 @@ import { useEffect } from "react";
 import { Token, BigintIsh } from "@uniswap/sdk-core";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { ethers, formatEther, formatUnits, parseEther } from "ethers";
-import { WETH_WEWE_CONTRACT_ABI } from "~/lib/abis/WETHWEWE";
 import { formatPrice, formatStringUnits, tickToPrice } from "~/utils";
-import { fetchWewePrice } from "~/api/price";
 import { MigrateCompleteModal } from "./MigrateCompleteModal";
 import { useDisclosure } from "@mantine/hooks";
 import { provider, useSafeTransfer } from "~/hooks/useMigrate";
 import { useAccount } from "wagmi";
 import { Loader } from "@mantine/core";
 import { FailTXModal } from "~/components/common/FailTXModal";
+import { COMMON_POOL_CONTRACT_ABI } from "~/lib/abis/CommonPool";
+import { fetchWEWEPrice } from "~/services";
 
 type MigrateDetailProps = {
   onBack: () => void;
@@ -72,7 +72,7 @@ export const MigrateDetail = ({
     const fetchTicks = async () => {
       const contract = new ethers.Contract(
         CONTRACT_ADDRESSES.wethWeweContract,
-        WETH_WEWE_CONTRACT_ABI,
+        COMMON_POOL_CONTRACT_ABI,
         provider
       );
       setPoolLiquidity(String(await contract.liquidity()));
@@ -84,7 +84,7 @@ export const MigrateDetail = ({
   }, []);
 
   useEffect(() => {
-    fetchWewePrice().then((price) => {
+    fetchWEWEPrice().then((price) => {
       setWewePrice(price);
     });
   }, []);
