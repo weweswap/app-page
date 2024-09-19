@@ -2,11 +2,11 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { ethers } from "ethers";
 import { erc20Abi } from "viem";
 import { useQuery } from "wagmi/query";
-import { fetchPricePercontractAddress } from "~/api/price";
 import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { ArrakisFactoryABI } from "~/lib/abis/ArrakisFactory";
 import { ArrakisV2HelperABI } from "~/lib/abis/ArrakisHelper";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
+import { fetchPricePerAddressInUsdc } from "~/services/price";
 
 export type WewePool = {
   address: string
@@ -38,8 +38,8 @@ export async function calculateTlvForTokens(
   const token0decimals = await token0Contract.decimals();
   const token1decimals = await token1Contract.decimals();
 
-  const priceInUsdToken0 = await fetchPricePercontractAddress(token0);
-  const priceInUsdToken1 = await fetchPricePercontractAddress(token1);
+  const priceInUsdToken0 = await fetchPricePerAddressInUsdc(token0);
+  const priceInUsdToken1 = await fetchPricePerAddressInUsdc(token1);
 
   const tlvToken0 =
     Number(ethers.formatUnits(totalUnderlying[0].toString(), token0decimals)) *
