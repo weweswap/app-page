@@ -7,6 +7,9 @@ import PoolBox from "./PoolBox";
 import Link from "next/link";
 import ComingSoon from "~/components/common/ComingSoon";
 import LiquidityDetails from "./LiquidityDetails";
+import { useWewePositions } from "~/hooks/useWewePositions";
+import { useAccount } from "wagmi";
+import { useWewePools } from "~/hooks/usePool";
 
 type LiquidityProps = {
   onClaim: () => void;
@@ -54,7 +57,12 @@ const Liquidity = ({
     event.stopPropagation();
     onClaim();
   };
+  
+  const { address } = useAccount();
+  const { data: wewePools } = useWewePools();
 
+  const { data: wewePositions } = useWewePositions(wewePools?.wewePools, address)
+  
   return (
     <>
       {!showDetails ? (
@@ -79,7 +87,7 @@ const Liquidity = ({
             {/* <Image src="/img/icons/home.svg" width={150} height={150} alt=""/> */}
             <div className="w-full flex flex-col">
               <Typography size="lg">MEMES 1%</Typography>
-              {DUMMY_POOLS.map(
+              {wewePositions?.wewePositions.map(
                 ({
                   exchangePair,
                   state,
@@ -173,7 +181,7 @@ const Liquidity = ({
                             ta="end"
                             className="font-extrabold"
                           >
-                            ${rewards}
+                            {rewards}
                           </Typography>
                         </div>
 
@@ -190,7 +198,13 @@ const Liquidity = ({
                             ta="center"
                             className="font-extrabold"
                           >
-                            ${lpValue}
+                            {
+                              new Intl.NumberFormat('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                minimumFractionDigits: 2,
+                              }).format(Number(lpValue))
+                            }
                           </Typography>
                         </div>
                       </div>

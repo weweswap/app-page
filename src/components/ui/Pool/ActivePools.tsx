@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
-import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT } from "./dummy";
+import { DUMMY_TABLE_HEAD } from "./dummy";
 import PoolDetail from "./PoolDetail";
+import { useWewePools } from "~/hooks/usePool";
 
 type ActivePoolProps = {
   setPoolTypes: (number: number) => void;
@@ -43,6 +44,8 @@ const ActivePools = ({
     onDeposit();
   };
 
+  const { data: pools } = useWewePools()
+
   return (
     <>
       {!showDetails ? (
@@ -77,15 +80,11 @@ const ActivePools = ({
             </thead>
             <Typography className="px-4 text-sm py-2">MEMES 1%</Typography>
             <tbody>
-              {DUMMY_TABLE_CONTENT.map(
+              {pools?.wewePools.map(
                 (
-                  { poolType, logo, type, pool, tvl, range, volume, apr },
-                  index
+                  { poolType, logo, type, pool, tvl, range, volume, apr }
                 ) => (
                   <>
-                    {/* <tr key={type} className='px-4 text-sm py-2'>
-            {poolType}
-        </tr> */}
                     <tr
                       onClick={() =>
                         handleShowDetails({
@@ -127,7 +126,13 @@ const ActivePools = ({
                       </td>
                       <td className="p-4">
                         <Typography size="xs" opacity={0.7}>
-                          {tvl}
+                          {
+                            new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: 'USD',
+                              minimumFractionDigits: 2,
+                            }).format(Number(tvl))
+                          }
                         </Typography>
                       </td>
                       <td className="p-4">
