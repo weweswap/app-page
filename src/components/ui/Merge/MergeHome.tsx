@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { formatEther, formatUnits, parseEther } from "viem";
 import { useAccount } from "wagmi";
-import { fetchWewePrice } from "~/api/price";
 import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { dogica } from "~/fonts";
@@ -20,6 +19,7 @@ import {
 import MergeOperation from "./MergeOperation";
 import RedeemOperation from "./RedeemOperation";
 import BridgeOperation from "./BridgeOperation";
+import { fetchWEWEPrice } from "~/services";
 
 type MergeHomeProps = {
   onConversion: () => void;
@@ -52,9 +52,10 @@ export const MergeHome = (props: MergeHomeProps) => {
     useVultBalance();
   // fetch wewe price
   useEffect(() => {
-    fetchWewePrice().then((price) => {
-      setWewePrice(price);
-    });
+    const fetchPrice = async () => {
+      setWewePrice(await fetchWEWEPrice());
+    };
+    fetchPrice();
   }, []);
 
   const totalVultSupply = 100000000; //100m

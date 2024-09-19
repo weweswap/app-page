@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
-import { fetchWewePrice } from "~/api/price";
+
 import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { dogica } from "~/fonts";
@@ -16,6 +16,7 @@ import {
   useVultBalance,
   useWeweBalance,
 } from "~/hooks";
+import { fetchWEWEPrice } from "~/services";
 
 export const RedeemHome = () => {
   const { address } = useAccount();
@@ -29,17 +30,13 @@ export const RedeemHome = () => {
   const [wewePrice, setWewePrice] = useState<number>(0);
   const [vultPrice, setVultPrice] = useState<number>(0);
   const [vultFDV, setVultFDV] = useState<number>(0);
-  // 1000 ratio
-  const { data: ratio, isFetching: isRatioFetching } = useQuoteVult(
-    parseEther(String("1000"))
-  );
   const { data: weweBalance, isFetching: isWeweBalanceFetching } =
     useWeweBalance();
   const { data: vultBalance, isFetching: isVultBalanceFetching } =
     useVultBalance();
   // fetch wewe price
   useEffect(() => {
-    fetchWewePrice().then((price) => {
+    fetchWEWEPrice().then((price) => {
       setWewePrice(price);
     });
   }, []);
