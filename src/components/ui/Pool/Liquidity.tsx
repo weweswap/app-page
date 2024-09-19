@@ -1,18 +1,13 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Button, Card, Typography } from "~/components/common";
-import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT, DUMMY_POOLS } from "./dummy";
-
-import PoolBox from "./PoolBox";
-import Link from "next/link";
-import ComingSoon from "~/components/common/ComingSoon";
+import { Button, Typography } from "~/components/common";
 import LiquidityDetails from "./LiquidityDetails";
-import { useWewePositions } from "~/hooks/useWewePositions";
+import { useWewePositions, WewePosition } from "~/hooks/useWewePositions";
 import { useAccount } from "wagmi";
 import { useWewePools } from "~/hooks/usePool";
 
 type LiquidityProps = {
-  onClaim: () => void;
+  onClaim: (wewePosition: WewePosition) => void;
   onManage: () => void;
   setPoolTypes: (number: number) => void;
   poolTypes: number;
@@ -28,7 +23,8 @@ const Liquidity = ({
   onNext,
   onZapOut,
 }: LiquidityProps) => {
-  const [poolDetail, setPoolDetail] = useState();
+  const { address } = useAccount();
+  const [poolDetail, setPoolDetail] = useState<WewePosition>();
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
   const handleShowDetails = (value: any) => {
@@ -42,6 +38,9 @@ const Liquidity = ({
       setShowDetails(true);
     }
   }, [poolDetail]);
+  
+  const { data: wewePools } = useWewePools();
+  const { data: wewePositions } = useWewePositions(wewePools?.wewePools, address)
 
   const handleHideDetails = () => {
     setShowDetails(false);
@@ -53,16 +52,11 @@ const Liquidity = ({
     onZapOut();
   };
 
-  const handleClaim = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    onClaim();
+  const handleClaim = (wewePosition: WewePosition, event?: React.MouseEvent<HTMLButtonElement>) => {
+    event?.stopPropagation();
+    onClaim(wewePosition);
   };
-  
-  const { address } = useAccount();
-  const { data: wewePools } = useWewePools();
 
-  const { data: wewePositions } = useWewePositions(wewePools?.wewePools, address)
-  
   return (
     <>
       {!showDetails ? (
@@ -88,27 +82,11 @@ const Liquidity = ({
             <div className="w-full flex flex-col">
               <Typography size="lg">MEMES 1%</Typography>
               {wewePositions?.wewePositions.map(
-                ({
-                  exchangePair,
-                  state,
-                  range,
-                  lpValue,
-                  rewards,
-                  positionId,
-                  apr,
-                  shares,
-                }) => {
+                (wewePosition) => {
                   return (
                     <div
                       onClick={() =>
-                        handleShowDetails({
-                          exchangePair,
-                          state,
-                          range,
-                          lpValue,
-                          rewards,
-                          positionId,
-                        })
+                        handleShowDetails(wewePosition)
                       }
                       className="bg_dark w-full min-h-[10rem] p-4 hover:bg-[#181818] cursor-pointer"
                     >
@@ -131,7 +109,7 @@ const Liquidity = ({
                             />
                           </div>
                           <Typography secondary fs="md" tt="uppercase">
-                            {exchangePair}
+                            {wewePosition.exchangePair}
                           </Typography>
                         </div>
                         <div></div>
@@ -148,7 +126,7 @@ const Liquidity = ({
                             ta="center"
                             className="font-extrabold"
                           >
-                            {shares}
+                            {wewePosition.shares}
                           </Typography>
                         </div>
                         <div className="lg:text-right flex flex-col gap-2">
@@ -164,7 +142,7 @@ const Liquidity = ({
                             ta="center"
                             className="font-extrabold"
                           >
-                            {apr}
+                            {wewePosition.apr}
                           </Typography>
                         </div>
 
@@ -181,7 +159,13 @@ const Liquidity = ({
                             ta="end"
                             className="font-extrabold"
                           >
-                            {rewards}
+                            {
+                              new Intl.NumberFormat('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                minimumFractionDigits: 2,
+                              }).format(Number(wewePosition.pendingUsdcReward))
+                            }
                           </Typography>
                         </div>
 
@@ -203,7 +187,7 @@ const Liquidity = ({
                                 style: 'currency',
                                 currency: 'USD',
                                 minimumFractionDigits: 2,
-                              }).format(Number(lpValue))
+                              }).format(Number(wewePosition.lpValue))
                             }
                           </Typography>
                         </div>
@@ -229,21 +213,21 @@ const Liquidity = ({
                             </Typography>
                           </div>
                           <div className="flex items-center gap-1">
-                            {range === "NARROW" ? (
+                            {wewePosition.range === "NARROW" ? (
                               <Image
                                 src="/img/links/narrow.svg"
                                 width={20}
                                 height={20}
                                 alt=""
                               />
-                            ) : range === "MID" ? (
+                            ) : wewePosition.range === "MID" ? (
                               <Image
                                 src="/img/links/mid.svg"
                                 width={20}
                                 height={20}
                                 alt=""
                               />
-                            ) : range === "INFINITY" ? (
+                            ) : wewePosition.range === "INFINITY" ? (
                               <Image
                                 src="/img/icons/Infinity.svg"
                                 width={20}
@@ -259,7 +243,7 @@ const Liquidity = ({
                               />
                             )}
                             <Typography size="xs" className="translate-x-1">
-                              {range}
+                              {wewePosition.range}
                             </Typography>
                           </div>
                           {/* <Typography size="xs" opacity={0.7}>
@@ -286,7 +270,7 @@ const Liquidity = ({
                         </Button>
 
                         <Button
-                          onClick={handleClaim}
+                          onClick={(e) => handleClaim(wewePosition, e)}
                           className="w-full md:w-auto"
                         >
                           <Typography
@@ -308,7 +292,7 @@ const Liquidity = ({
         </>
       ) : (
         <>
-          <LiquidityDetails onClaim={onClaim} onBack={handleHideDetails} />
+          <LiquidityDetails onClaim={() => handleClaim(poolDetail!)} onBack={handleHideDetails} />
         </>
       )}
     </>
