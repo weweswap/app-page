@@ -1,7 +1,7 @@
 "use client";
 
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PoolHome } from "./PoolHome";
 import { PoolAddModal } from "./PoolAddModal";
 import { PoolClaim } from "./PoolClaim";
@@ -16,9 +16,14 @@ import ApproveTokens from "./ApproveTokens";
 import SettingsModal from "./SettingsModal";
 import ClaimedFeesModal from "./ClaimFeesModal";
 import ClaimSuccessModal from "./ClaimSuccessModal";
+import { WewePosition } from "~/hooks/useWewePositions";
+import { useClaimFees } from "~/hooks/useClaimFees";
+import FailedModal from "./FailedModal";
+import { useAccount } from "wagmi";
 
 export const Pool = () => {
   const [step, setStep] = useState(0);
+  const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
   const [openedZapModal, {open: openZapModal, close: closeZapModal}] = useDisclosure(false)
   const [openedZapOutModal, {open: openZapOutModal, close: closeZapOutModal}] = useDisclosure(false)
   const [openedApproveModal, {open: openApproveModal, close: closeApproveModal}] = useDisclosure(false)
@@ -26,15 +31,34 @@ export const Pool = () => {
   const [openedSettingsModal, {open: openSettingsModal, close: closeSettingsModal}] = useDisclosure(false)
   const [openedClaimFeesModal, {open: openClaimFeesModal, close: closeClaimFeesModal}] = useDisclosure(false)
   const [openedClaimSuccessModal, {open: openClaimSuccessModal, close: closeClaimSuccessModal}] = useDisclosure(false)
+  const [openedMigrateFailModal, { open: openMigrateFailModal, close: closeMigrateFailModal }] = useDisclosure(false);
   const [addOpened, { open: openAdd, close: closeAdd }] = useDisclosure(false);
-  const [claimOpened, { open: openClaim, close: closeClaim }] =
-    useDisclosure(false);
 
+  const { address } = useAccount();
+
+  const {
+    hash,
+    isPending,
+    isError,
+    isTxConfirming,
+    isConfirmed,
+    receipt,
+    claimFees,
+  } = useClaimFees();
+
+  useEffect(() => {
+    if (isConfirmed) {
+      openClaimSuccessModal();
+    }
+    if (isError) {
+      openMigrateFailModal();
+    }
+  }, [isConfirmed, receipt, isError, isPending, isTxConfirming]);
+  
   const handleAdd = () => {
     closeAdd();
     setStep(step+1);
   };
-
 
   const handleZapModal = () => {
     openZapModal()
@@ -58,15 +82,19 @@ export const Pool = () => {
     openSettingsModal()
   }
 
-  const handleClaimFeesModal = () => {
+  const handleCloseSuccesModal = () => {
+    closeClaimFeesModal()
+    closeClaimSuccessModal()
+  }
+
+  const handleClaimFeesModal = (wewePositionSelected: WewePosition) => {
+    setWewePosition(wewePositionSelected)
     openClaimFeesModal()
   }
 
   const handleClaimSuccessModal = () => {
-    closeClaimFeesModal()
-    openClaimSuccessModal()
+    claimFees(address!)
   }
-
 
   return (
     <>
@@ -80,8 +108,25 @@ export const Pool = () => {
       <ApproveTokens onCreate={handleSuccessModal} opened={openedApproveModal} onOpen={handleApproveTokenModal} onClose={closeApproveModal} />
       <SuccessModal onConfirm={closeSuccessModal} opened={openedSuccessModal} onOpen={handleSuccessModal} onClose={closeSuccessModal}/>
       <SettingsModal onOpen={handleSettingsModal} opened={openedSettingsModal} onClose={closeSettingsModal} />
-      <ClaimedFeesModal onClaim={handleClaimSuccessModal} onOpen={handleClaimFeesModal} opened={openedClaimFeesModal} onClose={closeClaimFeesModal} />
-      <ClaimSuccessModal onOpen={handleClaimSuccessModal} opened={openedClaimSuccessModal} onClose={closeClaimSuccessModal} />
+      <ClaimedFeesModal loading={isPending || isTxConfirming} wewePosition={wewePositionSelected} onClaim={handleClaimSuccessModal} onOpen={() => {}} opened={openedClaimFeesModal} onClose={closeClaimFeesModal} />
+
+      {isConfirmed && receipt && hash && (
+        <ClaimSuccessModal
+          opened={openedClaimSuccessModal}
+          onClose={handleCloseSuccesModal}
+          hash={hash!}
+          data={{
+            pendingUsdcReward: wewePositionSelected?.pendingUsdcReward!
+          }}
+        />
+      )}
+      {isError && (
+        <FailedModal
+          hash={hash!}
+          opened={openedMigrateFailModal}
+          onClose={closeMigrateFailModal}
+        />
+      )}
     </>
   );
 };

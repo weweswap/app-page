@@ -7,9 +7,10 @@ import Link from "next/link";
 import ComingSoon from "~/components/common/ComingSoon";
 import ActivePools from "./ActivePools";
 import Liquidity from "./Liquidity";
+import { WewePosition } from "~/hooks/useWewePositions";
 
 type PoolHomeProps = {
-  onClaim: () => void;
+  onClaim: (wewePositon: WewePosition) => void;
   onNext: () => void;
   onAdd: () => void;
   onZap: () => void;
