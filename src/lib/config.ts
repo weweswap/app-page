@@ -10,6 +10,7 @@ import {
   walletConnectWallet,
   phantomWallet,
 } from "@rainbow-me/rainbowkit/wallets";
+import { fallback, webSocket } from "viem";
 
 export const projectId = "db99d4d311764dbfb7e4563ce13e71fb";
 
@@ -36,6 +37,9 @@ export const config = createConfig({
   connectors,
   ssr: true,
   transports: {
-    [base.id]: http(process.env.NEXT_PUBLIC_RPC_URL),
+    [base.id]: fallback([
+      http(process.env.NEXT_PUBLIC_RPC_URL),
+      webSocket(process.env.NEXT_PUBLIC_RPC_URL!.replace('https://', 'wss://'))
+    ]),
   },
 });
