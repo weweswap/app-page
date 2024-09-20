@@ -7,16 +7,17 @@ import { Pool, Position, FeeAmount } from "@uniswap/v3-sdk";
 import { useEffect } from "react";
 import { Token, BigintIsh } from "@uniswap/sdk-core";
 import { CONTRACT_ADDRESSES } from "~/constants";
-import { ethers, formatEther, formatUnits, parseEther } from "ethers";
-import { formatPrice, formatStringUnits, tickToPrice } from "~/utils";
+import { ethers, formatEther, formatUnits } from "ethers";
+import { formatPrice, tickToPrice } from "~/utils";
 import { MigrateCompleteModal } from "./MigrateCompleteModal";
 import { useDisclosure } from "@mantine/hooks";
 import { provider, useSafeTransfer } from "~/hooks/useMigrate";
-import { useAccount } from "wagmi";
+import { useAccount, useWatchContractEvent } from "wagmi";
 import { Loader } from "@mantine/core";
 import { FailTXModal } from "~/components/common/FailTXModal";
 import { COMMON_POOL_CONTRACT_ABI } from "~/lib/abis/CommonPool";
-import { fetchWEWEPrice } from "~/services";
+import { fetchETHPrice, fetchWEWEPrice } from "~/services";
+import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 
 type MigrateDetailProps = {
   onBack: () => void;
@@ -49,7 +50,8 @@ export const MigrateDetail = ({
     isConfirmed,
     receipt,
     safeTransferFrom,
-  } = useSafeTransfer();
+  } = useSafeTransfer()
+
   const [currentTick, setCurrentTick] = useState<number>(0);
   const [sqrtPriceX96, setSqrtPriceX96] = useState<BigintIsh>(0);
   const [poolLiquidity, setPoolLiquidity] = useState<BigintIsh>(0);
@@ -58,6 +60,7 @@ export const MigrateDetail = ({
   const [totalLP, setTotalLP] = useState<number>(0);
   const [totalLPUSD, setTotalLPUSD] = useState<number>(0);
   const [wewePrice, setWewePrice] = useState<number>(0);
+  const [wethPrice, setWethPrice] = useState<number>(0);
   const [mintAmount, setMintAmount] = useState<{
     amount0: bigint;
     amount1: bigint;
@@ -86,6 +89,12 @@ export const MigrateDetail = ({
   useEffect(() => {
     fetchWEWEPrice().then((price) => {
       setWewePrice(price);
+    });
+  }, []);
+
+  useEffect(() => {
+    fetchETHPrice().then((price) => {
+      setWethPrice(price);
     });
   }, []);
 
@@ -135,6 +144,23 @@ export const MigrateDetail = ({
     );
   }, [currentTick, sqrtPriceX96]);
 
+  useWatchContractEvent({
+    address: CONTRACT_ADDRESSES.weweVault,
+    abi: ArrakisVaultABI,
+    eventName: 'LogMint',
+    poll: false,
+    onLogs(logs: any[]) {
+      const mintEvent = logs.find(log => log['args'].receiver.toLowerCase() === address?.toLowerCase())
+      if (mintEvent) {
+        setMintAmount({
+          amount0: mintEvent.args.amount0In,
+          amount1: mintEvent.args.amount1In,
+          mintAmount: mintEvent.args.mintAmount
+        })
+      }
+    },
+  });
+
   // get mint amounts
   useEffect(() => {
     if (!amountWETH || !amountWEWE) return;
@@ -148,7 +174,7 @@ export const MigrateDetail = ({
         provider
       );
       const amountToDeposit0 = ethers.parseEther(amountWEWE.toString());
-      const amountToDeposit1 = ethers.parseEther(amountWETH.toString());
+      const amountToDeposit1 = ethers.parseUnits((amountWETH * wethPrice).toFixed(6), 6);
       const result = await resolver.getMintAmounts(
         CONTRACT_ADDRESSES.weweVault,
         amountToDeposit0,
