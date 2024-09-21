@@ -8,10 +8,7 @@ import {
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { NonFungiblePositionManagerAbi } from "~/lib/abis/NonFungiblePositionManager";
 import { Position } from "~/models";
-
-export const provider = new ethers.JsonRpcProvider(
-  `https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`
-);
+import { provider } from "./provider";
 
 export function useTokenNames(token0Address: string, token1Address: string) {
   return useQuery({

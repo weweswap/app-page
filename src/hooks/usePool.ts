@@ -1,16 +1,19 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { ethers } from "ethers";
-import { erc20Abi } from "viem";
+import { erc20Abi, Hex } from "viem";
 import { useQuery } from "wagmi/query";
 import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { ArrakisFactoryABI } from "~/lib/abis/ArrakisFactory";
 import { ArrakisV2HelperABI } from "~/lib/abis/ArrakisHelper";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { fetchPricePerAddressInUsdc } from "~/services/price";
+import { provider } from "./provider";
 
 export type WewePool = {
-  address: string
+  address: Hex
   poolType: string,
+  token0: Hex,
+  token1: Hex,
   pool: string,
   tvl: string,
   volume: string,
@@ -51,70 +54,69 @@ export async function calculateTlvForTokens(
   return tlvToken0 + tlvToken1;
 }
 
-export const provider = new ethers.JsonRpcProvider(
-    `https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`
-  );
 
-  export function useWewePools(): UseQueryResult<{ wewePools: WewePool[] } | undefined, Error | null> {
-    return useQuery({
-      queryKey: ["wewe-pools"],
-      queryFn: async (): Promise<{ wewePools: WewePool[] }> => {
-        const arrakisFactory = new ethers.Contract(
-          CONTRACT_ADDRESSES.weweVaultFactory,
-          ArrakisFactoryABI,
-          provider
-        );
+export function useWewePools(): UseQueryResult<{ wewePools: WewePool[] } | undefined, Error | null> {
+  return useQuery({
+    queryKey: ["wewe-pools"],
+    queryFn: async (): Promise<{ wewePools: WewePool[] }> => {
+      const arrakisFactory = new ethers.Contract(
+        CONTRACT_ADDRESSES.weweVaultFactory,
+        ArrakisFactoryABI,
+        provider
+      );
 
-        const arrakisHelper = new ethers.Contract(
-          CONTRACT_ADDRESSES.helper,
-          ArrakisV2HelperABI,
-          provider
-        );
+      const arrakisHelper = new ethers.Contract(
+        CONTRACT_ADDRESSES.helper,
+        ArrakisV2HelperABI,
+        provider
+      );
 
-        const weweVaultNumber = await arrakisFactory.numVaults()
-        const weweVults = await arrakisFactory.vaults(0, weweVaultNumber)
+      const weweVaultNumber = await arrakisFactory.numVaults()
+      const weweVults = await arrakisFactory.vaults(0, weweVaultNumber)
 
-        const wewePools: WewePool[] = []
-  
-        for (let key in weweVults) {
-          if (weweVults.hasOwnProperty(key)) {
-            const arrakisVault = new ethers.Contract(
-              weweVults[key],
-              ArrakisVaultABI,
-              provider
-            );
-            const token0 = await arrakisVault.token0()
-            const token1 = await arrakisVault.token1()
+      const wewePools: WewePool[] = []
 
-            const tlv = await calculateTlvForTokens(
-              weweVults[key],
-              arrakisHelper,
-              provider,
-              token0,
-              token1
-            );
+      for (let key in weweVults) {
+        if (weweVults.hasOwnProperty(key)) {
+          const arrakisVault = new ethers.Contract(
+            weweVults[key],
+            ArrakisVaultABI,
+            provider
+          );
+          const token0 = await arrakisVault.token0()
+          const token1 = await arrakisVault.token1()
 
-            const token0info = TOKEN_LIST.find(({ address }) => address.toLowerCase() === token0.toLowerCase() )
-            const token1info = TOKEN_LIST.find(({ address }) => address.toLowerCase() === token1.toLowerCase() )
+          const tlv = await calculateTlvForTokens(
+            weweVults[key],
+            arrakisHelper,
+            provider,
+            token0,
+            token1
+          );
 
-            wewePools.push({
-              address: weweVults[key],
-              poolType: "MEMES 1%",
-              pool: "EXOTIC",
-              tvl: tlv.toString(),
-              volume: "-",
-              range: "INFINITY",
-              apr: "-",
-              type: `${token0info?.symbol}/${token1info?.symbol}`,
-              logo: {
-                first: token0info?.icon as string,
-                second: token1info?.icon as string,
-              }
-            })
-          }
+          const token0info = TOKEN_LIST.find(({ address }) => address.toLowerCase() === token0.toLowerCase() )
+          const token1info = TOKEN_LIST.find(({ address }) => address.toLowerCase() === token1.toLowerCase() )
+
+          wewePools.push({
+            address: weweVults[key],
+            token0: token0,
+            token1: token1,
+            poolType: "MEMES 1%",
+            pool: "EXOTIC",
+            tvl: tlv.toString(),
+            volume: "-",
+            range: "INFINITY",
+            apr: "-",
+            type: `${token0info?.symbol}/${token1info?.symbol}`,
+            logo: {
+              first: token0info?.icon as string,
+              second: token1info?.icon as string,
+            }
+          })
         }
+      }
 
-        return { wewePools };
-      },
-    });
-  }
+      return { wewePools };
+    },
+  });
+}

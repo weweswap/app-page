@@ -5,6 +5,10 @@ import { Button, Card, Typography } from "~/components/common";
 import { DUMMY_TABLE_HEAD } from "./dummy";
 import PoolDetail from "./PoolDetail";
 import { useWewePools } from "~/hooks/usePool";
+import { useDualDeposit, useEstimateMintShares } from "~/hooks/useDepositWewePool";
+import { useAccount } from "wagmi";
+import { useApproveToken } from "~/hooks/useApproveToken";
+import { useWithdrawalWewePool } from "~/hooks/useWithdrawalWewePool";
 
 type ActivePoolProps = {
   setPoolTypes: (number: number) => void;
@@ -44,7 +48,53 @@ const ActivePools = ({
     onDeposit();
   };
 
+  const { address } = useAccount();
+
   const { data: pools } = useWewePools()
+
+  const { data: estimationMintShares } = useEstimateMintShares(pools?.wewePools, '3500000000000000000000', '500000')
+
+  const {
+    hash: hashApprove,
+    isPending: isPendingApprove,
+    isError: isErrorApprove,
+    approve,
+  } = useApproveToken();
+
+  const {
+    hash: hashDualDeposit,
+    isPending: isPendingDualDeposit,
+    isError: isErrorDualDeposit,
+    dualDeposit,
+  } = useDualDeposit();
+
+  const {
+    hash: hashDualWithdrawal,
+    isPending: isPendingDualWithdrawal,
+    isError: isErrorDualWithdrawal,
+    withdrawal,
+  } = useWithdrawalWewePool();
+
+  console.log('isErrorDualDeposit', isErrorDualDeposit)
+  console.log('hashDualDeposit', hashDualDeposit)
+
+  console.log('hashDualWithdrawal', hashDualWithdrawal)
+  console.log('isErrorDualWithdrawal', isErrorDualWithdrawal)
+
+  const handleDeposit = async () => {
+    if (pools) {
+      await approve(pools.wewePools[0].token0, pools.wewePools[0].address, estimationMintShares?.amount0)
+      await approve(pools.wewePools[0].token1, pools.wewePools[0].address, estimationMintShares?.amount1)
+      await dualDeposit(pools.wewePools[0].address, estimationMintShares.mintAmount, address!)
+    }
+  }
+
+  const handleWithdrawal = async () => {
+    if (pools) {
+      await approve(pools.wewePools[0].address, pools.wewePools[0].address, BigInt(500000000000000000))
+      await withdrawal(pools.wewePools[0].address, BigInt(500000000000000000), address!)
+    }
+  }
 
   return (
     <>
@@ -152,11 +202,21 @@ const ActivePools = ({
                       </td>
                       <td className="p-4" align="right">
                         <Button
-                          onClick={handleZapIn}
+                          onClick={handleDeposit}
                           className="w-full md:w-auto min-w-[6rem]"
                         >
                           <Typography secondary size="xs" fw="700" tt="uppercase">
                             Deposit
+                          </Typography>
+                        </Button>
+                      </td>
+                      <td className="p-4" align="right">
+                        <Button
+                          onClick={handleWithdrawal}
+                          className="w-full md:w-auto min-w-[6rem]"
+                        >
+                          <Typography secondary size="xs" fw="700" tt="uppercase">
+                            Withdrawal
                           </Typography>
                         </Button>
                       </td>
