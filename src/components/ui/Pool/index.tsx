@@ -83,9 +83,6 @@ export const Pool = () => {
     setStep(step + 1);
   };
 
-  // const handleZapModal = () => {
-  //   openZapModal()
-  // }
   const handleDeposit = () => {
     router.push("/pools/deposit");
   };
@@ -130,6 +127,7 @@ export const Pool = () => {
           onDeposit={handleDeposit}
           onManage={() => setStep(5)}
           onNext={() => setStep(1)}
+          onBack={() => setStep(0)} 
           onAdd={openAdd}
         />
       )}

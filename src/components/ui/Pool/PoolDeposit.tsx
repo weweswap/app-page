@@ -8,9 +8,11 @@ import clsx from "clsx";
 import { dogica } from "~/fonts";
 import { TOKEN_LIST } from "~/constants";
 
-type PoolDepositProps = {};
+type PoolDepositProps = {
+  onBack: () => void;
+};
 
-const PoolDeposit = () => {
+const PoolDeposit = ({ onBack }: PoolDepositProps) => {
   const { selectedPool } = usePoolContext();
   const [selectedAction, setSelectedAction] = useState("deposit");
   const [inputValue, setInputValue] = useState();
@@ -24,7 +26,7 @@ const PoolDeposit = () => {
           <div className=" w-full min-h-[10rem]">
             <div className="sm:py-4  flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2">
-                <button>
+                <button onClick={onBack}>
                   <Typography secondary size="xl">
                     {"<"}
                   </Typography>

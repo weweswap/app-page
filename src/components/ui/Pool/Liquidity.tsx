@@ -14,10 +14,11 @@ type LiquidityProps = {
   setPoolTypes: (number: number) => void;
   poolTypes: number;
   onNext: () => void;
+  onBack: () => void;
   onDeposit: () => void;
 };
 
-const Liquidity = ({ setPoolTypes, poolTypes, onNext }: LiquidityProps) => {
+const Liquidity = ({ setPoolTypes, poolTypes, onBack }: LiquidityProps) => {
   const [poolDetail, setPoolDetail] = useState();
   const [currentPage, setCurrentPage] = useState("");
   const { setSelectedPool } = usePoolContext();
@@ -171,7 +172,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onNext }: LiquidityProps) => {
       {/* {currentPage === "pool-details" && (
         <PoolDetail onBack={handleHideDetails} />
       )} */}
-      {currentPage === "deposit" && <PoolDeposit />}
+      {currentPage === "deposit" && <PoolDeposit onBack={() => setCurrentPage("")} />}
     </>
   );
 };
