@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import { Card, Dropdown, Typography } from "~/components/common";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { usePoolContext } from "./PoolContext";
 import { Divider, NumberInput } from "@mantine/core";
 import clsx from "clsx";
@@ -16,8 +16,15 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
   const { selectedPool } = usePoolContext();
   const [selectedAction, setSelectedAction] = useState("deposit");
   const [inputValue, setInputValue] = useState<number>();
-  console.log("selectedPool:", selectedPool);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
+  const [secondaryTokenIndex, setSecondaryTokenIndex] = useState(0);
+  
+  useEffect(() => {
+    if (selectedPool) {
+      setInputTokenIndex(TOKEN_LIST.findIndex(({address}) => address === selectedPool?.token0.address));
+      setSecondaryTokenIndex(TOKEN_LIST.findIndex(({address}) => address === selectedPool?.token1.address));
+    }
+  }, [selectedPool])
 
   return (
     selectedPool && (
@@ -66,25 +73,6 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
               </div>
             </div>
             <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1 ">
-              {/* <div className="flex gap-6">
-              <Typography
-                size="xs"
-                className={`bg_green flex justify-center rounded-full w-[6rem] py-1 `}
-              >
-                IN RANGE
-              </Typography>
-              <div className="flex items-center gap-1">
-                <Image
-                  src="/img/links/wide.svg"
-                  width={20}
-                  height={20}
-                  alt=""
-                />
-                <Typography size="xs" className="translate-x-1">
-                  WIDE
-                </Typography>
-              </div>
-            </div> */}
               <div className="flex items-center gap-1">
                 <Image
                   src="/img/icons/memes.svg"
@@ -151,41 +139,89 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
-              <NumberInput
-                classNames={{
-                  root: "md:col-span-8 col-span-6",
-                  input: clsx(
-                    dogica.className,
-                    "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
-                  ),
-                }}
-                defaultValue={inputValue}
-                hideControls
-                value={inputValue}
-                onChange={(value) => setInputValue(value as number)}
-                allowNegative={false}
-                trimLeadingZeroesOnBlur
-                thousandSeparator
-                decimalScale={6}
-              />
-              <Dropdown
-                value={TOKEN_LIST[inputTokenIndex].symbol}
-                options={TOKEN_LIST.map((token, index) => ({
-                  value: token.address,
-                  icon: token.icon,
-                  text: token.symbol,
-                  index: index
-                }))}
-                className="md:col-span-4 col-span-6"
-                setIndexValue={setInputTokenIndex}
-              />
-            </div>
-            {/* <Button onClick={onZap} className="w-full mt-4">
-            <Typography secondary size="xs" fw={700} tt="uppercase">
-              ZAP-IN
-            </Typography>
-          </Button> */}
+            {
+              selectedAction === 'deposit' 
+              ? <div className="">
+                  <div className="my-4">
+                    <Typography size="sm">Deposit amounts</Typography>
+                  </div>
+                  <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
+                    <Dropdown
+                      value={TOKEN_LIST[inputTokenIndex].address}
+                      options={TOKEN_LIST.map((token, index) => ({
+                        value: token.address,
+                        icon: token.icon,
+                        text: token.symbol,
+                        index: index
+                      }))}
+                      className="md:col-span-3 col-span-6"
+                      disabled
+                    />
+                    <NumberInput
+                      classNames={{
+                        root: "md:col-span-3 col-span-6 h-full",
+                        wrapper: "h-full",
+                        input: clsx(
+                          dogica.className,
+                          "text-start text-white text-2xl h-full border-transparent rounded-none"
+                        ),
+                      }}
+                      defaultValue={inputValue}
+                      hideControls
+                      value={inputValue}
+                      onChange={(value) => setInputValue(value as number)}
+                      allowNegative={false}
+                      trimLeadingZeroesOnBlur
+                      thousandSeparator
+                      decimalScale={6}
+                    />
+                    <Dropdown
+                      value={TOKEN_LIST[secondaryTokenIndex].address}
+                      options={TOKEN_LIST.map((token, index) => ({
+                        value: token.address,
+                        icon: token.icon,
+                        text: token.symbol,
+                        index: index
+                      }))}
+                      className="md:col-span-3 col-span-6"
+                      disabled
+                    />
+                    <NumberInput
+                      classNames={{
+                        root: "md:col-span-3 col-span-6 h-full",
+                        wrapper: "h-full",
+                        input: clsx(
+                          dogica.className,
+                          "text-start text-white text-2xl h-full border-transparent rounded-none"
+                        ),
+                      }}
+                      defaultValue={inputValue}
+                      hideControls
+                      value={inputValue}
+                      onChange={(value) => setInputValue(value as number)}
+                      allowNegative={false}
+                      trimLeadingZeroesOnBlur
+                      thousandSeparator
+                      decimalScale={6}
+                    />
+                  </div>
+                  <div className="py-4">
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        defaultValue="50"
+                        className="w-full h-2 bg-[#33E6BF] rounded-lg appearance-none cursor-pointer "
+                      />
+                  </div>
+                  <div className="flex justify-end font-extrabold text-black text-sm">
+                    <Button className="bg_turq">
+                      <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
+                    </Button>
+                  </div>
+                </div>
+              : <div> WIP </div>
+            }
           </div>
         </Card>
         <Card>

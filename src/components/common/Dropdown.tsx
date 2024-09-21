@@ -14,6 +14,7 @@ type DropdownProps = {
   }[];
   placeholder?: string;
   className?: string;
+  disabled?: boolean
   setIndexValue?: (value: number) => void;
 };
 
@@ -24,6 +25,7 @@ export const Dropdown = ({
   placeholder,
   className,
   setIndexValue,
+  disabled
 }: DropdownProps) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -38,6 +40,7 @@ export const Dropdown = ({
 
   return (
     <Combobox
+      disabled={disabled}
       store={combobox}
       onOptionSubmit={(val) => {
         setVal(val);

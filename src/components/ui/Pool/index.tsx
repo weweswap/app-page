@@ -83,9 +83,10 @@ export const Pool = () => {
     setStep(step + 1);
   };
 
-  const handleDeposit = () => {
-    router.push("/pools/deposit");
+  const handleZapModal = () => {
+    openZapModal();
   };
+
   const handleZapOutModal = () => {
     openZapOutModal();
   };
@@ -124,7 +125,7 @@ export const Pool = () => {
         <PoolHome
           onClaim={handleClaimFeesModal}
           onZapOut={handleZapOutModal}
-          onDeposit={handleDeposit}
+          onDeposit={handleZapModal}
           onManage={() => setStep(5)}
           onNext={() => setStep(1)}
           onBack={() => setStep(0)} 
@@ -137,7 +138,13 @@ export const Pool = () => {
       {/* {step === 2 && ( <PoolZapIn onBack={() => setStep(1)} onZap={handleZapModal} />)} */}
       {/* {step === 4 && (<SuccessModal onConfirm={handleAdd} />)} */}
 
-      {/* <PoolZapModal onSettings={handleSettingsModal} onConfirm={handleApproveTokenModal} opened={openedZapModal} onOpen={handleZapModal} onClose={closeZapModal} /> */}
+      <PoolZapModal 
+        onSettings={handleSettingsModal} 
+        onConfirm={handleApproveTokenModal} 
+        opened={openedZapModal} 
+        onOpen={handleZapModal} 
+        onClose={closeZapModal} 
+      />
       <PoolZapOutModal
         onConfirm={() => setStep(4)}
         opened={openedZapOutModal}
@@ -187,6 +194,12 @@ export const Pool = () => {
           onClose={closeMigrateFailModal}
         />
       )}
+      <button onClick={handleZapModal}>
+        Zap
+      </button>
+      <button onClick={handleZapOutModal}>
+        ZapOut
+      </button>
     </>
   );
 };

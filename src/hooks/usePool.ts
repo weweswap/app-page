@@ -23,7 +23,6 @@ export type WewePool = {
     first: string;
     second: string;
   };
-
   token0: TokenItem;
   token1: TokenItem;
 };

@@ -1,7 +1,5 @@
-import { useDisclosure } from "@mantine/hooks";
 import React, { createContext, useContext, useState } from "react";
 import { WewePool } from "~/hooks/usePool";
-import { RouteData, BuildData } from "~/models";
 
 interface PoolContextType {
   selectedPool?: WewePool;
@@ -10,7 +8,6 @@ interface PoolContextType {
 
 const PoolContext = createContext<PoolContextType | undefined>(undefined);
 export type PoolStateProps = {};
-const initialSwapState = {};
 export const PoolProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {

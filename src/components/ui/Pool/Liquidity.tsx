@@ -86,10 +86,10 @@ const Liquidity = ({ setPoolTypes, poolTypes, onBack }: LiquidityProps) => {
             <Typography className="px-4 text-sm py-2">MEMES 1%</Typography>
             <tbody>
               {pools?.wewePools.map(
-                ({ poolType, logo, type, pool, tvl, range, volume, apr }) => (
+                (wewePool) => (
                   <>
                     <tr
-                      key={pool}
+                      key={wewePool.pool}
                       className="bg-[#1c1c1c] w-[full] cursor-pointer hover:bg-[#202020]"
                       style={{ borderBottom: "1rem solid black" }}
                     >
@@ -98,21 +98,21 @@ const Liquidity = ({ setPoolTypes, poolTypes, onBack }: LiquidityProps) => {
                           <div className="flex items-center">
                             <Image
                               className="min-w-6 min-h-6"
-                              src={logo.first}
+                              src={wewePool.logo.first}
                               alt=""
                               width={32}
                               height={32}
                             />
                             <Image
                               className="ml-[-10px] min-w-6 min-h-6"
-                              src={logo.second}
+                              src={wewePool.logo.second}
                               alt=""
                               width={32}
                               height={32}
                             />
                           </div>
                           <Typography size="xs" opacity={0.7}>
-                            {type}
+                            {wewePool.type}
                           </Typography>
                         </div>
                       </td>
@@ -122,36 +122,28 @@ const Liquidity = ({ setPoolTypes, poolTypes, onBack }: LiquidityProps) => {
                             style: "currency",
                             currency: "USD",
                             minimumFractionDigits: 2,
-                          }).format(Number(tvl))}
+                          }).format(Number(wewePool.tvl))}
                         </Typography>
                       </td>
                       <td className="p-4">
                         <Typography size="xs" opacity={0.7}>
-                          {range}
+                          {wewePool.range}
                         </Typography>
                       </td>
                       <td className="p-4">
                         <Typography size="xs" opacity={0.7}>
-                          {volume}
+                          {wewePool.volume}
                         </Typography>
                       </td>
                       <td className="p-4">
                         <Typography size="xs" opacity={0.7}>
-                          {apr}
+                          {wewePool.apr}
                         </Typography>
                       </td>
                       <td className="p-4" align="right">
                         <Button
                           onClick={() =>
-                            onDeposit({
-                              poolType,
-                              logo,
-                              type,
-                              pool,
-                              tvl,
-                              volume,
-                              apr,
-                            } as WewePool)
+                            onDeposit(wewePool)
                           }
                           className="w-full md:w-auto min-w-[6rem]"
                         >
