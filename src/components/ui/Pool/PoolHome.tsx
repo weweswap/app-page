@@ -8,9 +8,10 @@ import ComingSoon from "~/components/common/ComingSoon";
 
 import Liquidity from "./Liquidity";
 import MyShares from "./MyShares";
+import { WewePosition } from "~/hooks/useWewePositions";
 
 type PoolHomeProps = {
-  onClaim: () => void;
+  onClaim: (wewePositon: WewePosition) => void;
   onNext: () => void;
   onAdd: () => void;
   onDeposit: () => void;

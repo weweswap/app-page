@@ -7,6 +7,7 @@ import { ArrakisFactoryABI } from "~/lib/abis/ArrakisFactory";
 import { ArrakisV2HelperABI } from "~/lib/abis/ArrakisHelper";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { calculateTlvForTokens, WewePool } from "./usePool";
+import feeManagerABI from "~/lib/abis/FeeManager";
 
 export type WewePosition = {
   title: string,
@@ -18,6 +19,8 @@ export type WewePosition = {
   lpValue: string,
   rewards: string,
   positionId: string,
+  wewePoolAddress: string,
+  pendingUsdcReward: string
 }
 
 async function getUserBalanceInUsd(
@@ -40,6 +43,28 @@ async function getUserBalanceInUsd(
   const userBalanceInUsd = tlv * userPercentage;
 
   return userBalanceInUsd;
+}
+
+async function getPendingUsdcRewards(
+  feeManagerAddress: string,
+  userAddress: string,
+  provider: ethers.JsonRpcProvider,
+  vaultAddress: string,
+): Promise<string> {
+  const feeManagerContract = new ethers.Contract(feeManagerAddress, feeManagerABI, provider);
+  const vaultContract = new ethers.Contract(vaultAddress, ArrakisVaultABI, provider);
+
+  const userBalance = await vaultContract.balanceOf(userAddress);
+  
+  const accumulatedRewardsPerShare = await feeManagerContract.accumulatedRewardsPerShare()
+  const rewardsPrecision = await feeManagerContract.REWARDS_PRECISION()
+  const userRewardsDebt = await feeManagerContract.rewardDebt(userAddress)
+
+  const totalReward = userBalance * accumulatedRewardsPerShare / rewardsPrecision
+
+  const pendingToHardvest = totalReward - userRewardsDebt
+
+  return ethers.formatUnits(pendingToHardvest, 6).toString();
 }
 
 
@@ -80,12 +105,19 @@ export const provider = new ethers.JsonRpcProvider(
             await vault.token1(),
           )
 
-          return { vault: wewePool, balance, balanceInUsdc }
+          const pendingUsdcReward = await getPendingUsdcRewards(
+            CONTRACT_ADDRESSES.feeManager,
+            address,
+            provider,
+            wewePool.address,
+          )
+
+          return { vault: wewePool, balance, balanceInUsdc, pendingUsdcReward }
         })
 
         const balances = await Promise.all(requestsBalances)
 
-        balances.forEach(({ vault, balance, balanceInUsdc}) => {
+        balances.forEach(({ vault, balance, balanceInUsdc, pendingUsdcReward}) => {
           wewePositions.push({
             title: "EXOTIC 1%",
             exchangePair: vault.type,
@@ -96,6 +128,8 @@ export const provider = new ethers.JsonRpcProvider(
             lpValue: String(balanceInUsdc),
             rewards: "-",
             positionId: "-",
+            wewePoolAddress: vault.address,
+            pendingUsdcReward: pendingUsdcReward,
           })
         })
 

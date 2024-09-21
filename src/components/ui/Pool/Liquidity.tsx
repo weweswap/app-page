@@ -8,6 +8,7 @@ import { useWewePools, WewePool } from "~/hooks/usePool";
 
 import { usePoolContext } from "./PoolContext";
 import PoolDeposit from "./PoolDeposit";
+import { useWewePositions } from "~/hooks/useWewePositions";
 
 type LiquidityProps = {
   setPoolTypes: (number: number) => void;
@@ -29,6 +30,9 @@ const Liquidity = ({ setPoolTypes, poolTypes, onNext }: LiquidityProps) => {
       setCurrentPage("pool-details");
     }
   }, [poolDetail]);
+  
+  const { data: wewePools } = useWewePools();
+  // const { data: wewePositions } = useWewePositions(wewePools?.wewePools, address)
 
   const handleHideDetails = () => {
     setCurrentPage("");

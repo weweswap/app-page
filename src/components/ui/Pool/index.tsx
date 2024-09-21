@@ -1,7 +1,7 @@
 "use client";
 
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PoolHome } from "./PoolHome";
 import { PoolAddModal } from "./PoolAddModal";
 import { PoolClaim } from "./PoolClaim";
@@ -17,10 +17,15 @@ import SettingsModal from "./SettingsModal";
 import ClaimedFeesModal from "./ClaimFeesModal";
 import ClaimSuccessModal from "./ClaimSuccessModal";
 import { useRouter } from "next/router";
+import { WewePosition } from "~/hooks/useWewePositions";
+import { useClaimFees } from "~/hooks/useClaimFees";
+import FailedModal from "./FailedModal";
+import { useAccount } from "wagmi";
 
 export const Pool = () => {
   const router = useRouter();
   const [step, setStep] = useState(0);
+  const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
   const [openedZapModal, { open: openZapModal, close: closeZapModal }] =
     useDisclosure(false);
   const [
@@ -47,10 +52,32 @@ export const Pool = () => {
     openedClaimSuccessModal,
     { open: openClaimSuccessModal, close: closeClaimSuccessModal },
   ] = useDisclosure(false);
+  const [openedMigrateFailModal, { open: openMigrateFailModal, close: closeMigrateFailModal }] = useDisclosure(false);
   const [addOpened, { open: openAdd, close: closeAdd }] = useDisclosure(false);
 
   useDisclosure(false);
 
+  const { address } = useAccount();
+
+  const {
+    hash,
+    isPending,
+    isError,
+    isTxConfirming,
+    isConfirmed,
+    receipt,
+    claimFees,
+  } = useClaimFees();
+
+  useEffect(() => {
+    if (isConfirmed) {
+      openClaimSuccessModal();
+    }
+    if (isError) {
+      openMigrateFailModal();
+    }
+  }, [isConfirmed, receipt, isError, isPending, isTxConfirming]);
+  
   const handleAdd = () => {
     closeAdd();
     setStep(step + 1);
@@ -80,14 +107,19 @@ export const Pool = () => {
     openSettingsModal();
   };
 
-  const handleClaimFeesModal = () => {
-    openClaimFeesModal();
-  };
+  const handleCloseSuccesModal = () => {
+    closeClaimFeesModal()
+    closeClaimSuccessModal()
+  }
+
+  const handleClaimFeesModal = (wewePositionSelected: WewePosition) => {
+    setWewePosition(wewePositionSelected)
+    openClaimFeesModal()
+  }
 
   const handleClaimSuccessModal = () => {
-    closeClaimFeesModal();
-    openClaimSuccessModal();
-  };
+    claimFees(address!)
+  }
 
   return (
     <>
@@ -107,13 +139,7 @@ export const Pool = () => {
       {/* {step === 2 && ( <PoolZapIn onBack={() => setStep(1)} onZap={handleZapModal} />)} */}
       {/* {step === 4 && (<SuccessModal onConfirm={handleAdd} />)} */}
 
-      {/* <PoolZapModal
-        onSettings={handleSettingsModal}
-        onConfirm={handleApproveTokenModal}
-        opened={openedZapModal}
-        onOpen={handleZapModal}
-        onClose={closeZapModal}
-      /> */}
+      {/* <PoolZapModal onSettings={handleSettingsModal} onConfirm={handleApproveTokenModal} opened={openedZapModal} onOpen={handleZapModal} onClose={closeZapModal} /> */}
       <PoolZapOutModal
         onConfirm={() => setStep(4)}
         opened={openedZapOutModal}
@@ -137,17 +163,32 @@ export const Pool = () => {
         opened={openedSettingsModal}
         onClose={closeSettingsModal}
       />
-      <ClaimedFeesModal
-        onClaim={handleClaimSuccessModal}
-        onOpen={handleClaimFeesModal}
-        opened={openedClaimFeesModal}
-        onClose={closeClaimFeesModal}
+      <ClaimedFeesModal 
+        loading={isPending || isTxConfirming} 
+        wewePosition={wewePositionSelected} 
+        onClaim={handleClaimSuccessModal} 
+        onOpen={() => {}} 
+        opened={openedClaimFeesModal} 
+        onClose={closeClaimFeesModal} 
       />
-      <ClaimSuccessModal
-        onOpen={handleClaimSuccessModal}
-        opened={openedClaimSuccessModal}
-        onClose={closeClaimSuccessModal}
-      />
+
+      {isConfirmed && receipt && hash && (
+        <ClaimSuccessModal
+          opened={openedClaimSuccessModal}
+          onClose={handleCloseSuccesModal}
+          hash={hash!}
+          data={{
+            pendingUsdcReward: wewePositionSelected?.pendingUsdcReward!
+          }}
+        />
+      )}
+      {isError && (
+        <FailedModal
+          hash={hash!}
+          opened={openedMigrateFailModal}
+          onClose={closeMigrateFailModal}
+        />
+      )}
     </>
   );
 };
