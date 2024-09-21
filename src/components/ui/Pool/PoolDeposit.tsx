@@ -15,7 +15,7 @@ type PoolDepositProps = {
 const PoolDeposit = ({ onBack }: PoolDepositProps) => {
   const { selectedPool } = usePoolContext();
   const [selectedAction, setSelectedAction] = useState("deposit");
-  const [inputValue, setInputValue] = useState();
+  const [inputValue, setInputValue] = useState<number>();
   console.log("selectedPool:", selectedPool);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
 
