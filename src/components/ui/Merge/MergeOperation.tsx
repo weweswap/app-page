@@ -7,7 +7,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
-import { fetchWewePrice } from "~/api/price";
 import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { dogica } from "~/fonts";
@@ -20,17 +19,16 @@ import {
 } from "~/hooks";
 import { MergeCompleteModal } from "./MergeCompleteModal";
 import { FailTXModal } from "~/components/common/FailTXModal";
-
+import { fetchWEWEPrice } from "~/services";
 
 const MergeOperation = () => {
-
   const { address } = useAccount();
   const { data: balanceWewe } = useTokenBalance(
     address,
     CONTRACT_ADDRESSES.wewe
   );
 
-  const [operations, setOperations] = useState<number>(0)
+  const [operations, setOperations] = useState<number>(0);
   const [amount, setAmount] = useState<string | number>("");
   const amountValue = parseEther(String(amount) ?? 0);
   const { data: quoteAmount, isFetching } = useQuoteVult(amountValue);
@@ -47,11 +45,14 @@ const MergeOperation = () => {
     useVultBalance();
   // fetch wewe price
   useEffect(() => {
-    fetchWewePrice().then((price) => {
+    fetchWEWEPrice().then((price) => {
       setWewePrice(price);
     });
   }, []);
-  const [openedMergeCompleteModal, { open: openMergeCompleteModal, close: closeMergeCompleteModal }] = useDisclosure(false)
+  const [
+    openedMergeCompleteModal,
+    { open: openMergeCompleteModal, close: closeMergeCompleteModal },
+  ] = useDisclosure(false);
   const [
     openedMergeFailModal,
     { open: openMergeFailModal, close: closeMergeFailModal },
@@ -67,8 +68,8 @@ const MergeOperation = () => {
       const weweFDV = wewePrice * totalWeweSupply;
       setVultFDV(
         ((weweBalanceNumber + virtualBalance) / totalWeweSupply) *
-        weweFDV *
-        (totalVultSupply / vultBalanceNumber)
+          weweFDV *
+          (totalVultSupply / vultBalanceNumber)
       );
     }
   }, [weweBalance, vultBalance, wewePrice]);
@@ -78,39 +79,39 @@ const MergeOperation = () => {
       setVultPrice(vultFDV / totalVultSupply);
     }
   }, [vultFDV, totalVultSupply]);
-  const { onWriteAsync: onApproveAndCall, isPending, isError, isConfirmed, hash } = useApproveAndCall();
+  const {
+    onWriteAsync: onApproveAndCall,
+    isPending,
+    isError,
+    isConfirmed,
+    hash,
+  } = useApproveAndCall();
 
   const handleSelect = (div: number) => {
     setAmount(Number(formatEther(balanceWewe)) / div);
   };
   useEffect(() => {
     if (isConfirmed) {
-      openMergeCompleteModal()
+      openMergeCompleteModal();
     }
-  }, [isConfirmed])
+  }, [isConfirmed]);
 
   useEffect(() => {
     if (isError) {
-      openMergeCompleteModal()
+      openMergeCompleteModal();
     }
-  }, [isError])
+  }, [isError]);
   const handleMerge = () => {
     onApproveAndCall(amountValue);
   };
 
   return (
     <>
-
       <div className="flex flex-col gap-4">
         {/* <Card className="flex flex-col gap-5"> */}
         <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
           <div className="flex-1 flex items-center gap-3">
-            <Image
-              src="/img/tokens/wewe.png"
-              width={32}
-              height={32}
-              alt=""
-            />
+            <Image src="/img/tokens/wewe.png" width={32} height={32} alt="" />
             <Typography secondary size="md">
               WEWE
             </Typography>
@@ -122,12 +123,7 @@ const MergeOperation = () => {
             alt=""
           />
           <div className="flex-1 flex items-center justify-end gap-3">
-            <Image
-              src="/img/tokens/vult.svg"
-              width={32}
-              height={32}
-              alt=""
-            />
+            <Image src="/img/tokens/vult.svg" width={32} height={32} alt="" />
             <Typography secondary size="md">
               VULT
             </Typography>
@@ -162,8 +158,7 @@ const MergeOperation = () => {
                 {!isFetching && (
                   <div className="overflow-x-auto">
                     <Typography size="xl">
-                      {Number(formatEther(quoteAmount)).toLocaleString()}{" "}
-                      VULT
+                      {Number(formatEther(quoteAmount)).toLocaleString()} VULT
                     </Typography>
                   </div>
                 )}
@@ -232,8 +227,6 @@ const MergeOperation = () => {
             <li>Your $VULT will be locked until the public launch</li>
           </ul>
         </Card>
-
-
       </div>
       {isConfirmed && ratio && (
         <MergeCompleteModal
@@ -244,7 +237,7 @@ const MergeOperation = () => {
           hash={hash!}
         />
       )}
-      {isError  && (
+      {isError && (
         <FailTXModal
           opened={openedMergeFailModal}
           onClose={closeMergeFailModal}
@@ -252,8 +245,7 @@ const MergeOperation = () => {
         />
       )}
     </>
+  );
+};
 
-  )
-}
-
-export default MergeOperation
+export default MergeOperation;

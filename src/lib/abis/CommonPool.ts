@@ -1,4 +1,4 @@
-export const WETH_WEWE_CONTRACT_ABI = [
+export const COMMON_POOL_CONTRACT_ABI = [
   {
     inputs: [],
     name: "slot0",

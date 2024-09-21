@@ -1,14 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { Button, Card, Typography } from "~/components/common";
+import React, { useState } from "react";
+import { Card, Dropdown, Typography } from "~/components/common";
 import { usePoolContext } from "./PoolContext";
+import { Divider, NumberInput } from "@mantine/core";
+import clsx from "clsx";
+import { dogica } from "~/fonts";
+import { TOKEN_LIST } from "~/constants";
 
 type PoolDepositProps = {};
 
 const PoolDeposit = () => {
   const { selectedPool } = usePoolContext();
-  console.log(selectedPool);
+  const [selectedAction, setSelectedAction] = useState("deposit");
+  const [inputValue, setInputValue] = useState();
+  console.log("selectedPool:", selectedPool);
+  const [inputTokenIndex, setInputTokenIndex] = useState(0);
 
   return (
     selectedPool && (
@@ -24,13 +31,13 @@ const PoolDeposit = () => {
                 </button>
                 <div className="flex items-center">
                   <Image
-                    src="/img/tokens/wewe.png"
+                    src={selectedPool.logo.first}
                     width={24}
                     height={24}
                     alt=""
                   />
                   <Image
-                    src="/img/tokens/eth.png"
+                    src={selectedPool.logo.second}
                     width={24}
                     height={24}
                     className="-translate-x-1.5"
@@ -43,7 +50,7 @@ const PoolDeposit = () => {
                   className="font-bold"
                   tt="uppercase"
                 >
-                  WEWE/USDC
+                  {selectedPool.type}
                 </Typography>
               </div>
               <div></div>
@@ -52,7 +59,7 @@ const PoolDeposit = () => {
                   APR
                 </Typography>
                 <Typography size="lg" className="font-extrabold">
-                  420%
+                  {selectedPool.apr}%
                 </Typography>
               </div>
             </div>
@@ -84,7 +91,7 @@ const PoolDeposit = () => {
                   alt=""
                 />
                 <Typography size="xs" className="translate-x-1">
-                  MEMES: 1%
+                  {selectedPool.address}
                 </Typography>
               </div>
               <div className="flex items-center gap-1">
@@ -98,60 +105,74 @@ const PoolDeposit = () => {
                   />
                 </div>
                 <Typography size="xs" className="translate-x-1">
-                  asdasdasdasd
+                  INFINITY
                 </Typography>
               </div>
             </div>
-            <div className=" gap-5 py-5 my-5 flex-wrap bg_light_dark min-h-[12rem]">
-              <Typography size="md" className="text-center">
-                POOLED TOKENS
-              </Typography>
-              {/* <Button className="w-full md:w-auto">
-                     <Typography secondary size="xs" fw={700} tt="uppercase">ZAP-OUT</Typography>
-                </Button>
-                <Button  className="w-full md:w-auto">
-                     <Typography secondary size="xs" fw={700} tt="uppercase">MANAGE</Typography>
-                </Button>
- 
-                <Button className="w-full md:w-auto">
-                     <Typography secondary size="xs" fw={700} tt="uppercase">CLAIM</Typography>
-                </Button> */}
+            <div className=" gap-5 py-5 my-5 flex-wrap bg_light_dark min-h-[12rem]"></div>
+            <div className="flex justify-between my-3">
+              <div className="flex flex-col items-center gap-4">
+                <Typography>TVL</Typography>
+                <Typography>$ {Number(selectedPool.tvl).toFixed(2)}</Typography>
+              </div>
+              <div className="flex flex-col items-center gap-4">
+                <Typography>VOLUME</Typography>
+                <Typography>$ {selectedPool.volume}</Typography>
+              </div>
+              <div className="flex flex-col items-center gap-4">
+                <Typography>INCENTIVES</Typography>
+                <Typography>$ -</Typography>
+              </div>
+              <div className="flex flex-col items-center gap-4">
+                <Typography>DISTRIBUTED FEES</Typography>
+                <Typography>$ -</Typography>
+              </div>
             </div>
-
-            <div className="flex items-center justify-between">
-              <Typography size="xs">Rate</Typography>
-              <Typography size="xs">1 USDC = 0.0027 ETH ($1.00)</Typography>
-            </div>
-            <div className="flex items-center justify-between my-5">
-              <Typography size="xs">Range</Typography>
-              <Typography size="xs"> Min. 1,02 - Max. 3,02</Typography>
-            </div>
-            <div className="flex items-center justify-between">
-              <Typography size="xs">Pooled Tokens</Typography>
-              <div className="flex items-center justify-center gap-5">
-                <div className="flex items-center gap-3">
-                  <Typography size="xs" className="translate-x-1 font-bold">
-                    17.27
-                  </Typography>
-                  <Image
-                    src="/img/tokens/usdc.png"
-                    width={32}
-                    height={32}
-                    alt=""
-                  />
+            <Divider className="border-blue-700" />
+            <div className="mt-5 flex items-center justify-between w-full gap-6 md:flex-row flex-col">
+              <div className="bg_light_dark w-full flex items-center justify-between gap-3 h-[3rem]">
+                <div
+                  onClick={() => setSelectedAction("deposit")}
+                  className={`${
+                    selectedAction === "deposit" && "nav_selected"
+                  } nav`}
+                >
+                  <Typography size="sm">Deposit</Typography>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Typography size="xs" className="translate-x-1 font-bold">
-                    4,245.15
-                  </Typography>
-                  <Image
-                    src="/img/tokens/wewe.svg"
-                    width={32}
-                    height={32}
-                    alt=""
-                  />
+                <div
+                  onClick={() => setSelectedAction("withdraw")}
+                  className={`${
+                    selectedAction === "withdraw" && "nav_selected"
+                  } nav`}
+                >
+                  <Typography size="sm">Withdraw</Typography>
                 </div>
               </div>
+            </div>
+            <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
+              <NumberInput
+                classNames={{
+                  root: "md:col-span-8 col-span-6",
+                  input: clsx(
+                    dogica.className,
+                    "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
+                  ),
+                }}
+                defaultValue={inputValue}
+                hideControls
+                value={inputValue}
+                onChange={(value) => setInputValue(value as number)}
+                allowNegative={false}
+                trimLeadingZeroesOnBlur
+                thousandSeparator
+                decimalScale={6}
+              />
+              <Dropdown
+                value={TOKEN_LIST[inputTokenIndex].symbol}
+                options={inTokenOptions}
+                className="md:col-span-4 col-span-6"
+                setIndexValue={setInputTokenIndex}
+              />
             </div>
             {/* <Button onClick={onZap} className="w-full mt-4">
             <Typography secondary size="xs" fw={700} tt="uppercase">

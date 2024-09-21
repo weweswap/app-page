@@ -20,9 +20,9 @@ const Liquidity = ({ setPoolTypes, poolTypes, onNext }: LiquidityProps) => {
   const [poolDetail, setPoolDetail] = useState();
   const [currentPage, setCurrentPage] = useState("");
   const { setSelectedPool } = usePoolContext();
-  const handleShowDetails = (value: any) => {
-    setPoolDetail(value);
-  };
+  // const handleShowDetails = (value: any) => {
+  //   setPoolDetail(value);
+  // };
 
   useEffect(() => {
     if (poolDetail !== undefined) {
@@ -37,7 +37,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onNext }: LiquidityProps) => {
 
   const onDeposit = (selectedPool: WewePool) => {
     setSelectedPool(selectedPool);
-    if (selectedPool) setCurrentPage("deposit");
+    setCurrentPage("deposit");
   };
 
   const { data: pools } = useWewePools();
@@ -80,17 +80,6 @@ const Liquidity = ({ setPoolTypes, poolTypes, onNext }: LiquidityProps) => {
                 ({ poolType, logo, type, pool, tvl, range, volume, apr }) => (
                   <>
                     <tr
-                      onClick={() =>
-                        handleShowDetails({
-                          poolType,
-                          logo,
-                          type,
-                          pool,
-                          tvl,
-                          volume,
-                          apr,
-                        })
-                      }
                       key={pool}
                       className="bg-[#1c1c1c] w-[full] cursor-pointer hover:bg-[#202020]"
                       style={{ borderBottom: "1rem solid black" }}

@@ -6,7 +6,8 @@ import { Button } from "~/components/common/Button";
 import { Hex } from "viem";
 import { ethers, formatEther } from "ethers";
 import { useEffect, useState } from "react";
-import { fetchETHPriceInUSD } from "~/api/price";
+import { fetchETHPrice } from "~/services";
+
 
 type MigrateCompleteProps = {
   hash: Hex;
@@ -33,7 +34,7 @@ export const MigrateCompleteModal = (props: MigrateCompleteProps) => {
             !props.data.receipt.effectiveGasPrice
           )
             return;
-          const ethPriceInUSD = await fetchETHPriceInUSD();
+          const ethPriceInUSD = await fetchETHPrice();
           const gasUsed = BigInt(props.data.receipt.gasUsed);
           const effectiveGasPrice = BigInt(
             props.data.receipt.effectiveGasPrice

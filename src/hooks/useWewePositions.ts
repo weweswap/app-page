@@ -2,7 +2,6 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { ethers } from "ethers";
 import { erc20Abi } from "viem";
 import { useQuery } from "wagmi/query";
-import { fetchPricePercontractAddress } from "~/api/price";
 import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { ArrakisFactoryABI } from "~/lib/abis/ArrakisFactory";
 import { ArrakisV2HelperABI } from "~/lib/abis/ArrakisHelper";

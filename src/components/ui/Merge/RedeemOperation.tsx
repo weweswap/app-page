@@ -7,7 +7,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
-import { fetchWewePrice } from "~/api/price";
 import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { dogica } from "~/fonts";
@@ -18,6 +17,7 @@ import {
   useVultBalance,
   useWeweBalance,
 } from "~/hooks";
+import { fetchWEWEPrice } from "~/services";
 
 const RedeemOperation = () => {
   const { address } = useAccount();
@@ -47,7 +47,7 @@ const RedeemOperation = () => {
     useVultBalance();
   // fetch wewe price
   useEffect(() => {
-    fetchWewePrice().then((price) => {
+    fetchWEWEPrice().then((price) => {
       setWewePrice(price);
     });
   }, []);

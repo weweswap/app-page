@@ -5,8 +5,7 @@ import {
   useWriteContract,
 } from "wagmi";
 import { CONTRACT_ADDRESSES } from "~/constants";
-import { ERC20VultABI, ERC20WeweABI, MergeABI } from "~/lib/abis";
-import { notifications } from "@mantine/notifications";
+import { ERC20WeweABI, MergeABI } from "~/lib/abis";
 import { erc20Abi } from "viem";
 
 export const useTokenBalance = (
@@ -117,6 +116,6 @@ export const useApproveAndCall = () => {
     hash,
     onWriteAsync,
     isConfirmed,
-    isError: isConfirmError || isCreationError
+    isError: isConfirmError || isCreationError,
   };
 };
