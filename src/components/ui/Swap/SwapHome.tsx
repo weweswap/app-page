@@ -14,7 +14,6 @@ import { useAccount, useBalance } from "wagmi";
 import { SwapButton } from "./SwapButton";
 import { useSwapContext } from "./SwapContext";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { config } from "~/lib/config";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 
 let inTokenOptions = TOKEN_LIST.map((token, index) => ({

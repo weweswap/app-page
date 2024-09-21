@@ -13,10 +13,10 @@ import { dogica } from "~/fonts";
 import {
   useApproveAndCall,
   useQuoteVult,
-  useTokenBalance,
   useVultBalance,
   useWeweBalance,
 } from "~/hooks";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { fetchWEWEPrice } from "~/services";
 
 const RedeemOperation = () => {

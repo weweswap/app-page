@@ -41,8 +41,6 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
     ethers.parseUnits(String(data?.amountToken1 || 0), selectedPool?.token1?.decimals || 18).toString(), 
   )
 
-  console.log('estimationMintShares', estimationMintShares)
-
   const {
     hash: hashApproveToken0,
     isPending: isPendingApproveToken0,
