@@ -11,11 +11,10 @@ import { RouterMessageType, RoutingData } from "~/models";
 import { formatUnits, parseEther, parseUnits } from "viem";
 import { formatStringUnits } from "~/utils";
 import { useAccount, useBalance } from "wagmi";
-import { useTokenBalance } from "~/hooks";
 import { SwapButton } from "./SwapButton";
 import { useSwapContext } from "./SwapContext";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { config } from "~/lib/config";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
 
 let inTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
@@ -49,7 +48,6 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
 
   let {
     data: inputBalance,
-    isFetching: isFetchingBalance,
     refetch: refetchBalance,
   } = useTokenBalance(
     address,

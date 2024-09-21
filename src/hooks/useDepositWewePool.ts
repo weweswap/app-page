@@ -7,8 +7,10 @@ import { CONTRACT_ADDRESSES } from "~/constants";
 import ArrakisResolverABI from "~/lib/abis/ArrakisResolver";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { provider } from "./provider";
+import { useState } from "react";
 
 export function useDualDeposit () {
+  const [ pendingToConfirm, setPendingToConfirm ] = useState(false)
     const {
         data: hash,
         isPending: isTxCreating,
@@ -22,19 +24,22 @@ export function useDualDeposit () {
           functionName: "mint",
           args: [mintAmount, receiver],
         });
+        setPendingToConfirm(true)
         const receipt = await provider.waitForTransaction(tx);
+        setPendingToConfirm(false)
         return receipt;
     };
     return {
         hash: hash,
         isPending: isTxCreating,
+        isConfirming: pendingToConfirm,
         isError: isCreationError,
         dualDeposit,
     };
 }
 
 
-export function useEstimateMintShares(wewePool?: WewePool[], amount0Max?: string, amount1Max?: string): UseQueryResult<any | undefined, Error | null> {
+export function useEstimateMintShares(wewePool?: WewePool, amount0Max?: string, amount1Max?: string): UseQueryResult<any | undefined, Error | null> {
     return useQuery({
       queryKey: ["mint-shares-estimation", wewePool, amount0Max, amount1Max],
       queryFn: async (): Promise<any> => {
@@ -49,7 +54,7 @@ export function useEstimateMintShares(wewePool?: WewePool[], amount0Max?: string
             provider
         );
 
-        const result = arrakisResolver.getMintAmounts(wewePool[0].address, amount0Max, amount1Max)
+        const result = arrakisResolver.getMintAmounts(wewePool.address, amount0Max, amount1Max)
 
         return result;
       },

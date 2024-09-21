@@ -3,29 +3,24 @@
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { PoolHome } from "./PoolHome";
-import { PoolAddModal } from "./PoolAddModal";
-import { PoolClaim } from "./PoolClaim";
-import { PoolClaimModal } from "./PoolClaimModal";
 import { PoolZapModal } from "./PoolZapModal";
-import PoolZapIn from "./PoolZapIn";
 import SuccessModal from "./SuccessModal";
 import PoolCreate from "./PoolCreate";
-import PoolsManage from "./PoolsManage";
 import { PoolZapOutModal } from "./PoolZapOutModal";
-import ApproveTokens from "./ApproveTokens";
+import ApproveTokens, { PayloadApproveModal } from "./ApproveTokens";
 import SettingsModal from "./SettingsModal";
 import ClaimedFeesModal from "./ClaimFeesModal";
 import ClaimSuccessModal from "./ClaimSuccessModal";
-import { useRouter } from "next/router";
 import { WewePosition } from "~/hooks/useWewePositions";
 import { useClaimFees } from "~/hooks/useClaimFees";
 import FailedModal from "./FailedModal";
 import { useAccount } from "wagmi";
 
 export const Pool = () => {
-  const router = useRouter();
   const [step, setStep] = useState(0);
+  const [genericHashError, setGenericHashError] = useState<string>()
   const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
+  const [payloadApprovalModal, setPayloadApprovalModal] = useState<PayloadApproveModal>()
   const [openedZapModal, { open: openZapModal, close: closeZapModal }] =
     useDisclosure(false);
   const [
@@ -52,7 +47,7 @@ export const Pool = () => {
     openedClaimSuccessModal,
     { open: openClaimSuccessModal, close: closeClaimSuccessModal },
   ] = useDisclosure(false);
-  const [openedMigrateFailModal, { open: openMigrateFailModal, close: closeMigrateFailModal }] = useDisclosure(false);
+  const [openedFailModal, { open: openFailModal, close: closeFailModal }] = useDisclosure(false);
   const [addOpened, { open: openAdd, close: closeAdd }] = useDisclosure(false);
 
   useDisclosure(false);
@@ -74,7 +69,7 @@ export const Pool = () => {
       openClaimSuccessModal();
     }
     if (isError) {
-      openMigrateFailModal();
+      openFailModal();
     }
   }, [isConfirmed, receipt, isError, isPending, isTxConfirming]);
   
@@ -83,15 +78,19 @@ export const Pool = () => {
     setStep(step + 1);
   };
 
-  const handleDeposit = () => {
-    router.push("/pools/deposit");
+  const handleZapModal = () => {
+    openZapModal();
   };
+
   const handleZapOutModal = () => {
     openZapOutModal();
   };
 
-  const handleApproveTokenModal = () => {
-    closeZapModal();
+  const handleApproveTokenModal = (amountToken0: number, amountToken1: number) => {
+    setPayloadApprovalModal({
+      amountToken0,
+      amountToken1
+    })
     openApproveModal();
   };
 
@@ -103,6 +102,18 @@ export const Pool = () => {
   const handleSettingsModal = () => {
     openSettingsModal();
   };
+
+  const handleCloseApproveTokensModal = () => {
+    setPayloadApprovalModal(undefined)
+    closeApproveModal()
+  }
+
+  const handleErrorApproveTokensModal = (hash?: string | undefined) => {
+    setPayloadApprovalModal(undefined)
+    setGenericHashError(hash)
+    closeApproveModal()
+    openFailModal()
+  }
 
   const handleCloseSuccesModal = () => {
     closeClaimFeesModal()
@@ -118,13 +129,18 @@ export const Pool = () => {
     claimFees(address!)
   }
 
+  const handleCloseFailModal = () => {
+    setGenericHashError(undefined)
+    closeFailModal()
+  }
+
   return (
     <>
       {step === 0 && (
         <PoolHome
           onClaim={handleClaimFeesModal}
           onZapOut={handleZapOutModal}
-          onDeposit={handleDeposit}
+          onDeposit={handleApproveTokenModal}
           onManage={() => setStep(5)}
           onNext={() => setStep(1)}
           onBack={() => setStep(0)} 
@@ -137,18 +153,18 @@ export const Pool = () => {
       {/* {step === 2 && ( <PoolZapIn onBack={() => setStep(1)} onZap={handleZapModal} />)} */}
       {/* {step === 4 && (<SuccessModal onConfirm={handleAdd} />)} */}
 
-      {/* <PoolZapModal onSettings={handleSettingsModal} onConfirm={handleApproveTokenModal} opened={openedZapModal} onOpen={handleZapModal} onClose={closeZapModal} /> */}
+      <PoolZapModal 
+        onSettings={handleSettingsModal} 
+        onConfirm={() => {}} 
+        opened={openedZapModal} 
+        onOpen={handleZapModal} 
+        onClose={closeZapModal} 
+      />
       <PoolZapOutModal
         onConfirm={() => setStep(4)}
         opened={openedZapOutModal}
         onOpen={handleZapOutModal}
         onClose={closeZapOutModal}
-      />
-      <ApproveTokens
-        onCreate={handleSuccessModal}
-        opened={openedApproveModal}
-        onOpen={handleApproveTokenModal}
-        onClose={closeApproveModal}
       />
       <SuccessModal
         onConfirm={closeSuccessModal}
@@ -170,6 +186,17 @@ export const Pool = () => {
         onClose={closeClaimFeesModal} 
       />
 
+      {
+        payloadApprovalModal &&
+        <ApproveTokens
+          opened={openedApproveModal}
+          onOpen={() => {}} 
+          onClose={handleCloseApproveTokensModal}
+          onTxError={handleErrorApproveTokensModal}
+          data={payloadApprovalModal}
+        />
+      }
+
       {isConfirmed && receipt && hash && (
         <ClaimSuccessModal
           opened={openedClaimSuccessModal}
@@ -180,13 +207,17 @@ export const Pool = () => {
           }}
         />
       )}
-      {isError && (
-        <FailedModal
-          hash={hash!}
-          opened={openedMigrateFailModal}
-          onClose={closeMigrateFailModal}
-        />
-      )}
+      <FailedModal
+        hash={hash! || genericHashError}
+        opened={openedFailModal}
+        onClose={handleCloseFailModal}
+      />
+      {/* <button onClick={handleZapModal}>
+        Zap
+      </button>
+      <button onClick={handleZapOutModal}>
+        ZapOut
+      </button> */}
     </>
   );
 };

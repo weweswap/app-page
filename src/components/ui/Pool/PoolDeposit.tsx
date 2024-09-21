@@ -1,23 +1,83 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import { Card, Dropdown, Typography } from "~/components/common";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { usePoolContext } from "./PoolContext";
 import { Divider, NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import { dogica } from "~/fonts";
 import { TOKEN_LIST } from "~/constants";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { useAccount } from "wagmi";
+import RangeSlider from "~/components/common/RangeSlider";
+import { ethers } from "ethers";
+import { useGetPrices } from "~/hooks/useGetPrices";
+import ComingSoon from "~/components/common/ComingSoon";
 
 type PoolDepositProps = {
   onBack: () => void;
+  onDeposit: (token0: number, token1: number) => void;
 };
 
-const PoolDeposit = ({ onBack }: PoolDepositProps) => {
+const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
   const { selectedPool } = usePoolContext();
   const [selectedAction, setSelectedAction] = useState("deposit");
-  const [inputValue, setInputValue] = useState<number>();
-  console.log("selectedPool:", selectedPool);
+  const [sliderValue, setSliderValue] = useState<number>(50);
+  const [inputValueToken0, setInputValueToken0] = useState<number>(0);
+  const [inputValueToken1, setInputValueToken1] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
+  const [secondaryTokenIndex, setSecondaryTokenIndex] = useState(0);
+  const { address } = useAccount();
+  
+  const { data: prices } = useGetPrices(selectedPool?.token0, selectedPool?.token1)
+
+  useEffect(() => {
+    if (selectedPool) {
+      setInputTokenIndex(TOKEN_LIST.findIndex(({address}) => address === selectedPool?.token0.address));
+      setSecondaryTokenIndex(TOKEN_LIST.findIndex(({address}) => address === selectedPool?.token1.address));
+    }
+  }, [selectedPool])
+  
+  const {
+    data: balanceToken0,
+    refetch: refechToken0Balance,
+  } = useTokenBalance(
+    address,
+    TOKEN_LIST.find(token => selectedPool?.token0.address.toLowerCase() === token.address.toLowerCase())?.address
+  );
+
+  const {
+    data: balanceToken1,
+    refetch: refechToken1Balance,
+  } = useTokenBalance(
+    address,
+    TOKEN_LIST.find(token => selectedPool?.token1.address.toLowerCase() === token.address.toLowerCase())?.address
+  );
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      refechToken1Balance()
+      refechToken0Balance()
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    if (prices) {
+      const result = (BigInt(sliderValue) * balanceToken0) / BigInt(100);
+      const formattedToken0 = Number(ethers.formatUnits(result, selectedPool?.token0.decimals));
+      setInputValueToken0(formattedToken0);
+      const token1Equivalent = (formattedToken0 * prices.priceToken0) / prices.priceToken1;
+
+      const formattedBalanceToken1 = Number(ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals))
+
+      if (token1Equivalent >= formattedBalanceToken1) {
+        setInputValueToken0(formattedBalanceToken1);
+      } else {
+        setInputValueToken1(Number(token1Equivalent.toFixed(6)));
+      }
+    }
+  }, [prices, sliderValue, balanceToken0, balanceToken1, selectedPool])
 
   return (
     selectedPool && (
@@ -66,25 +126,6 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
               </div>
             </div>
             <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1 ">
-              {/* <div className="flex gap-6">
-              <Typography
-                size="xs"
-                className={`bg_green flex justify-center rounded-full w-[6rem] py-1 `}
-              >
-                IN RANGE
-              </Typography>
-              <div className="flex items-center gap-1">
-                <Image
-                  src="/img/links/wide.svg"
-                  width={20}
-                  height={20}
-                  alt=""
-                />
-                <Typography size="xs" className="translate-x-1">
-                  WIDE
-                </Typography>
-              </div>
-            </div> */}
               <div className="flex items-center gap-1">
                 <Image
                   src="/img/icons/memes.svg"
@@ -111,7 +152,9 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
                 </Typography>
               </div>
             </div>
-            <div className=" gap-5 py-5 my-5 flex-wrap bg_light_dark min-h-[12rem]"></div>
+            <div className=" gap-5 py-5 my-5 flex flex-wrap items-center justify-center bg_light_dark min-h-[12rem]">
+              <ComingSoon />
+            </div>
             <div className="flex justify-between my-3">
               <div className="flex flex-col items-center gap-4">
                 <Typography>TVL</Typography>
@@ -139,7 +182,7 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
                     selectedAction === "deposit" && "nav_selected"
                   } nav`}
                 >
-                  <Typography size="sm">Deposit</Typography>
+                  <Typography size="sm" tt="uppercase">Deposit</Typography>
                 </div>
                 <div
                   onClick={() => setSelectedAction("withdraw")}
@@ -147,45 +190,102 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
                     selectedAction === "withdraw" && "nav_selected"
                   } nav`}
                 >
-                  <Typography size="sm">Withdraw</Typography>
+                  <Typography size="sm" tt="uppercase">Withdraw</Typography>
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
-              <NumberInput
-                classNames={{
-                  root: "md:col-span-8 col-span-6",
-                  input: clsx(
-                    dogica.className,
-                    "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
-                  ),
-                }}
-                defaultValue={inputValue}
-                hideControls
-                value={inputValue}
-                onChange={(value) => setInputValue(value as number)}
-                allowNegative={false}
-                trimLeadingZeroesOnBlur
-                thousandSeparator
-                decimalScale={6}
-              />
-              <Dropdown
-                value={TOKEN_LIST[inputTokenIndex].symbol}
-                options={TOKEN_LIST.map((token, index) => ({
-                  value: token.address,
-                  icon: token.icon,
-                  text: token.symbol,
-                  index: index
-                }))}
-                className="md:col-span-4 col-span-6"
-                setIndexValue={setInputTokenIndex}
-              />
-            </div>
-            {/* <Button onClick={onZap} className="w-full mt-4">
-            <Typography secondary size="xs" fw={700} tt="uppercase">
-              ZAP-IN
-            </Typography>
-          </Button> */}
+            {
+              selectedAction === 'deposit' 
+              ? <div>
+                  <div className="my-4">
+                    <Typography size="sm">Deposit amounts</Typography>
+                  </div>
+                  <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
+                    <Dropdown
+                      value={TOKEN_LIST[inputTokenIndex].address}
+                      options={TOKEN_LIST.map((token, index) => ({
+                        value: token.address,
+                        icon: token.icon,
+                        text: token.symbol,
+                        index: index
+                      }))}
+                      className="md:col-span-3 col-span-6"
+                      disabled
+                    />
+                    <NumberInput
+                      classNames={{
+                        root: "md:col-span-3 col-span-6 h-full",
+                        wrapper: "h-full",
+                        input: clsx(
+                          dogica.className,
+                          "text-start text-white text-2xl h-full border-transparent rounded-none"
+                        ),
+                      }}
+                      defaultValue={inputValueToken0}
+                      hideControls
+                      value={inputValueToken0}
+                      onChange={(value) => setInputValueToken0(value as number)}
+                      allowNegative={false}
+                      trimLeadingZeroesOnBlur
+                      thousandSeparator
+                      decimalScale={6}
+                    />
+                    <Dropdown
+                      value={TOKEN_LIST[secondaryTokenIndex].address}
+                      options={TOKEN_LIST.map((token, index) => ({
+                        value: token.address,
+                        icon: token.icon,
+                        text: token.symbol,
+                        index: index
+                      }))}
+                      className="md:col-span-3 col-span-6"
+                      disabled
+                    />
+                    <NumberInput
+                      classNames={{
+                        root: "md:col-span-3 col-span-6 h-full",
+                        wrapper: "h-full",
+                        input: clsx(
+                          dogica.className,
+                          "text-start text-white text-2xl h-full border-transparent rounded-none"
+                        ),
+                      }}
+                      defaultValue={inputValueToken1}
+                      hideControls
+                      value={inputValueToken1}
+                      onChange={(value) => setInputValueToken1(value as number)}
+                      allowNegative={false}
+                      trimLeadingZeroesOnBlur
+                      thousandSeparator
+                      decimalScale={6}
+                    />
+                  </div>
+                  <div className="py-4">
+                    <RangeSlider
+                      min={0}
+                      max={100}
+                      value={Number(sliderValue)}
+                      onChange={(e) => setSliderValue(Number(e.target.value))}
+                    />
+                  </div>
+                  <div className="flex justify-end font-extrabold text-black text-sm">
+                    <Button className="bg_turq" onClick={() => setSliderValue(100)}>
+                      <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
+                    </Button>
+                  </div>
+                  <Button className="w-full mt-4" onClick={() => {
+                    onDeposit(inputValueToken0, inputValueToken1)
+                    setSliderValue(50)
+                  }}>
+                    <Typography secondary size="xs" fw={700} tt="uppercase">
+                      Deposit
+                    </Typography>
+                  </Button>
+                </div>
+              : <div>
+                <ComingSoon />
+              </div>
+            }
           </div>
         </Card>
         <Card>
