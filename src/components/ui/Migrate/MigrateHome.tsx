@@ -4,7 +4,7 @@ import { Loader } from "@mantine/core";
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import { Button, Card, Typography } from "~/components/common";
-import { usePositions, useSafeTransfer } from "~/hooks/useMigrate";
+import { usePositions } from "~/hooks/useMigrate";
 import { Position } from "~/models";
 import { formatPrice, tickToPrice } from "~/utils";
 

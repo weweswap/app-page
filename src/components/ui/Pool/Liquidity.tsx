@@ -8,7 +8,7 @@ import { useWewePools, WewePool } from "~/hooks/usePool";
 
 import { usePoolContext } from "./PoolContext";
 import PoolDeposit from "./PoolDeposit";
-import { useWewePositions } from "~/hooks/useWewePositions";
+import { useWewePositions, WewePosition } from "~/hooks/useWewePositions";
 
 type LiquidityProps = {
   setPoolTypes: (number: number) => void;
@@ -46,6 +46,10 @@ const Liquidity = ({ setPoolTypes, poolTypes, onBack }: LiquidityProps) => {
   };
 
   const { data: pools } = useWewePools();
+  // const handleClaim = (wewePosition: WewePosition, event?: React.MouseEvent<HTMLButtonElement>) => {
+  //   event?.stopPropagation();
+  //   onClaim(wewePosition);
+  // };
 
   return (
     <>
