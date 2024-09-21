@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESSES } from "~/constants";
-import { provider } from "~/hooks/useMigrate";
+import { provider } from "~/hooks/provider";
 import { COMMON_POOL_CONTRACT_ABI } from "~/lib/abis/CommonPool";
 
 export const fetchWEWEPrice = async () => {

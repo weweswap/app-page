@@ -8,6 +8,7 @@ import { ArrakisV2HelperABI } from "~/lib/abis/ArrakisHelper";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { calculateTlvForTokens, WewePool } from "./usePool";
 import feeManagerABI from "~/lib/abis/FeeManager";
+import { provider } from "./provider";
 
 export type WewePosition = {
   title: string,
@@ -67,73 +68,68 @@ async function getPendingUsdcRewards(
   return ethers.formatUnits(pendingToHardvest, 6).toString();
 }
 
+export function useWewePositions(wewePools?: WewePool[], address?: string): UseQueryResult<{ wewePositions: WewePosition[] } | undefined, Error | null> {
+  return useQuery({
+    queryKey: ["wewe-positions", address],
+    queryFn: async (): Promise<{ wewePositions: WewePosition[] }> => {
 
-export const provider = new ethers.JsonRpcProvider(
-    `https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`
-  );
+      if (!wewePools || wewePools.length === 0 || !address){
+        return { wewePositions: [] }
+      }
 
-  export function useWewePositions(wewePools?: WewePool[], address?: string): UseQueryResult<{ wewePositions: WewePosition[] } | undefined, Error | null> {
-    return useQuery({
-      queryKey: ["wewe-positions", address],
-      queryFn: async (): Promise<{ wewePositions: WewePosition[] }> => {
+      const wewePositions: WewePosition[] = []
+      const requestsBalances = wewePools.map(async (wewePool) => {
+        const vault = new ethers.Contract(
+          wewePool.address,
+          ArrakisVaultABI,
+          provider
+        );
+        const balance = await vault.balanceOf(address)
 
-        if (!wewePools || wewePools.length === 0 || !address){
-          return { wewePositions: [] }
-        }
+        const arrakisHelper = new ethers.Contract(
+          CONTRACT_ADDRESSES.helper,
+          ArrakisV2HelperABI,
+          provider
+        );
 
-        const wewePositions: WewePosition[] = []
-        const requestsBalances = wewePools.map(async (wewePool) => {
-          const vault = new ethers.Contract(
-            wewePool.address,
-            ArrakisVaultABI,
-            provider
-          );
-          const balance = await vault.balanceOf(address)
+        const balanceInUsdc = await getUserBalanceInUsd(
+          wewePool.address,
+          address,
+          provider,
+          arrakisHelper,
+          await vault.token0(),
+          await vault.token1(),
+        )
 
-          const arrakisHelper = new ethers.Contract(
-            CONTRACT_ADDRESSES.helper,
-            ArrakisV2HelperABI,
-            provider
-          );
+        const pendingUsdcReward = await getPendingUsdcRewards(
+          CONTRACT_ADDRESSES.feeManager,
+          address,
+          provider,
+          wewePool.address,
+        )
 
-          const balanceInUsdc = await getUserBalanceInUsd(
-            wewePool.address,
-            address,
-            provider,
-            arrakisHelper,
-            await vault.token0(),
-            await vault.token1(),
-          )
+        return { vault: wewePool, balance, balanceInUsdc, pendingUsdcReward }
+      })
 
-          const pendingUsdcReward = await getPendingUsdcRewards(
-            CONTRACT_ADDRESSES.feeManager,
-            address,
-            provider,
-            wewePool.address,
-          )
+      const balances = await Promise.all(requestsBalances)
 
-          return { vault: wewePool, balance, balanceInUsdc, pendingUsdcReward }
+      balances.forEach(({ vault, balance, balanceInUsdc, pendingUsdcReward}) => {
+        wewePositions.push({
+          title: "EXOTIC 1%",
+          exchangePair: vault.type,
+          state: "Active",
+          range: vault.range,
+          apr: vault.apr,
+          shares: String(parseFloat(Number(ethers.formatUnits(balance.toString()).toString()).toFixed(4))),
+          lpValue: String(balanceInUsdc),
+          rewards: "-",
+          positionId: "-",
+          wewePoolAddress: vault.address,
+          pendingUsdcReward: pendingUsdcReward,
         })
+      })
 
-        const balances = await Promise.all(requestsBalances)
-
-        balances.forEach(({ vault, balance, balanceInUsdc, pendingUsdcReward}) => {
-          wewePositions.push({
-            title: "EXOTIC 1%",
-            exchangePair: vault.type,
-            state: "Active",
-            range: vault.range,
-            apr: vault.apr,
-            shares: String(parseFloat(Number(ethers.formatUnits(balance.toString()).toString()).toFixed(4))),
-            lpValue: String(balanceInUsdc),
-            rewards: "-",
-            positionId: "-",
-            wewePoolAddress: vault.address,
-            pendingUsdcReward: pendingUsdcReward,
-          })
-        })
-
-        return { wewePositions };
-      },
-    });
-  }
+      return { wewePositions };
+    },
+  });
+}

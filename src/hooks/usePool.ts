@@ -1,6 +1,6 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { ethers } from "ethers";
-import { erc20Abi } from "viem";
+import { erc20Abi, Hex } from "viem";
 import { useQuery } from "wagmi/query";
 import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { ArrakisFactoryABI } from "~/lib/abis/ArrakisFactory";
@@ -8,6 +8,7 @@ import { ArrakisV2HelperABI } from "~/lib/abis/ArrakisHelper";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { TokenItem } from "~/models";
 import { fetchPricePerAddressInUsdc } from "~/services/price";
+import { provider } from "./provider";
 
 export type WewePool = {
   address: string;
@@ -54,10 +55,6 @@ export async function calculateTlvForTokens(
 
   return tlvToken0 + tlvToken1;
 }
-
-export const provider = new ethers.JsonRpcProvider(
-  `https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_APIKEY}`
-);
 
 export function useWewePools(): UseQueryResult<
   { wewePools: WewePool[] } | undefined,
