@@ -18,6 +18,7 @@ import { useAccount } from "wagmi";
 
 export const Pool = () => {
   const [step, setStep] = useState(0);
+  const [genericHashError, setGenericHashError] = useState<string>()
   const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
   const [payloadApprovalModal, setPayloadApprovalModal] = useState<PayloadApproveModal>()
   const [openedZapModal, { open: openZapModal, close: closeZapModal }] =
@@ -46,7 +47,7 @@ export const Pool = () => {
     openedClaimSuccessModal,
     { open: openClaimSuccessModal, close: closeClaimSuccessModal },
   ] = useDisclosure(false);
-  const [openedMigrateFailModal, { open: openMigrateFailModal, close: closeMigrateFailModal }] = useDisclosure(false);
+  const [openedFailModal, { open: openFailModal, close: closeFailModal }] = useDisclosure(false);
   const [addOpened, { open: openAdd, close: closeAdd }] = useDisclosure(false);
 
   useDisclosure(false);
@@ -68,7 +69,7 @@ export const Pool = () => {
       openClaimSuccessModal();
     }
     if (isError) {
-      openMigrateFailModal();
+      openFailModal();
     }
   }, [isConfirmed, receipt, isError, isPending, isTxConfirming]);
   
@@ -102,6 +103,18 @@ export const Pool = () => {
     openSettingsModal();
   };
 
+  const handleCloseApproveTokensModal = () => {
+    setPayloadApprovalModal(undefined)
+    closeApproveModal()
+  }
+
+  const handleErrorApproveTokensModal = (hash?: string | undefined) => {
+    setPayloadApprovalModal(undefined)
+    setGenericHashError(hash)
+    closeApproveModal()
+    openFailModal()
+  }
+
   const handleCloseSuccesModal = () => {
     closeClaimFeesModal()
     closeClaimSuccessModal()
@@ -114,6 +127,11 @@ export const Pool = () => {
 
   const handleClaimSuccessModal = () => {
     claimFees(address!)
+  }
+
+  const handleCloseFailModal = () => {
+    setGenericHashError(undefined)
+    closeFailModal()
   }
 
   return (
@@ -148,13 +166,6 @@ export const Pool = () => {
         onOpen={handleZapOutModal}
         onClose={closeZapOutModal}
       />
-      <ApproveTokens
-        onCreate={handleSuccessModal}
-        opened={openedApproveModal}
-        onOpen={() => {}} 
-        onClose={closeApproveModal}
-        data={payloadApprovalModal}
-      />
       <SuccessModal
         onConfirm={closeSuccessModal}
         opened={openedSuccessModal}
@@ -175,6 +186,17 @@ export const Pool = () => {
         onClose={closeClaimFeesModal} 
       />
 
+      {
+        payloadApprovalModal &&
+        <ApproveTokens
+          opened={openedApproveModal}
+          onOpen={() => {}} 
+          onClose={handleCloseApproveTokensModal}
+          onTxError={handleErrorApproveTokensModal}
+          data={payloadApprovalModal}
+        />
+      }
+
       {isConfirmed && receipt && hash && (
         <ClaimSuccessModal
           opened={openedClaimSuccessModal}
@@ -185,19 +207,17 @@ export const Pool = () => {
           }}
         />
       )}
-      {isError && (
-        <FailedModal
-          hash={hash!}
-          opened={openedMigrateFailModal}
-          onClose={closeMigrateFailModal}
-        />
-      )}
-      <button onClick={handleZapModal}>
+      <FailedModal
+        hash={hash! || genericHashError}
+        opened={openedFailModal}
+        onClose={handleCloseFailModal}
+      />
+      {/* <button onClick={handleZapModal}>
         Zap
       </button>
       <button onClick={handleZapOutModal}>
         ZapOut
-      </button>
+      </button> */}
     </>
   );
 };

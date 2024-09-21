@@ -40,6 +40,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
   
   const {
     data: balanceToken0,
+    refetch: refechToken0Balance,
   } = useTokenBalance(
     address,
     TOKEN_LIST.find(token => selectedPool?.token0.address.toLowerCase() === token.address.toLowerCase())?.address
@@ -47,10 +48,19 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
 
   const {
     data: balanceToken1,
+    refetch: refechToken1Balance,
   } = useTokenBalance(
     address,
     TOKEN_LIST.find(token => selectedPool?.token1.address.toLowerCase() === token.address.toLowerCase())?.address
   );
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      refechToken1Balance()
+      refechToken0Balance()
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     if (prices) {
@@ -64,7 +74,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
       if (token1Equivalent >= formattedBalanceToken1) {
         setInputValueToken0(formattedBalanceToken1);
       } else {
-        setInputValueToken1(token1Equivalent);
+        setInputValueToken1(Number(token1Equivalent.toFixed(6)));
       }
     }
   }, [prices, sliderValue, balanceToken0, balanceToken1, selectedPool])
@@ -172,7 +182,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                     selectedAction === "deposit" && "nav_selected"
                   } nav`}
                 >
-                  <Typography size="sm">Deposit</Typography>
+                  <Typography size="sm" tt="uppercase">Deposit</Typography>
                 </div>
                 <div
                   onClick={() => setSelectedAction("withdraw")}
@@ -180,13 +190,13 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                     selectedAction === "withdraw" && "nav_selected"
                   } nav`}
                 >
-                  <Typography size="sm">Withdraw</Typography>
+                  <Typography size="sm" tt="uppercase">Withdraw</Typography>
                 </div>
               </div>
             </div>
             {
               selectedAction === 'deposit' 
-              ? <div className="">
+              ? <div>
                   <div className="my-4">
                     <Typography size="sm">Deposit amounts</Typography>
                   </div>
@@ -263,7 +273,10 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                       <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
                     </Button>
                   </div>
-                  <Button className="w-full mt-4" onClick={() => onDeposit(inputValueToken0, inputValueToken1)}>
+                  <Button className="w-full mt-4" onClick={() => {
+                    onDeposit(inputValueToken0, inputValueToken1)
+                    setSliderValue(50)
+                  }}>
                     <Typography secondary size="xs" fw={700} tt="uppercase">
                       Deposit
                     </Typography>

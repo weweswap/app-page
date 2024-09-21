@@ -1,8 +1,10 @@
 import { erc20Abi, Hex } from "viem";
 import { useWriteContract } from "wagmi";
 import { provider } from "./provider";
+import { useState } from "react";
 
 export function useApproveToken () {
+    const [ pendingToConfirm, setPendingToConfirm ] = useState(false)
     const {
         data: hash,
         isPending: isTxCreating,
@@ -17,13 +19,16 @@ export function useApproveToken () {
             functionName: "approve",
             args: [spender, amount],
         });
+        setPendingToConfirm(true)
         const receipt = await provider.waitForTransaction(tx);
+        setPendingToConfirm(false)
         return receipt;
     };
 
     return {
         hash: hash,
         isPending: isTxCreating,
+        isConfirming: pendingToConfirm,
         isError: isCreationError,
         approve,
     };

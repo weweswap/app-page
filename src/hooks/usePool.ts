@@ -11,7 +11,7 @@ import { fetchPricePerAddressInUsdc } from "~/services/price";
 import { provider } from "./provider";
 
 export type WewePool = {
-  address: string;
+  address: Hex;
   poolType: string;
   pool: string;
   tvl: string;

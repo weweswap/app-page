@@ -11,11 +11,10 @@ import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { dogica } from "~/fonts";
 import {
-  useQuoteVult,
-  useTokenBalance,
   useVultBalance,
   useWeweBalance,
 } from "~/hooks";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { fetchWEWEPrice } from "~/services";
 
 export const RedeemHome = () => {
