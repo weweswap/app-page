@@ -8,15 +8,17 @@ import { useWewePools, WewePool } from "~/hooks/usePool";
 
 import { usePoolContext } from "./PoolContext";
 import PoolDeposit from "./PoolDeposit";
+import { useWewePositions } from "~/hooks/useWewePositions";
 
 type LiquidityProps = {
   setPoolTypes: (number: number) => void;
   poolTypes: number;
   onNext: () => void;
+  onBack: () => void;
   onDeposit: () => void;
 };
 
-const Liquidity = ({ setPoolTypes, poolTypes, onNext }: LiquidityProps) => {
+const Liquidity = ({ setPoolTypes, poolTypes, onBack }: LiquidityProps) => {
   const [poolDetail, setPoolDetail] = useState();
   const [currentPage, setCurrentPage] = useState("");
   const { setSelectedPool } = usePoolContext();
@@ -29,6 +31,9 @@ const Liquidity = ({ setPoolTypes, poolTypes, onNext }: LiquidityProps) => {
       setCurrentPage("pool-details");
     }
   }, [poolDetail]);
+  
+  const { data: wewePools } = useWewePools();
+  // const { data: wewePositions } = useWewePositions(wewePools?.wewePools, address)
 
   const handleHideDetails = () => {
     setCurrentPage("");
@@ -167,7 +172,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onNext }: LiquidityProps) => {
       {/* {currentPage === "pool-details" && (
         <PoolDetail onBack={handleHideDetails} />
       )} */}
-      {currentPage === "deposit" && <PoolDeposit />}
+      {currentPage === "deposit" && <PoolDeposit onBack={() => setCurrentPage("")} />}
     </>
   );
 };

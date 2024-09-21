@@ -2,12 +2,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
 import MySharesDetails from "./MySharesDetails";
-import { useWewePositions } from "~/hooks/useWewePositions";
+import { useWewePositions, WewePosition } from "~/hooks/useWewePositions";
 import { useAccount } from "wagmi";
 import { useWewePools } from "~/hooks/usePool";
 
 type MySharesProps = {
-  onClaim: () => void;
+  onClaim: (wewePositon: WewePosition) => void;
   onManage: () => void;
   setPoolTypes: (number: number) => void;
   poolTypes: number;
@@ -43,14 +43,9 @@ const MyShares = ({
     setPoolDetail(undefined);
   };
 
-  const handleZapOut = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    onZapOut();
-  };
-
-  const handleClaim = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    onClaim();
+  const handleClaim = (wewePosition: WewePosition, event?: React.MouseEvent<HTMLButtonElement>) => {
+    event?.stopPropagation();
+    onClaim(wewePosition);
   };
 
   const { address } = useAccount();
@@ -86,27 +81,11 @@ const MyShares = ({
             <div className="w-full flex flex-col">
               <Typography size="lg">MEMES 1%</Typography>
               {wewePositions?.wewePositions.map(
-                ({
-                  exchangePair,
-                  state,
-                  range,
-                  lpValue,
-                  rewards,
-                  positionId,
-                  apr,
-                  shares,
-                }) => {
+                (wewePosition) => {
                   return (
                     <div
                       onClick={() =>
-                        handleShowDetails({
-                          exchangePair,
-                          state,
-                          range,
-                          lpValue,
-                          rewards,
-                          positionId,
-                        })
+                        handleShowDetails(wewePosition)
                       }
                       className="bg_dark w-full min-h-[10rem] p-4 hover:bg-[#181818] cursor-pointer"
                     >
@@ -129,7 +108,7 @@ const MyShares = ({
                             />
                           </div>
                           <Typography secondary fs="md" tt="uppercase">
-                            {exchangePair}
+                            {wewePosition.exchangePair}
                           </Typography>
                         </div>
                         <div></div>
@@ -146,7 +125,7 @@ const MyShares = ({
                             ta="center"
                             className="font-extrabold"
                           >
-                            {shares}
+                            {wewePosition.shares}
                           </Typography>
                         </div>
                         <div className="lg:text-right flex flex-col gap-2">
@@ -162,7 +141,7 @@ const MyShares = ({
                             ta="center"
                             className="font-extrabold"
                           >
-                            {apr}
+                            {wewePosition.apr}
                           </Typography>
                         </div>
 
@@ -179,7 +158,13 @@ const MyShares = ({
                             ta="end"
                             className="font-extrabold"
                           >
-                            {rewards}
+                            {
+                              new Intl.NumberFormat('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                minimumFractionDigits: 2,
+                              }).format(Number(wewePosition.pendingUsdcReward))
+                            }
                           </Typography>
                         </div>
 
@@ -200,7 +185,7 @@ const MyShares = ({
                               style: "currency",
                               currency: "USD",
                               minimumFractionDigits: 2,
-                            }).format(Number(lpValue))}
+                            }).format(Number(wewePosition.lpValue))}
                           </Typography>
                         </div>
                       </div>
@@ -225,21 +210,21 @@ const MyShares = ({
                             </Typography>
                           </div>
                           <div className="flex items-center gap-1">
-                            {range === "NARROW" ? (
+                            {wewePosition.range === "NARROW" ? (
                               <Image
                                 src="/img/links/narrow.svg"
                                 width={20}
                                 height={20}
                                 alt=""
                               />
-                            ) : range === "MID" ? (
+                            ) : wewePosition.range === "MID" ? (
                               <Image
                                 src="/img/links/mid.svg"
                                 width={20}
                                 height={20}
                                 alt=""
                               />
-                            ) : range === "INFINITY" ? (
+                            ) : wewePosition.range === "INFINITY" ? (
                               <Image
                                 src="/img/icons/Infinity.svg"
                                 width={20}
@@ -255,7 +240,7 @@ const MyShares = ({
                               />
                             )}
                             <Typography size="xs" className="translate-x-1">
-                              {range}
+                              {wewePosition.range}
                             </Typography>
                           </div>
                           {/* <Typography size="xs" opacity={0.7}>
@@ -268,7 +253,9 @@ const MyShares = ({
                       </div>
                       <div className="flex items-center justify-end gap-5 py-5 flex-wrap">
                         <Button
-                          onClick={handleZapOut}
+                          onClick={() =>
+                            handleShowDetails(wewePosition)
+                          }
                           className="w-full md:w-auto"
                         >
                           <Typography
@@ -282,7 +269,7 @@ const MyShares = ({
                         </Button>
 
                         <Button
-                          onClick={handleClaim}
+                          onClick={(e) => handleClaim(wewePosition, e)}
                           className="w-full md:w-auto"
                         >
                           <Typography
@@ -304,7 +291,7 @@ const MyShares = ({
         </>
       ) : (
         <>
-          <MySharesDetails onClaim={onClaim} onBack={handleHideDetails} />
+          <MySharesDetails onClaim={() => handleClaim(poolDetail!)} onBack={handleHideDetails} />
         </>
       )}
     </>

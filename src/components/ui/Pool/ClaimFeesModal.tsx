@@ -1,20 +1,23 @@
-import { Divider, ModalRootProps } from "@mantine/core";
+import { Divider, Loader, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
 import React from "react";
 import { Button, Card, Modal, Typography } from "~/components/common";
+import { WewePosition } from "~/hooks/useWewePositions";
 
 type ClaimedFeesModalProps = {
   onClaim: () => void;
   onClose: () => void;
   onOpen: () => void;
+  wewePosition?: WewePosition;
+  loading: boolean;
 } & ModalRootProps;
 
-const ClaimedFeesModal = (props: ClaimedFeesModalProps) => {
+const ClaimedFeesModal = ({ wewePosition, opened, onClose, onClaim, loading}: ClaimedFeesModalProps) => {
   return (
     <Modal
       title="CLAIM FEES AND REWARDS"
-      onClose={props.onClose}
-      opened={props.opened}
+      onClose={onClose}
+      opened={opened}
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
@@ -37,19 +40,25 @@ const ClaimedFeesModal = (props: ClaimedFeesModalProps) => {
           PENDING FEES
         </Typography>
         <Typography size="lg" className="font-bold">
-          $2,34
+          {
+            new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 6,
+            }).format(Number(wewePosition?.pendingUsdcReward))
+          }
         </Typography>
         <div className="flex items-center gap-2">
-          <Typography size="xs">2,34 USDC</Typography>
+          <Typography size="xs">{Number(wewePosition?.pendingUsdcReward)} USDC</Typography>
           <Image src="/img/tokens/usdc.png" alt="" height={20} width={20} />
         </div>
-        <Typography size="xs" className="text_light_gray pt-10">
+        {/* <Typography size="xs" className="text_light_gray pt-10">
           Estimated Fees: $0,017
-        </Typography>
-        <Divider className="border-blue-700 w-full" />
+        </Typography> */}
+        {/* <Divider className="border-blue-700 w-full" /> */}
       </div>
       <div className="flex flex-col items-center gap-3">
-        <Image
+        {/* <Image
           src="/img/icons/pending.svg"
           alt="Pending"
           width={50}
@@ -67,9 +76,10 @@ const ClaimedFeesModal = (props: ClaimedFeesModalProps) => {
         </div>
         <Typography size="xs" className="text_light_gray">
           Estimated Fees: $0,017
-        </Typography>
-        <Button onClick={props.onClaim} className="w-full">
+        </Typography> */}
+        <Button onClick={onClaim} className="w-full flex items-center justify-center gap-2" disabled={loading}>
           <Typography secondary>CLAIM</Typography>
+          {loading && <Loader color="white" size="sm" />}
         </Button>
       </div>
     </Modal>

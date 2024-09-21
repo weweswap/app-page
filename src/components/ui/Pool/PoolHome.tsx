@@ -8,10 +8,12 @@ import ComingSoon from "~/components/common/ComingSoon";
 
 import Liquidity from "./Liquidity";
 import MyShares from "./MyShares";
+import { WewePosition } from "~/hooks/useWewePositions";
 
 type PoolHomeProps = {
-  onClaim: () => void;
+  onClaim: (wewePositon: WewePosition) => void;
   onNext: () => void;
+  onBack: () => void;
   onAdd: () => void;
   onDeposit: () => void;
   onZapOut: () => void;
@@ -21,6 +23,7 @@ type PoolHomeProps = {
 export const PoolHome = ({
   onClaim,
   onNext,
+  onBack, 
   onAdd,
   onDeposit,
   onManage,
@@ -83,6 +86,7 @@ export const PoolHome = ({
           setPoolTypes={setPoolTypes}
           poolTypes={poolTypes}
           onNext={onNext}
+          onBack={onBack}
         />
       )}
       {poolTypes === 1 && (
