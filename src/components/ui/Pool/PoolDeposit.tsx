@@ -169,7 +169,12 @@ const PoolDeposit = () => {
               />
               <Dropdown
                 value={TOKEN_LIST[inputTokenIndex].symbol}
-                options={inTokenOptions}
+                options={TOKEN_LIST.map((token, index) => ({
+                  value: token.address,
+                  icon: token.icon,
+                  text: token.symbol,
+                  index: index
+                }))}
                 className="md:col-span-4 col-span-6"
                 setIndexValue={setInputTokenIndex}
               />
