@@ -7,24 +7,67 @@ import { Divider, NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import { dogica } from "~/fonts";
 import { TOKEN_LIST } from "~/constants";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { useAccount } from "wagmi";
+import RangeSlider from "~/components/common/RangeSlider";
+import { ethers } from "ethers";
+import { useGetPrices } from "~/hooks/useGetPrices";
+import ComingSoon from "~/components/common/ComingSoon";
 
 type PoolDepositProps = {
   onBack: () => void;
+  onDeposit: (token0: number, token1: number) => void;
 };
 
-const PoolDeposit = ({ onBack }: PoolDepositProps) => {
+const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
   const { selectedPool } = usePoolContext();
   const [selectedAction, setSelectedAction] = useState("deposit");
-  const [inputValue, setInputValue] = useState<number>();
+  const [sliderValue, setSliderValue] = useState<number>(50);
+  const [inputValueToken0, setInputValueToken0] = useState<number>(0);
+  const [inputValueToken1, setInputValueToken1] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
   const [secondaryTokenIndex, setSecondaryTokenIndex] = useState(0);
+  const { address } = useAccount();
   
+  const { data: prices } = useGetPrices(selectedPool?.token0, selectedPool?.token1)
+
   useEffect(() => {
     if (selectedPool) {
       setInputTokenIndex(TOKEN_LIST.findIndex(({address}) => address === selectedPool?.token0.address));
       setSecondaryTokenIndex(TOKEN_LIST.findIndex(({address}) => address === selectedPool?.token1.address));
     }
   }, [selectedPool])
+  
+  const {
+    data: balanceToken0,
+  } = useTokenBalance(
+    address,
+    TOKEN_LIST.find(token => selectedPool?.token0.address.toLowerCase() === token.address.toLowerCase())?.address
+  );
+
+  const {
+    data: balanceToken1,
+  } = useTokenBalance(
+    address,
+    TOKEN_LIST.find(token => selectedPool?.token1.address.toLowerCase() === token.address.toLowerCase())?.address
+  );
+
+  useEffect(() => {
+    if (prices) {
+      const result = (BigInt(sliderValue) * balanceToken0) / BigInt(100);
+      const formattedToken0 = Number(ethers.formatUnits(result, selectedPool?.token0.decimals));
+      setInputValueToken0(formattedToken0);
+      const token1Equivalent = (formattedToken0 * prices.priceToken0) / prices.priceToken1;
+
+      const formattedBalanceToken1 = Number(ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals))
+
+      if (token1Equivalent >= formattedBalanceToken1) {
+        setInputValueToken0(formattedBalanceToken1);
+      } else {
+        setInputValueToken1(token1Equivalent);
+      }
+    }
+  }, [prices, sliderValue, balanceToken0, balanceToken1, selectedPool])
 
   return (
     selectedPool && (
@@ -99,7 +142,9 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
                 </Typography>
               </div>
             </div>
-            <div className=" gap-5 py-5 my-5 flex-wrap bg_light_dark min-h-[12rem]"></div>
+            <div className=" gap-5 py-5 my-5 flex flex-wrap items-center justify-center bg_light_dark min-h-[12rem]">
+              <ComingSoon />
+            </div>
             <div className="flex justify-between my-3">
               <div className="flex flex-col items-center gap-4">
                 <Typography>TVL</Typography>
@@ -166,10 +211,10 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
                           "text-start text-white text-2xl h-full border-transparent rounded-none"
                         ),
                       }}
-                      defaultValue={inputValue}
+                      defaultValue={inputValueToken0}
                       hideControls
-                      value={inputValue}
-                      onChange={(value) => setInputValue(value as number)}
+                      value={inputValueToken0}
+                      onChange={(value) => setInputValueToken0(value as number)}
                       allowNegative={false}
                       trimLeadingZeroesOnBlur
                       thousandSeparator
@@ -195,10 +240,10 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
                           "text-start text-white text-2xl h-full border-transparent rounded-none"
                         ),
                       }}
-                      defaultValue={inputValue}
+                      defaultValue={inputValueToken1}
                       hideControls
-                      value={inputValue}
-                      onChange={(value) => setInputValue(value as number)}
+                      value={inputValueToken1}
+                      onChange={(value) => setInputValueToken1(value as number)}
                       allowNegative={false}
                       trimLeadingZeroesOnBlur
                       thousandSeparator
@@ -206,21 +251,27 @@ const PoolDeposit = ({ onBack }: PoolDepositProps) => {
                     />
                   </div>
                   <div className="py-4">
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        defaultValue="50"
-                        className="w-full h-2 bg-[#33E6BF] rounded-lg appearance-none cursor-pointer "
-                      />
+                    <RangeSlider
+                      min={0}
+                      max={100}
+                      value={Number(sliderValue)}
+                      onChange={(e) => setSliderValue(Number(e.target.value))}
+                    />
                   </div>
                   <div className="flex justify-end font-extrabold text-black text-sm">
-                    <Button className="bg_turq">
+                    <Button className="bg_turq" onClick={() => setSliderValue(100)}>
                       <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
                     </Button>
                   </div>
+                  <Button className="w-full mt-4" onClick={() => onDeposit(inputValueToken0, inputValueToken1)}>
+                    <Typography secondary size="xs" fw={700} tt="uppercase">
+                      Deposit
+                    </Typography>
+                  </Button>
                 </div>
-              : <div> WIP </div>
+              : <div>
+                <ComingSoon />
+              </div>
             }
           </div>
         </Card>

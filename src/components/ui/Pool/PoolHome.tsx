@@ -15,7 +15,7 @@ type PoolHomeProps = {
   onNext: () => void;
   onBack: () => void;
   onAdd: () => void;
-  onDeposit: () => void;
+  onDeposit: (token0: number, token1: number) => void;
   onZapOut: () => void;
   onManage: () => void;
 };
@@ -24,17 +24,12 @@ export const PoolHome = ({
   onClaim,
   onNext,
   onBack, 
-  onAdd,
   onDeposit,
   onManage,
   onZapOut,
 }: PoolHomeProps) => {
   const [poolTypes, setPoolTypes] = useState<number>(0);
   const [backOption, setBackOption] = useState(false);
-
-  const showDetailsHandler = () => {
-    setBackOption(!backOption);
-  };
 
   return (
     <>

@@ -3,28 +3,23 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
 import { DUMMY_TABLE_HEAD } from "./dummy";
-import PoolDetail from "./PoolDetail";
 import { useWewePools, WewePool } from "~/hooks/usePool";
 
 import { usePoolContext } from "./PoolContext";
 import PoolDeposit from "./PoolDeposit";
-import { useWewePositions, WewePosition } from "~/hooks/useWewePositions";
 
 type LiquidityProps = {
   setPoolTypes: (number: number) => void;
   poolTypes: number;
   onNext: () => void;
   onBack: () => void;
-  onDeposit: () => void;
+  onDeposit: (token0: number, token1: number) => void;
 };
 
-const Liquidity = ({ setPoolTypes, poolTypes, onBack }: LiquidityProps) => {
+const Liquidity = ({ setPoolTypes, poolTypes, onDeposit }: LiquidityProps) => {
   const [poolDetail, setPoolDetail] = useState();
   const [currentPage, setCurrentPage] = useState("");
   const { setSelectedPool } = usePoolContext();
-  // const handleShowDetails = (value: any) => {
-  //   setPoolDetail(value);
-  // };
 
   useEffect(() => {
     if (poolDetail !== undefined) {
@@ -32,24 +27,12 @@ const Liquidity = ({ setPoolTypes, poolTypes, onBack }: LiquidityProps) => {
     }
   }, [poolDetail]);
   
-  const { data: wewePools } = useWewePools();
-  // const { data: wewePositions } = useWewePositions(wewePools?.wewePools, address)
-
-  const handleHideDetails = () => {
-    setCurrentPage("");
-    setPoolDetail(undefined);
-  };
-
-  const onDeposit = (selectedPool: WewePool) => {
+  const onSelectPoolToDeposit = (selectedPool: WewePool) => {
     setSelectedPool(selectedPool);
     setCurrentPage("deposit");
   };
 
   const { data: pools } = useWewePools();
-  // const handleClaim = (wewePosition: WewePosition, event?: React.MouseEvent<HTMLButtonElement>) => {
-  //   event?.stopPropagation();
-  //   onClaim(wewePosition);
-  // };
 
   return (
     <>
@@ -143,7 +126,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onBack }: LiquidityProps) => {
                       <td className="p-4" align="right">
                         <Button
                           onClick={() =>
-                            onDeposit(wewePool)
+                            onSelectPoolToDeposit(wewePool)
                           }
                           className="w-full md:w-auto min-w-[6rem]"
                         >
@@ -168,7 +151,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onBack }: LiquidityProps) => {
       {/* {currentPage === "pool-details" && (
         <PoolDetail onBack={handleHideDetails} />
       )} */}
-      {currentPage === "deposit" && <PoolDeposit onBack={() => setCurrentPage("")} />}
+      {currentPage === "deposit" && <PoolDeposit onDeposit={onDeposit} onBack={() => setCurrentPage("")} />}
     </>
   );
 };

@@ -3,29 +3,23 @@
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { PoolHome } from "./PoolHome";
-import { PoolAddModal } from "./PoolAddModal";
-import { PoolClaim } from "./PoolClaim";
-import { PoolClaimModal } from "./PoolClaimModal";
 import { PoolZapModal } from "./PoolZapModal";
-import PoolZapIn from "./PoolZapIn";
 import SuccessModal from "./SuccessModal";
 import PoolCreate from "./PoolCreate";
-import PoolsManage from "./PoolsManage";
 import { PoolZapOutModal } from "./PoolZapOutModal";
-import ApproveTokens from "./ApproveTokens";
+import ApproveTokens, { PayloadApproveModal } from "./ApproveTokens";
 import SettingsModal from "./SettingsModal";
 import ClaimedFeesModal from "./ClaimFeesModal";
 import ClaimSuccessModal from "./ClaimSuccessModal";
-import { useRouter } from "next/router";
 import { WewePosition } from "~/hooks/useWewePositions";
 import { useClaimFees } from "~/hooks/useClaimFees";
 import FailedModal from "./FailedModal";
 import { useAccount } from "wagmi";
 
 export const Pool = () => {
-  const router = useRouter();
   const [step, setStep] = useState(0);
   const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
+  const [payloadApprovalModal, setPayloadApprovalModal] = useState<PayloadApproveModal>()
   const [openedZapModal, { open: openZapModal, close: closeZapModal }] =
     useDisclosure(false);
   const [
@@ -91,8 +85,11 @@ export const Pool = () => {
     openZapOutModal();
   };
 
-  const handleApproveTokenModal = () => {
-    closeZapModal();
+  const handleApproveTokenModal = (amountToken0: number, amountToken1: number) => {
+    setPayloadApprovalModal({
+      amountToken0,
+      amountToken1
+    })
     openApproveModal();
   };
 
@@ -125,7 +122,7 @@ export const Pool = () => {
         <PoolHome
           onClaim={handleClaimFeesModal}
           onZapOut={handleZapOutModal}
-          onDeposit={handleZapModal}
+          onDeposit={handleApproveTokenModal}
           onManage={() => setStep(5)}
           onNext={() => setStep(1)}
           onBack={() => setStep(0)} 
@@ -140,7 +137,7 @@ export const Pool = () => {
 
       <PoolZapModal 
         onSettings={handleSettingsModal} 
-        onConfirm={handleApproveTokenModal} 
+        onConfirm={() => {}} 
         opened={openedZapModal} 
         onOpen={handleZapModal} 
         onClose={closeZapModal} 
@@ -154,8 +151,9 @@ export const Pool = () => {
       <ApproveTokens
         onCreate={handleSuccessModal}
         opened={openedApproveModal}
-        onOpen={handleApproveTokenModal}
+        onOpen={() => {}} 
         onClose={closeApproveModal}
+        data={payloadApprovalModal}
       />
       <SuccessModal
         onConfirm={closeSuccessModal}
