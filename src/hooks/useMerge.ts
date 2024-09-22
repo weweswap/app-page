@@ -8,24 +8,6 @@ import { CONTRACT_ADDRESSES } from "~/constants";
 import { ERC20WeweABI, MergeABI } from "~/lib/abis";
 import { erc20Abi } from "viem";
 
-export const useTokenBalance = (
-  address: `0x${string}` | undefined,
-  contractAddress: `0x${string}`
-) => {
-  const { data, isFetching, refetch } = useReadContract({
-    abi: erc20Abi,
-    address: contractAddress,
-    functionName: "balanceOf",
-    args: [address ?? "0x0"],
-  });
-
-  return {
-    data: data ?? 0n,
-    isFetching,
-    refetch,
-  };
-};
-
 export const useQuoteVult = (amount: bigint) => {
   const { data, isFetching } = useReadContract({
     abi: MergeABI,

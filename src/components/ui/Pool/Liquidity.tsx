@@ -1,66 +1,43 @@
+import React, { useEffect } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { Button, Typography } from "~/components/common";
-import LiquidityDetails from "./LiquidityDetails";
-import { useWewePositions, WewePosition } from "~/hooks/useWewePositions";
-import { useAccount } from "wagmi";
-import { useWewePools } from "~/hooks/usePool";
+import { useState } from "react";
+import { Button, Card, Typography } from "~/components/common";
+import { DUMMY_TABLE_HEAD } from "./dummy";
+import { useWewePools, WewePool } from "~/hooks/usePool";
+
+import { usePoolContext } from "./PoolContext";
+import PoolDeposit from "./PoolDeposit";
 
 type LiquidityProps = {
-  onClaim: (wewePosition: WewePosition) => void;
-  onManage: () => void;
   setPoolTypes: (number: number) => void;
   poolTypes: number;
   onNext: () => void;
-  onZapOut: () => void;
+  onBack: () => void;
+  onDeposit: (token0: number, token1: number) => void;
 };
 
-const Liquidity = ({
-  onClaim,
-  onManage,
-  setPoolTypes,
-  poolTypes,
-  onNext,
-  onZapOut,
-}: LiquidityProps) => {
-  const { address } = useAccount();
-  const [poolDetail, setPoolDetail] = useState<WewePosition>();
-  const [showDetails, setShowDetails] = useState<boolean>(false);
-
-  const handleShowDetails = (value: any) => {
-    console.log(showDetails);
-    setPoolDetail(value);
-    console.log(value);
-  };
+const Liquidity = ({ setPoolTypes, poolTypes, onDeposit }: LiquidityProps) => {
+  const [poolDetail, setPoolDetail] = useState();
+  const [currentPage, setCurrentPage] = useState("");
+  const { setSelectedPool } = usePoolContext();
 
   useEffect(() => {
     if (poolDetail !== undefined) {
-      setShowDetails(true);
+      setCurrentPage("pool-details");
     }
   }, [poolDetail]);
   
-  const { data: wewePools } = useWewePools();
-  const { data: wewePositions } = useWewePositions(wewePools?.wewePools, address)
-
-  const handleHideDetails = () => {
-    setShowDetails(false);
-    setPoolDetail(undefined);
+  const onSelectPoolToDeposit = (selectedPool: WewePool) => {
+    setSelectedPool(selectedPool);
+    setCurrentPage("deposit");
   };
 
-  const handleZapOut = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    onZapOut();
-  };
-
-  const handleClaim = (wewePosition: WewePosition, event?: React.MouseEvent<HTMLButtonElement>) => {
-    event?.stopPropagation();
-    onClaim(wewePosition);
-  };
+  const { data: pools } = useWewePools();
 
   return (
     <>
-      {!showDetails ? (
-        <>
+      {currentPage == "" && (
+        <Card className="overflow-x-scroll">
           <div className="flex items-center justify-between w-full gap-6 md:flex-row flex-col">
             <div className="bg_light_dark sm:w-[30rem] w-full flex items-center justify-between gap-3 h-[3rem]">
               <div
@@ -77,224 +54,104 @@ const Liquidity = ({
               </div>
             </div>
           </div>
-          <div className="flex item-center justify-center py-5">
-            {/* <Image src="/img/icons/home.svg" width={150} height={150} alt=""/> */}
-            <div className="w-full flex flex-col">
-              <Typography size="lg">MEMES 1%</Typography>
-              {wewePositions?.wewePositions.map(
-                (wewePosition) => {
-                  return (
-                    <div
-                      onClick={() =>
-                        handleShowDetails(wewePosition)
-                      }
-                      className="bg_dark w-full min-h-[10rem] p-4 hover:bg-[#181818] cursor-pointer"
+          <table className="w-[fit-content] min-w-[100%] table-auto text-left bg_dark mt-5">
+            <thead>
+              <tr>
+                {DUMMY_TABLE_HEAD.map((head) => (
+                  <th key={head} className="bg-blue-gray-50 p-4">
+                    <Typography size="sm" className="leading-none opacity-70">
+                      {head}
+                    </Typography>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <Typography className="px-4 text-sm py-2">MEMES 1%</Typography>
+            <tbody>
+              {pools?.wewePools.map(
+                (wewePool) => (
+                  <>
+                    <tr
+                      key={wewePool.pool}
+                      className="bg-[#1c1c1c] w-[full] cursor-pointer hover:bg-[#202020]"
+                      style={{ borderBottom: "1rem solid black" }}
                     >
-                      <div className="pb-4  flex items-center justify-between gap-3 flex-wrap">
+                      <td className="p-4 font-bold ">
                         <div className="flex items-center gap-2">
                           <div className="flex items-center">
                             <Image
-                              src="/img/tokens/wewe.png"
-                              width={24}
-                              height={24}
+                              className="min-w-6 min-h-6"
+                              src={wewePool.logo.first}
                               alt=""
-                              className="-translate-x-1.5"
+                              width={32}
+                              height={32}
                             />
                             <Image
-                              src="/img/tokens/usdc.png"
-                              className="translate-x-[-12px]"
-                              width={24}
-                              height={24}
+                              className="ml-[-10px] min-w-6 min-h-6"
+                              src={wewePool.logo.second}
                               alt=""
+                              width={32}
+                              height={32}
                             />
                           </div>
-                          <Typography secondary fs="md" tt="uppercase">
-                            {wewePosition.exchangePair}
-                          </Typography>
-                        </div>
-                        <div></div>
-                        <div className="lg:text-right flex flex-col gap-2">
-                          <Typography
-                            size="xs"
-                            ta="center"
-                            className="text_light_gray"
-                          >
-                            SHARES
-                          </Typography>
-                          <Typography
-                            fs="md"
-                            ta="center"
-                            className="font-extrabold"
-                          >
-                            {wewePosition.shares}
-                          </Typography>
-                        </div>
-                        <div className="lg:text-right flex flex-col gap-2">
-                          <Typography
-                            size="xs"
-                            ta="center"
-                            className="text_light_gray"
-                          >
-                            APR
-                          </Typography>
-                          <Typography
-                            fs="md"
-                            ta="center"
-                            className="font-extrabold"
-                          >
-                            {wewePosition.apr}
-                          </Typography>
-                        </div>
-
-                        <div className="text-right flex flex-col gap-2">
-                          <Typography
-                            size="xs"
-                            ta="center"
-                            className="text_light_gray"
-                          >
-                            REWARDS
-                          </Typography>
-                          <Typography
-                            fs="md"
-                            ta="end"
-                            className="font-extrabold"
-                          >
-                            {
-                              new Intl.NumberFormat('en-US', {
-                                style: 'currency',
-                                currency: 'USD',
-                                minimumFractionDigits: 2,
-                              }).format(Number(wewePosition.pendingUsdcReward))
-                            }
-                          </Typography>
-                        </div>
-
-                        <div className="lg:text-right flex flex-col gap-2">
-                          <Typography
-                            size="xs"
-                            ta="center"
-                            className="text_light_gray"
-                          >
-                            TOTAL VALUE
-                          </Typography>
-                          <Typography
-                            fs="md"
-                            ta="center"
-                            className="font-extrabold"
-                          >
-                            {
-                              new Intl.NumberFormat('en-US', {
-                                style: 'currency',
-                                currency: 'USD',
-                                minimumFractionDigits: 2,
-                              }).format(Number(wewePosition.lpValue))
-                            }
-                          </Typography>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1 ">
-                        <div className="flex w-full justify-between items-center">
-                          {/* <Typography
-                            size="xs"
-                            opacity={0.7}
-                            className={`bg_green flex justify-center rounded-full w-[6rem] py-1 `}
-                          >
-                            IN RANGE
-                          </Typography> */}
-                          <div className="flex items-center gap-1">
-                            <Image
-                              src="/img/icons/memes.svg"
-                              width={20}
-                              height={20}
-                              alt=""
-                            />
-                            <Typography size="xs" className="translate-x-1">
-                              MEMES: 1%
-                            </Typography>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            {wewePosition.range === "NARROW" ? (
-                              <Image
-                                src="/img/links/narrow.svg"
-                                width={20}
-                                height={20}
-                                alt=""
-                              />
-                            ) : wewePosition.range === "MID" ? (
-                              <Image
-                                src="/img/links/mid.svg"
-                                width={20}
-                                height={20}
-                                alt=""
-                              />
-                            ) : wewePosition.range === "INFINITY" ? (
-                              <Image
-                                src="/img/icons/Infinity.svg"
-                                width={20}
-                                height={20}
-                                alt=""
-                              />
-                            ) : (
-                              <Image
-                                src="/img/links/wide.svg"
-                                width={20}
-                                height={20}
-                                alt=""
-                              />
-                            )}
-                            <Typography size="xs" className="translate-x-1">
-                              {wewePosition.range}
-                            </Typography>
-                          </div>
-                          {/* <Typography size="xs" opacity={0.7}>
-                            Position ID: {positionId}
-                          </Typography>
                           <Typography size="xs" opacity={0.7}>
-                            {`RANGE: 0.0006900>0.007000`}
-                          </Typography> */}
+                            {wewePool.type}
+                          </Typography>
                         </div>
-                      </div>
-                      <div className="flex items-center justify-end gap-5 py-5 flex-wrap">
+                      </td>
+                      <td className="p-4">
+                        <Typography size="xs" opacity={0.7}>
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                            minimumFractionDigits: 2,
+                          }).format(Number(wewePool.tvl))}
+                        </Typography>
+                      </td>
+                      <td className="p-4">
+                        <Typography size="xs" opacity={0.7}>
+                          {wewePool.range}
+                        </Typography>
+                      </td>
+                      <td className="p-4">
+                        <Typography size="xs" opacity={0.7}>
+                          {wewePool.volume}
+                        </Typography>
+                      </td>
+                      <td className="p-4">
+                        <Typography size="xs" opacity={0.7}>
+                          {wewePool.apr}
+                        </Typography>
+                      </td>
+                      <td className="p-4" align="right">
                         <Button
-                          onClick={handleZapOut}
-                          className="w-full md:w-auto"
+                          onClick={() =>
+                            onSelectPoolToDeposit(wewePool)
+                          }
+                          className="w-full md:w-auto min-w-[6rem]"
                         >
                           <Typography
                             secondary
                             size="xs"
-                            fw={700}
+                            fw="700"
                             tt="uppercase"
                           >
-                            manage
+                            Deposit
                           </Typography>
                         </Button>
-
-                        <Button
-                          onClick={(e) => handleClaim(wewePosition, e)}
-                          className="w-full md:w-auto"
-                        >
-                          <Typography
-                            secondary
-                            size="xs"
-                            fw={700}
-                            tt="uppercase"
-                          >
-                            CLAIM
-                          </Typography>
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                }
+                      </td>
+                    </tr>
+                  </>
+                )
               )}
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <LiquidityDetails onClaim={() => handleClaim(poolDetail!)} onBack={handleHideDetails} />
-        </>
+            </tbody>
+          </table>
+        </Card>
       )}
+      {/* {currentPage === "pool-details" && (
+        <PoolDetail onBack={handleHideDetails} />
+      )} */}
+      {currentPage === "deposit" && <PoolDeposit onDeposit={onDeposit} onBack={() => setCurrentPage("")} />}
     </>
   );
 };

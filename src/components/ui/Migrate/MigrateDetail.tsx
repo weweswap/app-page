@@ -11,13 +11,14 @@ import { ethers, formatEther, formatUnits } from "ethers";
 import { formatPrice, tickToPrice } from "~/utils";
 import { MigrateCompleteModal } from "./MigrateCompleteModal";
 import { useDisclosure } from "@mantine/hooks";
-import { provider, useSafeTransfer } from "~/hooks/useMigrate";
+import { useSafeTransfer } from "~/hooks/useMigrate";
 import { useAccount, useWatchContractEvent } from "wagmi";
 import { Loader } from "@mantine/core";
 import { FailTXModal } from "~/components/common/FailTXModal";
 import { COMMON_POOL_CONTRACT_ABI } from "~/lib/abis/CommonPool";
 import { fetchETHPrice, fetchWEWEPrice } from "~/services";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
+import { provider } from "~/hooks/provider";
 
 type MigrateDetailProps = {
   onBack: () => void;

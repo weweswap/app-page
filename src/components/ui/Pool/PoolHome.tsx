@@ -5,53 +5,62 @@ import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT, DUMMY_POOLS } from "./dummy";
 import PoolBox from "./PoolBox";
 import Link from "next/link";
 import ComingSoon from "~/components/common/ComingSoon";
-import ActivePools from "./ActivePools";
+
 import Liquidity from "./Liquidity";
+import MyShares from "./MyShares";
 import { WewePosition } from "~/hooks/useWewePositions";
 
 type PoolHomeProps = {
   onClaim: (wewePositon: WewePosition) => void;
   onNext: () => void;
+  onBack: () => void;
   onAdd: () => void;
-  onZap: () => void;
+  onDeposit: (token0: number, token1: number) => void;
   onZapOut: () => void;
   onManage: () => void;
 };
 
-export const PoolHome = ({ onClaim, onNext, onAdd, onZap, onManage, onZapOut }: PoolHomeProps) => {
-
-  const [poolTypes, setPoolTypes] = useState<number>(0)
-  const [backOption, setBackOption] = useState(false)
-
-  const showDetailsHandler = () => {
-    setBackOption(!backOption)  
-  }
-
+export const PoolHome = ({
+  onClaim,
+  onNext,
+  onBack, 
+  onDeposit,
+  onManage,
+  onZapOut,
+}: PoolHomeProps) => {
+  const [poolTypes, setPoolTypes] = useState<number>(0);
+  const [backOption, setBackOption] = useState(false);
 
   return (
     <>
-      <div className="w-full flex bg-black p-2 flex-col md:flex-row text-center md:text-start items-center justify-between gap-5" >
+      <div className="w-full flex bg-black p-2 flex-col md:flex-row text-center md:text-start items-center justify-between gap-5">
         <div className="">
           <Typography secondary size="xl" tt="uppercase">
-            <>{backOption ? <span >{"<"}</span> : ""}</>POOLS
+            <>{backOption ? <span>{"<"}</span> : ""}</>POOLS
           </Typography>
         </div>
         <div className="flex sm:flex-row flex-col sm:w-fit w-full gap-5">
-        <Link href="/migrate" className="w-full">
-        <Button className="w-full md:w-auto">
-          <Typography secondary size="xs" fw={700} tt="uppercase" className="mx-4">
-            Migrate
-          </Typography>
-        </Button>
-        </Link>
-        {/* <Button  className="w-full md:w-auto">
+          <Link href="/migrate" className="w-full">
+            <Button className="w-full md:w-auto">
+              <Typography
+                secondary
+                size="xs"
+                fw={700}
+                tt="uppercase"
+                className="mx-4"
+              >
+                Migrate
+              </Typography>
+            </Button>
+          </Link>
+          {/* <Button  className="w-full md:w-auto">
           <Typography secondary size="xs" fw={700} tt="uppercase">
             INCENTIVIZE
           </Typography>
         </Button> */}
         </div>
       </div>
-    {/* <div className="flex items-center justify-between w-full gap-6 md:flex-row flex-col">
+      {/* <div className="flex items-center justify-between w-full gap-6 md:flex-row flex-col">
         <div className="bg_light_dark w-[30rem] flex items-center justify-between gap-3 h-[3rem]">
             <div onClick={() => setPoolTypes(0)} className={`${poolTypes === 0 && "nav_selected"} nav`}>
                 <Typography size="sm">ACTIVE</Typography>
@@ -66,16 +75,27 @@ export const PoolHome = ({ onClaim, onNext, onAdd, onZap, onManage, onZapOut }: 
           </Typography>
           </button> 
     </div> */}
-      {poolTypes === 0
-         && 
-        <ActivePools onDeposit={onZap} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
-      }
-      {poolTypes === 1 
-        &&
+      {poolTypes === 0 && (
+        <Liquidity
+          onDeposit={onDeposit}
+          setPoolTypes={setPoolTypes}
+          poolTypes={poolTypes}
+          onNext={onNext}
+          onBack={onBack}
+        />
+      )}
+      {poolTypes === 1 && (
         <Card>
-            <Liquidity onClaim={onClaim} onZapOut={onZapOut} onManage={onManage} setPoolTypes={setPoolTypes} poolTypes={poolTypes} onNext={onNext} />
-        </Card> 
-      }
+          <MyShares
+            onClaim={onClaim}
+            onZapOut={onZapOut}
+            onManage={onManage}
+            setPoolTypes={setPoolTypes}
+            poolTypes={poolTypes}
+            onNext={onNext}
+          />
+        </Card>
+      )}
     </>
   );
 };

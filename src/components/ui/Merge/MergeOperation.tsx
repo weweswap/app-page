@@ -13,13 +13,13 @@ import { dogica } from "~/fonts";
 import {
   useApproveAndCall,
   useQuoteVult,
-  useTokenBalance,
   useVultBalance,
   useWeweBalance,
 } from "~/hooks";
 import { MergeCompleteModal } from "./MergeCompleteModal";
 import { FailTXModal } from "~/components/common/FailTXModal";
 import { fetchWEWEPrice } from "~/services";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
 
 const MergeOperation = () => {
   const { address } = useAccount();

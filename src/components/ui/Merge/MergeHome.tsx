@@ -12,7 +12,6 @@ import { dogica } from "~/fonts";
 import {
   useApproveAndCall,
   useQuoteVult,
-  useTokenBalance,
   useVultBalance,
   useWeweBalance,
 } from "~/hooks";
@@ -20,6 +19,7 @@ import MergeOperation from "./MergeOperation";
 import RedeemOperation from "./RedeemOperation";
 import BridgeOperation from "./BridgeOperation";
 import { fetchWEWEPrice } from "~/services";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
 
 type MergeHomeProps = {
   onConversion: () => void;
