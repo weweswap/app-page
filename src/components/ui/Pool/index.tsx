@@ -18,8 +18,9 @@ import { useAccount } from "wagmi";
 import PoolDeposit from "./PoolDeposit";
 import PoolDepositModal from "./PoolDepositModal";
 import DepositSuccessModal from "./DepositSuccessModal";
-import WithdrawModal from "./WithdrawModal";
-import WithdrawSuccessModal from "./WithdrawSuccessModal";
+import WithdrawModal, { PayloadWithdrawalModal } from "./WithdrawModal";
+import WithdrawSuccessModal, { PayloadWithdrawalSuccess } from "./WithdrawSuccessModal";
+import { Hex } from "viem";
 
 
 export const Pool = () => {
@@ -27,6 +28,8 @@ export const Pool = () => {
   const [genericHashError, setGenericHashError] = useState<string>()
   const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
   const [payloadApprovalModal, setPayloadApprovalModal] = useState<PayloadApproveModal>()
+  const [payloadWithdrawalModal, setPayloadWithdrawalModal] = useState<PayloadWithdrawalModal>()
+  const [payloadWithdrawalSuccessModal, setPayloadWithdrawalSuccessModal] = useState<PayloadWithdrawalSuccess>()
   const [openedDepositModal,{ open: openDepositModal, close: closeDepositModal }] =
   useDisclosure(false);
   const [openedDepositSuccessModal,{ open: openDepositSuccessModal, close: closeDepositSuccessModal }] =
@@ -123,10 +126,12 @@ export const Pool = () => {
     closeApproveModal()
   }
 
-  const handleErrorApproveTokensModal = (hash?: string | undefined) => {
+  const handleErrorModal = (hash?: string | undefined) => {
     setPayloadApprovalModal(undefined)
+    setPayloadWithdrawalModal(undefined)
     setGenericHashError(hash)
     closeApproveModal()
+    closeWithdrawModal()
     openFailModal()
   }
 
@@ -158,9 +163,21 @@ export const Pool = () => {
     openDepositSuccessModal()
   }
 
-  const handleWithdrawSuccess = () => {
+  const handleWithdrawSuccess = (hash?: Hex) => {
+    setPayloadWithdrawalModal(undefined)
+    setPayloadWithdrawalSuccessModal({hash: hash})
     closeWithdrawModal()
     openWithdrawSuccessModal()
+  }
+
+  const handleWithdrawalModal = (burnAmount: number) => {
+    setPayloadWithdrawalModal({burnAmount})
+    openWithdrawModal()
+  }
+
+  const handleCloseWithdraw = () => {
+    setPayloadWithdrawalModal(undefined)
+    closeWithdrawModal()
   }
 
   return (
@@ -170,6 +187,7 @@ export const Pool = () => {
           onClaim={handleClaimFeesModal}
           onZapOut={handleZapOutModal}
           onDeposit={handleApproveTokenModal}
+          onWithdraw={handleWithdrawalModal}
           onManage={() => setStep(5)}
           onNext={() => setStep(1)}
           onBack={() => setStep(0)} 
@@ -191,20 +209,12 @@ export const Pool = () => {
         onClose={() => closeDepositModal()}
         onDepositSuccess={() => handleDepositSuccess()}
       />
-
-      <WithdrawModal 
-        opened={openedWithdrawModal}
-        onOpen={() => openWithdrawModal()}
-        onClose={() => closeWithdrawModal()}
-        onWithdrawSuccess={handleWithdrawSuccess}
-      />
-
       <WithdrawSuccessModal
-      opened={openedWithdrawSuccessModal}
-      onOpen={() => openWithdrawSuccessModal()}
-      onClose={() => closeWithdrawSuccessModal()}
+        opened={openedWithdrawSuccessModal}
+        onOpen={() => openWithdrawSuccessModal()}
+        onClose={() => closeWithdrawSuccessModal()}
+        data={payloadWithdrawalSuccessModal}
       />
-
       <PoolZapModal 
         onSettings={handleSettingsModal} 
         onConfirm={() => {}} 
@@ -239,12 +249,24 @@ export const Pool = () => {
       />
 
       {
+        payloadWithdrawalModal &&
+        <WithdrawModal 
+          opened={openedWithdrawModal}
+          onOpen={() => {}}
+          onClose={handleCloseWithdraw}
+          onWithdrawSuccess={handleWithdrawSuccess}
+          onTxError={handleErrorModal}
+          data={payloadWithdrawalModal}
+        />
+      }
+
+      {
         payloadApprovalModal &&
         <ApproveTokens
           opened={openedApproveModal}
           onOpen={() => {}} 
           onClose={handleCloseApproveTokensModal}
-          onTxError={handleErrorApproveTokensModal}
+          onTxError={handleErrorModal}
           data={payloadApprovalModal}
         />
       }

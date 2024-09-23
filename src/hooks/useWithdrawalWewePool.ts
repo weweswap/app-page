@@ -1,14 +1,11 @@
 import { useWriteContract } from "wagmi";
-import { WewePool } from "./usePool";
 import { Hex } from "viem";
-import { ethers } from "ethers";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { CONTRACT_ADDRESSES } from "~/constants";
-import ArrakisResolverABI from "~/lib/abis/ArrakisResolver";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { provider } from "./provider";
+import { useState } from "react";
 
 export function useWithdrawalWewePool () {
+    const [ pendingToConfirm, setPendingToConfirm ] = useState(false)
     const {
         data: hash,
         isPending: isTxCreating,
@@ -22,13 +19,16 @@ export function useWithdrawalWewePool () {
           functionName: "burn",
           args: [burnAmount, receiver],
         });
+        setPendingToConfirm(true)
         const receipt = await provider.waitForTransaction(tx);
+        setPendingToConfirm(false)
         return receipt;
     };
     return {
         hash: hash,
         isPending: isTxCreating,
         isError: isCreationError,
+        isConfirming: pendingToConfirm,
         withdrawal,
     };
 }

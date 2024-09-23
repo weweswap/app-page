@@ -16,6 +16,7 @@ type PoolHomeProps = {
   onBack: () => void;
   onAdd: () => void;
   onDeposit: (token0: number, token1: number) => void;
+  onWithdraw: (sharesAmount: number) => void;
   onZapOut: () => void;
   onManage: () => void;
 };
@@ -25,6 +26,7 @@ export const PoolHome = ({
   onNext,
   onBack, 
   onDeposit,
+  onWithdraw,
   onManage,
   onZapOut,
 }: PoolHomeProps) => {
@@ -78,6 +80,7 @@ export const PoolHome = ({
       {poolTypes === 0 && (
         <Liquidity
           onDeposit={onDeposit}
+          onWithdraw={onWithdraw}
           setPoolTypes={setPoolTypes}
           poolTypes={poolTypes}
           onNext={onNext}
