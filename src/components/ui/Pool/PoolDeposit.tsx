@@ -6,7 +6,7 @@ import { usePoolContext } from "./PoolContext";
 import { Divider, NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import { dogica } from "~/fonts";
-import { TOKEN_LIST } from "~/constants";
+import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
 import RangeSlider from "~/components/common/RangeSlider";
@@ -17,13 +17,14 @@ import ComingSoon from "~/components/common/ComingSoon";
 type PoolDepositProps = {
   onBack: () => void;
   onDeposit: (token0: number, token1: number) => void;
-  onWithdraw: () => void;
+  onWithdraw: (sharesAmount: number) => void;
 };
 
 const PoolDeposit = ({ onBack, onDeposit, onWithdraw }: PoolDepositProps) => {
   const { selectedPool } = usePoolContext();
   const [selectedAction, setSelectedAction] = useState("deposit");
   const [sliderValue, setSliderValue] = useState<number>(50);
+  const [formattedShares, setFormattedShares] = useState<number>(0);
   const [inputValueToken0, setInputValueToken0] = useState<number>(0);
   const [inputValueToken1, setInputValueToken1] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
@@ -55,19 +56,31 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw }: PoolDepositProps) => {
     TOKEN_LIST.find(token => selectedPool?.token1.address.toLowerCase() === token.address.toLowerCase())?.address
   );
 
+  const {
+    data: balanceShares,
+    refetch: refechShares,
+  } = useTokenBalance(
+    address,
+    selectedPool?.address
+  );
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       refechToken1Balance()
       refechToken0Balance()
+      refechShares()
     }, 5000);
     return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
     if (prices) {
-      const result = (BigInt(sliderValue) * balanceToken0) / BigInt(100);
-      const formattedToken0 = Number(ethers.formatUnits(result, selectedPool?.token0.decimals));
+      const resultToken0 = (BigInt(sliderValue) * balanceToken0) / BigInt(100);
+      const resultShares = (BigInt(sliderValue) * balanceShares) / BigInt(100);
+      const formattedToken0 = Number(ethers.formatUnits(resultToken0, selectedPool?.token0.decimals));
+      const formattedShares = Number(ethers.formatUnits(resultShares, 18));
       setInputValueToken0(formattedToken0);
+      setFormattedShares(formattedShares);
       const token1Equivalent = (formattedToken0 * prices.priceToken0) / prices.priceToken1;
 
       const formattedBalanceToken1 = Number(ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals))
@@ -124,9 +137,7 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw }: PoolDepositProps) => {
                 </Typography>
                 <Typography size="lg" className="font-extrabold">
                   {selectedPool.apr}%
-                  %
                 </Typography>
-                ap%
               </div>
             </div>
             <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1 ">
@@ -164,12 +175,10 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw }: PoolDepositProps) => {
               <div className="flex flex-col items-center gap-4">
                 <Typography>TVL</Typography>
                 <Typography>$ {Number(selectedPool.tvl).toFixed(2)}</Typography>
-                <Typography>$345</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography>VOLUME</Typography>
                 <Typography>$ {selectedPool.volume}</Typography>
-                <Typography>$345</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography>INCENTIVES</Typography>
@@ -306,28 +315,28 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw }: PoolDepositProps) => {
                   </Button>
                 </div>
               : <div className="mt-5">
-                {/* <ComingSoon /> */}
                 <Typography>Withdraw amount</Typography>
-
                 <div className="bg_gray p-2 my-3 flex items-center gap-4">
-                <Dropdown
-                      value={TOKEN_LIST[secondaryTokenIndex].address}
-                      options={TOKEN_LIST.map((token, index) => ({
-                        value: token.address,
-                        icon: token.icon,
-                        text: token.symbol,
-                        index: index
-                      }))}
-                      className="md:col-span-3 col-span-6 w-fit"
-                      disabled
-                    />
-                    <Typography size="lg">
-                      0
-                    </Typography>
+                  <Dropdown
+                    value={selectedPool.address}
+                    options={[
+                      {
+                        value: selectedPool.address,
+                        icon: '/img/tokens/shares.png',
+                        text: 'SHARES',
+                        index: 0
+                      }
+                    ]}
+                    className="md:col-span-3 col-span-6 w-fit"
+                    disabled
+                  />
+                  <Typography size="lg">
+                    {formattedShares}
+                  </Typography>
                 </div>
                 <div className="flex items-center justify-center gap-2 py-3">
                     <Image alt="" src="/img/icons/wallet.svg" width={24} height={24} />
-                      <Typography size="xs" className="text_light_gray">102.00 SHARES</Typography>
+                    <Typography size="xs" className="text_light_gray">{ethers.formatUnits(balanceShares.toString(), 18)} SHARES</Typography>
                 </div>
                 <div className="py-4">
                     <RangeSlider
@@ -345,7 +354,7 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw }: PoolDepositProps) => {
                       <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
                     </Button>
                   </div>
-                  <Button onClick={() => onWithdraw()} className="w-full mt-5 mb-2">
+                  <Button onClick={() => onWithdraw(formattedShares)} className="w-full mt-5 mb-2">
                     <Typography secondary>
                       WITHDRAW
                     </Typography>
