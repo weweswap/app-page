@@ -151,7 +151,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit }: LiquidityProps) => {
       {/* {currentPage === "pool-details" && (
         <PoolDetail onBack={handleHideDetails} />
       )} */}
-      {currentPage === "deposit" && <PoolDeposit onDeposit={onDeposit} onBack={() => setCurrentPage("")} />}
+      {currentPage === "deposit" && <PoolDeposit onWithdraw={()=> {}} onDeposit={onDeposit} onBack={() => setCurrentPage("")} />}
     </>
   );
 };
