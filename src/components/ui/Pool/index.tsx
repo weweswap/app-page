@@ -18,6 +18,8 @@ import { useAccount } from "wagmi";
 import PoolDeposit from "./PoolDeposit";
 import PoolDepositModal from "./PoolDepositModal";
 import DepositSuccessModal from "./DepositSuccessModal";
+import WithdrawModal from "./WithdrawModal";
+import WithdrawSuccessModal from "./WithdrawSuccessModal";
 
 
 export const Pool = () => {
@@ -28,6 +30,11 @@ export const Pool = () => {
   const [openedDepositModal,{ open: openDepositModal, close: closeDepositModal }] =
   useDisclosure(false);
   const [openedDepositSuccessModal,{ open: openDepositSuccessModal, close: closeDepositSuccessModal }] =
+  useDisclosure(false);
+
+  const [openedWithdrawModal,{ open: openWithdrawModal, close: closeWithdrawModal }] =
+  useDisclosure(false);
+  const [openedWithdrawSuccessModal,{ open: openWithdrawSuccessModal, close: closeWithdrawSuccessModal }] =
   useDisclosure(false);
   const [openedZapModal, { open: openZapModal, close: closeZapModal }] =
     useDisclosure(false);
@@ -151,6 +158,11 @@ export const Pool = () => {
     openDepositSuccessModal()
   }
 
+  const handleWithdrawSuccess = () => {
+    closeWithdrawModal()
+    openWithdrawSuccessModal()
+  }
+
   return (
     <>
       {step === 0 && (
@@ -168,7 +180,7 @@ export const Pool = () => {
         <PoolCreate onBack={() => setStep(0)} onNext={handleAdd} />
       )}
       {step === 2 && (
-        <PoolDeposit onBack={() => setStep(0)} onDeposit={handleDepositModal} />
+        <PoolDeposit onWithdraw={() => openWithdrawModal()} onBack={() => setStep(0)} onDeposit={handleDepositModal} />
       )}
       {/* {step === 2 && ( <PoolZapIn onBack={() => setStep(1)} onZap={handleZapModal} />)} */}
       {/* {step === 4 && (<SuccessModal onConfirm={handleAdd} />)} */}
@@ -178,6 +190,19 @@ export const Pool = () => {
         onOpen={() => openDepositModal()} 
         onClose={() => closeDepositModal()}
         onDepositSuccess={() => handleDepositSuccess()}
+      />
+
+      <WithdrawModal 
+        opened={openedWithdrawModal}
+        onOpen={() => openWithdrawModal()}
+        onClose={() => closeWithdrawModal()}
+        onWithdrawSuccess={handleWithdrawSuccess}
+      />
+
+      <WithdrawSuccessModal
+      opened={openedWithdrawSuccessModal}
+      onOpen={() => openWithdrawSuccessModal()}
+      onClose={() => closeWithdrawSuccessModal()}
       />
 
       <PoolZapModal 

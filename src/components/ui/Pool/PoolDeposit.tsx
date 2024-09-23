@@ -17,9 +17,10 @@ import ComingSoon from "~/components/common/ComingSoon";
 type PoolDepositProps = {
   onBack: () => void;
   onDeposit: (token0: number, token1: number) => void;
+  onWithdraw: () => void;
 };
 
-const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
+const PoolDeposit = ({ onBack, onDeposit, onWithdraw }: PoolDepositProps) => {
   const { selectedPool } = usePoolContext();
   const [selectedAction, setSelectedAction] = useState("deposit");
   const [sliderValue, setSliderValue] = useState<number>(50);
@@ -113,6 +114,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                   tt="uppercase"
                 >
                   {selectedPool.type}
+                  Type
                 </Typography>
               </div>
               <div></div>
@@ -122,6 +124,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                 </Typography>
                 <Typography size="lg" className="font-extrabold">
                   {selectedPool.apr}%
+                  %
                 </Typography>
                 ap%
               </div>
@@ -136,6 +139,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                 />
                 <Typography size="xs" className="translate-x-1">
                   {selectedPool.address}
+                  hell
                 </Typography>
               </div>
               <div className="flex items-center gap-1">
@@ -212,16 +216,16 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                         text: token.symbol,
                         index: index
                       }))}
-                      className="md:col-span-2 col-span-6"
+                      className="md:col-span-3 col-span-6"
                       disabled
                     />
                     <NumberInput
                       classNames={{
-                        root: "md:col-span-3 col-span-6 h-full",
+                        root: "md:col-span-2 col-span-6 h-full",
                         wrapper: "h-full",
                         input: clsx(
                           dogica.className,
-                          "text-start text-white text-2xl h-full border-transparent rounded-none"
+                          "text-start text-white text-xl h-full border-transparent rounded-none"
                         ),
                       }}
                       defaultValue={inputValueToken0}
@@ -244,16 +248,16 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                         text: token.symbol,
                         index: index
                       }))}
-                      className="md:col-span-2 col-span-6"
+                      className="md:col-span-3 col-span-6"
                       disabled
                     />
                     <NumberInput
                       classNames={{
-                        root: "md:col-span-3 col-span-6 h-full",
+                        root: "md:col-span-2 col-span-6 h-full",
                         wrapper: "h-full",
                         input: clsx(
                           dogica.className,
-                          "text-start text-white text-2xl h-full border-transparent rounded-none"
+                          "text-start text-white text-xl h-full border-transparent rounded-none"
                         ),
                       }}
                       defaultValue={inputValueToken1}
@@ -285,7 +289,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                   </div>
                   </div>
                   <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
-                    <Button className="bg_turq">
+                    <Button className="bg_turq" onClick={() => setSliderValue(50)}>
                       <Typography secondary size="xs" fw={700} tt="uppercase">50%</Typography>
                     </Button>
                     <Button className="bg_turq" onClick={() => setSliderValue(100)}>
@@ -301,8 +305,51 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                     </Typography>
                   </Button>
                 </div>
-              : <div>
-                <ComingSoon />
+              : <div className="mt-5">
+                {/* <ComingSoon /> */}
+                <Typography>Withdraw amount</Typography>
+
+                <div className="bg_gray p-2 my-3 flex items-center gap-4">
+                <Dropdown
+                      value={TOKEN_LIST[secondaryTokenIndex].address}
+                      options={TOKEN_LIST.map((token, index) => ({
+                        value: token.address,
+                        icon: token.icon,
+                        text: token.symbol,
+                        index: index
+                      }))}
+                      className="md:col-span-3 col-span-6 w-fit"
+                      disabled
+                    />
+                    <Typography size="lg">
+                      0
+                    </Typography>
+                </div>
+                <div className="flex items-center justify-center gap-2 py-3">
+                    <Image alt="" src="/img/icons/wallet.svg" width={24} height={24} />
+                      <Typography size="xs" className="text_light_gray">102.00 SHARES</Typography>
+                </div>
+                <div className="py-4">
+                    <RangeSlider
+                      min={0}
+                      max={100}
+                      value={Number(sliderValue)}
+                      onChange={(e) => setSliderValue(Number(e.target.value))}
+                    />
+                  </div>
+                  <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
+                    <Button className="bg_turq" onClick={() => setSliderValue(50)}>
+                      <Typography secondary size="xs" fw={700} tt="uppercase">50%</Typography>
+                    </Button>
+                    <Button className="bg_turq" onClick={() => setSliderValue(100)}>
+                      <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
+                    </Button>
+                  </div>
+                  <Button onClick={() => onWithdraw()} className="w-full mt-5 mb-2">
+                    <Typography secondary>
+                      WITHDRAW
+                    </Typography>
+                  </Button>
               </div>
             }
           </div>
