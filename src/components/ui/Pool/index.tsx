@@ -15,12 +15,20 @@ import { WewePosition } from "~/hooks/useWewePositions";
 import { useClaimFees } from "~/hooks/useClaimFees";
 import FailedModal from "./FailedModal";
 import { useAccount } from "wagmi";
+import PoolDeposit from "./PoolDeposit";
+import PoolDepositModal from "./PoolDepositModal";
+import DepositSuccessModal from "./DepositSuccessModal";
+
 
 export const Pool = () => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(2);
   const [genericHashError, setGenericHashError] = useState<string>()
   const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
   const [payloadApprovalModal, setPayloadApprovalModal] = useState<PayloadApproveModal>()
+  const [openedDepositModal,{ open: openDepositModal, close: closeDepositModal }] =
+  useDisclosure(false);
+  const [openedDepositSuccessModal,{ open: openDepositSuccessModal, close: closeDepositSuccessModal }] =
+  useDisclosure(false);
   const [openedZapModal, { open: openZapModal, close: closeZapModal }] =
     useDisclosure(false);
   const [
@@ -134,6 +142,15 @@ export const Pool = () => {
     closeFailModal()
   }
 
+  const handleDepositModal = () => {
+    openDepositModal()
+  }
+
+  const handleDepositSuccess = () => {
+    closeDepositModal()
+    openDepositSuccessModal()
+  }
+
   return (
     <>
       {step === 0 && (
@@ -150,8 +167,18 @@ export const Pool = () => {
       {step === 1 && (
         <PoolCreate onBack={() => setStep(0)} onNext={handleAdd} />
       )}
+      {step === 2 && (
+        <PoolDeposit onBack={() => setStep(0)} onDeposit={handleDepositModal} />
+      )}
       {/* {step === 2 && ( <PoolZapIn onBack={() => setStep(1)} onZap={handleZapModal} />)} */}
       {/* {step === 4 && (<SuccessModal onConfirm={handleAdd} />)} */}
+
+      <PoolDepositModal 
+        opened={openedDepositModal} 
+        onOpen={() => openDepositModal()} 
+        onClose={() => closeDepositModal()}
+        onDepositSuccess={() => handleDepositSuccess()}
+      />
 
       <PoolZapModal 
         onSettings={handleSettingsModal} 
@@ -207,6 +234,10 @@ export const Pool = () => {
           }}
         />
       )}
+
+      <DepositSuccessModal opened={openedDepositSuccessModal}
+       onClose={closeDepositSuccessModal}  />
+      
       <FailedModal
         hash={hash! || genericHashError}
         opened={openedFailModal}

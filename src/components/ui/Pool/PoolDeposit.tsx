@@ -83,7 +83,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
     selectedPool && (
       <>
         <Card>
-          <div className=" w-full min-h-[10rem]">
+          <div className=" w-full min-h-[10rem] ">
             <div className="sm:py-4  flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2">
                 <button onClick={onBack}>
@@ -123,6 +123,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                 <Typography size="lg" className="font-extrabold">
                   {selectedPool.apr}%
                 </Typography>
+                ap%
               </div>
             </div>
             <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1 ">
@@ -155,14 +156,16 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
             <div className=" gap-5 py-5 my-5 flex flex-wrap items-center justify-center bg_light_dark min-h-[12rem]">
               <ComingSoon />
             </div>
-            <div className="flex justify-between my-3">
+            <div className="flex justify-between my-3 gap-4">
               <div className="flex flex-col items-center gap-4">
                 <Typography>TVL</Typography>
                 <Typography>$ {Number(selectedPool.tvl).toFixed(2)}</Typography>
+                <Typography>$345</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography>VOLUME</Typography>
                 <Typography>$ {selectedPool.volume}</Typography>
+                <Typography>$345</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography>INCENTIVES</Typography>
@@ -209,7 +212,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                         text: token.symbol,
                         index: index
                       }))}
-                      className="md:col-span-3 col-span-6"
+                      className="md:col-span-2 col-span-6"
                       disabled
                     />
                     <NumberInput
@@ -230,6 +233,9 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                       thousandSeparator
                       decimalScale={6}
                     />
+                    <button className="md:col-span-2 col-span-12 flex justify-center">
+                      <Image src="/img/icons/swapwewe.svg" alt="" width={36} height={36} />
+                    </button>
                     <Dropdown
                       value={TOKEN_LIST[secondaryTokenIndex].address}
                       options={TOKEN_LIST.map((token, index) => ({
@@ -238,7 +244,7 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                         text: token.symbol,
                         index: index
                       }))}
-                      className="md:col-span-3 col-span-6"
+                      className="md:col-span-2 col-span-6"
                       disabled
                     />
                     <NumberInput
@@ -268,7 +274,20 @@ const PoolDeposit = ({ onBack, onDeposit }: PoolDepositProps) => {
                       onChange={(e) => setSliderValue(Number(e.target.value))}
                     />
                   </div>
-                  <div className="flex justify-end font-extrabold text-black text-sm">
+                  <div className="flex items-center justify-evenly text_light_gray">
+                  <div className="flex items-center gap-2">
+                    <Image alt="" src="/img/icons/wallet.svg" width={24} height={24} />
+                      <Typography size="xs">100 WEWE</Typography>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Image alt="" src="/img/icons/wallet.svg" width={24} height={24} />
+                      <Typography size="xs">2.78 USDC</Typography>
+                  </div>
+                  </div>
+                  <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
+                    <Button className="bg_turq">
+                      <Typography secondary size="xs" fw={700} tt="uppercase">50%</Typography>
+                    </Button>
                     <Button className="bg_turq" onClick={() => setSliderValue(100)}>
                       <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
                     </Button>

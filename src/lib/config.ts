@@ -39,7 +39,7 @@ export const config = createConfig({
   transports: {
     [base.id]: fallback([
       http(process.env.NEXT_PUBLIC_RPC_URL),
-      webSocket(process.env.NEXT_PUBLIC_RPC_URL!.replace('https://', 'wss://'))
+      webSocket(process.env.NEXT_PUBLIC_RPC_URL!?.replace('https://', 'wss://'))
     ]),
   },
 });
