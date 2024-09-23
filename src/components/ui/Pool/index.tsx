@@ -163,9 +163,9 @@ export const Pool = () => {
     openDepositSuccessModal()
   }
 
-  const handleWithdrawSuccess = (hash: Hex) => {
+  const handleWithdrawSuccess = (hash?: Hex) => {
     setPayloadWithdrawalModal(undefined)
-    setPayloadWithdrawalSuccessModal({hash})
+    setPayloadWithdrawalSuccessModal({hash: hash})
     closeWithdrawModal()
     openWithdrawSuccessModal()
   }

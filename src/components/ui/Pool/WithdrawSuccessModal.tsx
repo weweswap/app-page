@@ -8,7 +8,7 @@ import { Hex } from "viem";
 import { ethers } from "ethers";
 
 export type PayloadWithdrawalSuccess = {
-  hash: Hex
+  hash?: Hex
 }
 
 type WithdrawSuccessModalProps = {
