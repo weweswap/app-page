@@ -21,7 +21,7 @@ import DepositSuccessModal from "./DepositSuccessModal";
 
 
 export const Pool = () => {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(0);
   const [genericHashError, setGenericHashError] = useState<string>()
   const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
   const [payloadApprovalModal, setPayloadApprovalModal] = useState<PayloadApproveModal>()
