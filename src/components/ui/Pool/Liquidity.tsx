@@ -32,10 +32,6 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit }: LiquidityProps) => {
     setCurrentPage("deposit");
   };
 
-  const handleDeposit = () => {
-    
-  }
-
   const { data: pools } = useWewePools();
 
   return (
@@ -148,21 +144,6 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit }: LiquidityProps) => {
                   </>
                 )
               )}
-                 <Button
-                          onClick={() =>
-                            handleDeposit()
-                          }
-                          className="w-full md:w-auto min-w-[6rem]"
-                        >
-                          <Typography
-                            secondary
-                            size="xs"
-                            fw="700"
-                            tt="uppercase"
-                          >
-                            Deposit
-                          </Typography>
-                        </Button>
             </tbody>
           </table>
         </Card>
