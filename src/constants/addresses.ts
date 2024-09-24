@@ -11,6 +11,7 @@ export const CONTRACT_ADDRESSES = {
   weweVaultFactory: "0x27CaAE96101c86E10aB85C393aE236C895C464aF" as `0x${string}`,
   weweVault: "0x6bAffADA267Ef0FbdDEFc05592271bED9a0B4a5E" as `0x${string}`,
   wethAddress: "0x4200000000000000000000000000000000000006" as `0x${string}`,
+  quoter: "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a" as `0x${string}`,
   wethWeweContract:
     "0x5E9BB3d7682A9537DB831060176C4247aB80D1Ec" as `0x${string}`,
   wethUsdcContract:
