@@ -91,7 +91,7 @@ export function useWewePools(): UseQueryResult<
       const poolAddresses: string[] = [];
 
       for (let key in weweVaults) {
-        if (weweVaults.hasOwnProperty(key)) {
+        if (Object.hasOwn(weweVaults, key)) {
           poolAddresses.push(weweVaults[key]);
         }
       }
@@ -117,7 +117,7 @@ export function useWewePools(): UseQueryResult<
       );
 
       for (let key in weweVaults) {
-        if (weweVaults.hasOwnProperty(key)) {
+        if (Object.hasOwn(weweVaults, key)) {
           const vaultAddress = weweVaults[key];
           const arrakisVault = new ethers.Contract(
             vaultAddress,
@@ -146,7 +146,10 @@ export function useWewePools(): UseQueryResult<
             (apr) => apr.address.toLowerCase() === vaultAddress.toLowerCase()
           );
 
-          const feeApr = aprData ? aprData.feeApr.toFixed(2) : "0.00";
+          const feeApr =
+            aprData && typeof aprData.feeApr === "number"
+              ? aprData.feeApr.toFixed(2)
+              : "0.00";
 
           wewePools.push({
             address: weweVaults[key],
