@@ -155,7 +155,6 @@ export const Pool = () => {
           onClaim={handleClaimFeesModal}
           onDeposit={handleApproveTokenModal}
           onWithdraw={handleWithdrawalModal}
-          onManage={() => setStep(5)}
           onNext={() => setStep(1)}
           onBack={() => setStep(0)} 
           onAdd={openAdd}
