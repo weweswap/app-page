@@ -18,15 +18,9 @@ type LiquidityProps = {
 };
 
 const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: LiquidityProps) => {
-  const [poolDetail, setPoolDetail] = useState();
   const [currentPage, setCurrentPage] = useState("");
   const { setSelectedPool } = usePoolContext();
 
-  useEffect(() => {
-    if (poolDetail !== undefined) {
-      setCurrentPage("pool-details");
-    }
-  }, [poolDetail]);
   
   const onSelectPoolToDeposit = (selectedPool: WewePool) => {
     setSelectedPool(selectedPool);

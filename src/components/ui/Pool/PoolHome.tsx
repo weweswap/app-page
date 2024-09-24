@@ -1,10 +1,6 @@
-import Image from "next/image";
 import { useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
-import { DUMMY_TABLE_HEAD, DUMMY_TABLE_CONTENT, DUMMY_POOLS } from "./dummy";
-import PoolBox from "./PoolBox";
 import Link from "next/link";
-import ComingSoon from "~/components/common/ComingSoon";
 
 import Liquidity from "./Liquidity";
 import MyShares from "./MyShares";
@@ -17,8 +13,6 @@ type PoolHomeProps = {
   onAdd: () => void;
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: number) => void;
-  onZapOut: () => void;
-  onManage: () => void;
 };
 
 export const PoolHome = ({
@@ -27,8 +21,6 @@ export const PoolHome = ({
   onBack, 
   onDeposit,
   onWithdraw,
-  onManage,
-  onZapOut,
 }: PoolHomeProps) => {
   const [poolTypes, setPoolTypes] = useState<number>(0);
   const [backOption, setBackOption] = useState(false);
@@ -88,16 +80,13 @@ export const PoolHome = ({
         />
       )}
       {poolTypes === 1 && (
-        <Card>
-          <MyShares
-            onClaim={onClaim}
-            onZapOut={onZapOut}
-            onManage={onManage}
-            setPoolTypes={setPoolTypes}
-            poolTypes={poolTypes}
-            onNext={onNext}
-          />
-        </Card>
+        <MyShares
+          onClaim={onClaim}
+          onWithdraw={onWithdraw}
+          onDeposit={onDeposit}
+          setPoolTypes={setPoolTypes}
+          poolTypes={poolTypes}
+        />
       )}
     </>
   );

@@ -4,43 +4,33 @@ import { Button, Card, Typography } from "~/components/common";
 import MySharesDetails from "./MySharesDetails";
 import { useWewePositions, WewePosition } from "~/hooks/useWewePositions";
 import { useAccount } from "wagmi";
-import { useWewePools } from "~/hooks/usePool";
+import { useWewePools, WewePool } from "~/hooks/usePool";
+import PoolDetail from "./PoolDetail";
+import PoolDeposit from "./PoolDeposit";
+import { usePoolContext } from "./PoolContext";
 
 type MySharesProps = {
   onClaim: (wewePositon: WewePosition) => void;
-  onManage: () => void;
+  onDeposit: (token0: number, token1: number) => void;
+  onWithdraw: (sharesAmount: number) => void;
   setPoolTypes: (number: number) => void;
   poolTypes: number;
-  onNext: () => void;
-  onZapOut: () => void;
 };
 
 const MyShares = ({
   onClaim,
-  onManage,
+  onDeposit,
+  onWithdraw,
   setPoolTypes,
   poolTypes,
-  onNext,
-  onZapOut,
 }: MySharesProps) => {
-  const [poolDetail, setPoolDetail] = useState();
-  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState("");
+  const { setSelectedPosition, setSelectedPool } = usePoolContext();
 
-  const handleShowDetails = (value: any) => {
-    console.log(showDetails);
-    setPoolDetail(value);
-    console.log(value);
-  };
-
-  useEffect(() => {
-    if (poolDetail !== undefined) {
-      setShowDetails(true);
-    }
-  }, [poolDetail]);
-
-  const handleHideDetails = () => {
-    setShowDetails(false);
-    setPoolDetail(undefined);
+  const handleShowDetails = (position: WewePosition) => {
+    setSelectedPosition(position)
+    setSelectedPool(wewePools?.wewePools.find(pool => pool.address.toLowerCase() === position.wewePoolAddress.toLowerCase()))
+    setCurrentPage("manage")
   };
 
   const handleClaim = (wewePosition: WewePosition, event?: React.MouseEvent<HTMLButtonElement>) => {
@@ -58,8 +48,8 @@ const MyShares = ({
 
   return (
     <>
-      {!showDetails ? (
-        <>
+      {currentPage == "" && (
+        <Card>
           <div className="flex items-center justify-between w-full gap-6 md:flex-row flex-col">
             <div className="bg_light_dark sm:w-[30rem] w-full flex items-center justify-between gap-3 h-[3rem]">
               <div
@@ -288,12 +278,9 @@ const MyShares = ({
               )}
             </div>
           </div>
-        </>
-      ) : (
-        <>
-          <MySharesDetails onClaim={() => handleClaim(poolDetail!)} onBack={handleHideDetails} />
-        </>
+        </Card>
       )}
+      {currentPage === "manage" && <PoolDeposit enableClaimBlock onClaim={onClaim} onWithdraw={onWithdraw} onDeposit={onDeposit} onBack={() => setCurrentPage("")} />}
     </>
   );
 };
