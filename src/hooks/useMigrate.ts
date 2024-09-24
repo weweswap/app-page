@@ -10,7 +10,7 @@ import { NonFungiblePositionManagerAbi } from "~/lib/abis/NonFungiblePositionMan
 import { Position, TokenItem } from "~/models";
 import { provider } from "./provider";
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import IQuoterABI from '@uniswap/v3-periphery/artifacts/contracts/interfaces/IQuoter.sol/IQuoter.json';
+import IQuoterABI from '@uniswap/v3-periphery/artifacts/contracts/interfaces/IQuoterV2.sol/IQuoterV2.json';
 
 import { Token } from '@uniswap/sdk-core';
 import { computePoolAddress, Pool, Route } from "@uniswap/v3-sdk";
@@ -188,40 +188,40 @@ export async function getMinAmount(tokenIn?: TokenItem, tokenOut?: TokenItem) {
   const tokenInUni = new Token(8453, tokenIn.address, tokenIn.decimals, tokenIn.symbol, "");
   const tokenOutUni = new Token(8453, tokenOut.address, tokenOut.decimals, tokenOut.symbol, "");
 
-  const currentPoolAddress = computePoolAddress({
-    factoryAddress: "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
-    tokenA: tokenInUni,
-    tokenB: tokenOutUni,
-    fee: 10000,
-  })
+  // const currentPoolAddress = computePoolAddress({
+  //   factoryAddress: "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
+  //   tokenA: tokenInUni,
+  //   tokenB: tokenOutUni,
+  //   fee: 10000,
+  // })
 
-  const poolContract = new ethers.Contract(
-    currentPoolAddress,
-    IUniswapV3PoolABI.abi,
-    provider
-  )
-  const [token0, token1, fee] = await Promise.all([
-    poolContract.token0(),
-    poolContract.token1(),
-    poolContract.fee(),
-  ])
+  // const poolContract = new ethers.Contract(
+  //   currentPoolAddress,
+  //   IUniswapV3PoolABI.abi,
+  //   provider
+  // )
+  // const [token0, token1, fee] = await Promise.all([
+  //   poolContract.token0(),
+  //   poolContract.token1(),
+  //   poolContract.fee(),
+  // ])
 
   
-  const quoterContract = new ethers.Contract("0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a", IQuoterABI.abi, provider);
+  const quoterContract = new ethers.Contract("0x3d4e44eb1374240ce5f1b871ab261cd16335b76a", IQuoterABI.abi, provider);
 
   const amountIn = ethers.parseUnits('10000', 18);
 
   const fee = 10000;
 
-  const amountOut = await quoterContract.quoteExactInputSingle.staticCall(
-      tokenInUni.address, // Dirección del token de entrada
-      tokenOutUni.address, // Dirección del token de salida
-      fee, // Comisión del pool
-      amountIn, // Cantidad de entrada
-      0 // No hay límite de precio
-  );
+  const params = {
+    tokenIn: tokenInUni.address,
+    tokenOut: tokenOutUni.address,
+    fee: fee,
+    amountIn: amountIn,
+    sqrtPriceLimitX96: 0,
+  }; 
 
-  console.log('amountOut', amountOut);
+  const amountOut = await quoterContract.quoteExactInputSingle.staticCall(params); 
 
   const slippageTolerance = new Percent('1', '100'); // 1%
 
