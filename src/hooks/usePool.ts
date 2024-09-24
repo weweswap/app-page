@@ -10,6 +10,10 @@ import { TokenItem } from "~/models";
 import { fetchPricePerAddressInUsdc } from "~/services/price";
 import { provider } from "./provider";
 
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  "https://app-backend-production-676d.up.railway.app/api";
+
 export type WewePool = {
   address: Hex;
   poolType: string;
@@ -26,6 +30,11 @@ export type WewePool = {
   token0: TokenItem;
   token1: TokenItem;
 };
+
+export interface AprResponse {
+  address: string;
+  feeApr: number;
+}
 
 export async function calculateTlvForTokens(
   vaultAddress: string,
@@ -75,14 +84,43 @@ export function useWewePools(): UseQueryResult<
       );
 
       const weweVaultNumber = await arrakisFactory.numVaults();
-      const weweVults = await arrakisFactory.vaults(0, weweVaultNumber);
+      const weweVaults = await arrakisFactory.vaults(0, weweVaultNumber);
 
       const wewePools: WewePool[] = [];
 
-      for (let key in weweVults) {
-        if (weweVults.hasOwnProperty(key)) {
+      const poolAddresses: string[] = [];
+
+      for (let key in weweVaults) {
+        if (Object.hasOwn(weweVaults, key)) {
+          poolAddresses.push(weweVaults[key]);
+        }
+      }
+
+      const aprResponses: AprResponse[] = await Promise.all(
+        poolAddresses.map(async (address) => {
+          try {
+            const response = await fetch(`${API_BASE_URL}/${address}`);
+
+            if (!response.ok) {
+              throw new Error(
+                `Failed to fetch APR for address ${address}: ${response.statusText}`
+              );
+            }
+
+            const data: AprResponse = await response.json();
+            return data;
+          } catch (error) {
+            console.error(error);
+            return { address, feeApr: 0 };
+          }
+        })
+      );
+
+      for (let key in weweVaults) {
+        if (Object.hasOwn(weweVaults, key)) {
+          const vaultAddress = weweVaults[key];
           const arrakisVault = new ethers.Contract(
-            weweVults[key],
+            vaultAddress,
             ArrakisVaultABI,
             provider
           );
@@ -90,7 +128,7 @@ export function useWewePools(): UseQueryResult<
           const token1 = await arrakisVault.token1();
 
           const tlv = await calculateTlvForTokens(
-            weweVults[key],
+            vaultAddress,
             arrakisHelper,
             provider,
             token0,
@@ -104,14 +142,23 @@ export function useWewePools(): UseQueryResult<
             ({ address }) => address.toLowerCase() === token1.toLowerCase()
           );
 
+          const aprData = aprResponses.find(
+            (apr) => apr.address.toLowerCase() === vaultAddress.toLowerCase()
+          );
+
+          const feeApr =
+            aprData && typeof aprData.feeApr === "number"
+              ? aprData.feeApr.toFixed(2)
+              : "0.00";
+
           wewePools.push({
-            address: weweVults[key],
+            address: weweVaults[key],
             poolType: "MEMES 1%",
             pool: "EXOTIC",
             tvl: tlv.toString(),
             volume: "-",
             range: "INFINITY",
-            apr: "-",
+            apr: feeApr,
             type: `${token0info?.symbol}/${token1info?.symbol}`,
             logo: {
               first: token0info?.icon as string,
