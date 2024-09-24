@@ -10,7 +10,7 @@ import { NonFungiblePositionManagerAbi } from "~/lib/abis/NonFungiblePositionMan
 import { Position, TokenItem } from "~/models";
 import { provider } from "./provider";
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import IQuoterABI from '@uniswap/v3-periphery/artifacts/contracts/interfaces/IQuoter.sol/IQuoter.json';
+import IQuoterABI from '@uniswap/v3-periphery/artifacts/contracts/interfaces/IQuoterV2.sol/IQuoterV2.json';
 
 import { Token } from '@uniswap/sdk-core';
 import { computePoolAddress, Pool, Route } from "@uniswap/v3-sdk";
@@ -126,12 +126,13 @@ export function useSafeTransfer() {
     data: receipt,
   } = useWaitForTransactionReceipt({ hash });
 
-  const safeTransferFrom = async (userAddress: Hex, tokenID: bigint) => {
+  const safeTransferFrom = async (userAddress: Hex, tokenID: bigint, amountIn: bigint) => {
+    const expectedAmount = getMinAmount()
     await writeContractAsync({
       abi: NonFungiblePositionManagerAbi,
       address: CONTRACT_ADDRESSES.nonFungiblePositionManagerAddress,
       functionName: "safeTransferFrom",
-      args: [userAddress, migrationAddress, tokenID],
+      args: [userAddress, migrationAddress, tokenID, expectedAmount],
     });
   };
 
@@ -146,40 +147,7 @@ export function useSafeTransfer() {
   };
 }
 
-// async function getMinAmount(tokenIn: TokenItem, tokenOut: TokenItem, poolAddress: string) {
-//   const tokenInUni = new Token(1, tokenIn.address, tokenIn.decimals, tokenIn.symbol);
-//   const tokenOutUni = new Token(1, tokenOut.address, tokenOut.decimals, tokenOut.symbol);
-
-//   const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI.abi, provider);
-
-//   const slot0 = await poolContract.slot0();
-//   const liquidity = await poolContract.liquidity();
-//   const tick = slot0.tick;
-//   const sqrtPriceX96 = slot0.sqrtPriceX96;
-
-//   const pool = new Pool(
-//     tokenInUni,
-//     tokenOutUni,
-//     10000,
-//     sqrtPriceX96,
-//     liquidity,
-//     tick
-//   );
-
-//   const route = new Route([pool], tokenInUni, tokenOutUni);
-//   const trade = new Trade(route, new TokenAmount(tokenIn, amountIn), TradeType.EXACT_INPUT);
-
-//   // Definir slippage tolerance (por ejemplo, 1%)
-//   const slippageTolerance = new Percent('1', '100');
-
-//   // Calcular el monto mínimo de salida con slippage
-//   const amountOutMinimum = trade.minimumAmountOut(slippageTolerance).toSignificant(6);
-//   console.log('AmountOutMinimum:', amountOutMinimum);
-
-//   return amountOutMinimum;
-// }
-
-export async function getMinAmount(tokenIn?: TokenItem, tokenOut?: TokenItem) {
+export async function getMinAmount(tokenIn: TokenItem, tokenOut: TokenItem, slippage: number = 5, fee: number = 10000) {
 
   if (!tokenIn || !tokenOut) {
     return
@@ -187,49 +155,25 @@ export async function getMinAmount(tokenIn?: TokenItem, tokenOut?: TokenItem) {
 
   const tokenInUni = new Token(8453, tokenIn.address, tokenIn.decimals, tokenIn.symbol, "");
   const tokenOutUni = new Token(8453, tokenOut.address, tokenOut.decimals, tokenOut.symbol, "");
-
-  const currentPoolAddress = computePoolAddress({
-    factoryAddress: "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
-    tokenA: tokenInUni,
-    tokenB: tokenOutUni,
-    fee: 10000,
-  })
-
-  const poolContract = new ethers.Contract(
-    currentPoolAddress,
-    IUniswapV3PoolABI.abi,
-    provider
-  )
-  const [token0, token1, fee] = await Promise.all([
-    poolContract.token0(),
-    poolContract.token1(),
-    poolContract.fee(),
-  ])
-
   
-  const quoterContract = new ethers.Contract("0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a", IQuoterABI.abi, provider);
+  const quoterContract = new ethers.Contract("0x3d4e44eb1374240ce5f1b871ab261cd16335b76a", IQuoterABI.abi, provider);
 
   const amountIn = ethers.parseUnits('10000', 18);
 
-  const fee = 10000;
+  const params = {
+    tokenIn: tokenInUni.address,
+    tokenOut: tokenOutUni.address,
+    fee: fee,
+    amountIn: amountIn,
+    sqrtPriceLimitX96: 0,
+  }; 
 
-  const amountOut = await quoterContract.quoteExactInputSingle.staticCall(
-      tokenInUni.address, // Dirección del token de entrada
-      tokenOutUni.address, // Dirección del token de salida
-      fee, // Comisión del pool
-      amountIn, // Cantidad de entrada
-      0 // No hay límite de precio
-  );
+  const { amountOut } = await quoterContract.quoteExactInputSingle.staticCall(params); 
 
-  console.log('amountOut', amountOut);
+  const fixedOut = ethers.formatUnits(amountOut, 6)
+  const slippageAdjustedAmountOut = fixedOut * (100 - slippage) / 100
 
-  const slippageTolerance = new Percent('1', '100'); // 1%
-
-  const slippageAdjustedAmountOut = amountOut.mul(
-      100 - Number(slippageTolerance.toFixed())
-  ).div(100);
-
-  console.log(`AmountOutMinimum (con slippage): ${ethers.formatUnits(slippageAdjustedAmountOut, 18)}`);
+  console.log(`AmountOutMinimum (con slippage): ${slippageAdjustedAmountOut}`);
 
   return slippageAdjustedAmountOut;
 }
