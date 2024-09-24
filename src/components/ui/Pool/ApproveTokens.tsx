@@ -161,24 +161,39 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
         <div className='flex flex-col gap-3'>
             <div className='flex gap-3 items-center'>
                 { isPendingApproveToken0 || isConfirmingApproveToken0 || !hashApproveToken0 
-                    ? <Loader color="grey" />
-                    : <Image src="/img/icons/success.svg" width={36} height={36} alt='' /> 
+                    ? <>
+                      <Loader color="grey" />
+                      <Typography>Please Approve {selectedPool?.token0.symbol}</Typography>
+                    </>
+                    : <>
+                      <Image src="/img/icons/success.svg" width={36} height={36} alt='' />
+                      <Typography>{selectedPool?.token0.symbol} Approved</Typography>
+                    </>
                 }
-                <Typography>Please Approve {selectedPool?.token0.symbol}</Typography>
             </div>
             <div className='flex gap-3 items-center'>
                 { isPendingApproveToken1 || isConfirmingApproveToken1 || !hashApproveToken1
-                    ? <Loader color="grey" />
-                    : <Image src="/img/icons/success.svg" width={36} height={36} alt='' /> 
+                    ? <>
+                      <Loader color="grey" />
+                      <Typography>Please Approve {selectedPool?.token1.symbol}</Typography>
+                    </>
+                    : <>
+                      <Image src="/img/icons/success.svg" width={36} height={36} alt='' /> 
+                      <Typography>{selectedPool?.token1.symbol} Approved</Typography>
+                    </>
                 }
-                <Typography>Please Approve {selectedPool?.token1.symbol}</Typography>
             </div>
             <div className='flex gap-3 items-center'>
                 { isPendingDualDeposit || !hashDualDeposit 
-                    ? <Loader color="grey" />
-                    : <Image src="/img/icons/success.svg" width={36} height={36} alt='' /> 
+                    ? <>
+                      <Loader color="grey" />
+                      <Typography>Please deposit tokens</Typography>
+                    </>
+                    : <>
+                      <Image src="/img/icons/success.svg" width={36} height={36} alt='' />
+                      <Typography>Tokens deposited</Typography>
+                    </>
                 }
-                <Typography>Please Deposit {selectedPool?.token1.symbol}</Typography>
             </div>
             {
               !isConfirmingApproveToken0 && !isConfirmingApproveToken1 && !isConfirmingDualDeposit && !finishSuccessfully &&
