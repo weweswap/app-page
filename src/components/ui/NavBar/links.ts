@@ -9,11 +9,11 @@ export const PAGE_LINKS = [
   //   text: "Pools",
   //   href: "/pools",
   // },
-  // {
-  //   icon: "img/links/swap.svg",
-  //   text: "Swap",
-  //   href: "/swap",
-  // },
+  {
+    icon: "img/links/swap.svg",
+    text: "Swap",
+    href: "/swap",
+  },
   // {
   //   icon: "img/links/earn.svg",
   //   text: "Earn",
