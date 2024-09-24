@@ -4,7 +4,7 @@ export const CONTRACT_ADDRESSES = {
   vult: "0x299A57C1f6761b3dB304dc8B18bb4E60A1CF37b6" as `0x${string}`,
   merge: "0x30091c97Fd47873c44D03F7F1b960473D300D269" as `0x${string}`,
   kyberSwapAgg: "0x6131b5fae19ea4f9d964eac0408e4408b66337b5" as `0x${string}`,
-  migration: "0x0C157a19eDB32b96A44Fa7EaE4D207522958f32c" as `0x${string}`,
+  migration: "0x105aB059e69a8E4843D0AF9339050De2237b7b2e" as `0x${string}`,
   helper: "0x17d48B94B993a10D2fA9D39E21FCd0E01588B68e" as `0x${string}`,
   resolver: "0xaeDeDB25120C80818E9CdF6375B21379f88b8F80" as `0x${string}`,
   feeManager: "0xFA255938e6297d19Fd73E05400dF5f899614D788" as `0x${string}`,

@@ -6,7 +6,7 @@ import {
   useWaitForTransactionReceipt,
 } from "wagmi";
 import { CONTRACT_ADDRESSES } from "~/constants";
-import { NonFungiblePositionManagerAbi } from "~/lib/abis/NonFungiblePositionManager";
+import NonfungiblePositionManagerAbi from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json';
 import { Position, TokenItem } from "~/models";
 import { provider } from "./provider";
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
@@ -72,7 +72,7 @@ export function usePositions(address: Hex) {
     queryFn: async () => {
       const positionManager = new ethers.Contract(
         CONTRACT_ADDRESSES.nonFungiblePositionManagerAddress,
-        NonFungiblePositionManagerAbi,
+        NonfungiblePositionManagerAbi.abi,
         provider
       );
       const balance = await positionManager.balanceOf(address);
@@ -127,12 +127,18 @@ export function useSafeTransfer() {
   } = useWaitForTransactionReceipt({ hash });
 
   const safeTransferFrom = async (userAddress: Hex, tokenID: bigint, amountIn: bigint) => {
-    const expectedAmount = getMinAmount()
+    const expectedAmount = await getMinAmount(CONTRACT_ADDRESSES.wethAddress, CONTRACT_ADDRESSES.usdc, amountIn)
+
+    const amountOutMinimum = ethers.AbiCoder.defaultAbiCoder().encode(
+      ["uint256"], 
+      [expectedAmount]          
+    );
+
     await writeContractAsync({
-      abi: NonFungiblePositionManagerAbi,
+      abi: NonfungiblePositionManagerAbi.abi,
       address: CONTRACT_ADDRESSES.nonFungiblePositionManagerAddress,
       functionName: "safeTransferFrom",
-      args: [userAddress, migrationAddress, tokenID, expectedAmount],
+      args: [userAddress, migrationAddress, tokenID, amountOutMinimum],
     });
   };
 
@@ -147,22 +153,16 @@ export function useSafeTransfer() {
   };
 }
 
-export async function getMinAmount(tokenIn: TokenItem, tokenOut: TokenItem, slippage: number = 5, fee: number = 10000) {
+export async function getMinAmount(tokenInAddress: string, tokenOutAddress: string, amountIn: bigint, slippage: number = 5, fee: number = 10000) {
 
-  if (!tokenIn || !tokenOut) {
+  if (!tokenInAddress || !tokenOutAddress) {
     return
   }
-
-  const tokenInUni = new Token(8453, tokenIn.address, tokenIn.decimals, tokenIn.symbol, "");
-  const tokenOutUni = new Token(8453, tokenOut.address, tokenOut.decimals, tokenOut.symbol, "");
-  
   const quoterContract = new ethers.Contract("0x3d4e44eb1374240ce5f1b871ab261cd16335b76a", IQuoterABI.abi, provider);
 
-  const amountIn = ethers.parseUnits('10000', 18);
-
   const params = {
-    tokenIn: tokenInUni.address,
-    tokenOut: tokenOutUni.address,
+    tokenIn: tokenInAddress,
+    tokenOut: tokenOutAddress,
     fee: fee,
     amountIn: amountIn,
     sqrtPriceLimitX96: 0,
@@ -170,40 +170,10 @@ export async function getMinAmount(tokenIn: TokenItem, tokenOut: TokenItem, slip
 
   const { amountOut } = await quoterContract.quoteExactInputSingle.staticCall(params); 
 
-  const fixedOut = ethers.formatUnits(amountOut, 6)
-  const slippageAdjustedAmountOut = fixedOut * (100 - slippage) / 100
+  // const fixedOut = ethers.formatUnits(amountOut, 6)
+  const slippageAdjustedAmountOut = BigInt(amountOut) * BigInt((100 - slippage)) / BigInt(100)
 
   console.log(`AmountOutMinimum (con slippage): ${slippageAdjustedAmountOut}`);
 
   return slippageAdjustedAmountOut;
-}
-
-async function getPoolConstants(tokenA: Token, tokenB: Token): Promise<{
-  token0: string
-  token1: string
-  fee: number
-}> {
-  const currentPoolAddress = computePoolAddress({
-    factoryAddress: "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
-    tokenA: tokenA,
-    tokenB: tokenB,
-    fee: 10000,
-  })
-
-  const poolContract = new ethers.Contract(
-    currentPoolAddress,
-    IUniswapV3PoolABI.abi,
-    provider
-  )
-  const [token0, token1, fee] = await Promise.all([
-    poolContract.token0(),
-    poolContract.token1(),
-    poolContract.fee(),
-  ])
-
-  return {
-    token0,
-    token1,
-    fee,
-  }
 }

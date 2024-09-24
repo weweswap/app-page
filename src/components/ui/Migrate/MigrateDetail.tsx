@@ -40,7 +40,8 @@ export const MigrateDetail = ({
   ] = useDisclosure(false);
 
   const handleMigrate = () => {
-    safeTransferFrom(address!, currentPosition.tokenId);
+    console.log('amountWETH', amountWETH)
+    safeTransferFrom(address!, currentPosition.tokenId, ethers.parseUnits(String(amountWETH), 18));
   };
 
   const {

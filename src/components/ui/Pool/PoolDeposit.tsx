@@ -13,7 +13,6 @@ import RangeSlider from "~/components/common/RangeSlider";
 import { ethers } from "ethers";
 import { useGetPrices } from "~/hooks/useGetPrices";
 import ComingSoon from "~/components/common/ComingSoon";
-import { getMinAmount } from "~/hooks/useMigrate";
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -33,8 +32,6 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw }: PoolDepositProps) => {
   const { address } = useAccount();
   
   const { data: prices } = useGetPrices(selectedPool?.token0, selectedPool?.token1)
-
-  const minAmount = getMinAmount(selectedPool?.token0, selectedPool?.token1)
 
   useEffect(() => {
     if (selectedPool) {
