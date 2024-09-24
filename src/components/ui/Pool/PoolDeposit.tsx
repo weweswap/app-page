@@ -5,7 +5,7 @@ import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { usePoolContext } from "./PoolContext";
 import { Divider, NumberInput } from "@mantine/core";
 import clsx from "clsx";
-import { dogica } from "~/fonts";
+import { dogica, verdana } from "~/fonts";
 import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
@@ -330,13 +330,24 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw }: PoolDepositProps) => {
                     className="md:col-span-3 col-span-6 w-fit"
                     disabled
                   />
-                  <Typography size="lg">
-                    {formattedShares}
-                  </Typography>
+                  <NumberInput
+                    classNames={{
+                      root: "flex-1  my-5 w-auto",
+                      input: clsx(
+                        verdana.className,
+                        "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
+                      ),
+                    }}
+                    onChange={(value) => setFormattedShares(value as number)}
+                    defaultValue="0"
+                    value={formattedShares}
+                    decimalScale={8}
+                    hideControls
+                  />
                 </div>
                 <div className="flex items-center justify-center gap-2 py-3">
                     <Image alt="" src="/img/icons/wallet.svg" width={24} height={24} />
-                    <Typography size="xs" className="text_light_gray">{ethers.formatUnits(balanceShares.toString(), 18)} SHARES</Typography>
+                    <Typography size="xs" className="text_light_gray">{parseFloat(Number(ethers.formatUnits(balanceShares.toString(), 18)).toFixed(8))} SHARES</Typography>
                 </div>
                 <div className="py-4">
                     <RangeSlider
