@@ -6,9 +6,15 @@ import {
   useWaitForTransactionReceipt,
 } from "wagmi";
 import { CONTRACT_ADDRESSES } from "~/constants";
-import { NonFungiblePositionManagerAbi } from "~/lib/abis/NonFungiblePositionManager";
-import { Position } from "~/models";
+import NonfungiblePositionManagerAbi from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json';
+import { Position, TokenItem } from "~/models";
 import { provider } from "./provider";
+import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
+import IQuoterABI from '@uniswap/v3-periphery/artifacts/contracts/interfaces/IQuoterV2.sol/IQuoterV2.json';
+
+import { Token } from '@uniswap/sdk-core';
+import { computePoolAddress, Pool, Route } from "@uniswap/v3-sdk";
+import { Percent } from '@uniswap/sdk-core';
 
 export function useTokenNames(token0Address: string, token1Address: string) {
   return useQuery({
@@ -66,7 +72,7 @@ export function usePositions(address: Hex) {
     queryFn: async () => {
       const positionManager = new ethers.Contract(
         CONTRACT_ADDRESSES.nonFungiblePositionManagerAddress,
-        NonFungiblePositionManagerAbi,
+        NonfungiblePositionManagerAbi.abi,
         provider
       );
       const balance = await positionManager.balanceOf(address);
@@ -120,12 +126,19 @@ export function useSafeTransfer() {
     data: receipt,
   } = useWaitForTransactionReceipt({ hash });
 
-  const safeTransferFrom = async (userAddress: Hex, tokenID: bigint) => {
+  const safeTransferFrom = async (userAddress: Hex, tokenID: bigint, amountIn: bigint) => {
+    const expectedAmount = await getMinAmount(CONTRACT_ADDRESSES.wethAddress, CONTRACT_ADDRESSES.usdc, amountIn)
+
+    const amountOutMinimum = ethers.AbiCoder.defaultAbiCoder().encode(
+      ["uint256"], 
+      [expectedAmount]          
+    );
+
     await writeContractAsync({
-      abi: NonFungiblePositionManagerAbi,
+      abi: NonfungiblePositionManagerAbi.abi,
       address: CONTRACT_ADDRESSES.nonFungiblePositionManagerAddress,
       functionName: "safeTransferFrom",
-      args: [userAddress, migrationAddress, tokenID],
+      args: [userAddress, migrationAddress, tokenID, amountOutMinimum],
     });
   };
 
@@ -138,4 +151,27 @@ export function useSafeTransfer() {
     receipt,
     safeTransferFrom,
   };
+}
+
+export async function getMinAmount(tokenInAddress: string, tokenOutAddress: string, amountIn: bigint, slippage: number = 5, fee: number = 10000) {
+
+  if (!tokenInAddress || !tokenOutAddress) {
+    return
+  }
+  const quoterContract = new ethers.Contract("0x3d4e44eb1374240ce5f1b871ab261cd16335b76a", IQuoterABI.abi, provider);
+
+  const params = {
+    tokenIn: tokenInAddress,
+    tokenOut: tokenOutAddress,
+    fee: fee,
+    amountIn: amountIn,
+    sqrtPriceLimitX96: 0,
+  }; 
+
+  const { amountOut } = await quoterContract.quoteExactInputSingle.staticCall(params); 
+
+  // const fixedOut = ethers.formatUnits(amountOut, 6)
+  const slippageAdjustedAmountOut = BigInt(amountOut) * BigInt((100 - slippage)) / BigInt(100)
+
+  return slippageAdjustedAmountOut;
 }
