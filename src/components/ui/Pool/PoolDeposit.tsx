@@ -1,12 +1,11 @@
 import Image from "next/image";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { usePoolContext } from "./PoolContext";
 import { Divider, NumberInput } from "@mantine/core";
 import clsx from "clsx";
-import { dogica, verdana } from "~/fonts";
-import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
+import { verdana } from "~/fonts";
+import { TOKEN_LIST } from "~/constants";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
 import RangeSlider from "~/components/common/RangeSlider";
@@ -14,6 +13,7 @@ import { ethers } from "ethers";
 import { useGetPrices } from "~/hooks/useGetPrices";
 import ComingSoon from "~/components/common/ComingSoon";
 import { WewePosition } from "~/hooks/useWewePositions";
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -32,6 +32,9 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw, onClaim, enableClaimBlock 
   const [inputValueToken1, setInputValueToken1] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
   const [secondaryTokenIndex, setSecondaryTokenIndex] = useState(0);
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+
   const { address } = useAccount();
   
   const { data: prices } = useGetPrices(selectedPool?.token0, selectedPool?.token1)
@@ -256,7 +259,7 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw, onClaim, enableClaimBlock 
                           text: token.symbol,
                           index: index
                         }))}
-                        className="md:w-2/5"
+                        className="md:w-1/2"
                         disabled
                       />
                       <NumberInput
@@ -290,7 +293,7 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw, onClaim, enableClaimBlock 
                           text: token.symbol,
                           index: index
                         }))}
-                        className="md:w-2/5"
+                        className="md:w-1/2"
                         disabled
                       />
                       <NumberInput
@@ -340,10 +343,12 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw, onClaim, enableClaimBlock 
                       <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
                     </Button>
                   </div>
-                  <Button className="w-full mt-4" onClick={() => {
-                    onDeposit(inputValueToken0, inputValueToken1)
-                    setSliderValue(50)
-                  }}>
+                  <Button className="w-full mt-4" onClick={isConnected ? () => {
+                      onDeposit(inputValueToken0, inputValueToken1)
+                      setSliderValue(50) 
+                    }
+                    : () => openConnectModal && openConnectModal()
+                  }>
                     <Typography secondary tt="uppercase">
                       Deposit
                     </Typography>
@@ -400,7 +405,7 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw, onClaim, enableClaimBlock 
                       <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
                     </Button>
                   </div>
-                  <Button onClick={() => onWithdraw(formattedShares)} className="w-full mt-5 mb-2">
+                  <Button onClick={isConnected ? () => onWithdraw(formattedShares) : () => openConnectModal && openConnectModal()} className="w-full mt-5 mb-2">
                     <Typography secondary>
                       WITHDRAW
                     </Typography>
