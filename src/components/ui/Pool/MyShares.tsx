@@ -131,7 +131,7 @@ const MyShares = ({
                             ta="center"
                             className="font-extrabold"
                           >
-                            {wewePosition.apr}
+                            {wewePosition.apr}%
                           </Typography>
                         </div>
 
