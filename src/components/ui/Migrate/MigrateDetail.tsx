@@ -39,8 +39,7 @@ export const MigrateDetail = ({
     { open: openMigrateFailModal, close: closeMigrateFailModal },
   ] = useDisclosure(false);
 
-  const handleMigrate = () => {
-    console.log('amountWETH', amountWETH)
+  const handleMigrate = () => {   
     safeTransferFrom(address!, currentPosition.tokenId, ethers.parseUnits(String(amountWETH), 18));
   };
 

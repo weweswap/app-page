@@ -173,7 +173,5 @@ export async function getMinAmount(tokenInAddress: string, tokenOutAddress: stri
   // const fixedOut = ethers.formatUnits(amountOut, 6)
   const slippageAdjustedAmountOut = BigInt(amountOut) * BigInt((100 - slippage)) / BigInt(100)
 
-  console.log(`AmountOutMinimum (con slippage): ${slippageAdjustedAmountOut}`);
-
   return slippageAdjustedAmountOut;
 }
