@@ -261,9 +261,8 @@ const PoolDeposit = ({
               <div className="bg_light_dark w-full flex items-center justify-between gap-3 h-[3rem]">
                 <div
                   onClick={() => setSelectedAction("deposit")}
-                  className={`${
-                    selectedAction === "deposit" && "nav_selected"
-                  } nav`}
+                  className={`${selectedAction === "deposit" && "nav_selected"
+                    } nav`}
                 >
                   <Typography size="sm" tt="uppercase">
                     Deposit
@@ -271,9 +270,8 @@ const PoolDeposit = ({
                 </div>
                 <div
                   onClick={() => setSelectedAction("withdraw")}
-                  className={`${
-                    selectedAction === "withdraw" && "nav_selected"
-                  } nav`}
+                  className={`${selectedAction === "withdraw" && "nav_selected"
+                    } nav`}
                 >
                   <Typography size="sm" tt="uppercase">
                     Withdraw
@@ -370,7 +368,12 @@ const PoolDeposit = ({
                       width={24}
                       height={24}
                     />
-                    <Typography size="xs">100 WEWE</Typography>
+                    <Typography size="xs">
+                      {Number(
+                        ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
+                      )}{" "}
+                      {selectedPool?.token0.symbol}
+                    </Typography>
                   </div>
                   <div className="flex items-center gap-2">
                     <Image
@@ -379,7 +382,12 @@ const PoolDeposit = ({
                       width={24}
                       height={24}
                     />
-                    <Typography size="xs">2.78 USDC</Typography>
+                    <Typography size="xs">
+                      {Number(
+                        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
+                      )}{" "}
+                      {selectedPool?.token1.symbol}
+                    </Typography>
                   </div>
                 </div>
                 <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
