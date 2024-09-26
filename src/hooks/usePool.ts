@@ -22,6 +22,7 @@ export type WewePool = {
   volume: string;
   range: string;
   apr: string;
+  dailyFeesInUsd: string;
   type: string;
   logo: {
     first: string;
@@ -31,9 +32,10 @@ export type WewePool = {
   token1: TokenItem;
 };
 
-export interface AprResponse {
+export interface VaultInfoResponse {
   address: string;
   feeApr: number;
+  feesPerDay: number;
 }
 
 export async function calculateTlvForTokens(
@@ -96,7 +98,7 @@ export function useWewePools(): UseQueryResult<
         }
       }
 
-      const aprResponses: AprResponse[] = await Promise.all(
+      const vaultInfoResponses: VaultInfoResponse[] = await Promise.all(
         poolAddresses.map(async (address) => {
           try {
             const response = await fetch(`${API_BASE_URL}/${address}`);
@@ -107,11 +109,11 @@ export function useWewePools(): UseQueryResult<
               );
             }
 
-            const data: AprResponse = await response.json();
+            const data: VaultInfoResponse = await response.json();
             return data;
           } catch (error) {
             console.error(error);
-            return { address, feeApr: 0 };
+            return { address, feeApr: 0, feesPerDay: 0 };
           }
         })
       );
@@ -142,13 +144,18 @@ export function useWewePools(): UseQueryResult<
             ({ address }) => address.toLowerCase() === token1.toLowerCase()
           );
 
-          const aprData = aprResponses.find(
+          const vaultInfoData = vaultInfoResponses.find(
             (apr) => apr.address.toLowerCase() === vaultAddress.toLowerCase()
           );
 
           const feeApr =
-            aprData && typeof aprData.feeApr === "number"
-              ? aprData.feeApr.toFixed(2)
+            vaultInfoData && typeof vaultInfoData.feeApr === "number"
+              ? vaultInfoData.feeApr.toFixed(2)
+              : "0.00";
+
+          const dailyFeesInUsd =
+            vaultInfoData && typeof vaultInfoData.feesPerDay === "number"
+              ? vaultInfoData.feesPerDay.toFixed(2)
               : "0.00";
 
           wewePools.push({
@@ -159,6 +166,7 @@ export function useWewePools(): UseQueryResult<
             volume: "-",
             range: "INFINITY",
             apr: feeApr,
+            dailyFeesInUsd,
             type: `${token0info?.symbol}/${token1info?.symbol}`,
             logo: {
               first: token0info?.icon as string,
