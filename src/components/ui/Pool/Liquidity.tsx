@@ -27,7 +27,15 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: Liquidity
     setCurrentPage("deposit");
   };
 
-  const { data: pools } = useWewePools();
+  const { data: pools, isLoading } = useWewePools();
+
+  if (isLoading) return (
+    <Card className="flex items-center justify-center overflow-x-scroll h-[300px]">
+          <Typography secondary size="xl" tt="uppercase">
+            LOADING ...
+          </Typography>
+    </Card>
+  );
 
   return (
     <>
