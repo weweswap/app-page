@@ -9,6 +9,7 @@ import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { TokenItem } from "~/models";
 import { fetchPricePerAddressInUsdc } from "~/services/price";
 import { provider } from "./provider";
+import uniswapV3PoolAbi from "~/lib/abis/UniswapPool";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
@@ -158,12 +159,26 @@ export function useWewePools(): UseQueryResult<
               ? vaultInfoData.feesPerDay.toFixed(2)
               : "0.00";
 
+          const poolAddressList = await arrakisVault.getPools();
+            
+          const uniswapContract = new ethers.Contract(
+            poolAddressList[0],
+            uniswapV3PoolAbi,
+            provider
+          );
+          
+          
+          const poolFeePercentage = await uniswapContract.fee();
+          console.log(vaultInfoData)
+          const volume =  vaultInfoData && typeof vaultInfoData.feesPerDay === "number"
+          ? vaultInfoData.feesPerDay / Number(ethers.formatUnits(poolFeePercentage, 6)) : 0; 
+
           wewePools.push({
             address: weweVaults[key],
             poolType: "MEMES 1%",
             pool: "EXOTIC",
             tvl: tlv.toString(),
-            volume: "-",
+            volume: volume.toFixed(2),
             range: "INFINITY",
             apr: feeApr,
             dailyFeesInUsd,
