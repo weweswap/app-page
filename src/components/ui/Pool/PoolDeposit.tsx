@@ -13,7 +13,7 @@ import { ethers } from "ethers";
 import { useGetPrices } from "~/hooks/useGetPrices";
 import ComingSoon from "~/components/common/ComingSoon";
 import { WewePosition } from "~/hooks/useWewePositions";
-import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -249,7 +249,11 @@ const PoolDeposit = ({
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography>DISTRIBUTED FEES</Typography>
-                <Typography>$ -</Typography>
+                <Typography>
+                  $ {new Intl.NumberFormat("en-US", {
+                    minimumFractionDigits: 2,
+                  }).format(Number(selectedPool.dailyFeesInUsd))}/day
+                </Typography>
               </div>
             </div>
             <Divider className="border-blue-700" />
@@ -275,89 +279,88 @@ const PoolDeposit = ({
                 </div>
               </div>
             </div>
-            {
-              selectedAction === 'deposit' 
-              ? <div>
-                  <div className="mt-4">
-                    <Typography>Deposit amount</Typography>
-                  </div>
-                  <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
-                    <div className="bg_gray my-3 col-span-12 md:col-span-6 md:flex md:items-center md:mr-4">
-                      <Dropdown
-                        value={TOKEN_LIST[inputTokenIndex].address}
-                        options={TOKEN_LIST.map((token, index) => ({
-                          value: token.address,
-                          icon: token.icon,
-                          text: token.symbol,
-                          index: index
-                        }))}
-                        className="md:w-1/2"
-                        disabled
-                      />
-                      <NumberInput
-                        classNames={{
-                          root: "md:col-span-2 col-span-6 h-full",
-                          wrapper: "h-full",
-                          input: clsx(
-                            verdana.className,
-                            "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
-                          ),
-                        }}
-                        defaultValue={inputValueToken0}
-                        hideControls
-                        value={inputValueToken0}
-                        onChange={(value) => setInputValueToken0(value as number)}
-                        allowNegative={false}
-                        trimLeadingZeroesOnBlur
-                        thousandSeparator
-                        decimalScale={6}
-                      />
-                    </div>
-                    {/* <button className="md:col-span-2 col-span-12 flex justify-center">
-                      <Image src="/img/icons/swapwewe.svg" alt="" width={36} height={36} />
-                    </button> */}
-                    <div className="bg_gray my-3 col-span-12 md:col-span-6 md:flex md:items-center md:ml-4">
-                      <Dropdown
-                        value={TOKEN_LIST[secondaryTokenIndex].address}
-                        options={TOKEN_LIST.map((token, index) => ({
-                          value: token.address,
-                          icon: token.icon,
-                          text: token.symbol,
-                          index: index
-                        }))}
-                        className="md:w-1/2"
-                        disabled
-                      />
-                      <NumberInput
-                        classNames={{
-                          root: "md:col-span-2 col-span-6 h-full",
-                          wrapper: "h-full",
-                          input: clsx(
-                            verdana.className,
-                            "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
-                          ),
-                        }}
-                        defaultValue={inputValueToken1}
-                        hideControls
-                        value={inputValueToken1}
-                        onChange={(value) => setInputValueToken1(value as number)}
-                        allowNegative={false}
-                        trimLeadingZeroesOnBlur
-                        thousandSeparator
-                        decimalScale={6}
-                        disabled
-                      />
-                    </div>
-                  </div>
-                  <div className="py-4">
-                    <RangeSlider
-                      min={0}
-                      max={100}
-                      value={Number(sliderValue)}
-                      onChange={(e) => setSliderValue(Number(e.target.value))}
+            {selectedAction === "deposit" ? (
+              <div>
+                <div className="mt-4">
+                  <Typography>Deposit amount</Typography>
+                </div>
+                <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
+                  <div className="bg_gray my-3 col-span-12 md:col-span-6 md:flex md:items-center md:mr-4">
+                    <Dropdown
+                      value={TOKEN_LIST[inputTokenIndex].address}
+                      options={TOKEN_LIST.map((token, index) => ({
+                        value: token.address,
+                        icon: token.icon,
+                        text: token.symbol,
+                        index: index,
+                      }))}
+                      className="md:w-1/2"
+                      disabled
+                    />
+                    <NumberInput
+                      classNames={{
+                        root: "md:col-span-2 col-span-6 h-full",
+                        wrapper: "h-full",
+                        input: clsx(
+                          verdana.className,
+                          "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
+                        ),
+                      }}
+                      defaultValue={inputValueToken0}
+                      hideControls
+                      value={inputValueToken0}
+                      onChange={(value) => setInputValueToken0(value as number)}
+                      allowNegative={false}
+                      trimLeadingZeroesOnBlur
+                      thousandSeparator
+                      decimalScale={6}
                     />
                   </div>
-                  <div className="flex items-center justify-evenly text_light_gray">
+                  {/* <button className="md:col-span-2 col-span-12 flex justify-center">
+                      <Image src="/img/icons/swapwewe.svg" alt="" width={36} height={36} />
+                    </button> */}
+                  <div className="bg_gray my-3 col-span-12 md:col-span-6 md:flex md:items-center md:ml-4">
+                    <Dropdown
+                      value={TOKEN_LIST[secondaryTokenIndex].address}
+                      options={TOKEN_LIST.map((token, index) => ({
+                        value: token.address,
+                        icon: token.icon,
+                        text: token.symbol,
+                        index: index,
+                      }))}
+                      className="md:w-1/2"
+                      disabled
+                    />
+                    <NumberInput
+                      classNames={{
+                        root: "md:col-span-2 col-span-6 h-full",
+                        wrapper: "h-full",
+                        input: clsx(
+                          verdana.className,
+                          "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
+                        ),
+                      }}
+                      defaultValue={inputValueToken1}
+                      hideControls
+                      value={inputValueToken1}
+                      onChange={(value) => setInputValueToken1(value as number)}
+                      allowNegative={false}
+                      trimLeadingZeroesOnBlur
+                      thousandSeparator
+                      decimalScale={6}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="py-4">
+                  <RangeSlider
+                    min={0}
+                    max={100}
+                    value={Number(sliderValue)}
+                    onChange={(e) => setSliderValue(Number(e.target.value))}
+                  />
+                </div>
+                <div className="flex items-center justify-evenly text_light_gray">
                   <div className="flex items-center gap-2">
                     <Image
                       alt=""
@@ -386,27 +389,43 @@ const PoolDeposit = ({
                       {selectedPool?.token1.symbol}
                     </Typography>
                   </div>
-                  </div>
-                  <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
-                    <Button className="bg_turq" onClick={() => setSliderValue(50)}>
-                      <Typography secondary size="xs" fw={700} tt="uppercase">50%</Typography>
-                    </Button>
-                    <Button className="bg_turq" onClick={() => setSliderValue(100)}>
-                      <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
-                    </Button>
-                  </div>
-                  <Button className="w-full mt-4" onClick={isConnected ? () => {
-                      onDeposit(inputValueToken0, inputValueToken1)
-                      setSliderValue(50) 
-                    }
-                    : () => openConnectModal && openConnectModal()
-                  }>
-                    <Typography secondary tt="uppercase">
-                      Deposit
+                </div>
+                <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
+                  <Button
+                    className="bg_turq"
+                    onClick={() => setSliderValue(50)}
+                  >
+                    <Typography secondary size="xs" fw={700} tt="uppercase">
+                      50%
+                    </Typography>
+                  </Button>
+                  <Button
+                    className="bg_turq"
+                    onClick={() => setSliderValue(100)}
+                  >
+                    <Typography secondary size="xs" fw={700} tt="uppercase">
+                      MAX
                     </Typography>
                   </Button>
                 </div>
-              : <div className="mt-5">
+                <Button
+                  className="w-full mt-4"
+                  onClick={
+                    isConnected
+                      ? () => {
+                          onDeposit(inputValueToken0, inputValueToken1);
+                          setSliderValue(50);
+                        }
+                      : () => openConnectModal && openConnectModal()
+                  }
+                >
+                  <Typography secondary tt="uppercase">
+                    Deposit
+                  </Typography>
+                </Button>
+              </div>
+            ) : (
+              <div className="mt-5">
                 <Typography>Withdraw amount</Typography>
                 <div className="bg_gray my-3 flex items-center gap-4">
                   <Dropdown
@@ -454,28 +473,43 @@ const PoolDeposit = ({
                   </Typography>
                 </div>
                 <div className="py-4">
-                    <RangeSlider
-                      min={0}
-                      max={100}
-                      value={Number(sliderValue)}
-                      onChange={(e) => setSliderValue(Number(e.target.value))}
-                    />
-                  </div>
-                  <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
-                    <Button className="bg_turq" onClick={() => setSliderValue(50)}>
-                      <Typography secondary size="xs" fw={700} tt="uppercase">50%</Typography>
-                    </Button>
-                    <Button className="bg_turq" onClick={() => setSliderValue(100)}>
-                      <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
-                    </Button>
-                  </div>
-                  <Button onClick={isConnected ? () => onWithdraw(formattedShares) : () => openConnectModal && openConnectModal()} className="w-full mt-5 mb-2">
-                    <Typography secondary>
-                      WITHDRAW
+                  <RangeSlider
+                    min={0}
+                    max={100}
+                    value={Number(sliderValue)}
+                    onChange={(e) => setSliderValue(Number(e.target.value))}
+                  />
+                </div>
+                <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
+                  <Button
+                    className="bg_turq"
+                    onClick={() => setSliderValue(50)}
+                  >
+                    <Typography secondary size="xs" fw={700} tt="uppercase">
+                      50%
                     </Typography>
                   </Button>
+                  <Button
+                    className="bg_turq"
+                    onClick={() => setSliderValue(100)}
+                  >
+                    <Typography secondary size="xs" fw={700} tt="uppercase">
+                      MAX
+                    </Typography>
+                  </Button>
+                </div>
+                <Button
+                  onClick={
+                    isConnected
+                      ? () => onWithdraw(formattedShares)
+                      : () => openConnectModal && openConnectModal()
+                  }
+                  className="w-full mt-5 mb-2"
+                >
+                  <Typography secondary>WITHDRAW</Typography>
+                </Button>
               </div>
-            }
+            )}
           </div>
         </Card>
         <Card>
