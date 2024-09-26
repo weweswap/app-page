@@ -115,7 +115,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: Liquidity
                       </td>
                       <td className="p-4">
                         <Typography size="xs" opacity={0.7}>
-                          {wewePool.apr}
+                          {wewePool.apr}%
                         </Typography>
                       </td>
                       <td className="p-4" align="right">
