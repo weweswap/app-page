@@ -63,9 +63,6 @@ const PoolDeposit = ({
     }
   }, [selectedPool]);
 
-  if (!selectedPool) return null;
-  const { token0, token1 } = selectedPool;
-
   const { data: balanceToken0, refetch: refechToken0Balance } = useTokenBalance(
     address,
     TOKEN_LIST.find(
@@ -370,9 +367,9 @@ const PoolDeposit = ({
                     />
                     <Typography size="xs">
                       {Number(
-                        ethers.formatUnits(balanceToken0, token0.decimals)
+                        ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
                       )}{" "}
-                      {token0.symbol}
+                      {selectedPool?.token0.symbol}
                     </Typography>
                   </div>
                   <div className="flex items-center gap-2">
@@ -384,9 +381,9 @@ const PoolDeposit = ({
                     />
                     <Typography size="xs">
                       {Number(
-                        ethers.formatUnits(balanceToken1, token1.decimals)
+                        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
                       )}{" "}
-                      {token1.symbol}
+                      {selectedPool?.token1.symbol}
                     </Typography>
                   </div>
                   </div>
