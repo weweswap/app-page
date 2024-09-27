@@ -63,16 +63,16 @@ export const PoolPriceChart = ({ address, timeFrame }: PoolPriceChartProps) => {
         />
         <YAxis
           axisLine={false}
-          width={40}
+          width={70}
           tickLine={false}
           className="text-xs"
-          tickFormatter={formatDollarValueNumber}
+          tickFormatter={(v) => formatDollarValueNumber(v, 7)}
         />
         <Tooltip
           cursor={{ radius: 3, fillOpacity: 0.1 }}
           contentStyle={{ backgroundColor: "rgba(0,0,0,0.7)", border: "none", fontSize: "14px" }}
-          formatter={(value, name, props) => {
-            return [formatDollarValueNumber(value as number), "Price"]
+          formatter={(value) => {
+            return [formatDollarValueNumber(value as number, 7), "Price"]
           }}
           labelFormatter={(v) => dayjs(v).format("DD.MMM YYYY HH:mm")}
         />
