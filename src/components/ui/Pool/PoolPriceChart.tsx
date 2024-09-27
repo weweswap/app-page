@@ -72,7 +72,6 @@ export const PoolPriceChart = ({ address, timeFrame }: PoolPriceChartProps) => {
           cursor={{ radius: 3, fillOpacity: 0.1 }}
           contentStyle={{ backgroundColor: "rgba(0,0,0,0.7)", border: "none", fontSize: "14px" }}
           formatter={(value, name, props) => {
-            console.log(value, name, props)
             return [formatDollarValueNumber(value as string), "Price"]
           }}
           labelFormatter={(v) => dayjs(v).format("DD.MMM YYYY HH:mm")}
