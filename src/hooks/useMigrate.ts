@@ -170,7 +170,6 @@ export async function getMinAmount(tokenInAddress: string, tokenOutAddress: stri
 
   const { amountOut } = await quoterContract.quoteExactInputSingle.staticCall(params); 
 
-  // const fixedOut = ethers.formatUnits(amountOut, 6)
   const slippageAdjustedAmountOut = BigInt(amountOut) * BigInt((100 - slippage)) / BigInt(100)
 
   return slippageAdjustedAmountOut;

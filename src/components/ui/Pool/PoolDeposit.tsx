@@ -104,27 +104,31 @@ const PoolDeposit = ({
         ethers.formatUnits(resultToken0, selectedPool?.token0.decimals)
       );
       const formattedShares = Number(ethers.formatUnits(resultShares, 18));
+      const token1Equivalent =
+      (formattedToken0 * prices.priceToken0) / prices.priceToken1;
       setInputValueToken0(formattedToken0);
       setFormattedShares(formattedShares);
+      setInputValueToken1(Number(token1Equivalent.toFixed(6)));
     }
-  }, [prices, sliderValue, balanceToken0, balanceToken1, selectedPool]);
+  }, [prices, sliderValue, balanceToken0, selectedPool]);
 
-  useEffect(() => {
+  const handleChangeToken0 = (newValue: number) => {
     if (prices) {
       const token1Equivalent =
-        (inputValueToken0 * prices.priceToken0) / prices.priceToken1;
-
-      const formattedBalanceToken1 = Number(
-        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
-      );
-
-      if (token1Equivalent >= formattedBalanceToken1) {
-        setInputValueToken0(formattedBalanceToken1);
-      } else {
-        setInputValueToken1(Number(token1Equivalent.toFixed(6)));
-      }
+        (newValue * prices.priceToken0) / prices.priceToken1;
+      setInputValueToken0(newValue)
+      setInputValueToken1(Number(token1Equivalent.toFixed(6)));
     }
-  }, [inputValueToken0, prices]);
+  }
+
+  const handleChangeToken1 = (newValue: number) => {
+    if (prices) {
+      const token0Equivalent =
+        (newValue * prices.priceToken1) / prices.priceToken0;
+      setInputValueToken1(newValue)
+      setInputValueToken0(Number(token0Equivalent.toFixed(6)));
+    }
+  }
 
   return (
     selectedPool && (
@@ -310,7 +314,7 @@ const PoolDeposit = ({
                       defaultValue={inputValueToken0}
                       hideControls
                       value={inputValueToken0}
-                      onChange={(value) => setInputValueToken0(value as number)}
+                      onChange={(value) => handleChangeToken0(value as number)}
                       allowNegative={false}
                       trimLeadingZeroesOnBlur
                       thousandSeparator
@@ -344,12 +348,11 @@ const PoolDeposit = ({
                       defaultValue={inputValueToken1}
                       hideControls
                       value={inputValueToken1}
-                      onChange={(value) => setInputValueToken1(value as number)}
+                      onChange={(value) => handleChangeToken1(value as number)}
                       allowNegative={false}
                       trimLeadingZeroesOnBlur
                       thousandSeparator
                       decimalScale={6}
-                      disabled
                     />
                   </div>
                 </div>
@@ -410,6 +413,7 @@ const PoolDeposit = ({
                   </Button>
                 </div>
                 <Button
+                  disabled={BigInt(ethers.parseUnits(String(inputValueToken1 || 0), selectedPool.token1.decimals))>balanceToken1}
                   className="w-full mt-4"
                   onClick={
                     isConnected
@@ -421,7 +425,7 @@ const PoolDeposit = ({
                   }
                 >
                   <Typography secondary tt="uppercase">
-                    Deposit
+                    { BigInt(ethers.parseUnits(String(inputValueToken1 || 0), selectedPool.token1.decimals))>balanceToken1 ? "Not Enough Balance" : "Deposit" }
                   </Typography>
                 </Button>
               </div>
