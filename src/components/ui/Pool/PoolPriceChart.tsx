@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Hex } from "viem";
 import { Typography } from "~/components/common";
-import LoadingScreen from "~/components/common/LoadingScreen";
+import { LoadingScreen } from "~/components/common/LoadingScreen";
 import { API_BASE_URL } from "~/constants/configs";
 import { formatDollarValueNumber } from "~/utils";
 
@@ -20,7 +20,7 @@ interface PriceResponse {
 
 export const PoolPriceChart = ({ address, timeFrame }: PoolPriceChartProps) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["pool-price-chart", timeFrame],
+    queryKey: ["pool-price-chart", address, timeFrame],
     staleTime: 1000 * 60 * 5,
     queryFn: async () => {
       const response = await axios.get<PriceResponse[]>(`${API_BASE_URL}/price/${address}`, {
@@ -40,7 +40,7 @@ export const PoolPriceChart = ({ address, timeFrame }: PoolPriceChartProps) => {
 
   if (isLoading) return <LoadingScreen />
 
-  if (!data) return (
+  if (!data || data.length === 0) return (
     <Typography secondary className='text-center py-10 font-bold' size='xl'>
       NOTHING TO SHOW HERE
     </Typography>
@@ -72,7 +72,7 @@ export const PoolPriceChart = ({ address, timeFrame }: PoolPriceChartProps) => {
           cursor={{ radius: 3, fillOpacity: 0.1 }}
           contentStyle={{ backgroundColor: "rgba(0,0,0,0.7)", border: "none", fontSize: "14px" }}
           formatter={(value, name, props) => {
-            return [formatDollarValueNumber(value as string), "Price"]
+            return [formatDollarValueNumber(value as number), "Price"]
           }}
           labelFormatter={(v) => dayjs(v).format("DD.MMM YYYY HH:mm")}
         />

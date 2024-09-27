@@ -7,7 +7,7 @@ import { provider } from "~/hooks/provider";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import dayjs from "dayjs";
 import { formatDollarValueNumber } from "~/utils";
-import LoadingScreen from "~/components/common/LoadingScreen";
+import { LoadingScreen } from "~/components/common/LoadingScreen";
 import { Typography } from "~/components/common";
 
 
@@ -95,7 +95,7 @@ async function fetchOneWeekVolume(address: Hex) {
 
 export const PoolVolumeChart = ({ address, timeFrame }: PoolVolumeChartProps) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["pool-volume-chart", timeFrame],
+    queryKey: ["pool-volume-chart", address, timeFrame],
     staleTime: 1000 * 60 * 5,
     queryFn: () => timeFrame === "1D" ? fetchOneDayVolume(address) : fetchOneWeekVolume(address),
   });
@@ -103,7 +103,7 @@ export const PoolVolumeChart = ({ address, timeFrame }: PoolVolumeChartProps) =>
 
   if (isLoading) return <LoadingScreen />
 
-  if (!data) return (
+  if (!data || data.length === 0) return (
     <Typography secondary className='text-center py-10 font-bold' size='xl'>
       NOTHING TO SHOW HERE
     </Typography>

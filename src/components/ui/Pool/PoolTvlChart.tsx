@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Hex } from "viem";
 import { Typography } from "~/components/common";
-import LoadingScreen from "~/components/common/LoadingScreen";
+import { LoadingScreen } from "~/components/common/LoadingScreen";
 import { API_BASE_URL } from "~/constants/configs";
 import { formatDollarValueNumber } from "~/utils";
 
@@ -20,7 +20,7 @@ interface TvlResponse {
 
 export const PoolTvlChart = ({ address, timeFrame }: PoolTvlChartProps) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["pool-tvl-chart", timeFrame],
+    queryKey: ["pool-tvl-chart", address, timeFrame],
     staleTime: 1000 * 60 * 5,
     queryFn: async () => {
       const response = await axios.get<TvlResponse[]>(`${API_BASE_URL}/tvl/${address}`, {
@@ -40,7 +40,7 @@ export const PoolTvlChart = ({ address, timeFrame }: PoolTvlChartProps) => {
 
   if (isLoading) return <LoadingScreen />
 
-  if (!data) return (
+  if (!data || data.length === 0) return (
     <Typography secondary className='text-center py-10 font-bold' size='xl'>
       NOTHING TO SHOW HERE
     </Typography>
