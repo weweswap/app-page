@@ -19,6 +19,7 @@ import { COMMON_POOL_CONTRACT_ABI } from "~/lib/abis/CommonPool";
 import { fetchETHPrice, fetchWEWEPrice } from "~/services";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { provider } from "~/hooks/provider";
+import { ERC20Abi } from "~/lib/abis";
 
 type MigrateDetailProps = {
   onBack: () => void;
@@ -67,6 +68,9 @@ export const MigrateDetail = ({
     amount1: bigint;
     mintAmount: bigint;
   }>();
+
+  const [leftover0, setLeftover0] = useState<string>('0');
+  const [leftover1, setLeftover1] = useState<string>('0');
 
   const handleCloseCompleteModal = () => {
     closeMigrateCompleteModal();
@@ -159,6 +163,28 @@ export const MigrateDetail = ({
           mintAmount: mintEvent.args.mintAmount
         })
       }
+    },
+  });
+
+  useWatchContractEvent({
+    address: CONTRACT_ADDRESSES.usdc,
+    abi: ERC20Abi,
+    eventName: 'Transfer',
+    args: [CONTRACT_ADDRESSES.migration, address],
+    poll: false,
+    onLogs(logs: any[]) {
+      setLeftover1(Number(ethers.formatUnits(logs[0]?.args?.value || 0, 6)).toFixed(2))
+    },
+  });
+
+  useWatchContractEvent({
+    address: CONTRACT_ADDRESSES.wewe,
+    abi: ERC20Abi,
+    eventName: 'Transfer',
+    args: [CONTRACT_ADDRESSES.migration, address],
+    poll: false,
+    onLogs(logs: any[]) {
+      setLeftover0(Number(ethers.formatUnits(logs[0]?.args?.value || 0, 18)).toFixed(2))
     },
   });
 
@@ -463,6 +489,8 @@ export const MigrateDetail = ({
             shares: mintAmount?.mintAmount,
             amountUsd: totalLPUSD,
             receipt: receipt,
+            leftover0,
+            leftover1
           }}
         />
       )}
