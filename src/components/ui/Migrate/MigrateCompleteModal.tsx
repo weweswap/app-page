@@ -115,7 +115,7 @@ export const MigrateCompleteModal = (props: MigrateCompleteProps) => {
                       </Typography>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center justify-between gap-3 w-full">
                     <Typography secondary size="sm">
                       AMOUNT
                     </Typography>
@@ -143,6 +143,35 @@ export const MigrateCompleteModal = (props: MigrateCompleteProps) => {
                             height={32}
                           />
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 justify-between w-full">
+                    <Typography secondary size="sm">
+                      LEFTOVERS
+                    </Typography>
+                    <div className="flex gap-2">
+                      <div className="flex gap-2 items-center">
+                        <Typography className="text_light_gray" size="xs">
+                          {props.data.leftover0}
+                        </Typography>
+                        <Image
+                          src="/img/tokens/wewe.svg"
+                          alt=""
+                          height={32}
+                          width={32}
+                        />
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        <Typography className="text_light_gray" size="xs">
+                          {props.data.leftover1}
+                        </Typography>
+                        <Image
+                          src="/img/tokens/usdc.png"
+                          alt=""
+                          height={32}
+                          width={32}
+                        />
                       </div>
                     </div>
                   </div>
