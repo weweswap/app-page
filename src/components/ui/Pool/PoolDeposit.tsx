@@ -231,7 +231,7 @@ const PoolDeposit = ({
                   </Typography>
                 </button>
               </div>
-            }
+            )}
             <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">
               <PoolChartCard address={selectedPool.address}/>
             </div>

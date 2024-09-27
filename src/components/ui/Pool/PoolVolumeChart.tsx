@@ -7,68 +7,139 @@ import { provider } from "~/hooks/provider";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import dayjs from "dayjs";
 import { formatDollarValueNumber } from "~/utils";
-import { useState } from "react";
+import LoadingScreen from "~/components/common/LoadingScreen";
+import { Typography } from "~/components/common";
 
 
 interface PoolVolumeChartProps {
   address: Hex;
+  timeFrame: string;
 }
 
-interface VolumeResponse {
+interface VolumeHourlySnapshotResponse {
   liquidityPool?: {
     hourlySnapshots: {
-      timestamp: number;
+      timestamp: string;
       hourlyVolumeUSD: string;
     }[];
   }
 }
-export const PoolVolumeChart = ({ address }: PoolVolumeChartProps) => {
-  const [isMouseOver, setIsMouseOver] = useState(false);
 
-  const {data, isLoading, isError} = useQuery({
-    queryKey: ["pool-volumes", "1W"],
+interface VolumeDailySnapshotResponse {
+  liquidityPool?: {
+    dailySnapshots: {
+      timestamp: string;
+      dailyVolumeUSD: string;
+    }[];
+  }
+}
+
+async function fetchOneDayVolume(address: Hex) {
+  const arrakisVault = new ethers.Contract(
+    address,
+    ArrakisVaultABI,
+    provider
+  );
+  const poolAddressList = await arrakisVault.getPools();
+
+  const response = await request<VolumeHourlySnapshotResponse>({
+    url: process.env.NEXT_PUBLIC_UNI_V3_SUBGRAPH_URL!,
+    document: gql`
+    query {
+      liquidityPool(id: "${poolAddressList[0]}") {
+        hourlySnapshots (first: 25, orderBy: timestamp, orderDirection: desc) {
+          hourlyVolumeUSD,
+          timestamp
+        },
+      }
+    }`
+  });
+
+  return response?.liquidityPool?.hourlySnapshots.map((item) => {
+    return {
+      timestamp: parseInt(item.timestamp) * 1000,
+      value: parseFloat(item.hourlyVolumeUSD)
+    }
+  }) || [];
+}
+
+
+async function fetchOneWeekVolume(address: Hex) {
+  const arrakisVault = new ethers.Contract(
+    address,
+    ArrakisVaultABI,
+    provider
+  );
+  const poolAddressList = await arrakisVault.getPools();
+
+  const response = await request<VolumeDailySnapshotResponse>({
+    url: process.env.NEXT_PUBLIC_UNI_V3_SUBGRAPH_URL!,
+    document: gql`
+    query {
+      liquidityPool(id: "${poolAddressList[0]}") {
+        dailySnapshots (first: 7, orderBy: timestamp, orderDirection: desc) {
+          dailyVolumeUSD,
+          timestamp
+        },
+      }
+    }`
+  });
+
+  return response?.liquidityPool?.dailySnapshots.map((item) => {
+    return {
+      timestamp: parseInt(item.timestamp) * 1000,
+      value: parseFloat(item.dailyVolumeUSD)
+    }
+  }) || [];
+}
+
+export const PoolVolumeChart = ({ address, timeFrame }: PoolVolumeChartProps) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["pool-volume-chart", timeFrame],
     staleTime: 1000 * 60 * 5,
-    queryFn: async () => {
-      const arrakisVault = new ethers.Contract(
-        address,
-        ArrakisVaultABI,
-        provider
-      );
-      const poolAddressList = await arrakisVault.getPools();
+    queryFn: () => timeFrame === "1D" ? fetchOneDayVolume(address) : fetchOneWeekVolume(address),
+  });
 
-      const response = await request<VolumeResponse>({
-      url: process.env.NEXT_PUBLIC_UNI_V3_SUBGRAPH_URL!,
-      document: gql`
-      query {
-        liquidityPool(id: ${poolAddressList[0]}) {
-          hourlySnapshots {
-            hourlyVolumeUSD,
-            timestamp
-          },
-        }
-      }`,
-    });
 
-    return response?.liquidityPool?.hourlySnapshots || [];
-  }});
-  
+  if (isLoading) return <LoadingScreen />
 
-  console.log(data, isError, isLoading)
+  if (!data) return (
+    <Typography secondary className='text-center py-10 font-bold' size='xl'>
+      NOTHING TO SHOW HERE
+    </Typography>
+  );
 
   return (
-      <ResponsiveContainer width="100%" height="100%"
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart
+        data={[...data].reverse()}
       >
-        <BarChart
-          height={300}
-          data={data}
-          onMouseEnter={() => setIsMouseOver(true)} onMouseLeave={() => setIsMouseOver(false)}
-          
-        >
-          <XAxis axisLine={false} tickLine={false} className="text-xs" dataKey="timestamp" tickFormatter={(timeStr) => dayjs(timeStr * 1000).format("HH:mm")} padding="gap" />
-          <YAxis axisLine={false} tickLine={false} className="text-xs" tickFormatter={(v) => formatDollarValueNumber(v)} />
-          <Tooltip cursor={{fill: 'gray', radius: 3, markerWidth: "100%"}} />
-          <Bar dataKey="hourlyVolumeUSD" fill={isMouseOver ? "#32e7bf61" : "#32e7bf"} radius={3}  activeBar={{ fill : "#32e7bf"}} />
-        </BarChart>
-      </ResponsiveContainer>
+        <XAxis
+          axisLine={false}
+          tickLine={false}
+          className="text-xs"
+          dataKey="timestamp"
+          padding="gap"
+          tickFormatter={(v) => dayjs(v).format(timeFrame === "1W" ? "DD.MMM" : "HH:mm")}
+        />
+        <YAxis
+          axisLine={false}
+          width={40}
+          tickLine={false}
+          className="text-xs"
+          tickFormatter={formatDollarValueNumber}
+        />
+        <Tooltip
+          cursor={{ radius: 3, fillOpacity: 0.1 }}
+          contentStyle={{ backgroundColor: "rgba(0,0,0,0.7)", border: "none", fontSize: "14px" }}
+          formatter={(value, name, props) => {
+            console.log(value, name, props)
+            return [formatDollarValueNumber(value as string), "Volume"]
+          }}
+          labelFormatter={(v) => dayjs(v).format("DD.MMM YYYY HH:mm")}
+        />
+        <Bar dataKey="value" fill="#32e7bf" radius={3} />
+      </BarChart>
+    </ResponsiveContainer>
   )
 }

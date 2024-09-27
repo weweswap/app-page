@@ -10,10 +10,8 @@ import { TokenItem } from "~/models";
 import { fetchPricePerAddressInUsdc } from "~/services/price";
 import { provider } from "./provider";
 import uniswapV3PoolAbi from "~/lib/abis/UniswapPool";
+import { API_BASE_URL } from "~/constants/configs";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  "https://app-backend-production-676d.up.railway.app/api";
 
 export type WewePool = {
   address: Hex;
