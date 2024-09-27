@@ -1,6 +1,7 @@
 import { ethers, formatUnits } from "ethers";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { Position } from "~/models";
+import * as dn from "dnum";
 
 export function formatStringUnits(display: string, decimals: number) {
   const negative = display.startsWith("-");
@@ -33,5 +34,13 @@ export function formatPrice(price: number) {
   } else {
     return price.toFixed(2);
   }
+}
+
+export function formatDollarValueNumber(
+  value: string | number | dn.Dnum,
+  decimalDigits = 2,
+) {
+  const dnValue = dn.isDnum(value) ? value : dn.from(value);
+  return `$${dn.format(dnValue, { digits: decimalDigits, compact: true, locale: "en" })}`;
 }
 

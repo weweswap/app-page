@@ -14,6 +14,7 @@ import { ethers } from "ethers";
 import { useGetPrices } from "~/hooks/useGetPrices";
 import ComingSoon from "~/components/common/ComingSoon";
 import { WewePosition } from "~/hooks/useWewePositions";
+import { PoolChartCard } from "./PoolChartCard";
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -198,8 +199,8 @@ const PoolDeposit = ({ onBack, onDeposit, onWithdraw, onClaim, enableClaimBlock 
                 </button>
               </div>
             }
-            <div className=" gap-5 py-5 my-5 flex flex-wrap items-center justify-center bg_light_dark min-h-[12rem]">
-              <ComingSoon />
+            <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">
+              <PoolChartCard address={selectedPool.address}/>
             </div>
             <div className="flex justify-between my-3 gap-4">
               <div className="flex flex-col items-center gap-4">
