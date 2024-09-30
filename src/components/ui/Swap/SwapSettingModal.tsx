@@ -72,10 +72,7 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
           <NumberInput
             classNames={{
               root: "w-auto",
-              input: clsx(
-                dogica.className,
-                "text-center  md:text-start bg_turq text-black text-xs h-[42px] border-transparent rounded-none"
-              ),
+              input: clsx(dogica.className, classes.inputField),
             }}
             defaultValue={swapSlippage}
             value={swapSlippage}
@@ -153,7 +150,7 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
               root: "w-auto",
               input: clsx(
                 dogica.className,
-                "text-center  md:text-start bg_turq text-black text-xs  h-[42px] border-transparent rounded-none"
+                classes.inputField
               ),
             }}
             defaultValue={zapSlippage}
