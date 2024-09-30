@@ -6,3 +6,33 @@
   background-color: #0439c7;
   border-radius: var(--mantine-radius-sm);
 }
+
+.inputField {
+  /* Use CSS variables for font size and line height */
+  font-size: var(--text-fz, var(--mantine-font-size-xs));
+  line-height: var(--text-lh, var(--mantine-line-height-xs));
+
+  /* Ensure consistent font weight and transformation */
+  font-weight: 600;
+  text-transform: uppercase;
+
+  /* Text alignment */
+  text-align: center;
+  @media (min-width: 768px) { /* md breakpoint */
+    text-align: start;
+  }
+
+  /* Background and text color */
+  background-color: var(--turq);
+  color: black;
+
+  /* Remove borders and rounding */
+  border: transparent;
+  border-radius: 0;
+
+  /* Override global letter-spacing */
+  letter-spacing: 0;
+
+  /* min-height to match the buttons height */
+   min-height: 41.5px;
+}
