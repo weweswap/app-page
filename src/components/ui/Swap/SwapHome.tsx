@@ -34,6 +34,12 @@ type SwapHomeProps = {
   onSetting: () => void;
 };
 
+function stringToNumberRoundDownTo8Decimals(str: string) {
+  const num = parseFloat(str);
+  const factor = Math.pow(10, 8);
+  return Math.floor(num * factor) / factor;
+}
+
 export const SwapHome = ({ onSetting }: SwapHomeProps) => {
   const { initialSwapState, swapState, setSwapState, setRouteData, routeData } =
     useSwapContext();
@@ -66,22 +72,6 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
     useEffect(() => {
       const handler = setTimeout(() => {
-        // if (
-        //   parseUnits(
-        //     String(value),
-        //     TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
-        //   ) > getCurrentBalance()
-        // ) {
-        //   setInputValue(
-        //     Number(
-        //       formatUnits(
-        //         getCurrentBalance(),
-        //         TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
-        //       )
-        //     )
-        //   );
-        //   return;
-        // }
         setDebouncedValue(value);
       }, delay);
 
@@ -260,7 +250,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
                 : "0.00"}
             </Typography>
             <div className="flex items-center gap-1 cursor-pointer" onClick={() => {
-              setInputValue(Number(formatUnits(
+              setInputValue(stringToNumberRoundDownTo8Decimals(formatUnits(
                 getCurrentBalance(),
                 TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
               )))
