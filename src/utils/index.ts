@@ -1,7 +1,10 @@
-import { ethers, formatUnits } from "ethers";
-import { CONTRACT_ADDRESSES } from "~/constants";
-import { Position } from "~/models";
 import * as dn from "dnum";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export function formatStringUnits(display: string, decimals: number) {
   const negative = display.startsWith("-");
