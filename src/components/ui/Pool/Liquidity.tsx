@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { useState } from "react";
 import { Button, Card, Typography } from "~/components/common";
-import { DUMMY_TABLE_HEAD } from "./dummy";
 import { useWewePools, WewePool } from "~/hooks/usePool";
 
 import { usePoolContext } from "./PoolContext";
@@ -21,7 +20,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: Liquidity
   const [currentPage, setCurrentPage] = useState("");
   const { setSelectedPool } = usePoolContext();
 
-  
+
   const onSelectPoolToDeposit = (selectedPool: WewePool) => {
     setSelectedPool(selectedPool);
     setCurrentPage("deposit");
@@ -31,9 +30,9 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: Liquidity
 
   if (isLoading) return (
     <Card className="flex items-center justify-center overflow-x-scroll h-[300px]">
-          <Typography secondary size="xl" tt="uppercase">
-            LOADING ...
-          </Typography>
+      <Typography secondary size="xl" tt="uppercase">
+        LOADING ...
+      </Typography>
     </Card>
   );
 
@@ -60,13 +59,33 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: Liquidity
           <table className="w-[fit-content] min-w-[100%] table-auto text-left bg_dark mt-5">
             <thead>
               <tr>
-                {DUMMY_TABLE_HEAD.map((head) => (
-                  <th key={head} className="bg-blue-gray-50 p-4">
-                    <Typography size="sm" className="leading-none opacity-70">
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
+                <th className="bg-blue-gray-50 p-4">
+                  <Typography size="sm" className="leading-none opacity-70">
+                    Pool
+                  </Typography>
+                </th>
+                <th className="bg-blue-gray-50 p-4 hidden sm:table-cell">
+                  <Typography size="sm" className="leading-none opacity-70">
+                    TVL
+                  </Typography>
+                </th>
+                <th className="bg-blue-gray-50 p-4 hidden md:table-cell">
+                  <Typography size="sm" className="leading-none opacity-70">
+                    Range
+                  </Typography>
+                </th>
+                <th className="bg-blue-gray-50 p-4 hidden sm:table-cell">
+                  <Typography size="sm" className="leading-none opacity-70">
+                    Volume
+                  </Typography>
+                </th>
+                <th className="bg-blue-gray-50 p-4 hidden sm:table-cell">
+                  <Typography size="sm" className="leading-none opacity-70">
+                    APR
+                  </Typography>
+                </th>
+                <th className="bg-blue-gray-50 p-4">
+                </th>
               </tr>
             </thead>
             <Typography className="px-4 text-sm py-2">MEMES 1%</Typography>
@@ -102,7 +121,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: Liquidity
                           </Typography>
                         </div>
                       </td>
-                      <td className="p-4">
+                      <td className="p-4 hidden sm:table-cell">
                         <Typography size="xs" opacity={0.7}>
                           {new Intl.NumberFormat("en-US", {
                             style: "currency",
@@ -111,17 +130,17 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: Liquidity
                           }).format(Number(wewePool.tvl))}
                         </Typography>
                       </td>
-                      <td className="p-4">
+                      <td className="p-4 hidden md:table-cell">
                         <Typography size="xs" opacity={0.7}>
                           {wewePool.range}
                         </Typography>
                       </td>
-                      <td className="p-4">
+                      <td className="p-4 hidden sm:table-cell">
                         <Typography size="xs" opacity={0.7}>
-                          {wewePool.volume}
+                          ${wewePool.volume}
                         </Typography>
                       </td>
-                      <td className="p-4">
+                      <td className="p-4 hidden sm:table-cell">
                         <Typography size="xs" opacity={0.7}>
                           {wewePool.apr}%
                         </Typography>

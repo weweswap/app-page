@@ -105,7 +105,7 @@ const PoolDeposit = ({
       );
       const formattedShares = Number(ethers.formatUnits(resultShares, 18));
       const token1Equivalent =
-      (formattedToken0 * prices.priceToken0) / prices.priceToken1;
+        (formattedToken0 * prices.priceToken0) / prices.priceToken1;
       setInputValueToken0(formattedToken0);
       setFormattedShares(formattedShares);
       setInputValueToken1(Number(token1Equivalent.toFixed(6)));
@@ -176,15 +176,15 @@ const PoolDeposit = ({
                 </Typography>
               </div>
             </div>
-            <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1 ">
-              <div className="flex items-center gap-1">
+            <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1">
+              <div className="flex items-center gap-2 max-w-full">
                 <Image
                   src="/img/icons/memes.svg"
                   width={20}
                   height={20}
                   alt=""
                 />
-                <Typography size="xs" className="translate-x-1">
+                <Typography size="xs" className="break-words line-clamp-1">
                   {selectedPool.address}
                 </Typography>
               </div>
@@ -237,24 +237,24 @@ const PoolDeposit = ({
               </div>
             )}
             <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">
-              <PoolChartCard address={selectedPool.address}/>
+              <PoolChartCard address={selectedPool.address} />
             </div>
-            <div className="flex justify-between my-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 my-3 gap-4 gap-y-8">
               <div className="flex flex-col items-center gap-4">
-                <Typography>TVL</Typography>
-                <Typography>$ {Number(selectedPool.tvl).toFixed(2)}</Typography>
+                <Typography className="text-sm sm:text-base font-extrabold">TVL</Typography>
+                <Typography className="text-sm sm:text-base">$ {Number(selectedPool.tvl).toFixed(2)}</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
-                <Typography>VOLUME</Typography>
-                <Typography>$ {selectedPool.volume}</Typography>
+                <Typography className="text-sm sm:text-base  font-extrabold">VOLUME</Typography>
+                <Typography className="text-sm sm:text-base">$ {selectedPool.volume}/day</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
-                <Typography>INCENTIVES</Typography>
-                <Typography>$ -</Typography>
+                <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
+                <Typography className="text-sm sm:text-base">$ -</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
-                <Typography>DISTRIBUTED FEES</Typography>
-                <Typography>
+                <Typography className="text-sm sm:text-base  font-extrabold line-clamp-1">DISTRIBUTED FEES</Typography>
+                <Typography className="text-sm sm:text-base">
                   $ {new Intl.NumberFormat("en-US", {
                     minimumFractionDigits: 2,
                   }).format(Number(selectedPool.dailyFeesInUsd))}/day
@@ -413,19 +413,19 @@ const PoolDeposit = ({
                   </Button>
                 </div>
                 <Button
-                  disabled={BigInt(ethers.parseUnits(String(inputValueToken1 || 0), selectedPool.token1.decimals))>balanceToken1}
+                  disabled={BigInt(ethers.parseUnits(String(inputValueToken1 || 0), selectedPool.token1.decimals)) > balanceToken1}
                   className="w-full mt-4"
                   onClick={
                     isConnected
                       ? () => {
-                          onDeposit(inputValueToken0, inputValueToken1);
-                          setSliderValue(50);
-                        }
+                        onDeposit(inputValueToken0, inputValueToken1);
+                        setSliderValue(50);
+                      }
                       : () => openConnectModal && openConnectModal()
                   }
                 >
                   <Typography secondary tt="uppercase">
-                    { BigInt(ethers.parseUnits(String(inputValueToken1 || 0), selectedPool.token1.decimals))>balanceToken1 ? "Not Enough Balance" : "Deposit" }
+                    {BigInt(ethers.parseUnits(String(inputValueToken1 || 0), selectedPool.token1.decimals)) > balanceToken1 ? "Not Enough Balance" : "Deposit"}
                   </Typography>
                 </Button>
               </div>

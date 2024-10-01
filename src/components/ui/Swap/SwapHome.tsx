@@ -219,7 +219,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
             <NumberInput
               classNames={{
-                root: "md:col-span-8 col-span-6",
+                root: "sm:col-span-8 col-span-12",
                 input: clsx(
                   dogica.className,
                   "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
@@ -237,7 +237,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
             <Dropdown
               value={TOKEN_LIST[inputTokenIndex].symbol}
               options={inTokenOptions}
-              className="md:col-span-4 col-span-6"
+              className="order-first sm:order-none sm:col-span-4 col-span-12"
               setIndexValue={setInputTokenIndex}
             />
           </div>
@@ -294,7 +294,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
             <Typography
               secondary
-              className={` md:col-span-8 col-span-6 
+              className={`sm:col-span-8 col-span-12
               text-start bg-transparent text-white text-2xl h-auto overflow-x-auto
               border-transparent rounded-none`}
             >
@@ -312,7 +312,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               defaultValue={TOKEN_LIST[outputTokenIndex].symbol}
               value={TOKEN_LIST[outputTokenIndex].symbol}
               options={outTokenOptions}
-              className="md:col-span-4 col-span-6"
+              className="order-first sm:order-none sm:col-span-4 col-span-12"
               setIndexValue={setOutputTokenIndex}
             />
           </div>
