@@ -1,5 +1,3 @@
-export const DUMMY_TABLE_HEAD = ["Pool", "TVL", "Range", "Volume", "APR", ""]
-
 export const DUMMY_TABLE_CONTENT = [
   {
     poolType: "MEMES 1%",
