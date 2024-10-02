@@ -4,7 +4,7 @@ import { Loader, NumberInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import clsx from "clsx";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
 import { Button, Card, Typography } from "~/components/common";
@@ -20,6 +20,8 @@ import { MergeCompleteModal } from "./MergeCompleteModal";
 import { FailTXModal } from "~/components/common/FailTXModal";
 import { fetchWEWEPrice } from "~/services";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { useApproveToken } from "~/hooks/useApproveToken";
+import { useEatBro } from "~/hooks/useEater";
 
 const MergeOperation = () => {
   const { address } = useAccount();
@@ -96,13 +98,38 @@ const MergeOperation = () => {
     }
   }, [isConfirmed]);
 
+  const {
+    hash: hashApproveBroToken,
+    isPending: isPendingApproveBroToken,
+    isConfirming: isConfirmingApproveBroToken,
+    isError: isErrorApproveBroToken,
+    approve: approveBroToken,
+  } = useApproveToken();
+
+  const {
+    hash: hashEatBroToken,
+    isPending: isPendingEatBroToken,
+    isConfirming: isConfirmingEatBroToken,
+    isError: isErrorEatBroToken,
+    eatBro: eatBro,
+  } = useEatBro();
+
+  const eat = useCallback(() => {
+    async function eat () {
+      await approveBroToken(CONTRACT_ADDRESSES.broToken, CONTRACT_ADDRESSES.broEater, BigInt(1))
+      await eatBro(BigInt(1))
+    }
+    eat()
+  }, [address])
+
   useEffect(() => {
     if (isError) {
       openMergeCompleteModal();
     }
   }, [isError]);
   const handleMerge = () => {
-    onApproveAndCall(amountValue);
+    eat()
+    // onApproveAndCall(amountValue);
   };
 
   return (
@@ -204,7 +231,7 @@ const MergeOperation = () => {
             <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
               <Button
                 className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
-                disabled={!address || !amountValue || isPending}
+                // disabled={!address || !amountValue || isPending}
                 onClick={handleMerge}
               >
                 {isPending && <Loader color="white" size="sm" />}

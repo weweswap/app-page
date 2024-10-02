@@ -12,6 +12,8 @@ export const CONTRACT_ADDRESSES = {
   weweVault: "0x3Fd7957D9F98D46c755685B67dFD8505468A7Cb6" as `0x${string}`,
   wethAddress: "0x4200000000000000000000000000000000000006" as `0x${string}`,
   quoter: "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a" as `0x${string}`,
+  broEater: "0xEC610d336D1C46BA57944f60Cc2DF8c56ea4A82B" as `0x${string}`,
+  broToken: "0x93750140C2EcEA27a53c6ed30380829607815A31" as `0x${string}`,
   wethWeweContract:
     "0x5E9BB3d7682A9537DB831060176C4247aB80D1Ec" as `0x${string}`,
   wethUsdcContract:
