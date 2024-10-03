@@ -5,19 +5,15 @@ import Lottie from "lottie-react";
 import animation from "../../../../public/videos/burn-animation.json";
 export const Footer = () => {
   const path = usePathname();
+
   return (
     <div className="flex flex-col items-center gap-9 p-4">
-      {path === "/merge" || path === "/swap" || path === "/transfer" ? (
+      {path === "/merge" || path === "/merge/vult" || path === "/swap" || path === "/transfer" ? (
         <div className="w-full sm:w-[500px]">
           <Lottie animationData={animation} />
         </div>
       ) : (
-        <>
-        <div className="w-full sm:w-[500px]">
-          {/* <video animationData={animation2} /> */}
-        </div>
         <Image src="/videos/pool-animation.gif" width={550} height={60} alt="" />
-        </>
       )}
       <div className="flex items-center gap-6">
         <Link href="https://x.com/weweswap" target="_blank">
