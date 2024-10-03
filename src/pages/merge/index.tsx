@@ -102,14 +102,14 @@ const MergePage = () => {
                       src="/img/tokens/bro.svg"
                       width={32}
                       height={32}
-                      alt="WEWE logo"
+                      alt="BRO logo"
                     />
                     <Image
                       className="ml-[-10px] w-10 h-10"
                       src="/img/tokens/wewe.svg"
                       width={32}
                       height={32}
-                      alt="VULT logo"
+                      alt="WEWE logo"
                     />
                   </div>
                   <Typography size="sm" opacity={0.7}>

@@ -7,11 +7,9 @@ import WagmiProviderComp from "~/lib/wagmiProvider";
 import { Background, Footer, NavBar } from "~/components/ui";
 import { theme } from "~/theme";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/router";
 
 const App: AppType = ({ Component, pageProps }) => {
-  const router = useRouter();
-  const path = router.pathname;
+  const path = usePathname();
 
   return (
     <DirectionProvider>
