@@ -20,6 +20,7 @@ import RedeemOperation from "./RedeemOperation";
 import BridgeOperation from "./BridgeOperation";
 import { fetchWEWEPrice } from "~/services";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
+import Link from "next/link";
 
 type MergeHomeProps = {
   onConversion: () => void;
@@ -68,8 +69,8 @@ export const MergeHome = (props: MergeHomeProps) => {
       const weweFDV = wewePrice * totalWeweSupply;
       setVultFDV(
         ((weweBalanceNumber + virtualBalance) / totalWeweSupply) *
-          weweFDV *
-          (totalVultSupply / vultBalanceNumber)
+        weweFDV *
+        (totalVultSupply / vultBalanceNumber)
       );
     }
   }, [weweBalance, vultBalance, wewePrice]);
@@ -100,9 +101,11 @@ export const MergeHome = (props: MergeHomeProps) => {
         <div className="md:col-span-8 col-span-12 gap-3 xl:w-[45rem] h-[100%]">
           <Card>
             <div className="md:flex items-center justify-between gap-3 text-center md:text-start  ">
-              <Typography secondary size="xl" tt="uppercase">
-                MERGE NO&ensp;W
-              </Typography>
+              <Link href="/merge">
+                <Typography secondary size="xl" tt="uppercase">
+                  <span>{"<"}</span>  MERGE NO&ensp;W
+                </Typography>
+              </Link>
             </div>
             <div className="md:flex items-center justify-between gap-3 text-center md:text-start mt-5">
               <Typography

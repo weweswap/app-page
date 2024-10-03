@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "~/utils";
 
 export const Card = ({
   children,
@@ -10,8 +10,8 @@ export const Card = ({
 >) => {
   return (
     <div
-      className={clsx(
-        "w-full bg-black border_stroke text-white p-4",
+      className={cn(
+        "w-full bg-black border border-[var(--stroke)] text-white p-4",
         className
       )}
       {...props}

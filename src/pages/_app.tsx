@@ -7,9 +7,11 @@ import WagmiProviderComp from "~/lib/wagmiProvider";
 import { Background, Footer, NavBar } from "~/components/ui";
 import { theme } from "~/theme";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 
 const App: AppType = ({ Component, pageProps }) => {
-  const path = usePathname();
+  const router = useRouter();
+  const path = router.pathname;
 
   return (
     <DirectionProvider>
@@ -19,7 +21,7 @@ const App: AppType = ({ Component, pageProps }) => {
             <Background />
             <div className="w-full flex flex-col items-center">
               <NavBar />
-              {path === "/merge" || path === "/redeem" ? (
+              {path.startsWith("/merge") || path === "/redeem" ? (
                 <div className="w-full max-w-[1245px] flex flex-col items-center p-4 gap-5">
                   <Component {...pageProps} />
                 </div>
