@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { Modal, Typography } from '~/components/common'
 import { useApproveToken } from '~/hooks/useApproveToken';
 import { useAccount } from 'wagmi';
-import { useEatBro } from '~/hooks/useEater';
+import { useEat } from '~/hooks/useEater';
 import { TokenItem } from '~/models';
 import { Hex } from 'viem';
 
@@ -40,15 +40,15 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
     isPending: isPendingEatBroToken,
     isConfirming: isConfirmingEatBroToken,
     isError: isErrorEatBroToken,
-    eatBro: eatBro,
-  } = useEatBro();
+    eat: eat,
+  } = useEat(data.eater);
 
   useEffect(() => {
-    async function eat () {
+    async function startEat () {
       await approveBroToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'))
-      await eatBro(data.amountToMerge)
+      await eat(data.amountToMerge)
     }
-    eat()
+    startEat()
   }, [data, address])
 
   useEffect(() => {

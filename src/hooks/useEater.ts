@@ -1,11 +1,10 @@
 import { useWriteContract } from "wagmi";
 import { Hex } from "viem";
-import { CONTRACT_ADDRESSES } from "~/constants";
 import { provider } from "./provider";
 import { useState } from "react";
 import eaterABI from "~/lib/abis/Eater";
 
-export function useEatBro () {
+export function useEat (eaterAddress: Hex) {
   const [ pendingToConfirm, setPendingToConfirm ] = useState(false)
     const {
         data: hash,
@@ -13,10 +12,10 @@ export function useEatBro () {
         isError: isCreationError,
         writeContractAsync,
     } = useWriteContract();
-    const eatBro = async (amount: string) => {
+    const eat = async (amount: string) => {
         const tx = await writeContractAsync({
           abi: eaterABI,
-          address: CONTRACT_ADDRESSES.broEater as Hex,
+          address: eaterAddress,
           functionName: "merge",
           args: [amount],
         });
@@ -30,6 +29,6 @@ export function useEatBro () {
         isPending: isTxCreating,
         isConfirming: pendingToConfirm,
         isError: isCreationError,
-        eatBro,
+        eat,
     };
 }

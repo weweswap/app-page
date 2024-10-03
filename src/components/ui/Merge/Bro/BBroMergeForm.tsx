@@ -3,23 +3,38 @@ import { dogica } from "~/fonts";
 import { cn } from "~/utils";
 import Image from "next/image";
 import { Button, Typography } from "~/components/common";
-import { formatEther } from "viem";
+import { formatEther, Hex } from "viem";
 import { useState } from "react";
 import { BroMergeCompleteModal } from "./BroMergeCompleteModal";
+import { FailTXModal } from "~/components/common/FailTXModal";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { useAccount } from "wagmi";
+import { Chain, CONTRACT_ADDRESSES } from "~/constants";
+import MergeProcessingModal from "./MergeProcessingModal";
+import { ethers } from "ethers";
 
 export const BBroMergeForm = () => {
-  const [amount, setAmount] = useState<string | number>("");
+  const { address } = useAccount();
+  const [amount, setAmount] = useState<string>("");
   const [isCompleted, setIsCompleted] = useState(false);
-  const balanceBro = 100n;
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isFailed, setIsFailed] = useState(false);
+  const [hash, setHash] = useState<Hex>()
+  
   // fetching calculated amount
   const isFetching = false;
   const handleSelect = (div: number) => {
-    setAmount(Number(formatEther(balanceBro)) / div);
+    setAmount(String(Number(formatEther(balanceBBro)) / div));
   };
 
   const handleMerge = () => {
-    setIsCompleted(true);
+    setIsProcessing(true);
   };
+
+  const { data: balanceBBro } = useTokenBalance(
+    address,
+    CONTRACT_ADDRESSES.bbroToken
+  );
 
   const isPending = false;
   return (
@@ -59,7 +74,7 @@ export const BBroMergeForm = () => {
                 }}
                 hideControls
                 value={amount}
-                onChange={setAmount}
+                onChange={(value) => setAmount(String(value))}
               />
             </div>
             <Image
@@ -88,7 +103,7 @@ export const BBroMergeForm = () => {
               <Typography size="xs" className="text_light_gray">
                 {/* $4,690,420,090.00 */}
                 {Math.trunc(
-                  Number(formatEther(balanceBro))
+                  Number(formatEther(balanceBBro))
                 ).toLocaleString()}
               </Typography>
             </div>
@@ -130,7 +145,47 @@ export const BBroMergeForm = () => {
           </div>
         </div>
       </div>
-      <BroMergeCompleteModal hash={"0x122"} amount={"1000"} ratio={100n} inputToken="bBRO" onClose={() => setIsCompleted(false)} opened={isCompleted} />
+      {
+        isProcessing &&
+        <MergeProcessingModal 
+          onClose={() => {
+            setIsProcessing(false)
+          }}
+          data={{
+            amountToMerge: ethers.parseUnits(amount, 18).toString(),
+            token: {
+              chain: Chain.BASE,
+              symbol: "bBRO",
+              address: CONTRACT_ADDRESSES.bbroToken,
+              icon: "/img/tokens/bbro.svg",
+              decimals: 18,
+            },
+            eater: CONTRACT_ADDRESSES.bbroEater,
+          }}
+          opened={isProcessing}
+          onTxError={(hash) => {
+            setHash(hash)
+            setIsFailed(true)
+            setIsProcessing(false)
+          }}
+          onMergeSuccess={hash => {
+            setHash(hash)
+            setIsProcessing(false)
+            setIsCompleted(true)
+          }}
+          onOpen={() => {}}     
+        />
+      }
+      <FailTXModal 
+        hash={hash as Hex} 
+        opened={isFailed} 
+        onClose={() => {
+          setHash(undefined)
+          setIsFailed(false)
+        }
+        } 
+      />
+      <BroMergeCompleteModal hash={hash as Hex} amount={"1000"} ratio={100n} inputToken="BRO" onClose={() => setIsCompleted(false)} opened={isCompleted} />
     </div>
   );
 };

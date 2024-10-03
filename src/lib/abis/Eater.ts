@@ -7,18 +7,8 @@ const eaterABI = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
+      { indexed: false, internalType: "uint256", name: "amount", type: "uint256" },
+      { indexed: true, internalType: "address", name: "account", type: "address" }
     ],
     name: "Merged",
     type: "event"
@@ -26,18 +16,8 @@ const eaterABI = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address"
-      }
+      { indexed: true, internalType: "address", name: "previousOwner", type: "address" },
+      { indexed: true, internalType: "address", name: "newOwner", type: "address" }
     ],
     name: "OwnershipTransferred",
     type: "event"
@@ -45,23 +25,30 @@ const eaterABI = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "newRate",
-        type: "uint256"
-      }
+      { indexed: false, internalType: "address", name: "account", type: "address" }
+    ],
+    name: "Paused",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: "uint256", name: "newRate", type: "uint256" }
     ],
     name: "RateChanged",
     type: "event"
   },
   {
+    anonymous: false,
     inputs: [
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
+      { indexed: false, internalType: "address", name: "account", type: "address" }
+    ],
+    name: "Unpaused",
+    type: "event"
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "amount", type: "uint256" }
     ],
     name: "deposit",
     outputs: [],
@@ -71,36 +58,20 @@ const eaterABI = [
   {
     inputs: [],
     name: "getRate",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function"
   },
   {
     inputs: [],
     name: "getToken",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function"
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
+      { internalType: "uint256", name: "amount", type: "uint256" }
     ],
     name: "merge",
     outputs: [],
@@ -117,38 +88,23 @@ const eaterABI = [
   {
     inputs: [],
     name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "paused",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function"
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address"
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      },
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes"
-      }
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "bytes", name: "", type: "bytes" }
     ],
     name: "receiveApproval",
     outputs: [],
@@ -164,11 +120,7 @@ const eaterABI = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "rate",
-        type: "uint256"
-      }
+      { internalType: "uint256", name: "rate", type: "uint256" }
     ],
     name: "setRate",
     outputs: [],
@@ -176,12 +128,22 @@ const eaterABI = [
     type: "function"
   },
   {
+    inputs: [],
+    name: "sweep",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "togglePause",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
     inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address"
-      }
+      { internalType: "address", name: "newOwner", type: "address" }
     ],
     name: "transferOwnership",
     outputs: [],
@@ -191,29 +153,11 @@ const eaterABI = [
   {
     inputs: [],
     name: "wewe",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
-    ],
-    name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function"
   }
 ]
+
 
 export default eaterABI;
