@@ -1,7 +1,7 @@
 import { Merge } from "~/components/ui";
 
-const MergePage = () => {
+const VultMergePage = () => {
   return <Merge />;
 };
 
-export default MergePage;
+export default VultMergePage;
