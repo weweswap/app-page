@@ -13,7 +13,7 @@ export function useEatBro () {
         isError: isCreationError,
         writeContractAsync,
     } = useWriteContract();
-    const eatBro = async (amount: bigint) => {
+    const eatBro = async (amount: string) => {
         const tx = await writeContractAsync({
           abi: eaterABI,
           address: CONTRACT_ADDRESSES.broEater as Hex,

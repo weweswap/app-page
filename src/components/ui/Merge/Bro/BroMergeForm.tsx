@@ -3,24 +3,38 @@ import { dogica } from "~/fonts";
 import { cn } from "~/utils";
 import Image from "next/image";
 import { Button, Typography } from "~/components/common";
-import { formatEther } from "viem";
+import { formatEther, Hex } from "viem";
 import { useState } from "react";
 import { BroMergeCompleteModal } from "./BroMergeCompleteModal";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { Chain, CONTRACT_ADDRESSES } from "~/constants";
+import { useAccount } from "wagmi";
+import MergeProcessingModal from "./MergeProcessingModal";
+import { ethers } from "ethers";
+import { FailTXModal } from "~/components/common/FailTXModal";
 
 
 export const BroMergeForm = () => {
-  const [amount, setAmount] = useState<string | number>("");
+  const { address } = useAccount();
+  const [amount, setAmount] = useState<string>("");
   const [isCompleted, setIsCompleted] = useState(false);
-  const balanceBro = 100n;
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isFailed, setIsFailed] = useState(false);
+  const [hash, setHash] = useState<Hex>()
   // fetching calculated amount
   const isFetching = false;
   const handleSelect = (div: number) => {
-    setAmount(Number(formatEther(balanceBro)) / div);
+    setAmount(String(Number(formatEther(balanceBro)) / div));
   };
 
   const handleMerge = () => {
-    setIsCompleted(true);
+    setIsProcessing(true);
   };
+
+  const { data: balanceBro } = useTokenBalance(
+    address,
+    CONTRACT_ADDRESSES.broToken
+  );
 
   const isPending = false;
   return (
@@ -60,7 +74,7 @@ export const BroMergeForm = () => {
                 }}
                 hideControls
                 value={amount}
-                onChange={setAmount}
+                onChange={(value) => setAmount(String(value))}
               />
             </div>
             <Image
@@ -131,7 +145,47 @@ export const BroMergeForm = () => {
           </div>
         </div>
       </div>
-      <BroMergeCompleteModal hash={"0x122"} amount={"1000"} ratio={100n} inputToken="BRO" onClose={() => setIsCompleted(false)} opened={isCompleted} />
+      {
+        isProcessing &&
+        <MergeProcessingModal 
+          onClose={() => {
+            setIsProcessing(false)
+          }}
+          data={{
+            amountToMerge: ethers.parseUnits(amount, 18).toString(),
+            token: {
+              chain: Chain.BASE,
+              symbol: "BRO",
+              address: CONTRACT_ADDRESSES.broToken,
+              icon: "/img/tokens/bro.svg",
+              decimals: 18,
+            },
+            eater: CONTRACT_ADDRESSES.broEater,
+          }}
+          opened={isProcessing}
+          onTxError={(hash) => {
+            setHash(hash)
+            setIsFailed(true)
+            setIsProcessing(false)
+          }}
+          onMergeSuccess={hash => {
+            setHash(hash)
+            setIsProcessing(false)
+            setIsCompleted(true)
+          }}
+          onOpen={() => {}}     
+        />
+      }
+      <FailTXModal 
+        hash={hash as Hex} 
+        opened={isFailed} 
+        onClose={() => {
+          setHash(undefined)
+          setIsFailed(false)
+        }
+        } 
+      />
+      <BroMergeCompleteModal hash={hash as Hex} amount={"1000"} ratio={100n} inputToken="BRO" onClose={() => setIsCompleted(false)} opened={isCompleted} />
     </div>
   );
 };
