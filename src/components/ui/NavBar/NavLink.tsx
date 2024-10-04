@@ -14,7 +14,7 @@ type NavLinkProps = {
 const NavLink = (props: NavLinkProps) => {
   const { text, href, onClick } = props;
   const router = useRouter();
-  const isActive = (href: string) => router.pathname === href;
+  const isActive = (href: string) => router.pathname.startsWith(href);
 
   return (
     <li>

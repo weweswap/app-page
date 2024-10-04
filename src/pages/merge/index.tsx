@@ -20,16 +20,6 @@ const MergePage = () => {
                   ASSETS
                 </Typography>
               </th>
-              <th className="bg-blue-gray-50 p-4 hidden sm:table-cell">
-                <Typography size="sm" className="leading-none opacity-70">
-                  LOCKED
-                </Typography>
-              </th>
-              <th className="bg-blue-gray-50 p-4 hidden md:table-cell">
-                <Typography size="sm" className="leading-none opacity-70">
-                  AVAILABLE
-                </Typography>
-              </th>
               <th className="bg-blue-gray-50 p-4">
               </th>
             </tr>
@@ -61,16 +51,6 @@ const MergePage = () => {
                     WEWE/VULT
                   </Typography>
                 </div>
-              </td>
-              <td className="p-4 hidden sm:table-cell">
-                <Typography size="xs" opacity={0.7}>
-                  -
-                </Typography>
-              </td>
-              <td className="p-4 hidden md:table-cell">
-                <Typography size="xs" opacity={0.7}>
-                  -
-                </Typography>
               </td>
               <td className="p-4" align="right">
                 <Link href="/merge/vult">
@@ -116,16 +96,6 @@ const MergePage = () => {
                     BRO/WEWE
                   </Typography>
                 </div>
-              </td>
-              <td className="p-4 hidden sm:table-cell">
-                <Typography size="xs" opacity={0.7}>
-                  -
-                </Typography>
-              </td>
-              <td className="p-4 hidden md:table-cell">
-                <Typography size="xs" opacity={0.7}>
-                  -
-                </Typography>
               </td>
               <td className="p-4" align="right">
                 <Link href="/merge/bro">
