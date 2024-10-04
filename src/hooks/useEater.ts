@@ -1,4 +1,4 @@
-import { useWriteContract } from "wagmi";
+import { useReadContract, useWriteContract } from "wagmi";
 import { Hex } from "viem";
 import { provider } from "./provider";
 import { useState } from "react";
@@ -31,4 +31,23 @@ export function useEat (eaterAddress: Hex) {
         isError: isCreationError,
         eat,
     };
+}
+
+export function useEaterRate(eaterAddress: Hex): {
+  rate: bigint,
+  isLoading: boolean
+} {
+    const {data, isLoading} = useReadContract({
+        abi: eaterABI,
+        address: eaterAddress,
+        functionName: "getRate",
+        query: {
+            staleTime: 1000 * 60 * 5,
+        }
+    });
+
+    return {
+      rate: data as bigint ?? 0n,
+      isLoading
+    }
 }

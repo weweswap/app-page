@@ -14,6 +14,8 @@ import { ethers } from "ethers";
 import { FailTXModal } from "~/components/common/FailTXModal";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { ERC20Abi } from "~/lib/abis";
+import { useEaterRate } from "~/hooks/useEater";
+import * as dn from "dnum";
 
 
 export const BroMergeForm = () => {
@@ -25,8 +27,7 @@ export const BroMergeForm = () => {
   const [isFailed, setIsFailed] = useState(false);
   const [amountClaimed, setAmountClaimed] = useState<string>()
   const [hash, setHash] = useState<Hex>()
-  // fetching calculated amount
-  const isFetching = false;
+  const { rate, isLoading: isRateLoading } = useEaterRate(CONTRACT_ADDRESSES.broEater);
   const handleSelect = (div: number) => {
     setAmount(String(Number(formatEther(balanceBro)) / div));
   };
@@ -100,10 +101,10 @@ export const BroMergeForm = () => {
               alt=""
             />
             <div className="col-span-5 items-center flex-1  md:flex-none flex justify-end gap-3">
-              {!isFetching && (
+              {!isRateLoading && (
                 <div className="overflow-x-auto">
-                  <Typography size="xl">
-                    {Number(formatEther(0n)).toLocaleString("en-US")} WEWE
+                  <Typography size="md">
+                    {dn.format(dn.mul([rate, 2], dn.from(amount || 0)), { locale: "en" })} WEWE
                   </Typography>
                 </div>
               )}
@@ -207,7 +208,7 @@ export const BroMergeForm = () => {
       <MergeCompleteModal
         hash={hash as Hex}
         amount={amountClaimed}
-        ratio={100n}
+        ratio={rate}
         inputToken="BRO"
         onClose={() => {
           setAmountClaimed(undefined)
