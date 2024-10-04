@@ -33,9 +33,9 @@ const BroMergePage = () => {
             <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
               <li>Merge your $BRO to grab your $WEWE</li>
               <li>
-                Fixed Rate of 1,000 $BRO to 39,262,000 $WEWE.
+                Fixed Rate of 1,000 $BRO to 36,450 $WEWE.
               </li>
-              <li>Your can Merge $BRO from dd/mm/yy to dd/mm/yy</li>
+              <li>Your can Merge $BRO from 04/10/24 to 04/12/24</li>
             </ul>
           </div>
         </Card>
@@ -51,9 +51,9 @@ const BroMergePage = () => {
             <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
               <li>Merge your $bBRO to grab your $WEWE</li>
               <li>
-                Fixed Rate of 1,000 $bBRO to 39,262,000 $WEWE.
+                Fixed Rate of 1,000 $bBRO to 7,290 $WEWE.
               </li>
-              <li>Your can Merge $bBRO from dd/mm/yy to dd/mm/yy</li>
+              <li>Your can Merge $bBRO from 04/10/24 to 04/12/24</li>
             </ul>
           </div>
         </Card>

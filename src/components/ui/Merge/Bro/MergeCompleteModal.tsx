@@ -1,16 +1,16 @@
 import { formatEther, Hex } from "viem";
-import { Modal as MtModal, ModalRootProps } from "@mantine/core";
+import { Modal as MtModal, ModalRootProps, Loader } from "@mantine/core";
 import { Button, Typography } from "~/components/common";
 import Image from "next/image";
-type BroMergeCompleteModalProps = {
+type MergeCompleteModalProps = {
   hash: Hex;
-  amount: string;
+  amount?: string;
   ratio: bigint;
   inputToken: "BRO" | "bBRO";
   onClose: () => void;
 } & ModalRootProps;
 
-export const BroMergeCompleteModal = (props: BroMergeCompleteModalProps) => {
+export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
   const handleDetails = () => {
     window.open(
       `https://basescan.org/tx/${props.hash}`,
@@ -70,12 +70,18 @@ export const BroMergeCompleteModal = (props: BroMergeCompleteModalProps) => {
               alt="WEWE logo"
             />
             <div className="flex flex-col">
-              <Typography size="sm" className="text_light_gray">
-                CLAIMED
-              </Typography>
-              <Typography size="md" className="font-bold">
-                {props.amount}
-              </Typography>
+              {
+                props.amount 
+                ? <>
+                  <Typography size="sm" className="text_light_gray">
+                    CLAIMED
+                  </Typography>
+                  <Typography size="md" className="font-bold">
+                    {props.amount}
+                  </Typography>
+                </>
+                : <Loader />
+              }
             </div>
           </div>
           <Image

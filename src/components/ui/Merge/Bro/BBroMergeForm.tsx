@@ -3,25 +3,54 @@ import { dogica } from "~/fonts";
 import { cn } from "~/utils";
 import Image from "next/image";
 import { Button, Typography } from "~/components/common";
-import { formatEther } from "viem";
+import { formatEther, Hex } from "viem";
 import { useState } from "react";
-import { BroMergeCompleteModal } from "./BroMergeCompleteModal";
+import { MergeCompleteModal } from "./MergeCompleteModal";
+import { FailTXModal } from "~/components/common/FailTXModal";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { useAccount, useWatchContractEvent } from "wagmi";
+import { Chain, CONTRACT_ADDRESSES } from "~/constants";
+import MergeProcessingModal from "./MergeProcessingModal";
+import { ethers } from "ethers";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { ERC20Abi } from "~/lib/abis";
 
 export const BBroMergeForm = () => {
-  const [amount, setAmount] = useState<string | number>("");
+  const { address, isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  const [amount, setAmount] = useState<string>("");
   const [isCompleted, setIsCompleted] = useState(false);
-  const balanceBro = 100n;
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isFailed, setIsFailed] = useState(false);
+  const [hash, setHash] = useState<Hex>()
+  const [amountClaimed, setAmountClaimed] = useState<string>()
+
   // fetching calculated amount
   const isFetching = false;
   const handleSelect = (div: number) => {
-    setAmount(Number(formatEther(balanceBro)) / div);
+    setAmount(String(Number(formatEther(balanceBBro)) / div));
   };
 
   const handleMerge = () => {
-    setIsCompleted(true);
+    setIsProcessing(true);
   };
 
-  const isPending = false;
+  const { data: balanceBBro } = useTokenBalance(
+    address,
+    CONTRACT_ADDRESSES.bbroToken
+  );
+
+  useWatchContractEvent({
+    address: CONTRACT_ADDRESSES.wewe,
+    abi: ERC20Abi,
+    eventName: 'Transfer',
+    args: [CONTRACT_ADDRESSES.bbroEater, address],
+    poll: false,
+    onLogs(logs: any[]) {
+      setAmountClaimed(Number(ethers.formatUnits(logs[0]?.args?.value || 0, 18)).toFixed(4))
+    },
+  });
+
   return (
     <div className="flex flex-col gap-4">
       {/* <Card className="flex flex-col gap-5"> */}
@@ -59,7 +88,7 @@ export const BBroMergeForm = () => {
                 }}
                 hideControls
                 value={amount}
-                onChange={setAmount}
+                onChange={(value) => setAmount(String(value))}
               />
             </div>
             <Image
@@ -88,7 +117,7 @@ export const BBroMergeForm = () => {
               <Typography size="xs" className="text_light_gray">
                 {/* $4,690,420,090.00 */}
                 {Math.trunc(
-                  Number(formatEther(balanceBro))
+                  Number(formatEther(balanceBBro))
                 ).toLocaleString()}
               </Typography>
             </div>
@@ -119,10 +148,13 @@ export const BBroMergeForm = () => {
           <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
             <Button
               className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
-              // disabled={!address || !amountValue || isPending}
-              onClick={handleMerge}
+              disabled={!address || !amount}
+              onClick={
+                isConnected
+                  ? () => handleMerge()
+                  : () => openConnectModal && openConnectModal()
+              }
             >
-              {isPending && <Loader color="white" size="sm" />}
               <Typography secondary size="sm" fw={700} tt="uppercase">
                 Merge🔥
               </Typography>
@@ -130,7 +162,56 @@ export const BBroMergeForm = () => {
           </div>
         </div>
       </div>
-      <BroMergeCompleteModal hash={"0x122"} amount={"1000"} ratio={100n} inputToken="bBRO" onClose={() => setIsCompleted(false)} opened={isCompleted} />
+      {
+        isProcessing &&
+        <MergeProcessingModal 
+          onClose={() => {
+            setIsProcessing(false)
+          }}
+          data={{
+            amountToMerge: ethers.parseUnits(amount, 18).toString(),
+            token: {
+              chain: Chain.BASE,
+              symbol: "bBRO",
+              address: CONTRACT_ADDRESSES.bbroToken,
+              icon: "/img/tokens/bbro.svg",
+              decimals: 18,
+            },
+            eater: CONTRACT_ADDRESSES.bbroEater,
+          }}
+          opened={isProcessing}
+          onTxError={(hash) => {
+            setHash(hash)
+            setIsFailed(true)
+            setIsProcessing(false)
+          }}
+          onMergeSuccess={hash => {
+            setHash(hash)
+            setIsProcessing(false)
+            setIsCompleted(true)
+          }}
+          onOpen={() => {}}     
+        />
+      }
+      <FailTXModal 
+        hash={hash as Hex} 
+        opened={isFailed} 
+        onClose={() => {
+          setHash(undefined)
+          setIsFailed(false)
+        }
+        } 
+      />
+      <MergeCompleteModal 
+        hash={hash as Hex} 
+        amount={amountClaimed} 
+        ratio={100n} 
+        inputToken="bBRO" 
+        onClose={() => {
+          setAmountClaimed(undefined)
+          setIsCompleted(false)
+        }} 
+        opened={isCompleted} />
     </div>
   );
 };
