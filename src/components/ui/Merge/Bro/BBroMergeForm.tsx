@@ -14,6 +14,8 @@ import MergeProcessingModal from "./MergeProcessingModal";
 import { ethers } from "ethers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { ERC20Abi } from "~/lib/abis";
+import { useEaterRate } from "~/hooks/useEater";
+import * as dn from "dnum";
 
 export const BBroMergeForm = () => {
   const { address, isConnected } = useAccount();
@@ -22,11 +24,10 @@ export const BBroMergeForm = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
-  const [hash, setHash] = useState<Hex>()
-  const [amountClaimed, setAmountClaimed] = useState<string>()
+  const [hash, setHash] = useState<Hex>();
+  const [amountClaimed, setAmountClaimed] = useState<string>();
+  const { rate, isLoading: isRateLoading } = useEaterRate(CONTRACT_ADDRESSES.bbroEater);
 
-  // fetching calculated amount
-  const isFetching = false;
   const handleSelect = (div: number) => {
     setAmount(String(Number(formatEther(balanceBBro)) / div));
   };
@@ -99,10 +100,10 @@ export const BBroMergeForm = () => {
               alt=""
             />
             <div className="col-span-5 items-center flex-1  md:flex-none flex justify-end gap-3">
-              {!isFetching && (
+              {!isRateLoading && (
                 <div className="overflow-x-auto">
-                  <Typography size="xl">
-                    {Number(formatEther(0n)).toLocaleString()} WEWE
+                  <Typography size="md">
+                    {dn.format(dn.mul([rate, 2], dn.from(amount || 0)), { locale: "en" })} WEWE
                   </Typography>
                 </div>
               )}
@@ -164,7 +165,7 @@ export const BBroMergeForm = () => {
       </div>
       {
         isProcessing &&
-        <MergeProcessingModal 
+        <MergeProcessingModal
           onClose={() => {
             setIsProcessing(false)
           }}
@@ -190,27 +191,27 @@ export const BBroMergeForm = () => {
             setIsProcessing(false)
             setIsCompleted(true)
           }}
-          onOpen={() => {}}     
+          onOpen={() => { }}
         />
       }
-      <FailTXModal 
-        hash={hash as Hex} 
-        opened={isFailed} 
+      <FailTXModal
+        hash={hash as Hex}
+        opened={isFailed}
         onClose={() => {
           setHash(undefined)
           setIsFailed(false)
         }
-        } 
+        }
       />
-      <MergeCompleteModal 
-        hash={hash as Hex} 
-        amount={amountClaimed} 
-        ratio={100n} 
-        inputToken="bBRO" 
+      <MergeCompleteModal
+        hash={hash as Hex}
+        amount={amountClaimed}
+        ratio={rate}
+        inputToken="bBRO"
         onClose={() => {
           setAmountClaimed(undefined)
           setIsCompleted(false)
-        }} 
+        }}
         opened={isCompleted} />
     </div>
   );

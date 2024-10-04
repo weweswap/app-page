@@ -3,8 +3,18 @@ import Link from "next/link";
 import { Card, Typography } from "~/components/common";
 import { BBroMergeForm } from "~/components/ui/Merge/Bro/BBroMergeForm";
 import { BroMergeForm } from "~/components/ui/Merge/Bro/BroMergeForm";
+import { CONTRACT_ADDRESSES } from "~/constants";
+import { useEaterRate } from "~/hooks/useEater";
+import * as dn from "dnum";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
 
 const BroMergePage = () => {
+  const { rate: broEaterRate } = useEaterRate(CONTRACT_ADDRESSES.broEater);
+  const { rate: bbroEaterRate } = useEaterRate(CONTRACT_ADDRESSES.bbroEater);
+
+  const { data: broContractBalance } = useTokenBalance(CONTRACT_ADDRESSES.broEater, CONTRACT_ADDRESSES.wewe);
+  const { data: bbroContractBalance } = useTokenBalance(CONTRACT_ADDRESSES.bbroEater, CONTRACT_ADDRESSES.wewe);
+
   return (
     <div className="gap-5 grid grid-cols-12">
       <div className="md:col-span-8 col-span-12 gap-3 xl:w-[45rem] h-[100%]">
@@ -33,7 +43,7 @@ const BroMergePage = () => {
             <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
               <li>Merge your $BRO to grab your $WEWE</li>
               <li>
-                Fixed Rate of 1,000 $BRO to 36,450 $WEWE.
+                Fixed Rate of 1 $BRO to {dn.format([broEaterRate, 2], { locale: "en" })} $WEWE.
               </li>
               <li>Your can Merge $BRO from 04/10/24 to 04/12/24</li>
             </ul>
@@ -51,7 +61,7 @@ const BroMergePage = () => {
             <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
               <li>Merge your $bBRO to grab your $WEWE</li>
               <li>
-                Fixed Rate of 1,000 $bBRO to 7,290 $WEWE.
+                Fixed Rate of 1 $bBRO to {dn.format([bbroEaterRate, 2], { locale: "en" })} $WEWE.
               </li>
               <li>Your can Merge $bBRO from 04/10/24 to 04/12/24</li>
             </ul>
@@ -63,7 +73,7 @@ const BroMergePage = () => {
         </Card>
       </div>
 
-      <div className="md:col-span-4 col-span-12 md:order-2 order-1">
+      <div className="flex flex-col justify-between md:col-span-4 col-span-12 md:order-2 order-1">
         <Card className="flex flex-col items-center py-10 h-unset md:h-[544px] justify-between">
           <div className="flex flex-col items-center">
             <Typography secondary size="sm" className="font-black	mb-4">
@@ -88,7 +98,7 @@ const BroMergePage = () => {
           <div className="flex flex-col items-center mb-5">
             <div className="flex justify-center gap-2 md:mb-4 mb-5">
               <Typography size="md" fw={600}>
-                Ratio: 1000
+                Ratio: 1
               </Typography>
               <Image
                 src="/img/tokens/bro.svg"
@@ -98,30 +108,7 @@ const BroMergePage = () => {
               />
 
               <Typography size="md" fw={600}>
-                ≈ 100000000
-              </Typography>
-
-              <Image
-                src="/img/tokens/wewe.svg"
-                width={17}
-                height={17}
-                alt="WEWE Logo"
-              />
-            </div>
-
-            <div className="flex justify-center gap-2 md:mb-4 mb-5">
-              <Typography size="md" fw={600}>
-                Ratio: 1000
-              </Typography>
-              <Image
-                src="/img/tokens/bbro.svg"
-                width={17}
-                height={17}
-                alt="bBRO Logo"
-              />
-
-              <Typography size="md" fw={600}>
-                ≈ 100000000
+                ≈ {dn.format([broEaterRate, 2], { locale: "en" })}
               </Typography>
 
               <Image
@@ -148,7 +135,55 @@ const BroMergePage = () => {
               size="sm"
               className="font-black"
             >
-              24,214,500,960
+              {dn.format([broContractBalance, 18], { locale: "en" })}
+            </Typography>
+
+          </div>
+
+        </Card>
+
+        <Card className="flex flex-col items-center py-10 h-unset justify-between md:h-[270px]">
+          <div className="flex flex-col items-center mb-5">
+            <div className="flex justify-center gap-2 md:mb-4 mb-5">
+              <Typography size="md" fw={600}>
+                Ratio: 1
+              </Typography>
+              <Image
+                src="/img/tokens/bbro.svg"
+                width={17}
+                height={17}
+                alt="bBRO Logo"
+              />
+
+              <Typography size="md" fw={600}>
+                ≈ {dn.format([bbroEaterRate, 2], { locale: "en" })}
+              </Typography>
+
+              <Image
+                src="/img/tokens/wewe.svg"
+                width={17}
+                height={17}
+                alt="WEWE Logo"
+              />
+            </div>
+          </div>
+
+
+          <div className="flex flex-col items-center">
+            <Typography
+              secondary
+              size="sm"
+              className="text-yellow font-black my-4"
+            >
+              AVAILABLE $WEWE:
+            </Typography>
+
+            <Typography
+              secondary
+              size="sm"
+              className="font-black"
+            >
+              {dn.format([bbroContractBalance, 18], { locale: "en" })}
             </Typography>
 
           </div>
