@@ -54,7 +54,7 @@ export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
             />
 
             <Typography size="md" fw={600}>
-              ≈ {Number(formatEther(props.ratio)).toLocaleString()}
+              ≈ {Number(formatEther(props.ratio)).toLocaleString("en-US")}
             </Typography>
 
             <Image
@@ -71,16 +71,16 @@ export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
             />
             <div className="flex flex-col">
               {
-                props.amount 
-                ? <>
-                  <Typography size="sm" className="text_light_gray">
-                    CLAIMED
-                  </Typography>
-                  <Typography size="md" className="font-bold">
-                    {props.amount}
-                  </Typography>
-                </>
-                : <Loader />
+                props.amount
+                  ? <>
+                    <Typography size="sm" className="text_light_gray">
+                      CLAIMED
+                    </Typography>
+                    <Typography size="md" className="font-bold">
+                      {props.amount}
+                    </Typography>
+                  </>
+                  : <Loader />
               }
             </div>
           </div>

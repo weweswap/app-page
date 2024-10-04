@@ -103,7 +103,7 @@ export const BroMergeForm = () => {
               {!isFetching && (
                 <div className="overflow-x-auto">
                   <Typography size="xl">
-                    {Number(formatEther(0n)).toLocaleString()} WEWE
+                    {Number(formatEther(0n)).toLocaleString("en-US")} WEWE
                   </Typography>
                 </div>
               )}
@@ -119,7 +119,7 @@ export const BroMergeForm = () => {
                 {/* $4,690,420,090.00 */}
                 {Math.trunc(
                   Number(formatEther(balanceBro))
-                ).toLocaleString()}
+                ).toLocaleString("en-US")}
               </Typography>
             </div>
             <div className="flex gap-3 items-center">
@@ -166,7 +166,7 @@ export const BroMergeForm = () => {
       </div>
       {
         isProcessing &&
-        <MergeProcessingModal 
+        <MergeProcessingModal
           onClose={() => {
             setIsProcessing(false)
           }}
@@ -192,27 +192,27 @@ export const BroMergeForm = () => {
             setIsProcessing(false)
             setIsCompleted(true)
           }}
-          onOpen={() => {}}     
+          onOpen={() => { }}
         />
       }
-      <FailTXModal 
-        hash={hash as Hex} 
-        opened={isFailed} 
+      <FailTXModal
+        hash={hash as Hex}
+        opened={isFailed}
         onClose={() => {
           setHash(undefined)
           setIsFailed(false)
         }
-        } 
+        }
       />
-      <MergeCompleteModal 
-        hash={hash as Hex} 
-        amount={amountClaimed} 
-        ratio={100n} 
-        inputToken="BRO" 
+      <MergeCompleteModal
+        hash={hash as Hex}
+        amount={amountClaimed}
+        ratio={100n}
+        inputToken="BRO"
         onClose={() => {
           setAmountClaimed(undefined)
           setIsCompleted(false)
-        }} 
+        }}
         opened={isCompleted} />
     </div>
   );

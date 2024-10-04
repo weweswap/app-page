@@ -80,7 +80,7 @@ export const SwapModal = (props: SwapModalProps) => {
               />
             </div>
             <Typography size="xs">
-              ${Number(routeData.routeSummary.amountInUsd).toLocaleString()}
+              ${Number(routeData.routeSummary.amountInUsd).toLocaleString("en-US")}
             </Typography>
           </div>
 
@@ -106,7 +106,7 @@ export const SwapModal = (props: SwapModalProps) => {
               />
             </div>
             <Typography size="xs">
-              ${Number(routeData.routeSummary.amountOutUsd).toLocaleString()}
+              ${Number(routeData.routeSummary.amountOutUsd).toLocaleString("en-US")}
             </Typography>
           </div>
 
@@ -129,7 +129,7 @@ export const SwapModal = (props: SwapModalProps) => {
                     routeData.inputToken.decimals
                   )
                 )
-              ).toLocaleString()}{" "}
+              ).toLocaleString("en-US")}{" "}
               {routeData.outputToken.symbol} ($1.00)
             </Typography>
           </div>
@@ -154,7 +154,7 @@ export const SwapModal = (props: SwapModalProps) => {
               {"<"}$
               {Number(
                 routeData.routeSummary.extraFee.feeAmount
-              ).toLocaleString()}
+              ).toLocaleString("en-US")}
             </Typography>
           </div>
 
@@ -163,7 +163,7 @@ export const SwapModal = (props: SwapModalProps) => {
             <div className="flex items-center gap-1">
               <Image src="/img/icons/fee.svg" width={14} height={14} alt="" />
               <Typography size="xs" fw={700}>
-                ${Number(routeData.routeSummary.gasUsd).toLocaleString()}
+                ${Number(routeData.routeSummary.gasUsd).toLocaleString("en-US")}
               </Typography>
             </div>
           </div>
@@ -199,8 +199,8 @@ export const SwapModal = (props: SwapModalProps) => {
                 {swapState.pendingSwap
                   ? "Pending wallet confirm"
                   : swapState.confirmingSwap
-                  ? "Pending ..."
-                  : " Confirm Swap"}
+                    ? "Pending ..."
+                    : " Confirm Swap"}
               </Typography>
             </Button>
           )}

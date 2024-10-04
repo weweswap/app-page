@@ -57,7 +57,7 @@ export const MergeCompleteModal = (props: MergeCompleteProps) => {
             />
 
             <Typography size="md" fw={600}>
-              ≈ {Number(formatEther(props.ratio)).toLocaleString()}
+              ≈ {Number(formatEther(props.ratio)).toLocaleString("en-US")}
             </Typography>
 
             <Image

@@ -50,8 +50,8 @@ export const RedeemHome = () => {
       const weweFDV = wewePrice * totalWeweSupply;
       setVultFDV(
         ((weweBalanceNumber + virtualBalance) / totalWeweSupply) *
-          weweFDV *
-          (totalVultSupply / vultBalanceNumber)
+        weweFDV *
+        (totalVultSupply / vultBalanceNumber)
       );
     }
   }, [weweBalance, vultBalance, wewePrice]);
@@ -210,7 +210,7 @@ export const RedeemHome = () => {
                 <>
                   {Math.trunc(
                     Number(formatEther(weweBalance))
-                  ).toLocaleString()}
+                  ).toLocaleString("en-US")}
                 </>
               )}
             </Typography>
@@ -236,7 +236,7 @@ export const RedeemHome = () => {
                   alt="Vult"
                 />
                 <Typography size="md" fw={600} className="md:py-5 py-2">
-                  Balance: {Number(formatEther(balanceVult)).toLocaleString()}
+                  Balance: {Number(formatEther(balanceVult)).toLocaleString("en-US")}
                 </Typography>
               </div>
               <div className="flex gap-2 md:my-5 my-2 md:mb-5 md:justify-start justify-center ">
@@ -267,7 +267,7 @@ export const RedeemHome = () => {
                   Balance ≈ Value: $
                   {(
                     Number(formatEther(balanceVult)) * vultPrice
-                  ).toLocaleString()}
+                  ).toLocaleString("en-US")}
                 </Typography>
               </div>
               {!isVultBalanceFetching && (
@@ -276,7 +276,7 @@ export const RedeemHome = () => {
                   fw={600}
                   className="md:py-5 py-2 text_yellow"
                 >
-                  FDV: ${Math.trunc(vultFDV).toLocaleString()}
+                  FDV: ${Math.trunc(vultFDV).toLocaleString("en-US")}
                 </Typography>
               )}
             </div>
