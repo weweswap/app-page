@@ -76,10 +76,6 @@ const BroMergePage = () => {
       <div className="flex flex-col justify-between md:col-span-4 col-span-12 md:order-2 order-1">
         <Card className="flex flex-col items-center py-10 h-unset md:h-[544px] justify-between">
           <div className="flex flex-col items-center">
-            <Typography secondary size="sm" className="font-black	mb-4">
-              Starting in <span className="text-yellow">/</span>
-            </Typography>
-
             <Typography
               size="sm"
               secondary
