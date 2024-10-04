@@ -135,7 +135,7 @@ const BroMergePage = () => {
               size="sm"
               className="font-black"
             >
-              {dn.format([broContractBalance, 18], { locale: "en" })}
+              {dn.format([broContractBalance, 18], { locale: "en", digits: 0 })}
             </Typography>
 
           </div>
@@ -183,7 +183,7 @@ const BroMergePage = () => {
               size="sm"
               className="font-black"
             >
-              {dn.format([bbroContractBalance, 18], { locale: "en" })}
+              {dn.format([bbroContractBalance, 18], { locale: "en", digits: 0 })}
             </Typography>
 
           </div>
