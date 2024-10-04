@@ -2,6 +2,8 @@ import { formatEther, Hex } from "viem";
 import { Modal as MtModal, ModalRootProps, Loader } from "@mantine/core";
 import { Button, Typography } from "~/components/common";
 import Image from "next/image";
+import * as dn from "dnum";
+
 type MergeCompleteModalProps = {
   hash: Hex;
   amount?: string;
@@ -44,7 +46,7 @@ export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
           </Typography>
           <div className="flex justify-center gap-2 md:my-5 my-2 md:mb-5 mb-10">
             <Typography size="md" fw={600}>
-              Ratio: 1000
+              Ratio: 1
             </Typography>
             <Image
               src={props.inputToken === "BRO" ? "/img/tokens/bro.svg" : "/img/tokens/bbro.svg"}
@@ -54,7 +56,7 @@ export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
             />
 
             <Typography size="md" fw={600}>
-              ≈ {Number(formatEther(props.ratio)).toLocaleString()}
+              ≈ {dn.format([props.ratio, 2], { locale: "en" })}
             </Typography>
 
             <Image
@@ -71,16 +73,16 @@ export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
             />
             <div className="flex flex-col">
               {
-                props.amount 
-                ? <>
-                  <Typography size="sm" className="text_light_gray">
-                    CLAIMED
-                  </Typography>
-                  <Typography size="md" className="font-bold">
-                    {props.amount}
-                  </Typography>
-                </>
-                : <Loader />
+                props.amount
+                  ? <>
+                    <Typography size="sm" className="text_light_gray">
+                      CLAIMED
+                    </Typography>
+                    <Typography size="md" className="font-bold">
+                      {props.amount}
+                    </Typography>
+                  </>
+                  : <Loader />
               }
             </div>
           </div>
