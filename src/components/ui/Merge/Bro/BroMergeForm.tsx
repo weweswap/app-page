@@ -120,7 +120,7 @@ export const BroMergeForm = () => {
                 {/* $4,690,420,090.00 */}
                 {Math.trunc(
                   Number(formatEther(balanceBro))
-                ).toLocaleString()}
+                ).toLocaleString("en-US")}
               </Typography>
             </div>
             <div className="flex gap-3 items-center">

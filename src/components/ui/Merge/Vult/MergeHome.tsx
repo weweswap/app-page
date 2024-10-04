@@ -161,7 +161,7 @@ export const MergeHome = (props: MergeHomeProps) => {
               </span>
 
               <>
-                {Math.trunc(Number(formatEther(weweBalance))).toLocaleString()}
+                {Math.trunc(Number(formatEther(weweBalance))).toLocaleString("en-US")}
               </>
             </Typography>
 
@@ -221,7 +221,7 @@ export const MergeHome = (props: MergeHomeProps) => {
                 />
 
                 <Typography size="md" fw={600}>
-                  ≈ {Number(formatEther(ratio)).toLocaleString()}
+                  ≈ {Number(formatEther(ratio)).toLocaleString("en-US")}
                 </Typography>
 
                 <Image
@@ -246,7 +246,7 @@ export const MergeHome = (props: MergeHomeProps) => {
                   ${" "}
                   {(
                     Number(formatUnits(balanceVult, 18)) * vultPrice
-                  ).toLocaleString()}
+                  ).toLocaleString("en-US")}
                 </Typography>
               </div>
 
@@ -255,7 +255,7 @@ export const MergeHome = (props: MergeHomeProps) => {
                 fw={600}
                 className="md:py-5 py-2 text_yellow"
               >
-                FDV: ${Math.trunc(vultFDV).toLocaleString()}
+                FDV: ${Math.trunc(vultFDV).toLocaleString("en-US")}
               </Typography>
             </div>
 

@@ -68,8 +68,8 @@ const MergeOperation = () => {
       const weweFDV = wewePrice * totalWeweSupply;
       setVultFDV(
         ((weweBalanceNumber + virtualBalance) / totalWeweSupply) *
-          weweFDV *
-          (totalVultSupply / vultBalanceNumber)
+        weweFDV *
+        (totalVultSupply / vultBalanceNumber)
       );
     }
   }, [weweBalance, vultBalance, wewePrice]);
@@ -158,7 +158,7 @@ const MergeOperation = () => {
                 {!isFetching && (
                   <div className="overflow-x-auto">
                     <Typography size="xl">
-                      {Number(formatEther(quoteAmount)).toLocaleString()} VULT
+                      {Number(formatEther(quoteAmount)).toLocaleString("en-US")} VULT
                     </Typography>
                   </div>
                 )}
@@ -174,7 +174,7 @@ const MergeOperation = () => {
                   {/* $4,690,420,090.00 */}
                   {Math.trunc(
                     Number(formatEther(balanceWewe))
-                  ).toLocaleString()}
+                  ).toLocaleString("en-US")}
                 </Typography>
               </div>
               <div className="flex gap-3 items-center">
@@ -231,7 +231,7 @@ const MergeOperation = () => {
       {isConfirmed && ratio && (
         <MergeCompleteModal
           ratio={ratio}
-          amount={Number(formatEther(quoteAmount)).toLocaleString()}
+          amount={Number(formatEther(quoteAmount)).toLocaleString("en-US")}
           opened={openedMergeCompleteModal}
           onClose={closeMergeCompleteModal}
           hash={hash!}

@@ -246,7 +246,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
             <Typography size="xs">
               $
               {routeData
-                ? Number(routeData.routeSummary.amountInUsd).toLocaleString()
+                ? Number(routeData.routeSummary.amountInUsd).toLocaleString("en-US")
                 : "0.00"}
             </Typography>
             <div className="flex items-center gap-1 cursor-pointer" onClick={() => {
@@ -265,7 +265,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
                 {Number(formatUnits(
                   getCurrentBalance(),
                   TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
-                )).toFixed(6).toLocaleString()}{" "}
+                )).toLocaleString("en-US", { maximumSignificantDigits: 6 })}{" "}
                 {inTokenOptions[inputTokenIndex].value}
               </Typography>
             </div>
@@ -304,7 +304,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
                     routeData.routeSummary.amountOut,
                     TOKEN_LIST[outputTokenIndex].decimals
                   )
-                ).toLocaleString()
+                ).toLocaleString("en-US")
                 : "0.0"}
             </Typography>
 
@@ -320,7 +320,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           <Typography size="xs" ta="center">
             $
             {routeData
-              ? Number(routeData.routeSummary.amountOutUsd).toLocaleString()
+              ? Number(routeData.routeSummary.amountOutUsd).toLocaleString("en-US")
               : "0.00"}{" "}
             (
             {routeData
@@ -331,7 +331,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
                     Number(routeData.routeSummary.amountOutUsd) /
                     Number(routeData.routeSummary.amountInUsd)) *
                   -100
-                ).toLocaleString()
+                ).toLocaleString("en-US")
               : "0.00"}
             %)
           </Typography>
@@ -380,11 +380,10 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
                     TOKEN_LIST[inputTokenIndex].decimals
                   )
                 )
-              ).toLocaleString()}{" "}
+              ).toLocaleString("en-US")}{" "}
               {TOKEN_LIST[outputTokenIndex].symbol} ($
               {(Number(routeData.routeSummary.amountInUsd) / inputValue)
-                .toFixed(5)
-                .toLocaleString()}
+                .toLocaleString("en-US", { maximumFractionDigits: 5 })}
               )
             </Typography>
           </div>
@@ -403,7 +402,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
             <div className="flex items-center gap-1">
               <Image src="/img/icons/fee.svg" width={14} height={14} alt="" />
               <Typography size="xs" fw={700}>
-                ${Number(routeData.routeSummary.gasUsd).toLocaleString()}
+                ${Number(routeData.routeSummary.gasUsd).toLocaleString("en-US")}
               </Typography>
               <Image
                 src="/img/icons/arrow_down.svg"
@@ -425,7 +424,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
                 $
                 {Number(
                   routeData.routeSummary.extraFee.feeAmount
-                ).toLocaleString()}
+                ).toLocaleString("en-US")}
               </Typography>
               <Image
                 src="/img/icons/arrow_down.svg"
