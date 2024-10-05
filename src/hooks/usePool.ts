@@ -43,15 +43,9 @@ export async function calculateTlvForTokens(
   token0: string,
   token1: string
 ) {
-  // const totalUnderlying = await arrakisHelper.totalUnderlying(vaultAddress);
 
   const token0Contract = new ethers.Contract(token0, erc20Abi, provider);
   const token1Contract = new ethers.Contract(token1, erc20Abi, provider);
-
-  // const token0decimals = await token0Contract.decimals();
-  // const token1decimals = await token1Contract.decimals();
-  // const priceInUsdToken0 = await fetchPricePerAddressInUsdc(token0);
-  // const priceInUsdToken1 = await fetchPricePerAddressInUsdc(token1);
 
   const [
     totalUnderlying,
@@ -138,9 +132,6 @@ export function useWewePools(): UseQueryResult<
             provider
           );
 
-          // const token0 = await arrakisVault.token0();
-          // const token1 = await arrakisVault.token1();
-
           const [token0, token1, poolAddressList] = await Promise.all([
             arrakisVault.token0(),
             arrakisVault.token1(),
@@ -175,8 +166,6 @@ export function useWewePools(): UseQueryResult<
             vaultInfoData && typeof vaultInfoData.feesPerDay === "number"
               ? vaultInfoData.feesPerDay.toFixed(2)
               : "0.00";
-
-          // const poolAddressList = await arrakisVault.getPools();
 
           const uniswapContract = new ethers.Contract(
             poolAddressList[0],
