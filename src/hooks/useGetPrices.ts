@@ -11,8 +11,10 @@ export function useGetPrices(token0?: TokenItem, token1?: TokenItem): UseQueryRe
           return { priceToken0: 0, priceToken1: 0 }
         }
         
-        const priceInUsdToken0 = await fetchPricePerAddressInUsdc(token0.address);
-        const priceInUsdToken1 = await fetchPricePerAddressInUsdc(token1.address);
+        const [ priceInUsdToken0, priceInUsdToken1 ] = await Promise.all([
+            fetchPricePerAddressInUsdc(token0.address),
+            fetchPricePerAddressInUsdc(token1.address),
+        ]);
 
         return {
             priceToken0: priceInUsdToken0,
