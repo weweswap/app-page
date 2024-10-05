@@ -46,7 +46,7 @@ const MyShares = ({
   const { address } = useAccount();
   const { data: wewePools, isLoading: isLoadingPools } = useWewePools();
 
-  const { data: wewePositions, isLoading: isLaodingPositions } = useWewePositions(
+  const { data: wewePositions, isLoading: isLoadingPositions } = useWewePositions(
     wewePools?.wewePools,
     address
   );
@@ -80,7 +80,7 @@ const MyShares = ({
                 <ConnectButton />
               </div>
             )}
-            {!isLaodingPositions && !isLoadingPools && address && (
+            {!isLoadingPositions && !isLoadingPools && address && (
               <div className="w-full flex flex-col">
                 <Typography size="lg">MEMES 1%</Typography>
                 {wewePositions?.wewePositions.map((wewePosition) => {
