@@ -12,7 +12,6 @@ import { provider } from "./provider";
 import uniswapV3PoolAbi from "~/lib/abis/UniswapPool";
 import { API_BASE_URL } from "~/constants/configs";
 
-
 export type WewePool = {
   address: Hex;
   poolType: string;
@@ -44,16 +43,29 @@ export async function calculateTlvForTokens(
   token0: string,
   token1: string
 ) {
-  const totalUnderlying = await arrakisHelper.totalUnderlying(vaultAddress);
+  // const totalUnderlying = await arrakisHelper.totalUnderlying(vaultAddress);
 
   const token0Contract = new ethers.Contract(token0, erc20Abi, provider);
   const token1Contract = new ethers.Contract(token1, erc20Abi, provider);
 
-  const token0decimals = await token0Contract.decimals();
-  const token1decimals = await token1Contract.decimals();
+  // const token0decimals = await token0Contract.decimals();
+  // const token1decimals = await token1Contract.decimals();
+  // const priceInUsdToken0 = await fetchPricePerAddressInUsdc(token0);
+  // const priceInUsdToken1 = await fetchPricePerAddressInUsdc(token1);
 
-  const priceInUsdToken0 = await fetchPricePerAddressInUsdc(token0);
-  const priceInUsdToken1 = await fetchPricePerAddressInUsdc(token1);
+  const [
+    totalUnderlying,
+    token0decimals,
+    token1decimals,
+    priceInUsdToken0,
+    priceInUsdToken1,
+  ] = await Promise.all([
+    arrakisHelper.totalUnderlying(vaultAddress),
+    token0Contract.decimals(),
+    token1Contract.decimals(),
+    fetchPricePerAddressInUsdc(token0),
+    fetchPricePerAddressInUsdc(token1),
+  ]);
 
   const tlvToken0 =
     Number(ethers.formatUnits(totalUnderlying[0].toString(), token0decimals)) *
@@ -88,7 +100,6 @@ export function useWewePools(): UseQueryResult<
       const weweVaults = await arrakisFactory.vaults(0, weweVaultNumber);
 
       const wewePools: WewePool[] = [];
-
       const poolAddresses: string[] = [];
 
       for (let key in weweVaults) {
@@ -117,6 +128,7 @@ export function useWewePools(): UseQueryResult<
         })
       );
 
+
       for (let key in weweVaults) {
         if (Object.hasOwn(weweVaults, key)) {
           const vaultAddress = weweVaults[key];
@@ -125,8 +137,15 @@ export function useWewePools(): UseQueryResult<
             ArrakisVaultABI,
             provider
           );
-          const token0 = await arrakisVault.token0();
-          const token1 = await arrakisVault.token1();
+
+          // const token0 = await arrakisVault.token0();
+          // const token1 = await arrakisVault.token1();
+
+          const [token0, token1, poolAddressList] = await Promise.all([
+            arrakisVault.token0(),
+            arrakisVault.token1(),
+            arrakisVault.getPools()
+          ]);
 
           const tlv = await calculateTlvForTokens(
             vaultAddress,
@@ -157,19 +176,21 @@ export function useWewePools(): UseQueryResult<
               ? vaultInfoData.feesPerDay.toFixed(2)
               : "0.00";
 
-          const poolAddressList = await arrakisVault.getPools();
-            
+          // const poolAddressList = await arrakisVault.getPools();
+
           const uniswapContract = new ethers.Contract(
             poolAddressList[0],
             uniswapV3PoolAbi,
             provider
           );
-          
-          
+
           const poolFeePercentage = await uniswapContract.fee();
-          console.log(vaultInfoData)
-          const volume =  vaultInfoData && typeof vaultInfoData.feesPerDay === "number"
-          ? vaultInfoData.feesPerDay / Number(ethers.formatUnits(poolFeePercentage, 6)) : 0; 
+          console.log(vaultInfoData);
+          const volume =
+            vaultInfoData && typeof vaultInfoData.feesPerDay === "number"
+              ? vaultInfoData.feesPerDay /
+                Number(ethers.formatUnits(poolFeePercentage, 6))
+              : 0;
 
           wewePools.push({
             address: weweVaults[key],
