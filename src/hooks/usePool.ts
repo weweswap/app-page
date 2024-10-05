@@ -36,7 +36,7 @@ export interface VaultInfoResponse {
   feesPerDay: number;
 }
 
-async function calculateTlvForTokens(
+export async function calculateTlvForTokens(
   vaultAddress: string,
   arrakisHelper: ethers.Contract,
   provider: ethers.JsonRpcProvider,

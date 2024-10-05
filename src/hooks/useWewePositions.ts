@@ -92,9 +92,9 @@ async function getPendingUsdcRewards(
   const totalReward =
     (userBalance * accumulatedRewardsPerShare) / rewardsPrecision;
 
-  const pendingToHardvest = totalReward - userRewardsDebt;
+  const pendingToHarvest = totalReward - userRewardsDebt
 
-  return ethers.formatUnits(pendingToHardvest, 6).toString();
+  return ethers.formatUnits(pendingToHarvest, 6).toString();
 }
 
 export function useWewePositions(
