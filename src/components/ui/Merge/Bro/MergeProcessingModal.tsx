@@ -9,7 +9,7 @@ import { useEat } from '~/hooks/useEater';
 import { TokenItem } from '~/models';
 import { Hex } from 'viem';
 
-export type PayloadMergeProcessingModald = {
+export type PayloadMergeProcessingModal = {
   amountToMerge: string,
   token: TokenItem
   eater: Hex
@@ -21,7 +21,7 @@ type MergeProcessingModalProps = {
   onTxError: (hash?: Hex) => void;
   onMergeSuccess: (hash?: Hex) => void;
   opened: boolean;
-  data: PayloadMergeProcessingModald
+  data: PayloadMergeProcessingModal;
 } & ModalRootProps;
 
 const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened }: MergeProcessingModalProps) => {

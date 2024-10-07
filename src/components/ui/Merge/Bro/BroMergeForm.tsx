@@ -29,7 +29,7 @@ export const BroMergeForm = () => {
   const [hash, setHash] = useState<Hex>()
   const { rate, isLoading: isRateLoading } = useEaterRate(CONTRACT_ADDRESSES.broEater);
   const handleSelect = (div: number) => {
-    setAmount(String(Number(formatEther(balanceBro)) / div));
+    setAmount(dn.toString(dn.div([balanceBro, 18], div)));
   };
 
   const handleMerge = () => {
@@ -52,7 +52,8 @@ export const BroMergeForm = () => {
     },
   });
 
-  const isPending = false;
+  const amountBigNumber = ethers.parseUnits(amount || "0", 18);
+
   return (
     <div className="flex flex-col gap-4">
       {/* <Card className="flex flex-col gap-5"> */}
@@ -153,11 +154,10 @@ export const BroMergeForm = () => {
               disabled={!address || !amount}
               onClick={
                 isConnected
-                  ? () => handleMerge()
-                  : () => openConnectModal && openConnectModal()
+                  ? handleMerge
+                  : () => openConnectModal?.()
               }
             >
-              {isPending && <Loader color="white" size="sm" />}
               <Typography secondary size="sm" fw={700} tt="uppercase">
                 Merge🔥
               </Typography>
@@ -172,7 +172,7 @@ export const BroMergeForm = () => {
             setIsProcessing(false)
           }}
           data={{
-            amountToMerge: ethers.parseUnits(amount, 18).toString(),
+            amountToMerge: amountBigNumber < balanceBro ? amountBigNumber.toString() : balanceBro.toString(),
             token: {
               chain: Chain.BASE,
               symbol: "BRO",
