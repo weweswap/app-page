@@ -29,7 +29,7 @@ export const BBroMergeForm = () => {
   const { rate, isLoading: isRateLoading } = useEaterRate(CONTRACT_ADDRESSES.bbroEater);
 
   const handleSelect = (div: number) => {
-    setAmount(String(Number(formatEther(balanceBBro)) / div));
+    setAmount(dn.toString(dn.div([balanceBBro, 18], div)));
   };
 
   const handleMerge = () => {
@@ -51,6 +51,8 @@ export const BBroMergeForm = () => {
       setAmountClaimed(Number(ethers.formatUnits(logs[0]?.args?.value || 0, 18)).toFixed(4))
     },
   });
+
+  const amountBigNumber = ethers.parseUnits(amount || "0", 18);
 
   return (
     <div className="flex flex-col gap-4">
@@ -170,7 +172,7 @@ export const BBroMergeForm = () => {
             setIsProcessing(false)
           }}
           data={{
-            amountToMerge: ethers.parseUnits(amount, 18).toString(),
+            amountToMerge: amountBigNumber < balanceBBro ? amountBigNumber.toString() : balanceBBro.toString(),
             token: {
               chain: Chain.BASE,
               symbol: "bBRO",
