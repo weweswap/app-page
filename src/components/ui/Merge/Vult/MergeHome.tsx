@@ -61,7 +61,7 @@ export const MergeHome = (props: MergeHomeProps) => {
 
   const totalVultSupply = 100000000; //100m
   const totalWeweSupply = 100000000000; //100bn
-  const virtualBalance = 10000000000 - 10000000000; //10bn - 10bn
+  const virtualBalance = 10000000000 ; //10bn (fixed from the last update)
   useEffect(() => {
     if (wewePrice > 0) {
       const weweBalanceNumber = Number(formatEther(weweBalance));
