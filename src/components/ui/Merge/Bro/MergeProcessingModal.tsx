@@ -38,15 +38,18 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
   const {
     hash: hashEatBroToken,
     isPending: isPendingEatBroToken,
-    isConfirming: isConfirmingEatBroToken,
     isError: isErrorEatBroToken,
     eat: eat,
   } = useEat(data.eater);
 
   useEffect(() => {
     async function startEat() {
-      await approveBroToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'))
-      await eat(data.amountToMerge)
+      try{
+        await approveBroToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'))
+        await eat(data.amountToMerge)
+      } catch (error) {
+        console.error(error)
+      }
     }
     startEat()
   }, [data, address])
@@ -57,13 +60,13 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
     }
   }, [isErrorEatBroToken, isErrorApproveBroToken, hashEatBroToken, hashApproveBroToken])
 
-  const finishSuccessfully = hashEatBroToken && hashApproveBroToken && (!isPendingEatBroToken && !isPendingApproveBroToken) && (!isConfirmingEatBroToken && !isConfirmingApproveBroToken)
+  const finishSuccessfully = hashEatBroToken && hashApproveBroToken && (!isPendingApproveBroToken) && (!isPendingEatBroToken && !isConfirmingApproveBroToken)
 
   useEffect(() => {
-    if (hashEatBroToken && (!isPendingEatBroToken) && (!isConfirmingEatBroToken)) {
+    if (hashEatBroToken && !isPendingEatBroToken) {
       onMergeSuccess(hashEatBroToken)
     }
-  }, [hashEatBroToken, isPendingEatBroToken, isConfirmingEatBroToken])
+  }, [hashEatBroToken, isPendingEatBroToken])
 
   return (
     <Modal title="MERGE TOKENS" onClose={onClose} opened={opened}>
@@ -93,7 +96,7 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
           }
         </div>
         {
-          !isConfirmingApproveBroToken && !isConfirmingEatBroToken && !finishSuccessfully &&
+          !isConfirmingApproveBroToken && !isPendingEatBroToken && !finishSuccessfully &&
           <div className='flex gap-3 items-center'>
             <Image src="/img/icons/inform.svg" width={36} height={36} alt='' />
             <Typography>Please sign transaction</Typography>

@@ -36,7 +36,7 @@ export const BroMergeForm = () => {
     setIsProcessing(true);
   };
 
-  const { data: balanceBro } = useTokenBalance(
+  const { data: balanceBro, refetch: refetchBalance } = useTokenBalance(
     address,
     CONTRACT_ADDRESSES.broToken
   );
@@ -190,8 +190,10 @@ export const BroMergeForm = () => {
           }}
           onMergeSuccess={hash => {
             setHash(hash)
-            setIsProcessing(false)
             setIsCompleted(true)
+            setIsProcessing(false)
+            setAmount("")
+            refetchBalance()
           }}
           onOpen={() => { }}
         />

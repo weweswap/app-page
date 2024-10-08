@@ -36,7 +36,7 @@ export const BBroMergeForm = () => {
     setIsProcessing(true);
   };
 
-  const { data: balanceBBro } = useTokenBalance(
+  const { data: balanceBBro, refetch: refetchBalance } = useTokenBalance(
     address,
     CONTRACT_ADDRESSES.bbroToken
   );
@@ -192,6 +192,8 @@ export const BBroMergeForm = () => {
             setHash(hash)
             setIsProcessing(false)
             setIsCompleted(true)
+            setAmount("")
+            refetchBalance()
           }}
           onOpen={() => { }}
         />
