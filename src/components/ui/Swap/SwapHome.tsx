@@ -122,7 +122,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       )
       .then((res) => {
         setSwapState({ ...swapState, loading: false });
-        res.data.message == RouterMessageType.Succussful
+        res.data.message == RouterMessageType.Successful
           ? setRouteData({
             inputToken: TOKEN_LIST[inputTokenIndex],
             outputToken: TOKEN_LIST[outputTokenIndex],
@@ -148,7 +148,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         )
         .then((res) => {
           setSwapState({ ...swapState, loading: false });
-          res.data.message == RouterMessageType.Succussful
+          res.data.message == RouterMessageType.Successful
             ? setRouteData({
               inputToken: TOKEN_LIST[inputTokenIndex],
               outputToken: TOKEN_LIST[outputTokenIndex],

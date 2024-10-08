@@ -61,7 +61,7 @@ export const SwapButton = (props: SwapButtonProps) => {
       .then((res) => {
         setSwapState({ ...swapState, loading: false });
         const data = res.data;
-        if (data.message == RouterMessageType.Succussful) {
+        if (data.message == RouterMessageType.Successful) {
           setSwapState({ ...swapState, approved: true, buildErrorCode: "" });
           setEncodedData(data.data as BuildData);
           openSwapModal();

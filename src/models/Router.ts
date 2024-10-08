@@ -8,7 +8,7 @@ export interface RouteData {
 }
 
 export enum RouterMessageType {
-  Succussful = "successfully",
+  Successful = "successfully",
 }
 
 export interface RouterApiResponse {
