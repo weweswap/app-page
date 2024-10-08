@@ -1,6 +1,5 @@
-import { useReadContract, useWriteContract } from "wagmi";
+import { usePublicClient, useReadContract, useWriteContract } from "wagmi";
 import { Hex } from "viem";
-import { provider } from "./provider";
 import { useState } from "react";
 import eaterABI from "~/lib/abis/Eater";
 
@@ -8,26 +7,32 @@ export function useEat (eaterAddress: Hex) {
   const [ pendingToConfirm, setPendingToConfirm ] = useState(false)
     const {
         data: hash,
-        isPending: isTxCreating,
         isError: isCreationError,
         writeContractAsync,
     } = useWriteContract();
+    const publicClient = usePublicClient();
+
     const eat = async (amount: string) => {
+        if (!publicClient) {
+          throw Error("Public client not found");
+        }
+
+        setPendingToConfirm(true);
+
         const tx = await writeContractAsync({
           abi: eaterABI,
           address: eaterAddress,
           functionName: "merge",
           args: [amount],
         });
-        setPendingToConfirm(true)
-        const receipt = await provider.waitForTransaction(tx);
-        setPendingToConfirm(false)
+        const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
+
+        setPendingToConfirm(false);
         return receipt;
     };
     return {
         hash: hash,
-        isPending: isTxCreating,
-        isConfirming: pendingToConfirm,
+        isPending: pendingToConfirm,
         isError: isCreationError,
         eat,
     };
