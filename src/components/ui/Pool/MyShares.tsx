@@ -51,9 +51,8 @@ const MyShares = ({
     address
   );
 
-  console.log(wewePositions, error)
 
-  if (isLoadingPositions) return <div>Loading...</div>;
+  if (isLoadingPositions) return null;
 
   return (
     <>
