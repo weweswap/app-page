@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Card, Typography } from "~/components/common";
@@ -14,6 +16,16 @@ const BroMergePage = () => {
 
   const { data: broContractBalance } = useTokenBalance(CONTRACT_ADDRESSES.broEater, CONTRACT_ADDRESSES.wewe);
   const { data: bbroContractBalance } = useTokenBalance(CONTRACT_ADDRESSES.bbroEater, CONTRACT_ADDRESSES.wewe);
+
+  const getDaysRemaining = () => {
+    const today = new Date();
+    const startDate = new Date("2024-10-07 16:30:00");
+    const timeDiff = today.getTime() - startDate.getTime();
+    return Math.ceil(timeDiff / (1000 * 3600 * 24));
+  }
+
+  console.log("test");
+  const delta = getDaysRemaining();
 
   return (
     <div className="gap-5 grid grid-cols-12">
@@ -87,7 +99,7 @@ const BroMergePage = () => {
               size="lg"
               secondary
               className="font-bold my-8">
-              60 DAYS
+              {delta} DAYS
             </Typography>
           </div>
 
