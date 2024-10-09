@@ -91,14 +91,15 @@ async function getPendingRewards(
     feeManagerContract.rate(),
   ]);
 
-  const totalReward = dn.mul(userBalance, accumulatedRewardsPerShare, Math.log10(Number(rewardsPrecision)));
+  const totalReward = (userBalance * accumulatedRewardsPerShare) / rewardsPrecision;
 
-  const pendingToHarvest = dn.sub(totalReward, userRewardsDebt);
-  const pendingToHarvestChaos = dn.div(dn.mul(pendingToHarvest, chaosRate), 100);
+  const pendingToHarvest = totalReward - userRewardsDebt;
+  const chaosRewardBigNumber = pendingToHarvest * chaosRate;
+  const pendingToHarvestChaos = Number(chaosRewardBigNumber) / 100;
 
   return {
-    usdc: dn.toString(pendingToHarvest, 6),
-    chaos: dn.toString(pendingToHarvestChaos, 6),
+    usdc: ethers.formatUnits(pendingToHarvest, 6).toString(),
+    chaos: ethers.formatUnits(pendingToHarvestChaos, 6).toString(),
   }
 }
 

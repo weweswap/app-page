@@ -1,4 +1,4 @@
-import { Loader, ModalRootProps } from "@mantine/core";
+import { Divider, Loader, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
 import React from "react";
 import { Button, Modal, Typography } from "~/components/common";
@@ -108,13 +108,9 @@ const WithdrawSuccessModal = ({
             </div>
           </div>
         </div>
+        <Divider className="border-blue-700 w-full" />
         <Typography secondary size="lg">
           CLAIMED FEES
-        </Typography>
-        <Typography fw={1000} size="xxl">
-          ${
-            formatNumber(selectedPosition?.pendingUsdcReward ?? 0, { decimalDigits: 6 })
-          }
         </Typography>
         <div className="flex gap-2 items-center">
           <Typography fw={1000} size="lg">
@@ -130,7 +126,7 @@ const WithdrawSuccessModal = ({
           <Typography fw={1000} size="lg">
             {formatNumber(selectedPosition?.pendingChaosReward ?? 0, { decimalDigits: 6 })} CHAOS
           </Typography>
-          <Image src={"/img/icons/rewards.svg"} alt="" height={40} width={40} />
+          <Image src={"/img/tokens/rewards.svg"} alt="" height={40} width={40} />
         </div>
         <Typography size="sm" fw={1000} className="text-right w-full text_light_gray">Total fee cost: $0.10</Typography>
         <Button className="w-full" onClick={onClose}>
