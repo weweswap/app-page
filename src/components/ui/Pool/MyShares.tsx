@@ -46,10 +46,14 @@ const MyShares = ({
   const { address } = useAccount();
   const { data: wewePools, isLoading: isLoadingPools } = useWewePools();
 
-  const { data: wewePositions, isLoading: isLoadingPositions } = useWewePositions(
+  const { data: wewePositions, isLoading: isLoadingPositions, error } = useWewePositions(
     wewePools?.wewePools,
     address
   );
+
+  console.log(wewePositions, error)
+
+  if (isLoadingPositions) return <div>Loading...</div>;
 
   return (
     <>
@@ -86,6 +90,7 @@ const MyShares = ({
                 {wewePositions?.wewePositions.map((wewePosition) => {
                   return (
                     <div
+                      key={wewePosition.wewePoolAddress}
                       onClick={() => handleShowDetails(wewePosition)}
                       className="bg_dark w-full min-h-[10rem] p-4 hover:bg-[#181818] cursor-pointer"
                     >

@@ -7,6 +7,7 @@ import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { calculateTlvForTokens, WewePool } from "./usePool";
 import feeManagerABI from "~/lib/abis/FeeManager";
 import { provider } from "./provider";
+import * as dn from "dnum";
 
 export type WewePosition = {
   title: string;
@@ -90,15 +91,14 @@ async function getPendingRewards(
     feeManagerContract.rate(),
   ]);
 
-  const totalReward =
-    (userBalance * accumulatedRewardsPerShare) / rewardsPrecision;
+  const totalReward = dn.div(dn.mul(userBalance, accumulatedRewardsPerShare), rewardsPrecision);
 
-  const pendingToHarvest = totalReward - userRewardsDebt;
-  const pendingToHarvestChaos = pendingToHarvest * chaosRate / 100;
+  const pendingToHarvest = dn.sub(totalReward, userRewardsDebt);
+  const pendingToHarvestChaos = dn.div(dn.mul(pendingToHarvest, chaosRate), 100);
 
   return {
-    usdc: ethers.formatUnits(pendingToHarvest, 6).toString(),
-    chaos: ethers.formatUnits(pendingToHarvestChaos, 6).toString(),
+    usdc: dn.toString(pendingToHarvest, 6),
+    chaos: dn.toString(pendingToHarvestChaos, 6),
   }
 }
 
