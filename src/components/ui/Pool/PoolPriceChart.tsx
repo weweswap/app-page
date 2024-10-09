@@ -6,7 +6,7 @@ import { Hex } from "viem";
 import { Typography } from "~/components/common";
 import { LoadingScreen } from "~/components/common/LoadingScreen";
 import { API_BASE_URL } from "~/constants/configs";
-import { formatDollarValueNumber } from "~/utils";
+import { formatNumber } from "~/utils";
 
 interface PoolPriceChartProps {
   address: Hex,
@@ -66,13 +66,13 @@ export const PoolPriceChart = ({ address, timeFrame }: PoolPriceChartProps) => {
           width={70}
           tickLine={false}
           className="text-xs"
-          tickFormatter={(v) => formatDollarValueNumber(v, 7)}
+          tickFormatter={(v) => `$${formatNumber(v, { decimalDigits: 7 })}`}
         />
         <Tooltip
           cursor={{ radius: 3, fillOpacity: 0.1 }}
           contentStyle={{ backgroundColor: "rgba(0,0,0,0.7)", border: "none", fontSize: "14px" }}
           formatter={(value) => {
-            return [formatDollarValueNumber(value as number, 7), "Price"]
+            return [`$${formatNumber(value as number, { decimalDigits: 7 })}`, "Price"]
           }}
           labelFormatter={(v) => dayjs(v).format("DD.MMM YYYY HH:mm")}
         />

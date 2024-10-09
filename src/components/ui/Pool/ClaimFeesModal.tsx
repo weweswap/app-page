@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { Button, Card, Modal, Typography } from "~/components/common";
 import { WewePosition } from "~/hooks/useWewePositions";
+import { formatNumber } from "~/utils";
 
 type ClaimedFeesModalProps = {
   onClaim: () => void;
@@ -40,25 +41,21 @@ const ClaimedFeesModal = ({ wewePosition, opened, onClose, onClaim, loading}: Cl
           PENDING FEES
         </Typography>
         <Typography size="lg" className="font-bold">
-          {
-            new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-              minimumFractionDigits: 6,
-            }).format(Number(wewePosition?.pendingUsdcReward))
+          ${
+            formatNumber(wewePosition?.pendingUsdcReward || "0", { decimalDigits: 6 })
           }
         </Typography>
         <div className="flex items-center gap-2">
-          <Typography size="xs">{Number(wewePosition?.pendingUsdcReward)} USDC</Typography>
+          <Typography size="xs">{formatNumber(wewePosition?.pendingUsdcReward || "0", { decimalDigits: 6 })} USDC</Typography>
           <Image src="/img/tokens/usdc.png" alt="" height={20} width={20} />
         </div>
-        {/* <Typography size="xs" className="text_light_gray pt-10">
+        <Typography size="xs" className="text_light_gray pt-10">
           Estimated Fees: $0,017
-        </Typography> */}
-        {/* <Divider className="border-blue-700 w-full" /> */}
+        </Typography>
+        <Divider className="border-blue-700 w-full" />
       </div>
       <div className="flex flex-col items-center gap-3">
-        {/* <Image
+        <Image
           src="/img/icons/pending.svg"
           alt="Pending"
           width={50}
@@ -67,16 +64,16 @@ const ClaimedFeesModal = ({ wewePosition, opened, onClose, onClaim, loading}: Cl
         <Typography size="sm" secondary>
           PENDING CHAOS
         </Typography>
-        <Typography size="lg" className="font-bold">
-          $2,34
-        </Typography>
         <div className="flex items-center gap-2">
-          <Typography size="xs">1020,02 CHAOS</Typography>
+          <Typography size="xs">
+            {
+              formatNumber(wewePosition?.pendingChaosReward || "0", { decimalDigits: 6 })
+            } CHAOS</Typography>
           <Image src="/img/icons/chaos.svg" alt="" height={20} width={20} />
         </div>
-        <Typography size="xs" className="text_light_gray">
+        <Typography size="xs" className="text_light_gray pt-10">
           Estimated Fees: $0,017
-        </Typography> */}
+        </Typography>
         <Button onClick={onClaim} className="w-full flex items-center justify-center gap-2" disabled={loading}>
           <Typography secondary>CLAIM</Typography>
           {loading && <Loader color="white" size="sm" />}

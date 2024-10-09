@@ -216,7 +216,8 @@ export const Pool = () => {
           onClose={handleCloseSuccesModal}
           hash={hash!}
           data={{
-            pendingUsdcReward: wewePositionSelected?.pendingUsdcReward!
+            pendingUsdcReward: wewePositionSelected?.pendingUsdcReward || "0",
+            pendingChaosReward: wewePositionSelected?.pendingChaosReward || "0",
           }}
         />
       )}

@@ -2,11 +2,12 @@ import { Divider, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
 import React from "react";
 import { Button, Card, Modal, Typography } from "~/components/common";
+import { formatNumber } from "~/utils";
 
 type ClaimSuccessModalProps = {
   onClose: () => void;
   hash: string;
-  data: { pendingUsdcReward: string };
+  data: { pendingUsdcReward: string; pendingChaosReward: string };
 } & ModalRootProps;
 
 const ClaimSuccessModal = (props: ClaimSuccessModalProps) => {
@@ -45,30 +46,23 @@ const ClaimSuccessModal = (props: ClaimSuccessModalProps) => {
           CLAIMED FEES
         </Typography>
         <Typography size="lg" className="font-bold">
-          {
-            new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-              minimumFractionDigits: 6,
-            }).format(Number(props.data.pendingUsdcReward))
+          ${
+            formatNumber(props.data.pendingUsdcReward, { decimalDigits: 6 })
           }
         </Typography>
         <div className="flex items-center gap-2 mb-3">
           <Typography size="xs">
-            {props.data.pendingUsdcReward} USDC 
+            {formatNumber(props.data.pendingUsdcReward)} USDC 
           </Typography>
           <Image src="/img/tokens/usdc.png" alt="" height={30} width={30} />
         </div>
-        {/* <Typography size="sm" secondary className="mt-5">
+        <Typography size="sm" secondary className="mt-5">
         CLAIMED CHAOS
         </Typography>
-        <Typography size="lg" className="font-bold">
-          $2,34
-        </Typography>
         <div className="flex items-center gap-2">
-          <Typography size="xs">1020,02 CHAOS</Typography>
-          <Image src="/img/icons/chaos.svg" alt="" height={30} width={30} />
-        </div> */}
+          <Typography size="xs">{ formatNumber(props.data.pendingChaosReward, { decimalDigits: 6 }) } CHAOS</Typography>
+          <Image src="/img/icons/rewards.svg" alt="" height={30} width={30} />
+        </div>
       </div>
       {/* <Typography className='flex justify-end w-full mb-3' size='xs'>Total fee cost: $ 0.10</Typography> */}
     </div>

@@ -15,6 +15,7 @@ import ComingSoon from "~/components/common/ComingSoon";
 import { WewePosition } from "~/hooks/useWewePositions";
 import { PoolChartCard } from "./PoolChartCard";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { formatNumber } from "~/utils";
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -206,7 +207,30 @@ const PoolDeposit = ({
             <Divider className="border-blue-700 mt-4" />
             {enableClaimBlock && (
               <div className="mt-10">
-                <div className="flex items-center justify-center">
+                <div className="flex gap-20 justify-center mb-5">
+                  <div>
+                  <div className="flex items-center justify-center">
+                  <Typography size="xs" className="font-bold mr-2">
+                    PENDING REWARDS
+                  </Typography>
+                  <Image
+                    src="/img/tokens/rewards.svg"
+                    alt=""
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <Typography size="lg" className="font-bold py-4 text-center">
+                  {
+                    formatNumber(selectedPosition?.pendingChaosReward  || 0, {
+                      decimalDigits: 6
+                    })
+                  }
+                </Typography>
+                  </div>
+                
+                  <div>
+                  <div className="flex items-center justify-center">
                   <Typography size="xs" className="font-bold mr-2">
                     PENDING FEES
                   </Typography>
@@ -218,12 +242,15 @@ const PoolDeposit = ({
                   />
                 </div>
                 <Typography size="lg" className="font-bold py-4 text-center">
-                  {new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                    minimumFractionDigits: 6,
-                  }).format(Number(selectedPosition?.pendingUsdcReward))}
+                  ${
+                    formatNumber(selectedPosition?.pendingUsdcReward || 0, {
+                      decimalDigits: 6
+                    })
+                  }
                 </Typography>
+                  </div>
+                
+                </div>
                 <button
                   className="custom_btn w-full uppercase"
                   onClick={() =>

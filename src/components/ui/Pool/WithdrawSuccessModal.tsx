@@ -6,6 +6,7 @@ import { useGetBurnEvents } from "~/hooks/useGetBurnEvents";
 import { usePoolContext } from "./PoolContext";
 import { Hex } from "viem";
 import { ethers } from "ethers";
+import { formatNumber } from "~/utils";
 
 export type PayloadWithdrawalSuccess = {
   hash?: Hex
@@ -14,7 +15,7 @@ export type PayloadWithdrawalSuccess = {
 type WithdrawSuccessModalProps = {
   onOpen: () => void;
   onClose: () => void;
-  data?: PayloadWithdrawalSuccess
+  data?: PayloadWithdrawalSuccess;
 } & ModalRootProps;
 
 const handleDetails = (hash: string) => {
@@ -28,10 +29,10 @@ const handleDetails = (hash: string) => {
 const WithdrawSuccessModal = ({
   onClose,
   opened,
-  data
+  data,
 }: WithdrawSuccessModalProps) => {
-  const { selectedPool } = usePoolContext();
-  const { data: event } = useGetBurnEvents(selectedPool?.address, data?.hash)
+  const { selectedPool, selectedPosition } = usePoolContext();
+  const { data: event } = useGetBurnEvents(selectedPool?.address, data?.hash);
 
   if (!event) {
     return (
@@ -42,7 +43,7 @@ const WithdrawSuccessModal = ({
       </Modal>
     );
   }
-  
+
   return (
     <Modal title="WITHDRAW SUCCESS" onClose={onClose} opened={opened}>
       <div className="flex flex-col items-center gap-6">
@@ -107,36 +108,36 @@ const WithdrawSuccessModal = ({
             </div>
           </div>
         </div>
-        {/* <Typography secondary size="lg">
+        <Typography secondary size="lg">
           CLAIMED FEES
         </Typography>
         <Typography fw={1000} size="xxl">
-          $2.34
+          ${
+            formatNumber(selectedPosition?.pendingUsdcReward ?? 0, { decimalDigits: 6 })
+          }
         </Typography>
         <div className="flex gap-2 items-center">
           <Typography fw={1000} size="lg">
-            2.34 USDC
+            {formatNumber(selectedPosition?.pendingUsdcReward ?? 0, { decimalDigits: 6 })} USDC
           </Typography>
           <Image src={"/img/tokens/usdc.png"} alt="" height={40} width={40} />
         </div>
         <Typography secondary size="lg">
           CLAIMED CHAOS
         </Typography>
-        <Typography fw={1000} size="xxl">
-          $2.34
-        </Typography>
+
         <div className="flex gap-2 items-center">
           <Typography fw={1000} size="lg">
-          1020,02 CHAOS
+            {formatNumber(selectedPosition?.pendingChaosReward ?? 0, { decimalDigits: 6 })} CHAOS
           </Typography>
-          <Image src={"/img/icons/chaos.svg"} alt="" height={40} width={40} />
-        </div> */}
+          <Image src={"/img/icons/rewards.svg"} alt="" height={40} width={40} />
+        </div>
         <Typography size="sm" fw={1000} className="text-right w-full text_light_gray">Total fee cost: $0.10</Typography>
         <Button className="w-full" onClick={onClose}>
-            COMPLETED
+          COMPLETED
         </Button>
         <button className="custom_btn w-full" onClick={() => handleDetails(data?.hash!)}>
-            VIEW DETAILS
+          VIEW DETAILS
         </button>
       </div>
     </Modal>
