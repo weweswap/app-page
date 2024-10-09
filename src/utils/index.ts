@@ -39,11 +39,18 @@ export function formatPrice(price: number) {
   }
 }
 
-export function formatDollarValueNumber(
+export function formatNumber(
   value: string | number | dn.Dnum,
-  decimalDigits = 2,
+  options?: {
+    decimalDigits?: number;
+    compact?: boolean;
+  }
 ) {
   const dnValue = dn.isDnum(value) ? value : dn.from(value);
-  return `$${dn.format(dnValue, { digits: decimalDigits, compact: true, locale: "en" })}`;
+  return dn.format(dnValue, { 
+    digits: options?.decimalDigits ?? 2, 
+    compact: options?.compact ?? false, 
+    locale: "en" 
+  });
 }
 

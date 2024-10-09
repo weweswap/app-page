@@ -6,7 +6,7 @@ import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { provider } from "~/hooks/provider";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import dayjs from "dayjs";
-import { formatDollarValueNumber } from "~/utils";
+import { formatNumber } from "~/utils";
 import { LoadingScreen } from "~/components/common/LoadingScreen";
 import { Typography } from "~/components/common";
 
@@ -127,13 +127,13 @@ export const PoolVolumeChart = ({ address, timeFrame }: PoolVolumeChartProps) =>
           width={40}
           tickLine={false}
           className="text-xs"
-          tickFormatter={formatDollarValueNumber}
+          tickFormatter={(value) => `$${formatNumber(value, {compact: true})}`}
         />
         <Tooltip
           cursor={{ radius: 3, fillOpacity: 0.1 }}
           contentStyle={{ backgroundColor: "rgba(0,0,0,0.7)", border: "none", fontSize: "14px" }}
-          formatter={(value, name, props) => {
-            return [formatDollarValueNumber(value as string), "Volume"]
+          formatter={(value) => {
+            return [`$${formatNumber(value as string, {compact: true})}`, "Volume"]
           }}
           labelFormatter={(v) => dayjs(v).format("DD.MMM YYYY HH:mm")}
         />
