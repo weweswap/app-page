@@ -91,7 +91,7 @@ async function getPendingRewards(
     feeManagerContract.rate(),
   ]);
 
-  const totalReward = dn.mul(userBalance, accumulatedRewardsPerShare, Math.log10(rewardsPrecision));
+  const totalReward = dn.mul(userBalance, accumulatedRewardsPerShare, Math.log10(Number(rewardsPrecision)));
 
   const pendingToHarvest = dn.sub(totalReward, userRewardsDebt);
   const pendingToHarvestChaos = dn.div(dn.mul(pendingToHarvest, chaosRate), 100);

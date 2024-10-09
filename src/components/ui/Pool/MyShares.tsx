@@ -51,9 +51,6 @@ const MyShares = ({
     address
   );
 
-
-  if (isLoadingPositions) return null;
-
   return (
     <>
       {currentPage == "" && (
