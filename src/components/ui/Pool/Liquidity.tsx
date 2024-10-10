@@ -6,6 +6,7 @@ import { useWewePools, WewePool } from "~/hooks/usePool";
 
 import { usePoolContext } from "./PoolContext";
 import PoolDeposit from "./PoolDeposit";
+import { formatNumber } from "~/utils";
 
 type LiquidityProps = {
   setPoolTypes: (number: number) => void;
@@ -137,7 +138,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: Liquidity
                       </td>
                       <td className="p-4 hidden sm:table-cell">
                         <Typography size="xs" opacity={0.7}>
-                          ${wewePool.volume}
+                          ${formatNumber(wewePool.volume)}
                         </Typography>
                       </td>
                       <td className="p-4 hidden sm:table-cell">
