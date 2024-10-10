@@ -9,6 +9,10 @@ import { CONTRACT_ADDRESSES } from "~/constants";
 import { useEaterRate } from "~/hooks/useEater";
 import * as dn from "dnum";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
+import dayjs from "dayjs";
+
+const startDateTimeStamp = 1728288000000;
+const endDateTimeStamp = 1733472000000;
 
 const BroMergePage = () => {
   const { rate: broEaterRate } = useEaterRate(CONTRACT_ADDRESSES.broEater);
@@ -18,14 +22,8 @@ const BroMergePage = () => {
   const { data: bbroContractBalance } = useTokenBalance(CONTRACT_ADDRESSES.bbroEater, CONTRACT_ADDRESSES.wewe);
 
   const getDaysRemaining = () => {
-    const today = new Date();
-    const startDate = new Date("2024-10-07 16:30:00");
-    const timeDiff = today.getTime() - startDate.getTime();
-    return Math.ceil(timeDiff / (1000 * 3600 * 24));
+    return dayjs(endDateTimeStamp).diff(dayjs(), "day");
   }
-
-  console.log("test");
-  const delta = getDaysRemaining();
 
   return (
     <div className="gap-5 grid grid-cols-12">
@@ -57,7 +55,7 @@ const BroMergePage = () => {
               <li>
                 Fixed Rate of 1 $BRO to {dn.format([broEaterRate, 2], { locale: "en" })} $WEWE.
               </li>
-              <li>Your can Merge $BRO from 04/10/24 to 04/12/24</li>
+              <li>Your can Merge $BRO from {dayjs(startDateTimeStamp).format("DD/MM/YY")} to {dayjs(endDateTimeStamp).format("DD/MM/YY")}</li>
             </ul>
           </div>
         </Card>
@@ -75,7 +73,7 @@ const BroMergePage = () => {
               <li>
                 Fixed Rate of 1 $bBRO to {dn.format([bbroEaterRate, 2], { locale: "en" })} $WEWE.
               </li>
-              <li>Your can Merge $bBRO from 04/10/24 to 04/12/24</li>
+              <li>Your can Merge $bBRO from {dayjs(startDateTimeStamp).format("DD/MM/YY")} to {dayjs(endDateTimeStamp).format("DD/MM/YY")}</li>
             </ul>
           </div>
         </Card>
@@ -99,7 +97,7 @@ const BroMergePage = () => {
               size="lg"
               secondary
               className="font-bold my-8">
-              {delta} DAYS
+              {getDaysRemaining() > 0 ? getDaysRemaining() : 0} DAYS
             </Typography>
           </div>
 

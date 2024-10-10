@@ -11,7 +11,6 @@ import { useAccount } from "wagmi";
 import RangeSlider from "~/components/common/RangeSlider";
 import { ethers } from "ethers";
 import { useGetPrices } from "~/hooks/useGetPrices";
-import ComingSoon from "~/components/common/ComingSoon";
 import { WewePosition } from "~/hooks/useWewePositions";
 import { PoolChartCard } from "./PoolChartCard";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
@@ -269,11 +268,11 @@ const PoolDeposit = ({
             <div className="grid grid-cols-2 md:grid-cols-4 my-3 gap-4 gap-y-8">
               <div className="flex flex-col items-center gap-4">
                 <Typography className="text-sm sm:text-base font-extrabold">TVL</Typography>
-                <Typography className="text-sm sm:text-base">$ {Number(selectedPool.tvl).toFixed(2)}</Typography>
+                <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.tvl)}</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography className="text-sm sm:text-base  font-extrabold">VOLUME</Typography>
-                <Typography className="text-sm sm:text-base">$ {selectedPool.volume}/day</Typography>
+                <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.volume)}/day</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
@@ -400,8 +399,10 @@ const PoolDeposit = ({
                       height={24}
                     />
                     <Typography size="xs">
-                      {Number(
-                        ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
+                      {formatNumber(
+                        ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals), {
+                          decimalDigits: 6
+                        }
                       )}{" "}
                       {selectedPool?.token0.symbol}
                     </Typography>
@@ -414,8 +415,10 @@ const PoolDeposit = ({
                       height={24}
                     />
                     <Typography size="xs">
-                      {Number(
-                        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
+                      {formatNumber(
+                        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals), {
+                          decimalDigits: 6
+                        }
                       )}{" "}
                       {selectedPool?.token1.symbol}
                     </Typography>
