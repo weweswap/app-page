@@ -126,7 +126,7 @@ const MergePage = () => {
                       src="/img/tokens/goodle.svg"
                       width={32}
                       height={32}
-                      alt="BRO logo"
+                      alt="GOODLE logo"
                     />
                     <Image
                       className="ml-[-10px] w-10 h-10"
