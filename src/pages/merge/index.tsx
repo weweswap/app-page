@@ -114,6 +114,50 @@ const MergePage = () => {
                 </Link>
               </td>
             </tr>
+            <tr
+              className="bg-[#1c1c1c] w-[full] cursor-pointer hover:bg-[#202020]"
+              style={{ borderBottom: "1rem solid black" }}
+            >
+              <td className="p-4 font-bold ">
+                <div className="flex items-center gap-5">
+                  <div className="flex gap-1">
+                    <Image
+                      className="w-10 h-10"
+                      src="/img/tokens/goodle.svg"
+                      width={32}
+                      height={32}
+                      alt="BRO logo"
+                    />
+                    <Image
+                      className="ml-[-10px] w-10 h-10"
+                      src="/img/tokens/wewe.svg"
+                      width={32}
+                      height={32}
+                      alt="WEWE logo"
+                    />
+                  </div>
+                  <Typography size="sm" opacity={0.7}>
+                    GOODLE/WEWE
+                  </Typography>
+                </div>
+              </td>
+              <td className="p-4" align="right">
+                <Link href="/merge/goodle">
+                  <Button
+                    className="w-full md:w-auto min-w-[6rem]"
+                  >
+                    <Typography
+                      secondary
+                      size="xs"
+                      fw="700"
+                      tt="uppercase"
+                    >
+                      MERGE
+                    </Typography>
+                  </Button>
+                </Link>
+              </td>
+            </tr>
           </tbody>
         </table>
       </Card>
