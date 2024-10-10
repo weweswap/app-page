@@ -42,7 +42,7 @@ export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
             className="text_light_gray"
             ta="center"
           >
-            successfuly merged
+            successfully merged
           </Typography>
           <div className="flex justify-center gap-2 md:my-5 my-2 md:mb-5 mb-10">
             <Typography size="md" fw={600}>
