@@ -1,14 +1,22 @@
 import { NumberInput } from '@mantine/core'
 import Image from 'next/image'
 import React, { useState } from 'react'
-import { formatEther } from 'viem'
+import { formatEther, Hex } from 'viem'
 import { Button, Typography } from '~/components/common'
 import { dogica } from '~/fonts'
 import { cn } from '~/utils'
+import MergeCompleteModal from './MergeCompleteModal'
+import { FailTXModal } from '~/components/common/FailTXModal'
+import { hash } from 'crypto'
 
 const GoodleMergeForm = () => {
 
     const [amount, setAmount] = useState("")
+
+    const [isProcessing, setIsProcessing] = useState(false)
+    const [isFailed, setIsFailed] = useState(false)
+    const [isComplete, setIsComplete] = useState(false)
+    const [hash, setHash] = useState<Hex>()
 
     const handleSelect = (div: number) => {
         
@@ -95,6 +103,7 @@ const GoodleMergeForm = () => {
         <div className="flex flex-col gap-3 w-full md:w-auto ">
           <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
             <Button
+            onClick={() => setIsComplete(true)}
               className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
              
             >
@@ -105,6 +114,8 @@ const GoodleMergeForm = () => {
           </div>
         </div>
       </div>
+      <FailTXModal hash={hash as Hex} opened={isFailed} onClose={() => {setIsFailed(false)}} />
+      <MergeCompleteModal onClose={() => setIsComplete(false)} opened={isComplete} />
     </>
   )
 }
