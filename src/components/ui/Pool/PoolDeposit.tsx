@@ -106,44 +106,40 @@ const PoolDeposit = ({
       const formattedToken0 = Number(
         ethers.formatUnits(resultToken0, selectedPool?.token0.decimals)
       );
+      const formattedShares = Number(ethers.formatUnits(resultShares, 18));
 
       const formattedToken1 = Number(
         ethers.formatUnits(resultToken1, selectedPool?.token1.decimals)
       )
 
-      const formattedShares = Number(ethers.formatUnits(resultShares, 18));
-
-      
-
       const token1Equivalent =
         (formattedToken0 * prices.priceToken0) / prices.priceToken1;
-
-      const token0Equivalent = 
-      (formattedToken1 * prices.priceToken0) / prices.priceToken1;
-
-      const walletToken0 = Number(
-        ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
-      )
-
-      const walletToken1 = Number(
-        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
-      )
-
-      console.log("Equivalent:", prices.priceToken0*walletToken0/prices.priceToken1)
-
-      if(prices.priceToken0*walletToken0/prices.priceToken1 < walletToken1 ) {
-        setInputValueToken0(formattedToken0);
-        setFormattedShares(formattedShares);
-        setInputValueToken1(Number(token1Equivalent.toFixed(6)));
-      }
-
-      else {
-        setInputValueToken1(formattedToken1);
-        setFormattedShares(formattedShares);
-        setInputValueToken0(Number(token0Equivalent.toFixed(6)))
-      }
+        const token0Equivalent = 
+        (formattedToken1 * prices.priceToken1) / prices.priceToken0;
+  
+        const walletToken0 = Number(
+          ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
+        )
+  
+        const walletToken1 = Number(
+          ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
+        )
+  
+        console.log("Equivalent:",prices.priceToken0)
+  
+        if(prices.priceToken0*walletToken0/prices.priceToken1 < walletToken1 ) {
+          setInputValueToken0(formattedToken0);
+          setFormattedShares(formattedShares);
+          setInputValueToken1(formattedToken1);
+        }
+  
+        else {
+          setInputValueToken1(formattedToken1);
+          setFormattedShares(formattedShares);
+          setInputValueToken0(Number(token0Equivalent.toFixed(6)))
+        }
     }
-  }, [prices, sliderValue, balanceToken0, balanceToken1, selectedPool]);
+  }, [prices, sliderValue, balanceToken0, selectedPool]);
 
   const handleChangeToken0 = (newValue: number) => {
     if (prices) {
