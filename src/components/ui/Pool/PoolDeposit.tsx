@@ -143,7 +143,7 @@ const PoolDeposit = ({
         setInputValueToken0(Number(token0Equivalent.toFixed(6)))
       }
     }
-  }, [prices, sliderValue, balanceToken0, selectedPool]);
+  }, [prices, sliderValue, balanceToken0, balanceToken1, selectedPool]);
 
   const handleChangeToken0 = (newValue: number) => {
     if (prices) {
