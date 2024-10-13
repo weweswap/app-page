@@ -1,10 +1,14 @@
 import Link from 'next/link'
 import React from 'react'
+import { useAccount } from 'wagmi'
 import { Card, Typography } from '~/components/common'
 import GoodleMergeForm from '~/components/ui/Merge/Goodle/GoodleMergeForm'
+import { CONTRACT_ADDRESSES } from '~/constants'
+import { useTokenBalance } from '~/hooks/useTokenBalance'
 
 const GoodleMergePage = () => {
 
+  const {address, isConnected} = useAccount()
 
   return (
     <div>

@@ -24,4 +24,5 @@ export const CONTRACT_ADDRESSES = {
     "0x6f71796114b9cdaef29a801bc5cdbcb561990eeb" as `0x${string}`,
   nonFungiblePositionManagerAddress:
     "0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1" as `0x${string}`,
+  goodle: "0x40312F66C4362FA165607E28D3f812b463761803" as `0x${string}`
 };
