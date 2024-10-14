@@ -1,4 +1,4 @@
-const GoodleAbi = [
+const GoodleEaterAbi = [
     {
         "inputs": [
             {
@@ -390,4 +390,4 @@ const GoodleAbi = [
     }
 ]
 
-export default GoodleAbi
+export default GoodleEaterAbi

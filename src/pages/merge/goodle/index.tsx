@@ -10,9 +10,8 @@ import * as dn from "dnum";
 
 const GoodleMergePage = () => {
 
-  const { rate } = useEaterRate(CONTRACT_ADDRESSES.goodle);
+  const { rate } = useEaterRate(CONTRACT_ADDRESSES.goodleEater);
 
-  console.log("RATE:", dn.format([rate, 2], { locale: "en" }))
 
   return (
     <div>

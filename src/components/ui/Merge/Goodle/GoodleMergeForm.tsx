@@ -15,18 +15,19 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import * as dn from "dnum"
 import GoodleProcessingModal from './GoodleProcessingModal'
 import { ethers } from 'ethers'
+import { useEaterRate } from '~/hooks/useEater'
 
 const GoodleMergeForm = () => {
 
     const [amount, setAmount] = useState("")
-
     const {address, isConnected} = useAccount()
     const {openConnectModal} = useConnectModal()
-
+    const [amountClaimed, setAmountClaimed] = useState<string>()
     const [isProcessing, setIsProcessing] = useState(false)
     const [isFailed, setIsFailed] = useState(false)
     const [isComplete, setIsComplete] = useState(false)
     const [hash, setHash] = useState<Hex>()
+    const { rate, isLoading: isRateLoading } = useEaterRate(CONTRACT_ADDRESSES.goodleEater);
 
     const amountBigNumber = ethers.parseUnits(amount || "0", 18);
 
@@ -36,7 +37,7 @@ const GoodleMergeForm = () => {
 
     const {data: balanceGoodle, refetch: refetchBalance}= useTokenBalance(
       address,
-      CONTRACT_ADDRESSES.goodle
+      CONTRACT_ADDRESSES.goodleEater
     )
 
     const handleRedeem = () => {
@@ -139,17 +140,17 @@ const GoodleMergeForm = () => {
           </div>
         </div>
       </div>
-      <GoodleProcessingModal opened={isProcessing}
+      {/* <GoodleProcessingModal opened={isProcessing}
       data={{
         amountToMerge: amountBigNumber < balanceGoodle ? amountBigNumber.toString() : balanceGoodle.toString(),
             token: {
               chain: Chain.BASE,
-              symbol: "BRO",
-              address: CONTRACT_ADDRESSES.broToken,
-              icon: "/img/tokens/bro.svg",
+              symbol: "GOODLE",
+              address: CONTRACT_ADDRESSES.goodleEater,
+              icon: "/img/tokens/goodle.svg",
               decimals: 18,
             },
-            eater: CONTRACT_ADDRESSES.broEater,
+            eater: CONTRACT_ADDRESSES.goodleEater,
       }}
       onTxError={(hash) => {
             setHash(hash)
@@ -166,9 +167,27 @@ const GoodleMergeForm = () => {
             setAmount("")
             refetchBalance()
           }}
-          onOpen={() => {}} />
-      <FailTXModal hash={hash as Hex} opened={isFailed} onClose={() => {setIsFailed(false)}} />
-      <MergeCompleteModal onClose={() => setIsComplete(false)} opened={isComplete} />
+          onOpen={() => {}} /> */}
+      <FailTXModal 
+        hash={hash as Hex} 
+        opened={isFailed} 
+        onClose={() => {
+          setIsFailed(false)
+          setHash(undefined)
+          }} />
+      <MergeCompleteModal 
+        amount={amountClaimed} 
+        hash={hash as Hex} 
+        inputToken='GOODLE'
+        ratio={rate}
+        onClose={() => {
+          setAmountClaimed(undefined)
+          setIsComplete(false)
+        }}
+        opened={isComplete} 
+
+        />
+
     </>
   )
 }

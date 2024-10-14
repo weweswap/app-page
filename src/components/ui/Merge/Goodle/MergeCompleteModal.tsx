@@ -3,8 +3,15 @@ import { Modal as MtModal, ModalRootProps, Loader } from "@mantine/core";
 import { Button, Typography } from "~/components/common";
 import Image from "next/image";
 import * as dn from "dnum";
+import { Hex } from 'viem';
 
-type MergeCompleteModalProps = ModalRootProps;
+type MergeCompleteModalProps = {
+  hash: Hex;
+  amount?: string;
+  ratio: bigint;
+  inputToken: "GOODLE" ;
+  onClose: () => void;
+} & ModalRootProps;
 
 const MergeCompleteModal = (props:MergeCompleteModalProps) => {
   return (
@@ -43,8 +50,7 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
             />
 
             <Typography size="md" fw={600}>
-              {/* ≈ {dn.format([props.ratio, 2], { locale: "en" })} */}
-                5,000
+              ≈ {dn.format([props.ratio, 2], { locale: "en" })}
             </Typography>
 
             <Image
@@ -60,25 +66,20 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
               alt="WEWE logo"
             />
             <div className="flex flex-col">
-              {
-                   <>
+            {
+                props.amount
+                  ? <>
                     <Typography size="sm" className="text_light_gray">
                       CLAIMED
                     </Typography>
                     <Typography size="md" className="font-bold">
-                      0.0008
+                      {props.amount}
                     </Typography>
-                  </>    
+                  </>
+                  : <Loader />
               }
             </div>
           </div>
-          <Image
-            src="/videos/bro-merge-animation.gif"
-            width={272}
-            height={152}
-            alt="GOODLE merge animation"
-            className="w-full"
-          />
           <div className="flex flex-col gap-2">
             <Button className="w-full" onClick={props.onClose}>
               <Typography secondary size="md" fw={700} tt="uppercase">
