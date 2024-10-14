@@ -11,7 +11,6 @@ import { useAccount } from "wagmi";
 import RangeSlider from "~/components/common/RangeSlider";
 import { ethers } from "ethers";
 import { useGetPrices } from "~/hooks/useGetPrices";
-import ComingSoon from "~/components/common/ComingSoon";
 import { WewePosition } from "~/hooks/useWewePositions";
 import { PoolChartCard } from "./PoolChartCard";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
@@ -101,15 +100,44 @@ const PoolDeposit = ({
     if (prices && selectedPool) {
       const resultToken0 = (BigInt(sliderValue) * balanceToken0) / BigInt(100);
       const resultShares = (BigInt(sliderValue) * balanceShares) / BigInt(100);
+
+      const resultToken1 = (BigInt(sliderValue) * balanceToken1)/ BigInt(100);
+
       const formattedToken0 = Number(
         ethers.formatUnits(resultToken0, selectedPool?.token0.decimals)
       );
       const formattedShares = Number(ethers.formatUnits(resultShares, 18));
+
+      const formattedToken1 = Number(
+        ethers.formatUnits(resultToken1, selectedPool?.token1.decimals)
+      )
+
       const token1Equivalent =
         (formattedToken0 * prices.priceToken0) / prices.priceToken1;
-      setInputValueToken0(formattedToken0);
-      setFormattedShares(formattedShares);
-      setInputValueToken1(Number(token1Equivalent.toFixed(6)));
+        const token0Equivalent = 
+        (formattedToken1 * prices.priceToken1) / prices.priceToken0;
+  
+        const walletToken0 = Number(
+          ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
+        )
+  
+        const walletToken1 = Number(
+          ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
+        )
+  
+        console.log("Equivalent:",prices.priceToken0)
+  
+        if(prices.priceToken0*walletToken0/prices.priceToken1 < walletToken1 ) {
+          setInputValueToken0(formattedToken0);
+          setFormattedShares(formattedShares);
+          setInputValueToken1(formattedToken1);
+        }
+  
+        else {
+          setInputValueToken1(formattedToken1);
+          setFormattedShares(formattedShares);
+          setInputValueToken0(Number(token0Equivalent.toFixed(6)))
+        }
     }
   }, [prices, sliderValue, balanceToken0, selectedPool]);
 
@@ -269,11 +297,11 @@ const PoolDeposit = ({
             <div className="grid grid-cols-2 md:grid-cols-4 my-3 gap-4 gap-y-8">
               <div className="flex flex-col items-center gap-4">
                 <Typography className="text-sm sm:text-base font-extrabold">TVL</Typography>
-                <Typography className="text-sm sm:text-base">$ {Number(selectedPool.tvl).toFixed(2)}</Typography>
+                <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.tvl)}</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography className="text-sm sm:text-base  font-extrabold">VOLUME</Typography>
-                <Typography className="text-sm sm:text-base">$ {selectedPool.volume}/day</Typography>
+                <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.volume)}/day</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
@@ -400,8 +428,10 @@ const PoolDeposit = ({
                       height={24}
                     />
                     <Typography size="xs">
-                      {Number(
-                        ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
+                      {formatNumber(
+                        ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals), {
+                          decimalDigits: 6
+                        }
                       )}{" "}
                       {selectedPool?.token0.symbol}
                     </Typography>
@@ -414,8 +444,10 @@ const PoolDeposit = ({
                       height={24}
                     />
                     <Typography size="xs">
-                      {Number(
-                        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
+                      {formatNumber(
+                        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals), {
+                          decimalDigits: 6
+                        }
                       )}{" "}
                       {selectedPool?.token1.symbol}
                     </Typography>

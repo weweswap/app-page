@@ -18,7 +18,7 @@ export const NavBar = () => {
           <Image src="/img/logo.svg" width={129} height={56} alt="logo" />
         </Link>
 
-        <ul className="items-center gap-4 hidden sm:flex">
+        <ul className="items-center gap-4 hidden lg:flex">
           {PAGE_LINKS.map((link, key) => (
             <NavLink
               icon={link.icon}
