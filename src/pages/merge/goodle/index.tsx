@@ -4,11 +4,15 @@ import { useAccount } from 'wagmi'
 import { Card, Typography } from '~/components/common'
 import GoodleMergeForm from '~/components/ui/Merge/Goodle/GoodleMergeForm'
 import { CONTRACT_ADDRESSES } from '~/constants'
+import { useEaterRate } from '~/hooks/useEater'
 import { useTokenBalance } from '~/hooks/useTokenBalance'
+import * as dn from "dnum";
 
 const GoodleMergePage = () => {
 
-  const {address, isConnected} = useAccount()
+  const { rate } = useEaterRate(CONTRACT_ADDRESSES.goodle);
+
+  console.log("RATE:", dn.format([rate, 2], { locale: "en" }))
 
   return (
     <div>

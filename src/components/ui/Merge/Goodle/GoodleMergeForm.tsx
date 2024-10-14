@@ -8,10 +8,18 @@ import { cn } from '~/utils'
 import MergeCompleteModal from './MergeCompleteModal'
 import { FailTXModal } from '~/components/common/FailTXModal'
 import { hash } from 'crypto'
+import { useAccount } from 'wagmi'
+import { useTokenBalance } from '~/hooks/useTokenBalance'
+import { CONTRACT_ADDRESSES } from '~/constants'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
+import * as dn from "dnum"
 
 const GoodleMergeForm = () => {
 
     const [amount, setAmount] = useState("")
+
+    const {address, isConnected} = useAccount()
+    const {openConnectModal} = useConnectModal()
 
     const [isProcessing, setIsProcessing] = useState(false)
     const [isFailed, setIsFailed] = useState(false)
@@ -19,8 +27,18 @@ const GoodleMergeForm = () => {
     const [hash, setHash] = useState<Hex>()
 
     const handleSelect = (div: number) => {
-        
+        setAmount(dn.toString(dn.div([balanceGoodle, 18 ], div)))
       };
+
+    const {data: balanceGoodle, refetch: refetchBalance}= useTokenBalance(
+      address,
+      CONTRACT_ADDRESSES.goodle
+    )
+
+    const handleRedeem = () => {
+      
+      isConnected ? setIsProcessing(true) : openConnectModal?.()
+    }
 
   return (
     <>
@@ -86,7 +104,10 @@ const GoodleMergeForm = () => {
                 Available:
               </Typography>
               <Typography size="xs" className="text_light_gray">
-                $4,690,420,090.00
+                {/* $4,690,420,090.00 */}
+                {Math.trunc(
+                  Number(formatEther(balanceGoodle))
+                ).toLocaleString("en-US")}
               </Typography>
             </div>
             <div className="flex gap-3 items-center">
@@ -103,7 +124,7 @@ const GoodleMergeForm = () => {
         <div className="flex flex-col gap-3 w-full md:w-auto ">
           <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
             <Button
-            onClick={() => setIsComplete(true)}
+            onClick={handleRedeem}
               className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
              
             >
