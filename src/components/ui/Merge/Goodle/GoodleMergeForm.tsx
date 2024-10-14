@@ -10,9 +10,11 @@ import { FailTXModal } from '~/components/common/FailTXModal'
 import { hash } from 'crypto'
 import { useAccount } from 'wagmi'
 import { useTokenBalance } from '~/hooks/useTokenBalance'
-import { CONTRACT_ADDRESSES } from '~/constants'
+import { Chain, CONTRACT_ADDRESSES } from '~/constants'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import * as dn from "dnum"
+import GoodleProcessingModal from './GoodleProcessingModal'
+import { ethers } from 'ethers'
 
 const GoodleMergeForm = () => {
 
@@ -25,6 +27,8 @@ const GoodleMergeForm = () => {
     const [isFailed, setIsFailed] = useState(false)
     const [isComplete, setIsComplete] = useState(false)
     const [hash, setHash] = useState<Hex>()
+
+    const amountBigNumber = ethers.parseUnits(amount || "0", 18);
 
     const handleSelect = (div: number) => {
         setAmount(dn.toString(dn.div([balanceGoodle, 18 ], div)))
@@ -135,6 +139,34 @@ const GoodleMergeForm = () => {
           </div>
         </div>
       </div>
+      <GoodleProcessingModal opened={isProcessing}
+      data={{
+        amountToMerge: amountBigNumber < balanceGoodle ? amountBigNumber.toString() : balanceGoodle.toString(),
+            token: {
+              chain: Chain.BASE,
+              symbol: "BRO",
+              address: CONTRACT_ADDRESSES.broToken,
+              icon: "/img/tokens/bro.svg",
+              decimals: 18,
+            },
+            eater: CONTRACT_ADDRESSES.broEater,
+      }}
+      onTxError={(hash) => {
+            setHash(hash)
+            setIsFailed(true)
+            setIsProcessing(false)
+          }}
+          onClose={() => {
+            setIsProcessing(false)
+          }}
+          onMergeSuccess={hash => {
+            setHash(hash)
+            setIsComplete(true)
+            setIsProcessing(false)
+            setAmount("")
+            refetchBalance()
+          }}
+          onOpen={() => {}} />
       <FailTXModal hash={hash as Hex} opened={isFailed} onClose={() => {setIsFailed(false)}} />
       <MergeCompleteModal onClose={() => setIsComplete(false)} opened={isComplete} />
     </>
