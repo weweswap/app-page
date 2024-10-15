@@ -12,6 +12,8 @@ interface GoodleClaimFormProps {
 
 export const GoodleClaimForm = ({ lockedAmount, lockedUntil, isLoading }: GoodleClaimFormProps) => {
 
+  const remainingDays = dayjs.unix(Number(lockedUntil)).diff(dayjs(), "day");
+
   if (isLoading) {
     return (
       <LoadingScreen />
@@ -46,7 +48,7 @@ export const GoodleClaimForm = ({ lockedAmount, lockedUntil, isLoading }: Goodle
         size="sm"
         secondary
         className="font-black my-10">
-        {dayjs.unix(Number(lockedUntil)).diff(dayjs(), "day")} DAYS
+        {remainingDays < 0 ? 0 : remainingDays} DAYS
       </Typography>
 
 

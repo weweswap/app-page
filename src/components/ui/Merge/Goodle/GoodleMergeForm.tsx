@@ -65,7 +65,7 @@ const GoodleMergeForm = ({ onMerge }: GoodleMergeFormProps) => {
         <div className="flex-1 flex items-center justify-end gap-1">
           <Image src="/img/tokens/wewe.svg" width={32} height={32} alt="" />
           <Typography secondary size="sm">
-            VULT
+            WEWE
           </Typography>
         </div>
       </div>
@@ -199,7 +199,6 @@ const GoodleMergeForm = ({ onMerge }: GoodleMergeFormProps) => {
       <MergeCompleteModal
         amount={claimableAmount}
         hash={hash as Hex}
-        inputToken='GOODLE'
         ratio={rate}
         onClose={() => {
           setAmount("")

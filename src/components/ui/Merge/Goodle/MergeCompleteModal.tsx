@@ -9,11 +9,18 @@ type MergeCompleteModalProps = {
   hash: Hex;
   amount?: string;
   ratio: number;
-  inputToken: "GOODLE" ;
   onClose: () => void;
 } & ModalRootProps;
 
 const MergeCompleteModal = (props:MergeCompleteModalProps) => {
+  const handleDetails = () => {
+    window.open(
+      `https://basescan.org/tx/${props.hash}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
   return (
     <MtModal.Root centered {...props}>
       <MtModal.Overlay />
@@ -88,7 +95,9 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
             </Button>
 
             <Button
-              className="w-full !bg-none !bg-black border border-1 border-white">
+              className="w-full !bg-none !bg-black border border-1 border-white"
+              onClick={handleDetails}
+            >
               <Typography secondary size="md" fw={700} tt="uppercase">
                 view details
               </Typography>

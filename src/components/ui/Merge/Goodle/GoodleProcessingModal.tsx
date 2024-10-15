@@ -1,12 +1,18 @@
 import { Divider, Loader, ModalRootProps } from '@mantine/core';
 import React, { useEffect } from 'react'
 import { Hex } from 'viem';
-import { PayloadMergeProcessingModal } from '../Bro/MergeProcessingModal';
 import { Modal, Typography } from '~/components/common';
 import Image from 'next/image';
 import { useApproveToken } from '~/hooks/useApproveToken';
 import { useEat } from '~/hooks/useEater';
 import { useAccount } from 'wagmi';
+import { TokenItem } from '~/models';
+
+export type PayloadMergeProcessingModal = {
+  amountToMerge: string,
+  token: TokenItem
+  eater: Hex
+}
 
 type GoodleMergeProcessingProps = {
     onClose: () => void;
