@@ -24,6 +24,7 @@ export const CONTRACT_ADDRESSES = {
     "0x6f71796114b9cdaef29a801bc5cdbcb561990eeb" as `0x${string}`,
   nonFungiblePositionManagerAddress:
     "0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1" as `0x${string}`,
-  goodleEater: "0x511Ce9337cB5c3272Dfbe9ee6F8dC9298751f12c" as `0x${string}`,
+  goodleEaterUniAdaptor: "0xdcF682D093541144F0Eba30769c741B6e3Fa5d19" as `0x${string}`,
+  goodleEater: "0xcC88E2f93118Ebfd47231FFd0D6cabFD8d2E4969" as `0x${string}`,
   goodleToken: "0x9F235D23354857EfE6c541dB92a9eF1877689BCB" as `0x${string}`,
 };

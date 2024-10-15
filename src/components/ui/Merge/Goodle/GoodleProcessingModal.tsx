@@ -5,7 +5,7 @@ import { PayloadMergeProcessingModal } from '../Bro/MergeProcessingModal';
 import { Modal, Typography } from '~/components/common';
 import Image from 'next/image';
 import { useApproveToken } from '~/hooks/useApproveToken';
-import { useEat } from '~/hooks/useEater';
+import { useMemeEat } from '~/hooks/useMemeEater';
 import { useAccount } from 'wagmi';
 
 type GoodleMergeProcessingProps = {
@@ -34,7 +34,7 @@ const GoodleProcessingModal = ({data, onClose, onTxError, onMergeSuccess, opened
     isPending: isPendingEatGoodleToken,
     isError: isErrorEatGoodleToken,
     eat: eat,
-  } = useEat(data.eater);
+  } = useMemeEat(data.eater);
 
   useEffect(() => {
     async function startEat() {
