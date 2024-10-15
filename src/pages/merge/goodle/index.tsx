@@ -1,21 +1,21 @@
 import Link from 'next/link'
 import React from 'react'
-import { useAccount } from 'wagmi'
 import { Card, Typography } from '~/components/common'
 import GoodleMergeForm from '~/components/ui/Merge/Goodle/GoodleMergeForm'
 import { CONTRACT_ADDRESSES } from '~/constants'
-import { useEaterRate } from '~/hooks/useEater'
-import { useTokenBalance } from '~/hooks/useTokenBalance'
 import * as dn from "dnum";
+import { GoodleWewePriceChart } from '~/components/ui/Merge/Goodle/GoodleWewePriceChart'
+import { useMemeEaterRate, useVestingsInfo } from '~/hooks/useMemeEater'
+import { GoodleClaimForm } from '~/components/ui/Merge/Goodle/GoodleClaimForm'
 
 const GoodleMergePage = () => {
-
-  const { rate } = useEaterRate(CONTRACT_ADDRESSES.goodleEater);
+  const { rate } = useMemeEaterRate(CONTRACT_ADDRESSES.goodleEater);
+  const { lockedAmount, lockedUntil, isLoading, refetch } = useVestingsInfo(CONTRACT_ADDRESSES.goodleEater);
 
 
   return (
-    <div>
-        <div className="col-span-12 gap-3 xl:w-[50rem] h-[100%]">
+    <div className="gap-5 grid grid-cols-12">
+      <div className="md:col-span-8 col-span-12 gap-3 h-[100%]">
         <Card>
           <div className="md:flex items-center justify-between gap-3 text-center md:text-start">
             <Link href="/merge">
@@ -40,25 +40,29 @@ const GoodleMergePage = () => {
 
             <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
               <li>Merge your $GOODLE to grab your $WEWE</li>
-              <li>Fixed Rate of <strong>1 $GOODLE to 36.45 $WEWE</strong></li>
+              <li>Fixed Rate of <strong>1 $GOODLE to {rate} $WEWE</strong></li>
             </ul>
           </div>
         </Card>
-        <Card>
-        <div id="dexscreener-embed" className='h-[25rem] lg:h-[40rem]'>
-          <iframe 
-            className='w-full h-full' 
-            src="https://dexscreener.com/base/0x5E9BB3d7682A9537DB831060176C4247aB80D1Ec?embed=1&theme=dark"> 
-          </iframe>
-        </div>
-        <GoodleMergeForm />
+        <Card className="border-t-0">
+          <div className="mb-10">
+            <GoodleMergeForm onMerge={() => refetch()} />
+          </div>
         </Card>
+        <Card className="border-t-0">
+          <div className="h-[300px]">
+            <GoodleWewePriceChart />
+          </div>
+        </Card>
+      </div>
+
+      <div className="flex flex-col justify-between md:col-span-4 col-span-12 md:order-2 order-1">
         <Card>
-            <Typography className='text-center py-5'>MERGE 1:1 your $GOODLE for $WEWE</Typography>
-        </Card>       
+          <GoodleClaimForm lockedAmount={lockedAmount} lockedUntil={lockedUntil} isLoading={isLoading} />
+        </Card>
       </div>
     </div>
   )
 }
 
-export default GoodleMergePage
+export default GoodleMergePage;

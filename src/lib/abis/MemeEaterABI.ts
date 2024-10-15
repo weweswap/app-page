@@ -1,4 +1,4 @@
-const GoodleEaterAbi = [
+const MemeEaterAbi = [
     {
         "inputs": [
             {
@@ -388,6 +388,6 @@ const GoodleEaterAbi = [
         "stateMutability": "view",
         "type": "function"
     }
-]
+] as const;
 
-export default GoodleEaterAbi
+export default MemeEaterAbi

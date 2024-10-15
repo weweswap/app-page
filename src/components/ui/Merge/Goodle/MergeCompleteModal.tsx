@@ -8,7 +8,7 @@ import { Hex } from 'viem';
 type MergeCompleteModalProps = {
   hash: Hex;
   amount?: string;
-  ratio: bigint;
+  ratio: number;
   inputToken: "GOODLE" ;
   onClose: () => void;
 } & ModalRootProps;
@@ -50,7 +50,7 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
             />
 
             <Typography size="md" fw={600}>
-              ≈ {dn.format([props.ratio, 2], { locale: "en" })}
+              ≈ {dn.format(dn.from(props.ratio), { locale: "en" })}
             </Typography>
 
             <Image

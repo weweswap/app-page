@@ -7,47 +7,49 @@ import { dogica } from '~/fonts'
 import { cn } from '~/utils'
 import MergeCompleteModal from './MergeCompleteModal'
 import { FailTXModal } from '~/components/common/FailTXModal'
-import { hash } from 'crypto'
-import { useAccount } from 'wagmi'
+import { useAccount, useWatchContractEvent } from 'wagmi'
 import { useTokenBalance } from '~/hooks/useTokenBalance'
 import { Chain, CONTRACT_ADDRESSES } from '~/constants'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import * as dn from "dnum"
 import GoodleProcessingModal from './GoodleProcessingModal'
 import { ethers } from 'ethers'
-import { useEaterRate } from '~/hooks/useEater'
+import { useMemeEaterRate } from '~/hooks/useMemeEater'
 
-const GoodleMergeForm = () => {
+interface GoodleMergeFormProps {
+  onMerge: () => void
+}
 
-    const [amount, setAmount] = useState("")
-    const {address, isConnected} = useAccount()
-    const {openConnectModal} = useConnectModal()
-    const [amountClaimed, setAmountClaimed] = useState<string>()
-    const [isProcessing, setIsProcessing] = useState(false)
-    const [isFailed, setIsFailed] = useState(false)
-    const [isComplete, setIsComplete] = useState(false)
-    const [hash, setHash] = useState<Hex>()
-    const { rate, isLoading: isRateLoading } = useEaterRate(CONTRACT_ADDRESSES.goodleEater);
+const GoodleMergeForm = ({ onMerge }: GoodleMergeFormProps) => {
+  const [amount, setAmount] = useState("")
+  const { address, isConnected } = useAccount()
+  const { openConnectModal } = useConnectModal()
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [isFailed, setIsFailed] = useState(false)
+  const [isComplete, setIsComplete] = useState(false)
+  const [hash, setHash] = useState<Hex>()
+  const { rate, isLoading: isRateLoading } = useMemeEaterRate(CONTRACT_ADDRESSES.goodleEater);
 
-    const amountBigNumber = ethers.parseUnits(amount || "0", 18);
+  const amountBigNumber = ethers.parseUnits(amount || "0", 18);
 
-    const handleSelect = (div: number) => {
-        setAmount(dn.toString(dn.div([balanceGoodle, 18 ], div)))
-      };
+  const handleSelect = (div: number) => {
+    setAmount(dn.toString(dn.div([balanceGoodle, 18], div)))
+  };
 
-    const {data: balanceGoodle, refetch: refetchBalance}= useTokenBalance(
-      address,
-      CONTRACT_ADDRESSES.goodleEater
-    )
+  const { data: balanceGoodle, refetch: refetchBalance } = useTokenBalance(
+    address,
+    CONTRACT_ADDRESSES.goodleToken,
+  )
 
-    const handleRedeem = () => {
-      
-      isConnected ? setIsProcessing(true) : openConnectModal?.()
-    }
+  const handleMerge = () => {
+    isConnected ? setIsProcessing(true) : openConnectModal?.()
+  }
+
+  const claimableAmount = dn.format(dn.mul(dn.from(amount || 0, 18), rate), { locale: "en", digits: 2 })
 
   return (
     <>
-         <div className="bg_light_dark flex items-center justify-between gap-3 p-4 mt-5">
+      <div className="bg_light_dark flex items-center justify-between gap-3 p-4 mt-5">
         <div className="flex-1 flex items-center gap-1">
           <Image src="/img/tokens/goodle.svg" width={32} height={32} alt="" />
           <Typography secondary size="sm">
@@ -67,7 +69,7 @@ const GoodleMergeForm = () => {
           </Typography>
         </div>
       </div>
-      <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3 pt-4">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3 mt-5">
         <div className="flex-1">
           <div className="grid grid-cols-11  md:bg-black items-center justify-between md:justify-normal gap-3">
             <div className="col-span-5 flex-1 flex items-center gap-3">
@@ -92,14 +94,13 @@ const GoodleMergeForm = () => {
               alt=""
             />
             <div className="col-span-5 items-center flex-1  md:flex-none flex justify-end gap-3">
-            
+              {!isRateLoading && (
                 <div className="overflow-x-auto">
                   <Typography size="md">
-                    {/* {dn.format(dn.mul([rate, 2], dn.from(amount || 0)), { locale: "en" })}  */}
-                    WEWE
+                    {claimableAmount} WEWE
                   </Typography>
                 </div>
-
+              )}
             </div>
           </div>
 
@@ -109,13 +110,24 @@ const GoodleMergeForm = () => {
                 Available:
               </Typography>
               <Typography size="xs" className="text_light_gray">
-                {/* $4,690,420,090.00 */}
                 {Math.trunc(
                   Number(formatEther(balanceGoodle))
                 ).toLocaleString("en-US")}
               </Typography>
             </div>
             <div className="flex gap-3 items-center">
+              <button
+                className="bg_light_dark px-3 py-2"
+                onClick={() => handleSelect(4)}
+              >
+                <Typography size="xs">25%</Typography>
+              </button>
+              <button
+                className="bg_light_dark px-3 py-2"
+                onClick={() => handleSelect(2)}
+              >
+                <Typography size="xs">50%</Typography>
+              </button>
               <button
                 className="bg_light_dark px-3 py-2"
                 onClick={() => handleSelect(1)}
@@ -126,67 +138,75 @@ const GoodleMergeForm = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 w-full md:w-auto ">
+        <div className="flex flex-col gap-3 w-full sm:w-auto ">
           <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
             <Button
-            onClick={handleRedeem}
               className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
-             
+              disabled={!address || !amount}
+              onClick={
+                isConnected
+                  ? () => handleMerge()
+                  : () => openConnectModal && openConnectModal()
+              }
             >
               <Typography secondary size="sm" fw={700} tt="uppercase">
-                REDEEM
+                Merge🔥
               </Typography>
             </Button>
           </div>
         </div>
       </div>
-      {/* <GoodleProcessingModal opened={isProcessing}
-      data={{
-        amountToMerge: amountBigNumber < balanceGoodle ? amountBigNumber.toString() : balanceGoodle.toString(),
-            token: {
-              chain: Chain.BASE,
-              symbol: "GOODLE",
-              address: CONTRACT_ADDRESSES.goodleEater,
-              icon: "/img/tokens/goodle.svg",
-              decimals: 18,
-            },
-            eater: CONTRACT_ADDRESSES.goodleEater,
-      }}
-      onTxError={(hash) => {
-            setHash(hash)
-            setIsFailed(true)
-            setIsProcessing(false)
-          }}
-          onClose={() => {
-            setIsProcessing(false)
-          }}
-          onMergeSuccess={hash => {
-            setHash(hash)
-            setIsComplete(true)
-            setIsProcessing(false)
-            setAmount("")
-            refetchBalance()
-          }}
-          onOpen={() => {}} /> */}
-      <FailTXModal 
-        hash={hash as Hex} 
-        opened={isFailed} 
+      {
+        isProcessing && (
+          <GoodleProcessingModal
+            opened={isProcessing}
+            data={{
+              amountToMerge: amountBigNumber < balanceGoodle ? amountBigNumber.toString() : balanceGoodle.toString(),
+              token: {
+                chain: Chain.BASE,
+                symbol: "GOODLE",
+                address: CONTRACT_ADDRESSES.goodleToken,
+                icon: "/img/tokens/goodle.svg",
+                decimals: 18,
+              },
+              eater: CONTRACT_ADDRESSES.goodleEater,
+            }}
+            onTxError={(hash) => {
+              setHash(hash)
+              setIsFailed(true)
+              setIsProcessing(false)
+            }}
+            onClose={() => {
+              setIsProcessing(false)
+            }}
+            onMergeSuccess={hash => {
+              setHash(hash)
+              setIsComplete(true)
+              setIsProcessing(false)
+              onMerge()
+              refetchBalance()
+            }}
+            onOpen={() => { }} />
+        )
+      }
+      <FailTXModal
+        hash={hash as Hex}
+        opened={isFailed}
         onClose={() => {
           setIsFailed(false)
           setHash(undefined)
-          }} />
-      <MergeCompleteModal 
-        amount={amountClaimed} 
-        hash={hash as Hex} 
+        }} />
+      <MergeCompleteModal
+        amount={claimableAmount}
+        hash={hash as Hex}
         inputToken='GOODLE'
         ratio={rate}
         onClose={() => {
-          setAmountClaimed(undefined)
+          setAmount("")
           setIsComplete(false)
         }}
-        opened={isComplete} 
-
-        />
+        opened={isComplete}
+      />
 
     </>
   )
