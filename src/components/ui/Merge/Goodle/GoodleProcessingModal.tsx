@@ -4,7 +4,7 @@ import { Hex } from 'viem';
 import { Modal, Typography } from '~/components/common';
 import Image from 'next/image';
 import { useApproveToken } from '~/hooks/useApproveToken';
-import { useEat } from '~/hooks/useEater';
+import { useMemeEat } from '~/hooks/useMemeEater';
 import { useAccount } from 'wagmi';
 import { TokenItem } from '~/models';
 
@@ -40,7 +40,7 @@ const GoodleProcessingModal = ({data, onClose, onTxError, onMergeSuccess, opened
     isPending: isPendingEatGoodleToken,
     isError: isErrorEatGoodleToken,
     eat: eat,
-  } = useEat(data.eater);
+  } = useMemeEat(data.eater);
 
   useEffect(() => {
     async function startEat() {

@@ -3,6 +3,7 @@ import { Hex } from "viem";
 import { useAccount, usePublicClient, useReadContract, useWriteContract } from "wagmi";
 import MemeEaterAbi from "~/lib/abis/MemeEaterABI";
 import * as dn from "dnum";
+import { CONTRACT_ADDRESSES } from "~/constants";
 
 export function useMemeEat (eaterAddress: Hex) {
   const [ pendingToConfirm, setPendingToConfirm ] = useState(false)
@@ -23,8 +24,8 @@ export function useMemeEat (eaterAddress: Hex) {
         const tx = await writeContractAsync({
           abi: MemeEaterAbi,
           address: eaterAddress,
-          functionName: "merge",
-          args: [BigInt(amount)],
+          functionName: "mergeAndSell",
+          args: [BigInt(amount), CONTRACT_ADDRESSES.goodleEaterUniAdaptor, '0x'],
         });
         const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
 
