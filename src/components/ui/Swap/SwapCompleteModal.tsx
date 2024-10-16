@@ -6,13 +6,16 @@ import { Button } from "~/components/common/Button";
 import { BuildData, TokenItem } from "~/models";
 import { useSwapContext } from "./SwapContext";
 import { Hex } from "viem";
+import { formatBigIntegers, formatStringUnits } from "~/utils";
+import { TOKEN_LIST } from "~/constants";
+import { useState } from "react";
 
 type SwapCompleteProps = {
   hash: Hex;
   onClose: () => void;
 } & ModalRootProps;
-
 export const SwapCompleteModal = (props: SwapCompleteProps) => {
+
   const { encodedData, routeData } = useSwapContext();
   const handleDetails = () => {
     window.open(
@@ -21,6 +24,7 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
       "noopener,noreferrer"
     );
   };
+
   return (
     <MtModal.Root centered {...props}>
       <MtModal.Overlay />
@@ -53,8 +57,16 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
               height={40}
             />
             <div className="flex flex-col">
-              <Typography size="md" fw={700}>
-                ${Number(encodedData!.amountInUsd).toFixed(2)}
+              <Typography size="sm" fw={1000} >
+                {formatBigIntegers(Number(
+                  formatStringUnits(
+                    routeData!.routeSummary.amountIn,
+                    routeData!.inputToken.decimals
+                  )
+                ))} {routeData!.inputToken.symbol}
+              </Typography>
+              <Typography size="xs" fw={700} className="opacity-50">
+                ${formatBigIntegers(Number(encodedData!.amountInUsd))}
               </Typography>
             </div>
           </div>
@@ -74,13 +86,21 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
               height={40}
             />
             <div className="flex flex-col">
-              <Typography size="md" fw={700}>
-                ${Number(encodedData!.amountOutUsd).toFixed(2)}
+            <Typography size="sm" fw={1000} >
+                {formatBigIntegers(Number(
+                  formatStringUnits(
+                    routeData!.routeSummary.amountOut,
+                    routeData!.outputToken.decimals
+                  )
+                ))} {routeData!.outputToken.symbol}
+              </Typography>
+              <Typography size="xs" fw={700} className="opacity-50">
+                ${formatBigIntegers(Number(encodedData!.amountOutUsd))}
               </Typography>
             </div>
           </div>
           <Typography size="xs" className="text_light_gray mx-auto">
-            US$ {Number(encodedData!.gasUsd).toFixed(2)} estimated fees
+            US$ {Number(encodedData!.gasUsd).toFixed(3)} estimated fees
           </Typography>
           <div className="flex flex-col gap-2">
             <Button className="w-full" onClick={props.onClose}>
