@@ -41,6 +41,7 @@ const GoodleMergePage = () => {
             <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
               <li>Merge your $GOODLE to grab your $WEWE</li>
               <li>Fixed Rate of <strong>1 $GOODLE to {rate} $WEWE</strong></li>
+              <li>Claim your $WEWE in 7 days</li>
             </ul>
           </div>
         </Card>

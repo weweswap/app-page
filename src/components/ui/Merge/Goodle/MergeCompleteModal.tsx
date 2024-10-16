@@ -77,7 +77,7 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
                 props.amount
                   ? <>
                     <Typography size="sm" className="text_light_gray">
-                      CLAIMED
+                      RESERVED
                     </Typography>
                     <Typography size="md" className="font-bold">
                       {props.amount}

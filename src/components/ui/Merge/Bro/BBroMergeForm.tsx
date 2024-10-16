@@ -91,6 +91,9 @@ export const BBroMergeForm = () => {
                 }}
                 hideControls
                 value={amount}
+                allowNegative={false}
+                trimLeadingZeroesOnBlur
+                thousandSeparator
                 onChange={(value) => setAmount(String(value))}
               />
             </div>

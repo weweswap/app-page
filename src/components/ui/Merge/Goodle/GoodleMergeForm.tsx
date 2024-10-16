@@ -1,6 +1,6 @@
 import { NumberInput } from '@mantine/core'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { formatEther, Hex } from 'viem'
 import { Button, Typography } from '~/components/common'
 import { dogica } from '~/fonts'
@@ -45,7 +45,7 @@ const GoodleMergeForm = ({ onMerge }: GoodleMergeFormProps) => {
     isConnected ? setIsProcessing(true) : openConnectModal?.()
   }
 
-  const claimableAmount = dn.format(dn.mul(dn.from(amount || 0, 18), rate), { locale: "en", digits: 2 })
+  const claimableAmount = dn.format(dn.mul(dn.from(amount || 0, 18), rate), { locale: "en", digits: 2 });
 
   return (
     <>
@@ -83,6 +83,9 @@ const GoodleMergeForm = ({ onMerge }: GoodleMergeFormProps) => {
                 }}
                 hideControls
                 value={amount}
+                allowNegative={false}
+                trimLeadingZeroesOnBlur
+                thousandSeparator
                 onChange={(value) => setAmount(String(value))}
               />
             </div>

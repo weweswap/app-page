@@ -12,7 +12,9 @@ interface GoodleClaimFormProps {
 
 export const GoodleClaimForm = ({ lockedAmount, lockedUntil, isLoading }: GoodleClaimFormProps) => {
 
-  const remainingDays = dayjs.unix(Number(lockedUntil)).diff(dayjs(), "day");
+  const remainingHours = dayjs.unix(Number(lockedUntil)).diff(dayjs(), "hours");
+  const remainingDays = Math.floor(remainingHours / 24);
+  const isClaimActive = Number(lockedUntil) > Date.now() / 1000;
 
   if (isLoading) {
     return (
@@ -30,26 +32,32 @@ export const GoodleClaimForm = ({ lockedAmount, lockedUntil, isLoading }: Goodle
 
   return (
     <div className="flex flex-col my-5 text-center">
-      <Typography
-        size="sm"
-        secondary
-        className="font-black text-yellow mb-5">
-        YOUR REWARDS
-      </Typography>
+      {
+        isClaimActive ? (
+          <>
+            <Typography
+              size="sm"
+              secondary
+              className="font-black text-yellow">
+              CLAIM WEWE IN:
+            </Typography>
 
-      <Typography
-        size="sm"
-        secondary
-        className="font-black text-yellow">
-        COUNTDOWN
-      </Typography>
-
-      <Typography
-        size="sm"
-        secondary
-        className="font-black my-10">
-        {remainingDays < 0 ? 0 : remainingDays} DAYS
-      </Typography>
+            <Typography
+              size="sm"
+              secondary
+              className="font-black my-10">
+              {remainingDays} DAYS {remainingHours % 24} HOURS
+            </Typography>
+          </>
+        ) : (
+          <Typography
+            size="sm"
+            secondary
+            className="font-black text-yellow">
+            YOU CAN CLAIM YOUR WEWE NOW
+          </Typography>
+        )
+      }
 
 
       <div className="flex flex-col justify-center">
@@ -69,7 +77,7 @@ export const GoodleClaimForm = ({ lockedAmount, lockedUntil, isLoading }: Goodle
 
         <Button
           className="flex items-center justify-center gap-3 mt-5"
-          disabled={Number(lockedUntil) > Date.now() / 1000}
+          disabled={isClaimActive}
         >
           <Typography secondary size="sm" fw={700} tt="uppercase">
             CLAIM

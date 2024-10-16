@@ -70,7 +70,7 @@ export const GoodleWewePriceChart = () => {
           }}
           labelFormatter={(v) => dayjs(v).format("DD.MMM YYYY HH:mm")}
         />
-        <Area type="monotone" dataKey="wewePrice" stroke="#33e6bf" fill="#33e6bf" />
+        {/* <Area type="monotone" dataKey="wewePrice" stroke="#33e6bf" fill="#33e6bf" /> */}
         <Area type="monotone" dataKey="mergeCoinPrice" stroke="#fce405" fill="#fce405" />
       </AreaChart>
     </ResponsiveContainer>
