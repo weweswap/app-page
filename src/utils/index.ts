@@ -6,6 +6,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function formatBigIntegers(num:number) {
+  return num < 1 ? num.toFixed(6) : num < 9 ? num.toFixed(4) : num.toFixed(2)
+}
+
 export function formatStringUnits(display: string, decimals: number) {
   const negative = display.startsWith("-");
   if (negative) display = display.slice(1);
