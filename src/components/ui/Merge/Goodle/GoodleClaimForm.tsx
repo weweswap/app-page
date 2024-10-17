@@ -1,20 +1,35 @@
-import { Card } from "@mantine/core"
 import { Button, Typography } from "~/components/common"
 import { LoadingScreen } from "~/components/common/LoadingScreen";
 import * as dn from "dnum";
 import dayjs from "dayjs";
+import { useMemeEaterVestingDuration, useVestingsInfo } from "~/hooks/useMemeEater";
+import { CONTRACT_ADDRESSES } from "~/constants";
+import { useState } from "react";
+import { Hex } from "viem";
+import { useAccount } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import ClaimProcessingModal from "./ClaimProcessingModal";
+import ClaimCompleteModal from "./ClaimCompleteModal";
+import { FailTXModal } from "~/components/common/FailTXModal";
 
-interface GoodleClaimFormProps {
-  lockedAmount: bigint;
-  lockedUntil: bigint;
-  isLoading: boolean;
-}
 
-export const GoodleClaimForm = ({ lockedAmount, lockedUntil, isLoading }: GoodleClaimFormProps) => {
+export const GoodleClaimForm = () => {
+  const { lockedAmount, lockedUntil, isLoading, refetch } = useVestingsInfo(CONTRACT_ADDRESSES.goodleEater);
+  const { vestingDuration } = useMemeEaterVestingDuration(CONTRACT_ADDRESSES.goodleEater);
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isFailed, setIsFailed] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [hash, setHash] = useState<Hex>();
 
   const remainingHours = dayjs.unix(Number(lockedUntil)).diff(dayjs(), "hours");
   const remainingDays = Math.floor(remainingHours / 24);
   const isClaimActive = Number(lockedUntil) > Date.now() / 1000;
+
+  const handleClaim = () => {
+    isConnected ? setIsProcessing(true) : openConnectModal?.()
+  }
 
   if (isLoading) {
     return (
@@ -25,65 +40,117 @@ export const GoodleClaimForm = ({ lockedAmount, lockedUntil, isLoading }: Goodle
   if (lockedAmount === 0n) {
     return (
       <Typography secondary className='text-center py-10 font-bold' size='sm'>
-        Claim your $WEWE 7 days after merging!
+        Claim your $WEWE {vestingDuration} after merging!
       </Typography>
     )
   }
 
   return (
-    <div className="flex flex-col my-5 text-center">
+    <>
       {
-        isClaimActive ? (
-          <>
-            <Typography
-              size="sm"
-              secondary
-              className="font-black text-yellow">
-              CLAIM WEWE IN:
-            </Typography>
+        isLoading ?
+          <LoadingScreen /> :
+          lockedAmount === 0n ?
+            <Typography secondary className='text-center py-10 font-bold' size='sm'>Claim your $WEWE {vestingDuration} after merging!</Typography> : (
+              <div className="flex flex-col my-5 text-center">
+                {
+                  isClaimActive ? (
+                    <>
+                      <Typography
+                        size="sm"
+                        secondary
+                        className="font-black text-yellow">
+                        CLAIM WEWE IN:
+                      </Typography>
 
-            <Typography
-              size="sm"
-              secondary
-              className="font-black my-10">
-              {remainingDays} DAYS {remainingHours % 24} HOURS
-            </Typography>
-          </>
-        ) : (
-          <Typography
-            size="sm"
-            secondary
-            className="font-black text-yellow">
-            YOU CAN CLAIM YOUR WEWE NOW
-          </Typography>
+                      <Typography
+                        size="sm"
+                        secondary
+                        className="font-black my-10">
+                        {remainingDays} DAYS {remainingHours % 24} HOURS
+                      </Typography>
+                    </>
+                  ) : (
+                    <Typography
+                      size="sm"
+                      secondary
+                      className="font-black text-yellow">
+                      YOU CAN CLAIM YOUR WEWE NOW
+                    </Typography>
+                  )
+                }
+
+
+                <div className="flex flex-col justify-center">
+                  <Typography
+                    size="sm"
+                    secondary
+                    className="font-black text-yellow mb-5">
+                    AVAILABLE $WEWE:
+                  </Typography>
+
+                  <Typography
+                    size="sm"
+                    secondary
+                    className="font-black">
+                    {dn.format([lockedAmount, 18], { locale: "en", digits: 2 })}
+                  </Typography>
+
+                  <Button
+                    className="flex items-center justify-center gap-3 mt-5"
+                    disabled={isClaimActive}
+                    onClick={handleClaim}
+                  >
+                    <Typography secondary size="sm" fw={700} tt="uppercase">
+                      CLAIM
+                    </Typography>
+                  </Button>
+                </div>
+
+              </div>
+            )
+      }
+
+      {
+        isProcessing && (
+          <ClaimProcessingModal
+            opened={isProcessing}
+            onTxError={(hash) => {
+              setHash(hash)
+              setIsFailed(true)
+              setIsProcessing(false)
+            }}
+            onClose={() => {
+              setIsProcessing(false)
+            }}
+            onMergeSuccess={hash => {
+              setHash(hash)
+              setIsComplete(true)
+              setIsProcessing(false)
+            }}
+            onOpen={() => { }}
+          />
         )
       }
 
+      <FailTXModal
+        hash={hash as Hex}
+        opened={isFailed}
+        onClose={() => {
+          setIsFailed(false)
+          setHash(undefined)
+        }}
+      />
 
-      <div className="flex flex-col justify-center">
-        <Typography
-          size="sm"
-          secondary
-          className="font-black text-yellow mb-5">
-          AVAILABLE $WEWE:
-        </Typography>
-
-        <Typography
-          size="sm"
-          secondary
-          className="font-black">
-          {dn.format([lockedAmount, 18], { locale: "en", digits: 2 })}
-        </Typography>
-
-        <Button
-          className="flex items-center justify-center gap-3 mt-5"
-          disabled={isClaimActive}
-        >
-          <Typography secondary size="sm" fw={700} tt="uppercase">
-            CLAIM
-          </Typography>
-        </Button>
-      </div>
-    </div>
+      <ClaimCompleteModal
+        amount={dn.format([lockedAmount, 18], { locale: "en", digits: 2 })}
+        hash={hash as Hex}
+        onClose={() => {
+          setIsComplete(false)
+          refetch()
+        }}
+        opened={isComplete}
+      />
+    </>
   )
 }

@@ -12,9 +12,9 @@ const MemeEaterAbi = [
                 "type": "address"
             },
             {
-                "internalType": "uint8",
+                "internalType": "uint32",
                 "name": "_vestingDuration",
-                "type": "uint8"
+                "type": "uint32"
             }
         ],
         "stateMutability": "nonpayable",
@@ -195,13 +195,6 @@ const MemeEaterAbi = [
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "mergeAll",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -312,6 +305,32 @@ const MemeEaterAbi = [
         "type": "function"
     },
     {
+        "inputs": [
+            {
+                "internalType": "uint32",
+                "name": "duration",
+                "type": "uint32"
+            }
+        ],
+        "name": "setVestingDuration",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "sumOfVested",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "sweep",
         "outputs": [],
@@ -346,6 +365,19 @@ const MemeEaterAbi = [
                 "internalType": "address",
                 "name": "",
                 "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "vestingDuration",
+        "outputs": [
+            {
+                "internalType": "uint32",
+                "name": "",
+                "type": "uint32"
             }
         ],
         "stateMutability": "view",

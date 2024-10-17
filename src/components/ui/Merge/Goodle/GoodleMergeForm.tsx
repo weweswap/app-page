@@ -14,13 +14,11 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import * as dn from "dnum"
 import GoodleProcessingModal from './GoodleProcessingModal'
 import { ethers } from 'ethers'
-import { useMemeEaterRate } from '~/hooks/useMemeEater'
+import { useMemeEaterRate, useVestingsInfo } from '~/hooks/useMemeEater'
 
-interface GoodleMergeFormProps {
-  onMerge: () => void
-}
 
-const GoodleMergeForm = ({ onMerge }: GoodleMergeFormProps) => {
+const GoodleMergeForm = () => {
+  const {refetch: refetchVestings} = useVestingsInfo(CONTRACT_ADDRESSES.goodleEater)
   const [amount, setAmount] = useState("")
   const { address, isConnected } = useAccount()
   const { openConnectModal } = useConnectModal()
@@ -184,10 +182,10 @@ const GoodleMergeForm = ({ onMerge }: GoodleMergeFormProps) => {
             }}
             onMergeSuccess={hash => {
               setHash(hash)
-              setIsComplete(true)
               setIsProcessing(false)
-              onMerge()
+              setIsComplete(true)
               refetchBalance()
+              refetchVestings()
             }}
             onOpen={() => { }} />
         )
@@ -199,12 +197,15 @@ const GoodleMergeForm = ({ onMerge }: GoodleMergeFormProps) => {
           setIsFailed(false)
           setHash(undefined)
         }} />
+
       <MergeCompleteModal
+        key="merge-complete-modal"
         amount={claimableAmount}
         hash={hash as Hex}
         ratio={rate}
         onClose={() => {
           setAmount("")
+
           setIsComplete(false)
         }}
         opened={isComplete}

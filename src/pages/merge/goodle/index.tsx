@@ -5,13 +5,12 @@ import GoodleMergeForm from '~/components/ui/Merge/Goodle/GoodleMergeForm'
 import { CONTRACT_ADDRESSES } from '~/constants'
 import * as dn from "dnum";
 import { GoodleWewePriceChart } from '~/components/ui/Merge/Goodle/GoodleWewePriceChart'
-import { useMemeEaterRate, useVestingsInfo } from '~/hooks/useMemeEater'
+import { useMemeEaterRate, useMemeEaterVestingDuration, useVestingsInfo } from '~/hooks/useMemeEater'
 import { GoodleClaimForm } from '~/components/ui/Merge/Goodle/GoodleClaimForm'
 
 const GoodleMergePage = () => {
   const { rate } = useMemeEaterRate(CONTRACT_ADDRESSES.goodleEater);
-  const { lockedAmount, lockedUntil, isLoading, refetch } = useVestingsInfo(CONTRACT_ADDRESSES.goodleEater);
-
+  const { vestingDuration } = useMemeEaterVestingDuration(CONTRACT_ADDRESSES.goodleEater);
 
   return (
     <div className="gap-5 grid grid-cols-12">
@@ -41,13 +40,13 @@ const GoodleMergePage = () => {
             <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
               <li>Merge your $GOODLE to grab your $WEWE</li>
               <li>Fixed Rate of <strong>1 $GOODLE to {rate} $WEWE</strong></li>
-              <li>Claim your $WEWE in 7 days</li>
+              <li>Claim your $WEWE in {vestingDuration}</li>
             </ul>
           </div>
         </Card>
         <Card className="border-t-0">
           <div className="mb-10">
-            <GoodleMergeForm onMerge={() => refetch()} />
+            <GoodleMergeForm />
           </div>
         </Card>
         <Card className="border-t-0">
@@ -59,7 +58,8 @@ const GoodleMergePage = () => {
 
       <div className="flex flex-col justify-between md:col-span-4 col-span-12 md:order-2 order-1">
         <Card>
-          <GoodleClaimForm lockedAmount={lockedAmount} lockedUntil={lockedUntil} isLoading={isLoading} />
+          <GoodleClaimForm
+          />
         </Card>
       </div>
     </div>
