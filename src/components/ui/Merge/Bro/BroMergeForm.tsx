@@ -79,7 +79,7 @@ export const BroMergeForm = () => {
       </div>
       <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
         <div className="flex-1">
-          <div className="grid grid-cols-11  md:bg-black items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
+          <div className="grid grid-cols-11  md:bg-black items-center justify-between md:justify-normal gap-3">
             <div className="col-span-5 flex-1 flex items-center gap-3">
               <NumberInput
                 classNames={{
@@ -91,6 +91,9 @@ export const BroMergeForm = () => {
                 }}
                 hideControls
                 value={amount}
+                allowNegative={false}
+                trimLeadingZeroesOnBlur
+                thousandSeparator
                 onChange={(value) => setAmount(String(value))}
               />
             </div>
