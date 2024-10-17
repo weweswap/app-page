@@ -5,15 +5,20 @@ import { Typography } from "~/components/common/Typography";
 import { Button } from "~/components/common/Button";
 import { BuildData, TokenItem } from "~/models";
 import { formatEther, Hex } from "viem";
+import { formatBigIntegers } from "~/utils";
+import { useEffect } from "react";
 
 type MergeCompleteProps = {
+  totalFees: number;
   hash: Hex;
   amount: string;
   ratio: bigint
   onClose: () => void;
 } & ModalRootProps;
 
+
 export const MergeCompleteModal = (props: MergeCompleteProps) => {
+
   const handleDetails = () => {
     window.open(
       `https://basescan.org/tx/${props.hash}`,
@@ -78,8 +83,7 @@ export const MergeCompleteModal = (props: MergeCompleteProps) => {
                 {props.amount}
               </Typography>
               <Typography size="xs" className="text_light_gray">
-                {/* US$ {Number(encodedData!.gasUsd).toFixed(2)} estimated fees */}
-                US$ 0.00 estimated fees
+                US$ {props!?.totalFees.toFixed(4)} estimated fees
               </Typography>
             </div>
           </div>

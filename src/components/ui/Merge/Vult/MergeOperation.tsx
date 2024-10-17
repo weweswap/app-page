@@ -20,6 +20,7 @@ import { MergeCompleteModal } from "./MergeCompleteModal";
 import { FailTXModal } from "~/components/common/FailTXModal";
 import { fetchWEWEPrice } from "~/services";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { usdConverter } from "~/utils";
 
 const MergeOperation = () => {
   const { address } = useAccount();
@@ -35,6 +36,7 @@ const MergeOperation = () => {
   const [wewePrice, setWewePrice] = useState<number>(0);
   const [vultPrice, setVultPrice] = useState<number>(0);
   const [vultFDV, setVultFDV] = useState<number>(0);
+  const [totalGasFee, setTotalGasFee] = useState<number>(0)
   // 1000 ratio
   const { data: ratio, isFetching: isRatioFetching } = useQuoteVult(
     parseEther(String("1000"))
@@ -85,6 +87,7 @@ const MergeOperation = () => {
     isError,
     isConfirmed,
     hash,
+    txReceipt
   } = useApproveAndCall();
 
   const handleSelect = (div: number) => {
@@ -92,7 +95,17 @@ const MergeOperation = () => {
   };
   useEffect(() => {
     if (isConfirmed) {
+      
       openMergeCompleteModal();
+
+      const totalFee = (txReceipt!?.gasUsed * txReceipt!?.effectiveGasPrice);
+      const getUsdFees = async () => {
+        const finalUsdValue = await usdConverter(totalFee)
+        setTotalGasFee(finalUsdValue)
+
+      }
+
+    getUsdFees()  
     }
   }, [isConfirmed]);
 
@@ -230,6 +243,7 @@ const MergeOperation = () => {
       </div>
       {isConfirmed && ratio && (
         <MergeCompleteModal
+          totalFees={totalGasFee}
           ratio={ratio}
           amount={Number(formatEther(quoteAmount)).toLocaleString("en-US")}
           opened={openedMergeCompleteModal}
