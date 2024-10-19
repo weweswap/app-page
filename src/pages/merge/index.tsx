@@ -54,25 +54,25 @@ const MergeTableRow: React.FC<MergeTableRowProps> = ({ token1, token2, mergeLink
     className="bg-[#1c1c1c] w-[full] cursor-pointer hover:bg-[#202020]"
     style={{ borderBottom: "1rem solid black" }}
   >
-    <td className="p-4 font-bold ">
+    <td className="p-4 font-bold min-w-[13rem]">
       <div className="flex items-center gap-5">
         <div className="flex gap-1">
           <Image
-            className="w-10 h-10 rounded-full"
+            className="lg:w-10 lg:h-10 rounded-full"
             src={token1.logo}
             width={32}
             height={32}
             alt={`${token1.name} logo`}
           />
           <Image
-            className="ml-[-10px] w-10 h-10 rounded-full"
+            className="ml-[-10px] lg:w-10 lg:h-10 rounded-full"
             src={token2.logo}
             width={32}
             height={32}
             alt={`${token2.name} logo`}
           />
         </div>
-        <Typography size="sm" opacity={0.7}>
+        <Typography size="xs" opacity={0.7}>
           {token1.name}/{token2.name}
         </Typography>
       </div>
@@ -82,7 +82,7 @@ const MergeTableRow: React.FC<MergeTableRowProps> = ({ token1, token2, mergeLink
         mergeLink ? (
           <Link href={mergeLink}>
             <Button
-              className="w-full md:w-auto min-w-[6rem]"
+              className="w-full md:w-auto min-w-[5rem]"
               aria-label={`Merge ${token1.name} to ${token2.name}`}
             >
               <Typography
