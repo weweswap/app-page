@@ -15,7 +15,7 @@ export const NavBar = () => {
     <header className="w-full">
       <nav className="flex items-center justify-between gap-4 py-8 px-4 md:px-8">
         <Link href="/" className="flex items-center">
-          <Image src="/img/logo.svg" width={129} height={56} alt="logo" />
+          <Image src="/img/logo.svg" width={115} height={50} alt="logo" />
         </Link>
 
         <ul className="items-center gap-4 hidden lg:flex">
@@ -29,7 +29,7 @@ export const NavBar = () => {
           ))}
         </ul>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 lg:gap-4">
           <ConnectButton />
           <button onClick={open} className="block lg:hidden">
             <Image
