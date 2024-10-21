@@ -158,8 +158,6 @@ export const Pool = () => {
     closeWithdrawModal()
   }
 
-  console.log("Receipt:", txReceipt)
-
   return (
     <>
       {step === 0 && (
