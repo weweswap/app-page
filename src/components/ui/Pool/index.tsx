@@ -16,12 +16,14 @@ import DepositSuccessModal from "./DepositSuccessModal";
 import WithdrawModal, { PayloadWithdrawalModal } from "./WithdrawModal";
 import WithdrawSuccessModal, { PayloadWithdrawalSuccess } from "./WithdrawSuccessModal";
 import { Hex } from "viem";
+import { usdConverter } from "~/utils";
 
 
 export const Pool = () => {
   const [step, setStep] = useState(0);
   const [genericHashError, setGenericHashError] = useState<string>()
   const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
+  const [totalGasFee, setTotalGasFee] = useState<number>()
   const [payloadApprovalModal, setPayloadApprovalModal] = useState<PayloadApproveModal>()
   const [payloadWithdrawalModal, setPayloadWithdrawalModal] = useState<PayloadWithdrawalModal>()
   const [payloadWithdrawalSuccessModal, setPayloadWithdrawalSuccessModal] = useState<PayloadWithdrawalSuccess>()
@@ -63,18 +65,26 @@ export const Pool = () => {
     isError,
     isTxConfirming,
     isConfirmed,
-    receipt,
+    receipt: txReceipt,
     claimFees,
   } = useClaimFees();
 
   useEffect(() => {
     if (isConfirmed) {
       openClaimSuccessModal();
+
+      const totalFee = (txReceipt!?.gasUsed * txReceipt!?.effectiveGasPrice);
+      const getUsdFees = async () => {
+        const finalUsdValue = await usdConverter(totalFee)
+        setTotalGasFee(finalUsdValue)
+
+      }
+      getUsdFees()  
     }
     if (isError) {
       openFailModal();
     }
-  }, [isConfirmed, receipt, isError, isPending, isTxConfirming]);
+  }, [isConfirmed, txReceipt, isError, isPending, isTxConfirming]);
   
   const handleApproveTokenModal = (amountToken0: number, amountToken1: number) => {
     setPayloadApprovalModal({
@@ -210,7 +220,7 @@ export const Pool = () => {
         />
       }
 
-      {isConfirmed && receipt && hash && (
+      {isConfirmed && txReceipt && hash && (
         <ClaimSuccessModal
           opened={openedClaimSuccessModal}
           onClose={handleCloseSuccesModal}
@@ -218,6 +228,7 @@ export const Pool = () => {
           data={{
             pendingUsdcReward: wewePositionSelected?.pendingUsdcReward || "0",
             pendingChaosReward: wewePositionSelected?.pendingChaosReward || "0",
+            gasFee: totalGasFee
           }}
         />
       )}

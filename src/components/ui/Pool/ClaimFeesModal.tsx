@@ -14,6 +14,7 @@ type ClaimedFeesModalProps = {
 } & ModalRootProps;
 
 const ClaimedFeesModal = ({ wewePosition, opened, onClose, onClaim, loading}: ClaimedFeesModalProps) => {
+
   return (
     <Modal
       title="CLAIM FEES AND REWARDS"
