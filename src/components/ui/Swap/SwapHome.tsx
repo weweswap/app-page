@@ -189,8 +189,9 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       );
       setOutputTokenIndex(inToken);
     } else {
+      setOutputTokenIndex(inputTokenIndex);
       setInputTokenIndex(outputTokenIndex);
-      setOutputTokenIndex(inToken);
+      console.log("Inputtoken")
     }
   };
 
