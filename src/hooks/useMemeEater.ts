@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Hex } from "viem";
-import { useAccount, usePublicClient, useReadContract, useWriteContract } from "wagmi";
+import { useAccount, usePublicClient, useReadContract, useWatchContractEvent, useWriteContract } from "wagmi";
 import MemeEaterAbi from "~/lib/abis/MemeEaterABI";
 import * as dn from "dnum";
 
@@ -59,13 +59,22 @@ export function useMemeEaterRate(address: Hex): {
   rate: number,
   isLoading: boolean
 } {
-  const { data, isLoading } = useReadContract({
+  const { data, isLoading, refetch } = useReadContract({
     abi: MemeEaterAbi,
     address: address,
     functionName: "getRate",
     query: {
       staleTime: 1000 * 60 * 5,
     }
+  });
+
+  useWatchContractEvent({
+    abi: MemeEaterAbi,
+    address: address,
+    eventName: "RateChanged",
+    onLogs() {
+      refetch();
+    },
   });
 
   return {

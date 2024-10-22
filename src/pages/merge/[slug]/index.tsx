@@ -72,7 +72,7 @@ const MemeMergePage = ({mergeConfig}: MemeMergePageProps) => {
         </Card>
         <Card className="border-t-0">
           <div className="h-[300px]">
-            <MergePriceChart tokenName={mergeConfig.inputToken.symbol} />
+            <MergePriceChart tokenName={mergeConfig.inputToken.symbol} chartId={mergeConfig.chartId} />
           </div>
         </Card>
       </div>

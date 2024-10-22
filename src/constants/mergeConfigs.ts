@@ -7,6 +7,7 @@ export interface MergeConfig {
   eaterContractAddress: Hex;
   inputToken: TokenItem;
   uniAdaptorAddress: Hex;
+  chartId: string;
 }
 
 const goodleMergeConfig: MergeConfig = {
@@ -19,6 +20,7 @@ const goodleMergeConfig: MergeConfig = {
     decimals: 18,
   },
   uniAdaptorAddress: "0xbb1a07e99f7638dcC730b523e1b107FdC7c379Ac" as `0x${string}`,
+  chartId: "goodle",
 }
 
 

@@ -14,15 +14,16 @@ interface PriceResponse {
 }
 
 interface MergePriceChartProps {
-  tokenName: string
+  chartId: string;
+  tokenName: string;
 }
 
-export const MergePriceChart = ({ tokenName }: MergePriceChartProps ) => {
+export const MergePriceChart = ({ chartId, tokenName }: MergePriceChartProps ) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["merge-price-chart", tokenName],
+    queryKey: ["merge-price-chart", chartId],
     staleTime: 1000 * 60 * 5,
     queryFn: async () => {
-      const response = await axios.get<PriceResponse[]>(`${API_BASE_URL}/merge/${tokenName.toLowerCase()}`, {
+      const response = await axios.get<PriceResponse[]>(`${API_BASE_URL}/merge/${chartId}`, {
         params: {
           timeframe:  "daily",
         }
