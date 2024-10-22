@@ -15,20 +15,9 @@ import { SwapButton } from "./SwapButton";
 import { useSwapContext } from "./SwapContext";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { useDebounce } from "~/hooks/useDebounce";
 
-const useDebounce = (value: number, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-  return debouncedValue;
-};
 
 let inTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
@@ -100,9 +89,10 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
   };
 
   useEffect(() => {
-    setInterval(() => refetchBalance(), 5000);
+    const intervalId = setInterval(() => refetchBalance(), 5000);
     return () => {
       clearRouteChecking();
+      clearInterval(intervalId)
     };
   }, []);
 
@@ -138,7 +128,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         setSwapState({ ...swapState, loading: false });
         console.error(err);
       });
-    intervalId = setInterval(() => {
+    // intervalId = setInterval(() => {
       setSwapState({ ...initialSwapState, loading: true });
 
       api.router
@@ -164,7 +154,11 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           setSwapState({ ...swapState, loading: false });
           console.error(err);
         });
-    }, 5000);
+    // }, 5000);
+
+    // return () => {
+    //   clearInterval(intervalId)
+    // }
   }, [inputTokenIndex, outputTokenIndex, debouncedInputValue]);
 
   useEffect(() => {
@@ -206,6 +200,8 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       setInputTokenIndex(outputTokenIndex);
     }
   };
+
+  console.log("token Data:", routeData)
 
   return (
     <>
