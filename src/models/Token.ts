@@ -7,4 +7,5 @@ export interface TokenItem {
   address:Hex;
   icon: string;
   decimals: number;
+  disabled: boolean
 }

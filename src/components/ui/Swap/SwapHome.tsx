@@ -16,10 +16,25 @@ import { useSwapContext } from "./SwapContext";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 
+const useDebounce = (value: number, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  return debouncedValue;
+};
+
 let inTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
   icon: token.icon,
   index: index,
+  disabled: token.disabled
 }));
 // interval ref
 let intervalId: any = null;
@@ -28,6 +43,7 @@ let outTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
   icon: token.icon,
   index: index,
+  disabled: token.disabled
 }));
 
 type SwapHomeProps = {
@@ -66,20 +82,6 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       return ethBalance!.value;
     }
     return inputBalance;
-  };
-
-  const useDebounce = (value: number, delay: number) => {
-    const [debouncedValue, setDebouncedValue] = useState(value);
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedValue(value);
-      }, delay);
-
-      return () => {
-        clearTimeout(handler);
-      };
-    }, [value, delay]);
-    return debouncedValue;
   };
 
   const checkHasBalance = (): boolean => {
@@ -170,10 +172,21 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       value: token.symbol,
       icon: token.icon,
       index: index,
+      disabled: outTokenOptions[index].value === inTokenOptions[inputTokenIndex].value ? true : false
     }));
-    outTokenOptions.splice(inTokenOptions[inputTokenIndex].index, 1);
-    setOutputTokenIndex(outTokenOptions[0].index);
-  }, [inputTokenIndex]);
+
+    inTokenOptions = TOKEN_LIST.map((token, index) => ({
+      value: token.symbol,
+      icon: token.icon,
+      index: index,
+      disabled: inTokenOptions[index].value === outTokenOptions[outputTokenIndex].value ? true : false
+    }));
+    
+  }, [inputTokenIndex, outputTokenIndex]);
+
+  useEffect(() => {
+    setOutputTokenIndex(outTokenOptions[1].index);
+  }, [])
 
   const handleReverse = () => {
     let inToken = inputTokenIndex;
@@ -191,7 +204,6 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     } else {
       setOutputTokenIndex(inputTokenIndex);
       setInputTokenIndex(outputTokenIndex);
-      console.log("Inputtoken")
     }
   };
 
@@ -315,6 +327,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               options={outTokenOptions}
               className="order-first sm:order-none sm:col-span-4 col-span-12"
               setIndexValue={setOutputTokenIndex}
+              disabled={TOKEN_LIST[outputTokenIndex].disabled}
             />
           </div>
 
