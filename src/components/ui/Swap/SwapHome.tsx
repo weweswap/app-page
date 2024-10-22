@@ -199,8 +199,6 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     }
   };
 
-  console.log("token Data:", routeData)
-
   return (
     <>
       <div className="w-full flex items-center justify-between">
