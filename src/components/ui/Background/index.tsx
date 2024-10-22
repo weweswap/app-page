@@ -3,6 +3,8 @@ import { usePathname } from "next/navigation";
 export const Background = () => {
   const pathname = usePathname();
 
+  if(!pathname) return null;
+
   return (
     <>
     {/* <img 

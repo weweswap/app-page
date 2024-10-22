@@ -7,18 +7,21 @@ import { dogica } from '~/fonts'
 import { cn } from '~/utils'
 import MergeCompleteModal from './MergeCompleteModal'
 import { FailTXModal } from '~/components/common/FailTXModal'
-import { useAccount, useWatchContractEvent } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { useTokenBalance } from '~/hooks/useTokenBalance'
-import { Chain, CONTRACT_ADDRESSES } from '~/constants'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import * as dn from "dnum"
-import GoodleProcessingModal from './GoodleProcessingModal'
-import { ethers } from 'ethers'
+import MergeProcessingModal from './MergeProcessingModal'
+import { ethers, formatUnits } from 'ethers'
 import { useMemeEaterRate, useVestingsInfo } from '~/hooks/useMemeEater'
+import { MergeConfig } from '~/constants/mergeConfigs'
 
+interface MemeMergeFormProps {
+  mergeConfig: MergeConfig;
+}
 
-const GoodleMergeForm = () => {
-  const {refetch: refetchVestings} = useVestingsInfo(CONTRACT_ADDRESSES.goodleEater)
+const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
+  const { refetch: refetchVestings } = useVestingsInfo(mergeConfig.eaterContractAddress)
   const [amount, setAmount] = useState("")
   const { address, isConnected } = useAccount()
   const { openConnectModal } = useConnectModal()
@@ -26,32 +29,34 @@ const GoodleMergeForm = () => {
   const [isFailed, setIsFailed] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
   const [hash, setHash] = useState<Hex>()
-  const { rate, isLoading: isRateLoading } = useMemeEaterRate(CONTRACT_ADDRESSES.goodleEater);
+  const { rate, isLoading: isRateLoading } = useMemeEaterRate(mergeConfig.eaterContractAddress);
 
-  const amountBigNumber = ethers.parseUnits(amount || "0", 18);
+  const amountBigNumber = ethers.parseUnits(amount || "0", mergeConfig.inputToken.decimals);
+
+  const { data: balanceMeme, refetch: refetchBalance } = useTokenBalance(
+    address,
+    mergeConfig.inputToken.address,
+  )
 
   const handleSelect = (div: number) => {
-    setAmount(dn.toString(dn.div([balanceGoodle, 18], div)))
+    setAmount(dn.toString(dn.div([balanceMeme, mergeConfig.inputToken.decimals], div)))
   };
 
-  const { data: balanceGoodle, refetch: refetchBalance } = useTokenBalance(
-    address,
-    CONTRACT_ADDRESSES.goodleToken,
-  )
+
 
   const handleMerge = () => {
     isConnected ? setIsProcessing(true) : openConnectModal?.()
   }
 
-  const claimableAmount = dn.format(dn.mul(dn.from(amount || 0, 18), rate), { locale: "en", digits: 2 });
+  const claimableAmount = dn.format(dn.mul(dn.from(amount || 0, mergeConfig.inputToken.decimals), rate), { locale: "en", digits: 2 });
 
   return (
     <>
       <div className="bg_light_dark flex items-center justify-between gap-3 p-4 mt-5">
         <div className="flex-1 flex items-center gap-1">
-          <Image src="/img/tokens/goodle.svg" width={32} height={32} alt="" />
+          <Image src={mergeConfig.inputToken.icon} width={32} height={32} alt="" />
           <Typography secondary size="sm">
-            GOODLE
+            {mergeConfig.inputToken.symbol}
           </Typography>
         </div>
         <Image
@@ -112,7 +117,7 @@ const GoodleMergeForm = () => {
               </Typography>
               <Typography size="xs" className="text_light_gray">
                 {Math.trunc(
-                  Number(formatEther(balanceGoodle))
+                  Number(formatUnits(balanceMeme, mergeConfig.inputToken.decimals))
                 ).toLocaleString("en-US")}
               </Typography>
             </div>
@@ -159,18 +164,13 @@ const GoodleMergeForm = () => {
       </div>
       {
         isProcessing && (
-          <GoodleProcessingModal
+          <MergeProcessingModal
             opened={isProcessing}
             data={{
-              amountToMerge: amountBigNumber < balanceGoodle ? amountBigNumber.toString() : balanceGoodle.toString(),
-              token: {
-                chain: Chain.BASE,
-                symbol: "GOODLE",
-                address: CONTRACT_ADDRESSES.goodleToken,
-                icon: "/img/tokens/goodle.svg",
-                decimals: 18,
-              },
-              eater: CONTRACT_ADDRESSES.goodleEater,
+              amountToMerge: amountBigNumber < balanceMeme ? amountBigNumber.toString() : balanceMeme.toString(),
+              token: mergeConfig.inputToken,
+              eater: mergeConfig.eaterContractAddress,
+              uniAdapter: mergeConfig.uniAdaptorAddress,
             }}
             onTxError={(hash) => {
               setHash(hash)
@@ -203,6 +203,7 @@ const GoodleMergeForm = () => {
         amount={claimableAmount}
         hash={hash as Hex}
         ratio={rate}
+        inputToken={mergeConfig.inputToken}
         onClose={() => {
           setAmount("")
 
@@ -215,4 +216,4 @@ const GoodleMergeForm = () => {
   )
 }
 
-export default GoodleMergeForm
+export default MemeMergeForm;

@@ -1,16 +1,37 @@
 import Link from 'next/link'
 import React from 'react'
 import { Card, Typography } from '~/components/common'
-import GoodleMergeForm from '~/components/ui/Merge/Goodle/GoodleMergeForm'
-import { CONTRACT_ADDRESSES } from '~/constants'
-import * as dn from "dnum";
-import { GoodleWewePriceChart } from '~/components/ui/Merge/Goodle/GoodleWewePriceChart'
-import { useMemeEaterRate, useMemeEaterVestingDuration, useVestingsInfo } from '~/hooks/useMemeEater'
-import { GoodleClaimForm } from '~/components/ui/Merge/Goodle/GoodleClaimForm'
+import { useMemeEaterRate, useMemeEaterVestingDuration } from '~/hooks/useMemeEater'
+import { MemeClaimForm } from '~/components/ui/Merge/Memes/MemeClaimForm'
+import { MergeConfig, slugToMergeConfig } from '~/constants/mergeConfigs'
+import { GetServerSideProps } from 'next'
+import MemeMergeForm from '~/components/ui/Merge/Memes/MemeMergeForm'
+import { MergePriceChart } from '~/components/ui/Merge/Memes/MergePriceChart'
 
-const GoodleMergePage = () => {
-  const { rate } = useMemeEaterRate(CONTRACT_ADDRESSES.goodleEater);
-  const { vestingDuration } = useMemeEaterVestingDuration(CONTRACT_ADDRESSES.goodleEater);
+interface MemeMergePageProps {
+  mergeConfig: MergeConfig
+}
+
+export const getServerSideProps: GetServerSideProps<MemeMergePageProps> = async ({ params }) => {
+  const mergeConfig = slugToMergeConfig[params?.slug as string];
+
+  if (!mergeConfig) {
+    return {
+      notFound: true
+    }
+  }
+
+  return {
+    props: {
+      mergeConfig
+    }
+  }
+}
+
+const MemeMergePage = ({mergeConfig}: MemeMergePageProps) => {
+
+  const { rate } = useMemeEaterRate(mergeConfig.eaterContractAddress);
+  const { vestingDuration } = useMemeEaterVestingDuration(mergeConfig.eaterContractAddress);
 
   return (
     <div className="gap-5 grid grid-cols-12">
@@ -35,35 +56,34 @@ const GoodleMergePage = () => {
         </Card>
         <Card className="border-t-0">
           <div className="flex flex-col my-5">
-            <Typography size="lg">MERGE your GOODLE into WEWE</Typography>
+            <Typography size="lg">MERGE your {mergeConfig.inputToken.symbol} into WEWE</Typography>
 
             <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
-              <li>Merge your $GOODLE to grab your $WEWE</li>
-              <li>Fixed Rate of <strong>1 $GOODLE to {rate} $WEWE</strong></li>
+              <li>Merge your ${mergeConfig.inputToken.symbol} to grab your $WEWE</li>
+              <li>Fixed Rate of <strong>1 ${mergeConfig.inputToken.symbol} to {rate} $WEWE</strong></li>
               <li>Claim your $WEWE in {vestingDuration}</li>
             </ul>
           </div>
         </Card>
         <Card className="border-t-0">
           <div className="mb-10">
-            <GoodleMergeForm />
+            <MemeMergeForm mergeConfig={mergeConfig} />
           </div>
         </Card>
         <Card className="border-t-0">
           <div className="h-[300px]">
-            <GoodleWewePriceChart />
+            <MergePriceChart tokenName={mergeConfig.inputToken.symbol} />
           </div>
         </Card>
       </div>
 
       <div className="flex flex-col justify-between md:col-span-4 col-span-12 md:order-2 order-1">
         <Card>
-          <GoodleClaimForm
-          />
+          <MemeClaimForm mergeConfig={mergeConfig} />
         </Card>
       </div>
     </div>
   )
 }
 
-export default GoodleMergePage;
+export default MemeMergePage;

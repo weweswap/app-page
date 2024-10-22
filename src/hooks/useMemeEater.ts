@@ -3,8 +3,6 @@ import { Hex } from "viem";
 import { useAccount, usePublicClient, useReadContract, useWriteContract } from "wagmi";
 import MemeEaterAbi from "~/lib/abis/MemeEaterABI";
 import * as dn from "dnum";
-import { CONTRACT_ADDRESSES } from "~/constants";
-import dayjs from "dayjs";
 
 function formatMinutesToHumanReadable(minutes: number) {
   const days = Math.floor(minutes / 60 / 24);
@@ -22,7 +20,7 @@ function formatMinutesToHumanReadable(minutes: number) {
   return "0m";
 }
 
-export function useMemeEat(eaterAddress: Hex) {
+export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
   const [pendingToConfirm, setPendingToConfirm] = useState(false)
   const {
     data: hash,
@@ -42,7 +40,7 @@ export function useMemeEat(eaterAddress: Hex) {
       abi: MemeEaterAbi,
       address: eaterAddress,
       functionName: "mergeAndSell",
-      args: [BigInt(amount), CONTRACT_ADDRESSES.goodleEaterUniAdaptor, '0x'],
+      args: [BigInt(amount), uniAdaptorAddress, '0x'],
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
 

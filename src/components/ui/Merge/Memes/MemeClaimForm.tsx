@@ -11,11 +11,15 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import ClaimProcessingModal from "./ClaimProcessingModal";
 import ClaimCompleteModal from "./ClaimCompleteModal";
 import { FailTXModal } from "~/components/common/FailTXModal";
+import { MergeConfig } from "~/constants/mergeConfigs";
 
+interface MemeClaimFormProps {
+  mergeConfig: MergeConfig;
+}
 
-export const GoodleClaimForm = () => {
-  const { lockedAmount, lockedUntil, isLoading, refetch } = useVestingsInfo(CONTRACT_ADDRESSES.goodleEater);
-  const { vestingDuration } = useMemeEaterVestingDuration(CONTRACT_ADDRESSES.goodleEater);
+export const MemeClaimForm = ({ mergeConfig }: MemeClaimFormProps) => {
+  const { lockedAmount, lockedUntil, isLoading, refetch } = useVestingsInfo(mergeConfig.eaterContractAddress);
+  const { vestingDuration } = useMemeEaterVestingDuration(mergeConfig.eaterContractAddress);
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -115,6 +119,7 @@ export const GoodleClaimForm = () => {
         isProcessing && (
           <ClaimProcessingModal
             opened={isProcessing}
+            eaterContractAddress={mergeConfig.eaterContractAddress}
             onTxError={(hash) => {
               setHash(hash)
               setIsFailed(true)

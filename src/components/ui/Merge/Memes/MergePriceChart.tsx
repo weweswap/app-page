@@ -13,12 +13,16 @@ interface PriceResponse {
   mergeCoinPrice: number
 }
 
-export const GoodleWewePriceChart = () => {
+interface MergePriceChartProps {
+  tokenName: string
+}
+
+export const MergePriceChart = ({ tokenName }: MergePriceChartProps ) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["goodle-wewe-price-chart"],
+    queryKey: ["merge-price-chart", tokenName],
     staleTime: 1000 * 60 * 5,
     queryFn: async () => {
-      const response = await axios.get<PriceResponse[]>(`${API_BASE_URL}/merge/goodle`, {
+      const response = await axios.get<PriceResponse[]>(`${API_BASE_URL}/merge/${tokenName.toLowerCase()}`, {
         params: {
           timeframe:  "daily",
         }
@@ -66,7 +70,7 @@ export const GoodleWewePriceChart = () => {
           cursor={{ radius: 3, fillOpacity: 0.1 }}
           contentStyle={{ backgroundColor: "rgba(0,0,0,0.7)", border: "none", fontSize: "14px" }}
           formatter={(value, name) => {
-            return [`$${formatNumber(value as number, { decimalDigits: 7 })}`, name === "wewePrice" ? "WEWE Price" : "Goodle Price"]
+            return [`$${formatNumber(value as number, { decimalDigits: 7 })}`, name === "wewePrice" ? "WEWE Price" : `${tokenName} Price`];
           }}
           labelFormatter={(v) => dayjs(v).format("DD.MMM YYYY HH:mm")}
         />

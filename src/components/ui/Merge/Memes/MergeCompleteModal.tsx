@@ -4,15 +4,18 @@ import { Button, Typography } from "~/components/common";
 import Image from "next/image";
 import * as dn from "dnum";
 import { Hex } from 'viem';
+import { TokenItem } from '~/models';
 
 type MergeCompleteModalProps = {
   hash: Hex;
   amount?: string;
   ratio: number;
   onClose: () => void;
+  inputToken: TokenItem;
 } & ModalRootProps;
 
 const MergeCompleteModal = (props:MergeCompleteModalProps) => {
+  const { inputToken } = props;
   const handleDetails = () => {
     window.open(
       `https://basescan.org/tx/${props.hash}`,
@@ -50,10 +53,10 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
               Ratio: 1
             </Typography>
             <Image
-              src="/img/tokens/goodle.svg"
+              src={inputToken.icon}
               width={17}
               height={17}
-              alt="GOODLE logo"
+              alt={`${inputToken.symbol} logo`}
             />
 
             <Typography size="md" fw={600}>

@@ -13,9 +13,10 @@ type ClaimProcessingProps = {
   onTxError: (hash?: Hex) => void;
   onMergeSuccess: (hash?: Hex) => void;
   opened: boolean;
+  eaterContractAddress: Hex;
 } & ModalRootProps;
 
-const ClaimProcessingModal = ({ onClose, onTxError, onMergeSuccess, opened }: ClaimProcessingProps) => {
+const ClaimProcessingModal = ({ onClose, onTxError, onMergeSuccess, opened, eaterContractAddress }: ClaimProcessingProps) => {
 
   const { address } = useAccount();
 
@@ -24,7 +25,7 @@ const ClaimProcessingModal = ({ onClose, onTxError, onMergeSuccess, opened }: Cl
     isPending,
     isError,
     claim,
-  } = useMemeEaterClaim(CONTRACT_ADDRESSES.goodleEater);
+  } = useMemeEaterClaim(eaterContractAddress);
 
   useEffect(() => {
     async function startClaim() {
