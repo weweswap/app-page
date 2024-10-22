@@ -16,9 +16,12 @@ export const useQuoteVult = (amount: bigint) => {
     args: [amount],
   });
 
+  const {data:txReceipt} = useWaitForTransactionReceipt();
+
   return {
     data: data ?? 0n,
     isFetching,
+    txReceipt
   };
 };
 
@@ -57,6 +60,7 @@ export const useApproveAndCall = () => {
     error: errorConfirm,
     isError: isConfirmError,
     isSuccess: isConfirmed,
+    data: txReceipt
   } = useWaitForTransactionReceipt({ hash });
 
   useEffect(() => {
@@ -99,5 +103,6 @@ export const useApproveAndCall = () => {
     onWriteAsync,
     isConfirmed,
     isError: isConfirmError || isCreationError,
+    txReceipt
   };
 };

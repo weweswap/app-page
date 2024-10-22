@@ -34,7 +34,7 @@ export const ConnectButton = () => {
                     type="button"
                     className="flex items-center bg_violet text-black px-4 h-10"
                   >
-                    <Typography secondary size="sm" fw={700}>
+                    <Typography secondary size="xs" fw={700}>
                       Connect
                     </Typography>
                   </button>
@@ -48,7 +48,7 @@ export const ConnectButton = () => {
                     type="button"
                     className="flex items-center bg_violet text-black px-4 h-10"
                   >
-                    <Typography secondary size="sm" fw={700}>
+                    <Typography secondary size="xs" fw={700}>
                       Wrong network
                     </Typography>
                   </button>
@@ -90,7 +90,7 @@ export const ConnectButton = () => {
                   >
                     <Typography
                       secondary
-                      size="sm"
+                      size="xs"
                       fw={700}
                       className="truncate"
                     >

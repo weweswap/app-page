@@ -2,10 +2,55 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button, Card, Typography } from "~/components/common";
 
+const MergeTokenList = {
+  wewe: {
+    name: "WEWE",
+    logo: "/img/tokens/wewe.svg",
+  },
+  vult: {
+    name: "VULT",
+    logo: "/img/tokens/vult.svg",
+  },
+  bro: {
+    name: "BRO",
+    logo: "/img/tokens/bro.svg",
+  },
+  duh: {
+    name: "DUH",
+    logo: "/img/tokens/DUH.webp",
+  },
+  moby: {
+    name: "MOBY",
+    logo: "/img/tokens/MOBY.webp",
+  },
+  cosmic: {
+    name: "COSMIC",
+    logo: "/img/tokens/COSMIC.webp",
+  },
+  fckn: {
+    name: "FCKN",
+    logo: "/img/tokens/FCKN.webp",
+  },
+  cds: {
+    name: "CDS",
+    logo: "/img/tokens/CDS.webp",
+  },
+  goodle: {
+    name: "GOOGLE",
+    logo: "/img/tokens/goodle.svg",
+  },
+}
+
 interface MergeTableRowProps {
-  token1: string;
-  token2: string;
-  mergeLink: string;
+  token1: {
+    name: string;
+    logo: string;
+  };
+  token2: {
+    name: string;
+    logo: string;
+  };
+  mergeLink?: string;
 }
 
 const MergeTableRow: React.FC<MergeTableRowProps> = ({ token1, token2, mergeLink }) => (
@@ -13,45 +58,64 @@ const MergeTableRow: React.FC<MergeTableRowProps> = ({ token1, token2, mergeLink
     className="bg-[#1c1c1c] w-[full] cursor-pointer hover:bg-[#202020]"
     style={{ borderBottom: "1rem solid black" }}
   >
-    <td className="p-4 font-bold ">
+    <td className="p-4 font-bold min-w-[13rem]">
       <div className="flex items-center gap-5">
         <div className="flex gap-1">
           <Image
-            className="w-10 h-10"
-            src={`/img/tokens/${token1.toLowerCase()}.svg`}
+            className="lg:w-10 lg:h-10 rounded-full"
+            src={token1.logo}
             width={32}
             height={32}
-            alt={`${token1} logo`}
+            alt={`${token1.name} logo`}
           />
           <Image
-            className="ml-[-10px] w-10 h-10"
-            src={`/img/tokens/${token2.toLowerCase()}.svg`}
+            className="ml-[-10px] lg:w-10 lg:h-10 rounded-full"
+            src={token2.logo}
             width={32}
             height={32}
-            alt={`${token2} logo`}
+            alt={`${token2.name} logo`}
           />
         </div>
-        <Typography size="sm" opacity={0.7}>
-          {token1}/{token2}
+        <Typography size="xs" opacity={0.7}>
+          {token1.name}/{token2.name}
         </Typography>
       </div>
     </td>
     <td className="p-4" align="right">
-      <Link href={mergeLink}>
-        <Button
-          className="w-full md:w-auto min-w-[6rem]"
-          aria-label={`Merge ${token1} to ${token2}`}
-        >
-          <Typography
-            secondary
-            size="xs"
-            fw="700"
-            tt="uppercase"
+      {
+        mergeLink ? (
+          <Link href={mergeLink}>
+            <Button
+              className="w-full md:w-auto min-w-[5rem]"
+              aria-label={`Merge ${token1.name} to ${token2.name}`}
+            >
+              <Typography
+                secondary
+                size="xs"
+                fw="700"
+                tt="uppercase"
+              >
+                MERGE
+              </Typography>
+            </Button>
+          </Link>) : (
+          <Button
+            className="w-full md:w-auto min-w-[6rem]"
+            aria-label={`Merge ${token1.name} to ${token2.name}`}
+            disabled
           >
-            MERGE
-          </Typography>
-        </Button>
-      </Link>
+            <Typography
+              secondary
+              size="xs"
+              fw="700"
+              tt="uppercase"
+            >
+              SOON
+            </Typography>
+          </Button>
+        )
+      }
+
     </td>
   </tr>
 );
@@ -78,9 +142,14 @@ const MergePage = () => {
             </tr>
           </thead>
           <tbody>
-          <MergeTableRow token1="WEWE" token2="VULT" mergeLink="/merge/vult" />
-          <MergeTableRow token1="BRO" token2="WEWE" mergeLink="/merge/bro" />
-          <MergeTableRow token1="GOODLE" token2="WEWE" mergeLink="/merge/goodle" />
+            <MergeTableRow token1={MergeTokenList.wewe} token2={MergeTokenList.vult} mergeLink="/merge/vult" />
+            <MergeTableRow token1={MergeTokenList.bro} token2={MergeTokenList.wewe} mergeLink="/merge/bro" />
+            <MergeTableRow token1={MergeTokenList.goodle} token2={MergeTokenList.wewe} mergeLink="/merge/goodle" />
+            <MergeTableRow token1={MergeTokenList.duh} token2={MergeTokenList.wewe}  />
+            <MergeTableRow token1={MergeTokenList.moby} token2={MergeTokenList.wewe} />
+            <MergeTableRow token1={MergeTokenList.cosmic} token2={MergeTokenList.wewe}/>
+            <MergeTableRow token1={MergeTokenList.fckn} token2={MergeTokenList.wewe}/>
+            <MergeTableRow token1={MergeTokenList.cds} token2={MergeTokenList.wewe} />
           </tbody>
         </table>
       </Card>

@@ -9,7 +9,7 @@ import api from "~/api/swap";
 import { Chain } from "~/constants/chains";
 import { RouterMessageType, RoutingData } from "~/models";
 import { formatUnits, parseEther, parseUnits } from "viem";
-import { formatStringUnits } from "~/utils";
+import { formatBigIntegers, formatStringUnits } from "~/utils";
 import { useAccount, useBalance } from "wagmi";
 import { SwapButton } from "./SwapButton";
 import { useSwapContext } from "./SwapContext";
