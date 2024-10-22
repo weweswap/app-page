@@ -1,7 +1,7 @@
 import { NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import Image from "next/image";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { TOKEN_LIST } from "~/constants/tokens";
 import { dogica } from "~/fonts";
