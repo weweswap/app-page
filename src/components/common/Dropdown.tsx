@@ -11,7 +11,6 @@ type DropdownProps = {
     icon?: string;
     text?: string;
     index?: number;
-    disabled?: boolean
   }[];
   placeholder?: string;
   className?: string;
@@ -90,7 +89,6 @@ export const Dropdown = ({
             <Combobox.Option
               value={option.value}
               key={option.value}
-              disabled={option.disabled}
               className="flex items-center gap-3 p-1 my-1"
             >
               {option.icon && (

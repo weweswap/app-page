@@ -22,8 +22,7 @@ import { useDebounce } from "~/hooks/useDebounce";
 let inTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
   icon: token.icon,
-  index: index,
-  disabled: token.disabled
+  index: index
 }));
 // interval ref
 let intervalId: any = null;
@@ -31,8 +30,7 @@ let intervalId: any = null;
 let outTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
   icon: token.icon,
-  index: index,
-  disabled: token.disabled
+  index: index
 }));
 
 type SwapHomeProps = {
@@ -52,7 +50,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
   const { address, isConnected } = useAccount();
   const [inputValue, setInputValue] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState<number>(0);
-  const [outputTokenIndex, setOutputTokenIndex] = useState<number>(0);
+  const [outputTokenIndex, setOutputTokenIndex] = useState<number>(1);
   const { data: ethBalance } = useBalance({
     address: address,
   });
@@ -128,7 +126,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         setSwapState({ ...swapState, loading: false });
         console.error(err);
       });
-    // intervalId = setInterval(() => {
+    intervalId = setInterval(() => {
       setSwapState({ ...initialSwapState, loading: true });
 
       api.router
@@ -154,33 +152,32 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           setSwapState({ ...swapState, loading: false });
           console.error(err);
         });
-    // }, 5000);
+    }, 5000);
 
-    // return () => {
-    //   clearInterval(intervalId)
-    // }
+    return () => {
+      clearInterval(intervalId)
+    }
   }, [inputTokenIndex, outputTokenIndex, debouncedInputValue]);
 
-  useEffect(() => {
-    outTokenOptions = TOKEN_LIST.map((token, index) => ({
-      value: token.symbol,
-      icon: token.icon,
-      index: index,
-      disabled: outTokenOptions[index].value === inTokenOptions[inputTokenIndex].value ? true : false
-    }));
-
-    inTokenOptions = TOKEN_LIST.map((token, index) => ({
-      value: token.symbol,
-      icon: token.icon,
-      index: index,
-      disabled: inTokenOptions[index].value === outTokenOptions[outputTokenIndex].value ? true : false
-    }));
-    
-  }, [inputTokenIndex, outputTokenIndex]);
 
   useEffect(() => {
-    setOutputTokenIndex(outTokenOptions[1].index);
-  }, [])
+    if(inputTokenIndex == outputTokenIndex && outputTokenIndex == TOKEN_LIST.length - 1) {
+      setOutputTokenIndex(outputTokenIndex-1)
+    }
+    else if(inputTokenIndex == outputTokenIndex) {
+      setOutputTokenIndex(outputTokenIndex+1)
+    }
+  }, [inputTokenIndex])
+
+  useEffect(() => {
+    if(inputTokenIndex == outputTokenIndex && inputTokenIndex == TOKEN_LIST.length - 1) {
+      setInputTokenIndex(inputTokenIndex-1)
+    }
+    else if(inputTokenIndex == outputTokenIndex) {
+      setInputTokenIndex(inputTokenIndex+1)
+    }
+  }, [outputTokenIndex])
+
 
   const handleReverse = () => {
     let inToken = inputTokenIndex;
@@ -195,7 +192,8 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         )
       );
       setOutputTokenIndex(inToken);
-    } else {
+    } 
+    else {
       setOutputTokenIndex(inputTokenIndex);
       setInputTokenIndex(outputTokenIndex);
     }
@@ -323,7 +321,6 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               options={outTokenOptions}
               className="order-first sm:order-none sm:col-span-4 col-span-12"
               setIndexValue={setOutputTokenIndex}
-              disabled={TOKEN_LIST[outputTokenIndex].disabled}
             />
           </div>
 
