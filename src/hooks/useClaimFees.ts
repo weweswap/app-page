@@ -17,7 +17,7 @@ export function useClaimFees() {
       data: receipt,
     } = useWaitForTransactionReceipt({ hash });
 
-    const { data: gasPriceData } = useGasPrice();
+    const { data: gasPriceData, isError: isGasPriceError } = useGasPrice();
   
     const claimFees = async (userAddress: Hex) => {
       await writeContractAsync({
@@ -36,6 +36,7 @@ export function useClaimFees() {
       isConfirmed,
       receipt,
       claimFees,
-      gasPriceData
+      gasPriceData,
+      isGasPriceError
     };
   }

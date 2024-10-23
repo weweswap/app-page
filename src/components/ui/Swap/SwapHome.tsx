@@ -25,8 +25,6 @@ let inTokenOptions = TOKEN_LIST.map((token, index) => ({
   icon: token.icon,
   index: index
 }));
-// interval ref
-let intervalId: any = null;
 
 let outTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
@@ -83,32 +81,17 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
 
   const debouncedInputValue = useDebounce(inputValue, 500);
 
-  const clearRouteChecking = () => {
-    if (intervalId) clearInterval(intervalId);
-  };
-
-  useEffect(() => {
-    const intervalId = setInterval(() => refetchBalance(), 5000);
-    
-    return () => {
-      clearRouteChecking();
-      clearInterval(intervalId)
-    };
-  }, []);
-
   const {
     isLoading:fetchLoading, 
     isError:fetchError,
   } = useQuery({
     queryKey: [inputTokenIndex, outputTokenIndex, debouncedInputValue],
-    refetchInterval: 5000,
+    refetchInterval: 10000,
     queryFn: async () => {
       if (debouncedInputValue == 0) {
         setRouteData(undefined);
-        clearRouteChecking();
         return;
       }
-      clearRouteChecking();
       setSwapState({ ...initialSwapState, loading: true });
   
       api.router
@@ -136,23 +119,17 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         });}
   })
   
-  useEffect(() => {
-    if(inputTokenIndex == outputTokenIndex && outputTokenIndex == TOKEN_LIST.length - 1) {
-      setOutputTokenIndex(outputTokenIndex-1)
-    }
-    else if(inputTokenIndex == outputTokenIndex) {
-      setOutputTokenIndex(outputTokenIndex+1)
-    }
-  }, [inputTokenIndex])
-
-  useEffect(() => {
-    if(inputTokenIndex == outputTokenIndex && inputTokenIndex == TOKEN_LIST.length - 1) {
-      setInputTokenIndex(inputTokenIndex-1)
-    }
-    else if(inputTokenIndex == outputTokenIndex) {
-      setInputTokenIndex(inputTokenIndex+1)
-    }
-  }, [outputTokenIndex])
+   useEffect(() => {
+       if (inputTokenIndex === outputTokenIndex) {
+         const isLastToken = inputTokenIndex === TOKEN_LIST.length - 1;
+         const newIndex = isLastToken ? inputTokenIndex - 1 : inputTokenIndex + 1;
+         if (inputTokenIndex === newIndex) {
+           setOutputTokenIndex(newIndex);
+         } else {
+           setInputTokenIndex(newIndex);
+         }
+       }
+     }, [inputTokenIndex, outputTokenIndex]);
 
 
   const handleReverse = () => {
@@ -170,8 +147,9 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       setOutputTokenIndex(inToken);
     } 
     else {
-      setOutputTokenIndex(inputTokenIndex);
+      const tempIndex = inputTokenIndex;
       setInputTokenIndex(outputTokenIndex);
+      setOutputTokenIndex(tempIndex);
     }
   };
 
@@ -321,7 +299,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       {isConnected ? (
         <>
           {routeData ? (
-            <div className="w-full" onClick={() => clearRouteChecking()}>
+            <div className="w-full">
               <SwapButton hasBalance={checkHasBalance()} />
             </div>
           ) : (

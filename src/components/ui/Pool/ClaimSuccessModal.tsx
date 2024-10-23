@@ -7,7 +7,7 @@ import { formatNumber } from "~/utils";
 type ClaimSuccessModalProps = {
   onClose: () => void;
   hash: string;
-  data: { pendingUsdcReward: string; pendingChaosReward: string, gasFee: number | undefined };
+  data: { pendingUsdcReward: string; pendingChaosReward: string, gasFee?: number };
 } & ModalRootProps;
 
 const ClaimSuccessModal = (props: ClaimSuccessModalProps) => {
@@ -64,7 +64,7 @@ const ClaimSuccessModal = (props: ClaimSuccessModalProps) => {
           <Image src="/img/tokens/rewards.svg" alt="" height={30} width={30} />
         </div>
       </div>
-      <Typography className='flex justify-end w-full mb-3' size='xs'>Total estimated fees:US$ {props?.data?.gasFee?.toFixed(4)} estimated fees</Typography>
+      <Typography className='flex justify-end w-full mb-3' size='xs'>Total estimated fees:US$ {props?.data?.gasFee?.toFixed(4)}</Typography>
     </div>
         <div className='flex flex-col gap-4 w-full mt-5'>
         <Button onClick={props.onClose} className="w-full">

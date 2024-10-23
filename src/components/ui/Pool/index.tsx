@@ -71,15 +71,15 @@ export const Pool = () => {
     gasPriceData
   } = useClaimFees();
 
-  console.log("Gasprice: ", formatUnits(gasPriceData ?? 0n, 18))
-
   useEffect(() => {
     if (isConfirmed) {
       openClaimSuccessModal();
 
-      const totalFee = (txReceipt!?.gasUsed * txReceipt!?.effectiveGasPrice);
+      const gasUsed = txReceipt?.gasUsed ?? 0n;
+      const gasPrice = txReceipt?.effectiveGasPrice ?? 0n;
+      const totalFee = gasUsed * gasPrice;
       const getUsdFees = async () => {
-        const finalUsdValue = await usdConverter(totalFee)
+        const finalUsdValue = totalFee > 0n ? await usdConverter(totalFee) : 0;
         setTotalGasFee(finalUsdValue)
 
       }
