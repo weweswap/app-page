@@ -50,9 +50,9 @@ const ClaimedFeesModal = ({ wewePosition, opened, onClose, onClaim, loading}: Cl
           <Typography size="xs">{formatNumber(wewePosition?.pendingUsdcReward || "0", { decimalDigits: 6 })} USDC</Typography>
           <Image src="/img/tokens/usdc.png" alt="" height={20} width={20} />
         </div>
-        <Typography size="xs" className="text_light_gray pt-10">
+        {/* <Typography size="xs" className="text_light_gray pt-10">
           Estimated Fees: $0,017
-        </Typography>
+        </Typography> */}
         <Divider className="border-blue-700 w-full" />
       </div>
       <div className="flex flex-col items-center gap-3">

@@ -15,7 +15,8 @@ import PoolDepositModal from "./PoolDepositModal";
 import DepositSuccessModal from "./DepositSuccessModal";
 import WithdrawModal, { PayloadWithdrawalModal } from "./WithdrawModal";
 import WithdrawSuccessModal, { PayloadWithdrawalSuccess } from "./WithdrawSuccessModal";
-import { Hex } from "viem";
+import { formatUnits, Hex } from "viem";
+import { ethers } from "ethers";
 import { usdConverter } from "~/utils";
 
 
@@ -67,7 +68,10 @@ export const Pool = () => {
     isConfirmed,
     receipt: txReceipt,
     claimFees,
+    gasPriceData
   } = useClaimFees();
+
+  console.log("Gasprice: ", formatUnits(gasPriceData ?? 0n, 18))
 
   useEffect(() => {
     if (isConfirmed) {
