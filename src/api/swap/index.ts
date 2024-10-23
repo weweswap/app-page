@@ -3,10 +3,11 @@ import { Chain } from "~/constants";
 import { RouterApiResponse, RouteSummary, TokenItem } from "~/models";
 
 const AGGREGATOR_KYBERSWAP_BASEURL = "https://aggregator-api.kyberswap.com";
+const CLIENT_ID = "weweswap";
 
 const api = axios.create({
   baseURL: AGGREGATOR_KYBERSWAP_BASEURL,
-  headers: { accept: "application/json" },
+  headers: { accept: "application/json","x-client-id": CLIENT_ID },
 });
 
 export default {
@@ -27,6 +28,7 @@ export default {
           tokenOut: tokenOut.address,
           amountIn: amountInFormatted,
           gasInclude: "true",
+          source: CLIENT_ID,
         },
       };
       return await api.get<RouterApiResponse>(
@@ -49,6 +51,7 @@ export default {
         enableGasEstimation: true,
         skipSimulateTx: false,
         deadline: Math.floor(new Date().getTime() / 1000) + 1200,
+        source: CLIENT_ID,
       };
       return await api.post<RouterApiResponse>(
         `/${chain.toLocaleLowerCase()}/api/v1/route/build`,
