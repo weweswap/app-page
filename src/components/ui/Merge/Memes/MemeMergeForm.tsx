@@ -185,7 +185,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
               setIsProcessing(false)
               setIsComplete(true)
               refetchBalance()
-              refetchVestings()
+              
             }}
             onOpen={() => { }} />
         )
@@ -206,8 +206,8 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
         inputToken={mergeConfig.inputToken}
         onClose={() => {
           setAmount("")
-
           setIsComplete(false)
+          refetchVestings()
         }}
         opened={isComplete}
       />

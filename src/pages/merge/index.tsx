@@ -36,7 +36,7 @@ const MergeTokenList = {
     logo: "/img/tokens/CDS.webp",
   },
   goodle: {
-    name: "GOOGLE",
+    name: "GOODLE",
     logo: "/img/tokens/goodle.svg",
   },
 }
