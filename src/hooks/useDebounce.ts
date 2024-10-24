@@ -1,15 +1,24 @@
+"use-client"
 import { useEffect, useState } from "react";
 
 export const useDebounce = (value: number, delay: number) => {
-    const [debouncedValue, setDebouncedValue] = useState(value);
+    const [debouncedInputValue, setDebouncedInputValue] = useState(value);
+    const [isInputChanging, setIsInputChanging] = useState(false)
+
     useEffect(() => {
+      setIsInputChanging(true)
       const handler = setTimeout(() => {
-        setDebouncedValue(value);
+        setDebouncedInputValue(value);
       }, delay);
-  
+
+      const delayChange = setTimeout(() => {
+        setIsInputChanging(false) 
+      },2400)
+ 
       return () => {
+        clearTimeout(delayChange);
         clearTimeout(handler);
       };
     }, [value, delay]);
-    return debouncedValue;
+    return {debouncedInputValue, isInputChanging};
   };

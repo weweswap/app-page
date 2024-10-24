@@ -79,11 +79,11 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     );
   };
 
-  const debouncedInputValue = useDebounce(inputValue, 500);
+  const {debouncedInputValue, isInputChanging} = useDebounce(inputValue, 500);
 
   const {
     isLoading:fetchLoading, 
-    isError:fetchError,
+    isError:fetchError
   } = useQuery({
     queryKey: [inputTokenIndex, outputTokenIndex, debouncedInputValue],
     refetchInterval: 10000,
@@ -152,6 +152,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       setOutputTokenIndex(tempIndex);
     }
   };
+
 
   return (
     <>
@@ -257,7 +258,8 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               text-start bg-transparent text-white text-2xl h-auto overflow-x-auto
               border-transparent rounded-none`}
             >
-              {routeData
+              {isInputChanging || fetchLoading ? <Typography secondary className="animate-pulse">Loading...</Typography> :
+              routeData
                 ? Number(
                   formatStringUnits(
                     routeData.routeSummary.amountOut,
