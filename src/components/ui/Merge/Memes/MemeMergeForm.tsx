@@ -13,7 +13,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import * as dn from "dnum"
 import MergeProcessingModal from './MergeProcessingModal'
 import { ethers, formatUnits } from 'ethers'
-import { useMemeEaterRate, useVestingsInfo } from '~/hooks/useMemeEater'
+import { useMemeEaterRate, useMemeGetTotalWeWe, useVestingsInfo } from '~/hooks/useMemeEater'
 import { MergeConfig } from '~/constants/mergeConfigs'
 
 interface MemeMergeFormProps {
@@ -48,13 +48,15 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
     isConnected ? setIsProcessing(true) : openConnectModal?.()
   }
 
-  const claimableAmount = dn.format(dn.mul(dn.from(amount || 0, mergeConfig.inputToken.decimals), rate), { locale: "en", digits: 2 });
+  const { totalWeWe, isLoading: isTotalWeWeLoading } = useMemeGetTotalWeWe(mergeConfig.eaterContractAddress, amountBigNumber);
+
+  const claimableAmount = dn.format([totalWeWe, 18], { locale: "en", digits: 2 });
 
   return (
     <>
       <div className="bg_light_dark flex items-center justify-between gap-3 p-4 mt-5">
         <div className="flex-1 flex items-center gap-1">
-          <Image src={mergeConfig.inputToken.icon} width={32} height={32} alt="" />
+          <Image className="rounded-full" src={mergeConfig.inputToken.icon} width={32} height={32} alt="" />
           <Typography secondary size="sm">
             {mergeConfig.inputToken.symbol}
           </Typography>
@@ -102,9 +104,17 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
             <div className="col-span-5 items-center flex-1  md:flex-none flex justify-end gap-3">
               {!isRateLoading && (
                 <div className="overflow-x-auto">
-                  <Typography size="md">
-                    {claimableAmount} WEWE
-                  </Typography>
+                  {
+                    isTotalWeWeLoading ? (
+                      <Typography size="sm" className="animate-pulse">
+                        Calculating...
+                      </Typography>
+                    ) : (
+                      <Typography size="md">
+                      {claimableAmount} WEWE
+                    </Typography>
+                    )
+                  }
                 </div>
               )}
             </div>

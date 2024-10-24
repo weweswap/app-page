@@ -62,23 +62,21 @@ export function useMemeEaterRate(address: Hex): {
   const { data, isLoading, refetch } = useReadContract({
     abi: MemeEaterAbi,
     address: address,
-    functionName: "getRate",
-    query: {
-      staleTime: 1000 * 60 * 5,
-    }
+    functionName: "getCurrentPrice",
   });
 
   useWatchContractEvent({
-    abi: MemeEaterAbi,
     address: address,
-    eventName: "RateChanged",
-    onLogs() {
+    abi: MemeEaterAbi,
+    eventName: "Merged",
+    onLogs: () => {
       refetch();
     },
   });
 
+
   return {
-    rate: dn.toNumber(dn.from([data as bigint ?? 0n, 5])),
+    rate: dn.toNumber(dn.from([data as bigint ?? 0n, 3])),
     isLoading
   }
 }
@@ -115,8 +113,6 @@ export function useMemeEaterVestingDuration(address: Hex) {
       staleTime: 1000 * 60 * 5,
     },
   });
-
-
 
   return {
     vestingDuration: formatMinutesToHumanReadable(data ?? 0),
@@ -157,4 +153,21 @@ export function useMemeEaterClaim(eaterAddress: Hex) {
     isError: isCreationError,
     claim,
   };
+}
+
+export function useMemeGetTotalWeWe(eaterAddress: Hex, amount: bigint) {
+  const { data, isLoading } = useReadContract({
+    abi: MemeEaterAbi,
+    address: eaterAddress,
+    functionName: "calculateTokensOut",
+    args: [amount],
+    query: {
+      enabled: !!amount,
+    }
+  });
+
+  return {
+    totalWeWe: data as bigint ?? 0n,
+    isLoading
+  }
 }

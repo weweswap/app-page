@@ -8,13 +8,23 @@ const MemeEaterAbi = [
             },
             {
                 "internalType": "address",
-                "name": "token",
+                "name": "_token",
                 "type": "address"
             },
             {
                 "internalType": "uint32",
                 "name": "_vestingDuration",
                 "type": "uint32"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_virtualFOMO",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_virtualWEWE",
+                "type": "uint256"
             }
         ],
         "stateMutability": "nonpayable",
@@ -34,6 +44,12 @@ const MemeEaterAbi = [
                 "internalType": "address",
                 "name": "account",
                 "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "weweAmount",
+                "type": "uint256"
             }
         ],
         "name": "Merged",
@@ -119,6 +135,25 @@ const MemeEaterAbi = [
     {
         "inputs": [
             {
+                "internalType": "uint256",
+                "name": "x",
+                "type": "uint256"
+            }
+        ],
+        "name": "calculateTokensOut",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "address",
                 "name": "account",
                 "type": "address"
@@ -157,6 +192,19 @@ const MemeEaterAbi = [
     },
     {
         "inputs": [],
+        "name": "getCurrentPrice",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "getRate",
         "outputs": [
             {
@@ -182,6 +230,19 @@ const MemeEaterAbi = [
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "maxSupply",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -190,7 +251,26 @@ const MemeEaterAbi = [
             }
         ],
         "name": "merge",
-        "outputs": [],
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "mergeAll",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
         "stateMutability": "nonpayable",
         "type": "function"
     },
@@ -281,19 +361,6 @@ const MemeEaterAbi = [
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "rate",
-                "type": "uint256"
-            }
-        ],
-        "name": "setRate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "address",
                 "name": "_treasury",
                 "type": "address"
@@ -318,16 +385,29 @@ const MemeEaterAbi = [
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "sumOfVested",
-        "outputs": [
+        "inputs": [
             {
                 "internalType": "uint256",
-                "name": "",
+                "name": "_maxSupply",
                 "type": "uint256"
             }
         ],
-        "stateMutability": "view",
+        "name": "setVitualBalance",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "setWhiteList",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -342,6 +422,19 @@ const MemeEaterAbi = [
         "name": "togglePause",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "totalVested",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -409,12 +502,57 @@ const MemeEaterAbi = [
     },
     {
         "inputs": [],
+        "name": "virtualFOMO",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "virtualWEWE",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "wewe",
         "outputs": [
             {
                 "internalType": "address",
                 "name": "",
                 "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "whiteList",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
             }
         ],
         "stateMutability": "view",

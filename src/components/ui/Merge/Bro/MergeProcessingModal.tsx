@@ -11,8 +11,8 @@ import { Hex } from 'viem';
 
 export type PayloadMergeProcessingModal = {
   amountToMerge: string,
-  token: TokenItem
-  eater: Hex
+  token: TokenItem,
+  eater: Hex,
 }
 
 type MergeProcessingModalProps = {

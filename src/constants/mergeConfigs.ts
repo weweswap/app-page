@@ -10,20 +10,20 @@ export interface MergeConfig {
   chartId: string;
 }
 
-const goodleMergeConfig: MergeConfig = {
-  eaterContractAddress: "0x2C56C080451d86eb708B44F8b5942cf797acC6be" as `0x${string}`,
+const fomoMergeConfig: MergeConfig = {
+  eaterContractAddress: "0x56080973a9626a3Aa7A7E2e7E5c6cA7A3DeFA5b0" as `0x${string}`,
   inputToken: {
     chain: Chain.BASE,
-    symbol: "GOODLE",
-    address: "0x9F235D23354857EfE6c541dB92a9eF1877689BCB" as `0x${string}`,
-    icon: "/img/tokens/goodle.svg",
-    decimals: 18,
+    symbol: "FOMO",
+    address: "0xd327d36EB6E1f250D191cD62497d08b4aaa843Ce" as `0x${string}`,
+    icon: "/img/tokens/FOMO.webp",
+    decimals: 9,
   },
   uniAdaptorAddress: "0xbb1a07e99f7638dcC730b523e1b107FdC7c379Ac" as `0x${string}`,
-  chartId: "goodle",
+  chartId: "father-of-meme-origin",
 }
 
 
 export const slugToMergeConfig: Record<string, MergeConfig> = {
-  goodle: goodleMergeConfig
+  fomo: fomoMergeConfig
 }
