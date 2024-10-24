@@ -1,5 +1,5 @@
 import { Hex } from "viem";
-import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useGasPrice, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import feeManagerABI from "~/lib/abis/FeeManager";
 
@@ -16,6 +16,8 @@ export function useClaimFees() {
       isSuccess: isConfirmed,
       data: receipt,
     } = useWaitForTransactionReceipt({ hash });
+
+    const { data: gasPriceData, isError: isGasPriceError } = useGasPrice();
   
     const claimFees = async (userAddress: Hex) => {
       await writeContractAsync({
@@ -34,5 +36,7 @@ export function useClaimFees() {
       isConfirmed,
       receipt,
       claimFees,
+      gasPriceData,
+      isGasPriceError
     };
   }
