@@ -13,7 +13,7 @@ export const useDebounce = (value: number, delay: number) => {
 
       const delayChange = setTimeout(() => {
         setIsInputChanging(false) 
-      },2400)
+      },2700)
  
       return () => {
         clearTimeout(delayChange);
