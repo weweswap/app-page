@@ -5,7 +5,7 @@ import { usePoolContext } from "./PoolContext";
 import { Divider, NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import { verdana } from "~/fonts";
-import { TOKEN_LIST } from "~/constants";
+import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
 import RangeSlider from "~/components/common/RangeSlider";
@@ -14,7 +14,9 @@ import { useGetPrices } from "~/hooks/useGetPrices";
 import { WewePosition } from "~/hooks/useWewePositions";
 import { PoolChartCard } from "./PoolChartCard";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { formatNumber } from "~/utils";
+import { formatBigIntegers, formatNumber } from "~/utils";
+import { useQuery } from "@tanstack/react-query";
+import { API_BASE_URL, RAILWAY_APP_API } from "~/constants/configs";
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -95,6 +97,18 @@ const PoolDeposit = ({
     }, 5000);
     return () => clearInterval(intervalId);
   }, []);
+
+  const {data:incentiveDetails} = useQuery({
+    queryKey: ["incentive"],
+    queryFn: async () => {
+      const response = await fetch(`${RAILWAY_APP_API}/${CONTRACT_ADDRESSES.weweVault}`);
+      if (!response.ok) {
+        console.error("Failed to fetch incentive details.")
+      }
+      const data = await response.json(); 
+      return data;
+    }
+  })
 
   useEffect(() => {
     if (prices && selectedPool) {
@@ -563,7 +577,7 @@ const PoolDeposit = ({
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
-                <Typography className="text-sm sm:text-base">$ -</Typography>
+                <Typography className="text-sm sm:text-base">$ {(incentiveDetails?.incentivesPerDay)?.toFixed(3)}</Typography>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <Typography className="text-sm sm:text-base  font-extrabold line-clamp-1">DISTRIBUTED FEES</Typography>
