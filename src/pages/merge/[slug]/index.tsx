@@ -29,60 +29,67 @@ export const getServerSideProps: GetServerSideProps<MemeMergePageProps> = async 
   }
 }
 
-const MemeMergePage = ({mergeConfig}: MemeMergePageProps) => {
+const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
   const { vestingDuration } = useMemeEaterVestingDuration(mergeConfig.eaterContractAddress);
 
   return (
-    <div className="gap-5 grid grid-cols-12">
-      <div className="md:col-span-8 col-span-12 gap-3 h-[100%]">
-        <Card>
-          <div className="md:flex items-center justify-between gap-3 text-center md:text-start">
-            <Link href="/merge">
-              <Typography secondary size="xl" tt="uppercase">
-                <span>{"<"}</span>  MERGE NO&ensp;W
+    <div>
+      <Card  className="mb-5">
+        <Typography secondary size="lg" className="text-center uppercase text-yellow" >
+        Last Call to Merge & Upgrade, Merge live until {mergeConfig.mergeDeadline}! 
+        </Typography>
+      </Card>
+      <div className="gap-5 grid grid-cols-12">
+        <div className="md:col-span-8 col-span-12 gap-3 h-[100%]">
+          <Card>
+            <div className="md:flex items-center justify-between gap-3 text-center md:text-start">
+              <Link href="/merge">
+                <Typography secondary size="xl" tt="uppercase">
+                  <span>{"<"}</span>  MERGE NO&ensp;W
+                </Typography>
+              </Link>
+            </div>
+            <div className="md:flex items-center justify-between gap-3 text-center md:text-start mt-5">
+              <Typography
+                size="sm"
+                tt="uppercase"
+                className="text-center md:text-start"
+              >
+                Merge your coins
               </Typography>
-            </Link>
-          </div>
-          <div className="md:flex items-center justify-between gap-3 text-center md:text-start mt-5">
-            <Typography
-              size="sm"
-              tt="uppercase"
-              className="text-center md:text-start"
-            >
-              Merge your coins
-            </Typography>
-          </div>
-        </Card>
-        <Card className="border-t-0">
-          <div className="flex flex-col my-5">
-            <Typography size="lg">MERGE your {mergeConfig.inputToken.symbol} into WEWE</Typography>
+            </div>
+          </Card>
+          <Card className="border-t-0">
+            <div className="flex flex-col my-5">
+              <Typography size="lg">MERGE your {mergeConfig.inputToken.symbol} into WEWE</Typography>
 
-            <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
-              <li>Merge your ${mergeConfig.inputToken.symbol} to grab your $WEWE</li>
-              <li>Dynamic ratio. The sooner you merge, the more WEWE you get!</li>
-              <li>Claim your $WEWE in {vestingDuration}</li>
-            </ul>
-          </div>
-        </Card>
-        <Card className="border-t-0">
-          <div className="mb-10">
-            <MemeMergeForm mergeConfig={mergeConfig} />
-          </div>
-        </Card>
-        <Card className="border-t-0">
-          <div className="h-[300px]">
-            <MergePriceChart tokenName={mergeConfig.inputToken.symbol} chartId={mergeConfig.chartId} />
-          </div>
-        </Card>
-      </div>
+              <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
+                <li>Merge your ${mergeConfig.inputToken.symbol} to grab your $WEWE</li>
+                <li>Dynamic ratio. The sooner you merge, the more WEWE you get!</li>
+                <li>Claim your $WEWE in {vestingDuration}</li>
+              </ul>
+            </div>
+          </Card>
+          <Card className="border-t-0">
+            <div className="mb-10">
+              <MemeMergeForm mergeConfig={mergeConfig} />
+            </div>
+          </Card>
+          <Card className="border-t-0">
+            <div className="h-[300px]">
+              <MergePriceChart tokenName={mergeConfig.inputToken.symbol} chartId={mergeConfig.chartId} />
+            </div>
+          </Card>
+        </div>
 
-      <div className="flex flex-col md:col-span-4 col-span-12 md:order-2 order-1 gap-5">
-        <Card>
-          <MemeClaimForm mergeConfig={mergeConfig} />
-        </Card>
-        <Card>
-          <ChaosRewardCard mergeConfig={mergeConfig} />
-        </Card>
+        <div className="flex flex-col md:col-span-4 col-span-12 md:order-2 order-1 gap-5">
+          <Card>
+            <MemeClaimForm mergeConfig={mergeConfig} />
+          </Card>
+          <Card>
+            <ChaosRewardCard mergeConfig={mergeConfig} />
+          </Card>
+        </div>
       </div>
     </div>
   )

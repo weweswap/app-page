@@ -1,6 +1,7 @@
 import { Hex } from "viem"
 import { TokenItem } from "~/models"
 import { Chain } from "./chains";
+import dayjs from "dayjs";
 
 
 export interface MergeConfig {
@@ -8,10 +9,11 @@ export interface MergeConfig {
   inputToken: TokenItem;
   uniAdaptorAddress: Hex;
   chartId: string;
+  mergeDeadline: string;
 }
 
 const fomoMergeConfig: MergeConfig = {
-  eaterContractAddress: "0x56080973a9626a3Aa7A7E2e7E5c6cA7A3DeFA5b0" as `0x${string}`,
+  eaterContractAddress: "0x711Aadc66281E42Ecc7f6f4b91d47F4aB792AF5f" as `0x${string}`,
   inputToken: {
     chain: Chain.BASE,
     symbol: "FOMO",
@@ -21,6 +23,7 @@ const fomoMergeConfig: MergeConfig = {
   },
   uniAdaptorAddress: "0xbb1a07e99f7638dcC730b523e1b107FdC7c379Ac" as `0x${string}`,
   chartId: "father-of-meme-origin",
+  mergeDeadline: dayjs(1730107572000).format("DD.MMM"),
 }
 
 
