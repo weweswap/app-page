@@ -8,7 +8,7 @@ export interface MergeConfig {
   eaterContractAddress: Hex;
   inputToken: TokenItem;
   uniAdaptorAddress: Hex;
-  chartId: string;
+  chartUrl: string;
   mergeDeadline: string;
 }
 
@@ -22,7 +22,7 @@ const fomoMergeConfig: MergeConfig = {
     decimals: 9,
   },
   uniAdaptorAddress: "0xbb1a07e99f7638dcC730b523e1b107FdC7c379Ac" as `0x${string}`,
-  chartId: "father-of-meme-origin",
+  chartUrl: "https://dexscreener.com/base/0x7bCD8185B7f4171017397993345726E15457B1eE?embed=1&theme=dark&trades=0&info=0",
   mergeDeadline: dayjs(1730107572000).format("DD.MMM"),
 }
 

@@ -61,11 +61,9 @@ const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
           </Card>
           <Card className="border-t-0">
             <div className="flex flex-col my-5">
-              <Typography size="lg">MERGE your {mergeConfig.inputToken.symbol} into WEWE</Typography>
-
-              <ul className="list-decimal list-inside pt-3 text-sm text_light_gray">
-                <li>Merge your ${mergeConfig.inputToken.symbol} to grab your $WEWE</li>
-                <li>Dynamic ratio. The sooner you merge, the more WEWE you get!</li>
+              <ul className="list-decimal list-inside text-sm text_light_gray">
+                <li>Sacrifice your ${mergeConfig.inputToken.symbol} to get $WEWE</li>
+                <li>Speed pays. Be fast to get maximum $WEWE and $CHAOS</li>
                 <li>Claim your $WEWE in {vestingDuration}</li>
               </ul>
             </div>
@@ -76,8 +74,8 @@ const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
             </div>
           </Card>
           <Card className="border-t-0">
-            <div className="h-[300px]">
-              <MergePriceChart tokenName={mergeConfig.inputToken.symbol} chartId={mergeConfig.chartId} />
+            <div className="h-full">
+              <div id="dexscreener-embed"><iframe src={mergeConfig.chartUrl}></iframe></div>
             </div>
           </Card>
         </div>

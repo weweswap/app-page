@@ -8,13 +8,14 @@ interface ChaosRewardCardProps {
 
 export const ChaosRewardCard = ({ mergeConfig }: ChaosRewardCardProps) => {
   const { rate } = useMemeEaterRate(mergeConfig.eaterContractAddress);
-  
+
   return (
     <div className="flex flex-col items-center gap-4 py-5">
       <Typography
         size="sm"
         secondary
-        className="font-black text-yellow">
+        className="font-black text-yellow text-center">
+        CURRENT <br />
         {mergeConfig.inputToken.symbol}:WEWE RATIO
       </Typography>
 
@@ -29,14 +30,15 @@ export const ChaosRewardCard = ({ mergeConfig }: ChaosRewardCardProps) => {
       <Typography
         size="xs"
         className="text-center mb-5"
-        >
-        Merge your tokens early to get a premium on your tokens!
+      >
+        BE FAST. RATIO WILL DROP TO ZERO BY THE END OF THE MERGE.
       </Typography>
 
       <Typography
         size="sm"
         secondary
-        className="font-black text-yellow">
+        className="font-black text-yellow text-center">
+        CURRENT <br />
         CHAOS MULTIPLIER
       </Typography>
 
@@ -51,9 +53,9 @@ export const ChaosRewardCard = ({ mergeConfig }: ChaosRewardCardProps) => {
       <Typography
         size="xs"
         className="text-center"
-        >
-        Get rewarded for merging EARLY! <br />
-        More CHAOS points if you merge NOW!
+      >
+        HIGHEST MULTIPLIER OUTSET. <br />
+        DETERMINES ALLOCATION TO FUTURE $WEWE AIRDROP.
       </Typography>
 
     </div>
