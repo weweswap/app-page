@@ -90,6 +90,8 @@ const MergeOperation = () => {
     txReceipt
   } = useApproveAndCall();
 
+  // console.log("ErrorConfirmed: ", )
+
   const handleSelect = (div: number) => {
     setAmount(Number(formatEther(balanceWewe)) / div);
   };

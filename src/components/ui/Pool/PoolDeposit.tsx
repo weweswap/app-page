@@ -125,7 +125,6 @@ const PoolDeposit = ({
           ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
         )
   
-        console.log("Equivalent:",prices.priceToken0)
   
         if(prices.priceToken0*walletToken0/prices.priceToken1 < walletToken1 ) {
           setInputValueToken0(formattedToken0);
@@ -291,31 +290,6 @@ const PoolDeposit = ({
                 </button>
               </div>
             )}
-            <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">
-              <PoolChartCard address={selectedPool.address} />
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 my-3 gap-4 gap-y-8">
-              <div className="flex flex-col items-center gap-4">
-                <Typography className="text-sm sm:text-base font-extrabold">TVL</Typography>
-                <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.tvl)}</Typography>
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <Typography className="text-sm sm:text-base  font-extrabold">VOLUME</Typography>
-                <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.volume)}/day</Typography>
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
-                <Typography className="text-sm sm:text-base">$ -</Typography>
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <Typography className="text-sm sm:text-base  font-extrabold line-clamp-1">DISTRIBUTED FEES</Typography>
-                <Typography className="text-sm sm:text-base">
-                  $ {new Intl.NumberFormat("en-US", {
-                    minimumFractionDigits: 2,
-                  }).format(Number(selectedPool.dailyFeesInUsd))}/day
-                </Typography>
-              </div>
-            </div>
             <Divider className="border-blue-700" />
             <div className="mt-5 flex items-center justify-between w-full gap-6 md:flex-row flex-col">
               <div className="bg_light_dark w-full flex items-center justify-between gap-3 h-[3rem]">
@@ -575,6 +549,32 @@ const PoolDeposit = ({
               </div>
             )}
           </div>
+          <Divider />
+          <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">
+              <PoolChartCard address={selectedPool.address} />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 my-3 gap-4 gap-y-8">
+              <div className="flex flex-col items-center gap-4">
+                <Typography className="text-sm sm:text-base font-extrabold">TVL</Typography>
+                <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.tvl)}</Typography>
+              </div>
+              <div className="flex flex-col items-center gap-4">
+                <Typography className="text-sm sm:text-base  font-extrabold">VOLUME</Typography>
+                <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.volume)}/day</Typography>
+              </div>
+              <div className="flex flex-col items-center gap-4">
+                <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
+                <Typography className="text-sm sm:text-base">$ -</Typography>
+              </div>
+              <div className="flex flex-col items-center gap-4">
+                <Typography className="text-sm sm:text-base  font-extrabold line-clamp-1">DISTRIBUTED FEES</Typography>
+                <Typography className="text-sm sm:text-base">
+                  $ {new Intl.NumberFormat("en-US", {
+                    minimumFractionDigits: 2,
+                  }).format(Number(selectedPool.dailyFeesInUsd))}/day
+                </Typography>
+              </div>
+            </div>
         </Card>
         <Card>
           <Typography size="lg">
