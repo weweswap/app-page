@@ -290,7 +290,6 @@ const PoolDeposit = ({
                 </button>
               </div>
             )}
-            <Divider className="border-blue-700 my-3" />
             <div className="mt-5 flex items-center justify-between w-full gap-6 md:flex-row flex-col">
               <div className="bg_light_dark w-full flex items-center justify-between gap-3 h-[3rem]">
                 <div
@@ -549,7 +548,7 @@ const PoolDeposit = ({
               </div>
             )}
           </div>
-          <Divider className="border-blue-700 my-3" />
+          <Divider className="border-blue-700 mt-4" />
           <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">
               <PoolChartCard address={selectedPool.address} />
             </div>
