@@ -10,7 +10,7 @@ import { usePoolContext } from "./PoolContext";
 type MySharesProps = {
   onClaim: (wewePositon: WewePosition) => void;
   onDeposit: (token0: number, token1: number) => void;
-  onWithdraw: (sharesAmount: number) => void;
+  onWithdraw: (sharesAmount: bigint) => void;
   setPoolTypes: (number: number) => void;
   poolTypes: number;
 };

@@ -152,7 +152,7 @@ export const Pool = () => {
     openWithdrawSuccessModal()
   }
 
-  const handleWithdrawalModal = (burnAmount: number) => {
+  const handleWithdrawalModal = (burnAmount: bigint) => {
     setPayloadWithdrawalModal({burnAmount})
     openWithdrawModal()
   }
