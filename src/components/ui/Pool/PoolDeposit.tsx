@@ -19,7 +19,7 @@ import { formatNumber } from "~/utils";
 type PoolDepositProps = {
   onBack: () => void;
   onDeposit: (token0: number, token1: number) => void;
-  onWithdraw: (sharesAmount: number) => void;
+  onWithdraw: (sharesAmount: bigint) => void;
   onClaim?: (wewePositon: WewePosition) => void;
   enableClaimBlock?: boolean;
 };
@@ -101,7 +101,7 @@ const PoolDeposit = ({
       const resultToken0 = (BigInt(sliderValue) * balanceToken0) / BigInt(100);
       const resultShares = (BigInt(sliderValue) * balanceShares) / BigInt(100);
 
-      const resultToken1 = (BigInt(sliderValue) * balanceToken1)/ BigInt(100);
+      const resultToken1 = (BigInt(sliderValue) * balanceToken1) / BigInt(100);
 
       const formattedToken0 = Number(
         ethers.formatUnits(resultToken0, selectedPool?.token0.decimals)
@@ -114,29 +114,29 @@ const PoolDeposit = ({
 
       const token1Equivalent =
         (formattedToken0 * prices.priceToken0) / prices.priceToken1;
-        const token0Equivalent = 
+      const token0Equivalent =
         (formattedToken1 * prices.priceToken1) / prices.priceToken0;
-  
-        const walletToken0 = Number(
-          ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
-        )
-  
-        const walletToken1 = Number(
-          ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
-        )
-  
-  
-        if(prices.priceToken0*walletToken0/prices.priceToken1 < walletToken1 ) {
-          setInputValueToken0(formattedToken0);
-          setFormattedShares(formattedShares);
-          setInputValueToken1(formattedToken1);
-        }
-  
-        else {
-          setInputValueToken1(formattedToken1);
-          setFormattedShares(formattedShares);
-          setInputValueToken0(Number(token0Equivalent.toFixed(6)))
-        }
+
+      const walletToken0 = Number(
+        ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
+      )
+
+      const walletToken1 = Number(
+        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
+      )
+
+
+      if (prices.priceToken0 * walletToken0 / prices.priceToken1 < walletToken1) {
+        setInputValueToken0(formattedToken0);
+        setFormattedShares(formattedShares);
+        setInputValueToken1(formattedToken1);
+      }
+
+      else {
+        setInputValueToken1(formattedToken1);
+        setFormattedShares(formattedShares);
+        setInputValueToken0(Number(token0Equivalent.toFixed(6)))
+      }
     }
   }, [prices, sliderValue, balanceToken0, selectedPool]);
 
@@ -155,6 +155,19 @@ const PoolDeposit = ({
         (newValue * prices.priceToken1) / prices.priceToken0;
       setInputValueToken1(newValue)
       setInputValueToken0(Number(token0Equivalent.toFixed(6)));
+    }
+  }
+
+  const handleWithdraw = () => {
+    if(!isConnected) {
+      openConnectModal && openConnectModal()
+      return
+    }
+    try{
+      const sharesInBigNumber = ethers.parseUnits(formattedShares.toString(), 18);
+      onWithdraw(sharesInBigNumber > balanceShares ? balanceShares : sharesInBigNumber);
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -236,47 +249,47 @@ const PoolDeposit = ({
               <div className="mt-10">
                 <div className="flex gap-20 justify-center mb-5">
                   <div>
-                  <div className="flex items-center justify-center">
-                  <Typography size="xs" className="font-bold mr-2">
-                    PENDING REWARDS
-                  </Typography>
-                  <Image
-                    src="/img/tokens/rewards.svg"
-                    alt=""
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <Typography size="lg" className="font-bold py-4 text-center">
-                  {
-                    formatNumber(selectedPosition?.pendingChaosReward  || 0, {
-                      decimalDigits: 6
-                    })
-                  }
-                </Typography>
+                    <div className="flex items-center justify-center">
+                      <Typography size="xs" className="font-bold mr-2">
+                        PENDING REWARDS
+                      </Typography>
+                      <Image
+                        src="/img/tokens/rewards.svg"
+                        alt=""
+                        width={24}
+                        height={24}
+                      />
+                    </div>
+                    <Typography size="lg" className="font-bold py-4 text-center">
+                      {
+                        formatNumber(selectedPosition?.pendingChaosReward || 0, {
+                          decimalDigits: 6
+                        })
+                      }
+                    </Typography>
                   </div>
-                
+
                   <div>
-                  <div className="flex items-center justify-center">
-                  <Typography size="xs" className="font-bold mr-2">
-                    PENDING FEES
-                  </Typography>
-                  <Image
-                    src="/img/tokens/usdc.png"
-                    alt=""
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <Typography size="lg" className="font-bold py-4 text-center">
-                  ${
-                    formatNumber(selectedPosition?.pendingUsdcReward || 0, {
-                      decimalDigits: 6
-                    })
-                  }
-                </Typography>
+                    <div className="flex items-center justify-center">
+                      <Typography size="xs" className="font-bold mr-2">
+                        PENDING FEES
+                      </Typography>
+                      <Image
+                        src="/img/tokens/usdc.png"
+                        alt=""
+                        width={24}
+                        height={24}
+                      />
+                    </div>
+                    <Typography size="lg" className="font-bold py-4 text-center">
+                      ${
+                        formatNumber(selectedPosition?.pendingUsdcReward || 0, {
+                          decimalDigits: 6
+                        })
+                      }
+                    </Typography>
                   </div>
-                
+
                 </div>
                 <button
                   className="custom_btn w-full uppercase"
@@ -403,8 +416,8 @@ const PoolDeposit = ({
                     <Typography size="xs">
                       {formatNumber(
                         ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals), {
-                          decimalDigits: 6
-                        }
+                        decimalDigits: 6
+                      }
                       )}{" "}
                       {selectedPool?.token0.symbol}
                     </Typography>
@@ -419,8 +432,8 @@ const PoolDeposit = ({
                     <Typography size="xs">
                       {formatNumber(
                         ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals), {
-                          decimalDigits: 6
-                        }
+                        decimalDigits: 6
+                      }
                       )}{" "}
                       {selectedPool?.token1.symbol}
                     </Typography>
@@ -536,11 +549,7 @@ const PoolDeposit = ({
                   </Button>
                 </div>
                 <Button
-                  onClick={
-                    isConnected
-                      ? () => onWithdraw(formattedShares)
-                      : () => openConnectModal && openConnectModal()
-                  }
+                  onClick={handleWithdraw}
                   className="w-full mt-5 mb-2"
                 >
                   <Typography secondary>WITHDRAW</Typography>
@@ -550,30 +559,30 @@ const PoolDeposit = ({
           </div>
           <Divider className="border-blue-700 mt-4" />
           <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">
-              <PoolChartCard address={selectedPool.address} />
+            <PoolChartCard address={selectedPool.address} />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 my-3 gap-4 gap-y-8">
+            <div className="flex flex-col items-center gap-4">
+              <Typography className="text-sm sm:text-base font-extrabold">TVL</Typography>
+              <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.tvl)}</Typography>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 my-3 gap-4 gap-y-8">
-              <div className="flex flex-col items-center gap-4">
-                <Typography className="text-sm sm:text-base font-extrabold">TVL</Typography>
-                <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.tvl)}</Typography>
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <Typography className="text-sm sm:text-base  font-extrabold">VOLUME</Typography>
-                <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.volume)}/day</Typography>
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
-                <Typography className="text-sm sm:text-base">$ -</Typography>
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <Typography className="text-sm sm:text-base  font-extrabold line-clamp-1">DISTRIBUTED FEES</Typography>
-                <Typography className="text-sm sm:text-base">
-                  $ {new Intl.NumberFormat("en-US", {
-                    minimumFractionDigits: 2,
-                  }).format(Number(selectedPool.dailyFeesInUsd))}/day
-                </Typography>
-              </div>
+            <div className="flex flex-col items-center gap-4">
+              <Typography className="text-sm sm:text-base  font-extrabold">VOLUME</Typography>
+              <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.volume)}/day</Typography>
             </div>
+            <div className="flex flex-col items-center gap-4">
+              <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
+              <Typography className="text-sm sm:text-base">$ -</Typography>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Typography className="text-sm sm:text-base  font-extrabold line-clamp-1">DISTRIBUTED FEES</Typography>
+              <Typography className="text-sm sm:text-base">
+                $ {new Intl.NumberFormat("en-US", {
+                  minimumFractionDigits: 2,
+                }).format(Number(selectedPool.dailyFeesInUsd))}/day
+              </Typography>
+            </div>
+          </div>
         </Card>
         <Card>
           <Typography size="lg">

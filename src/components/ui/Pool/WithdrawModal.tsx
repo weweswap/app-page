@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import { Hex } from "viem";
 
 export type PayloadWithdrawalModal = {
-  burnAmount: number
+  burnAmount: bigint
 }
 
 type WithdrawModalProps = {
@@ -34,7 +34,7 @@ const WithdrawModal = ({ onWithdrawSuccess, onTxError, onClose, opened, data }: 
   useEffect(() => {
     async function deposit () {
       if (selectedPool && data && address) {
-        await withdrawal(selectedPool.address, ethers.parseUnits(String(data.burnAmount), 18), address)
+        await withdrawal(selectedPool.address, data.burnAmount, address)
       }
     }
     deposit()
