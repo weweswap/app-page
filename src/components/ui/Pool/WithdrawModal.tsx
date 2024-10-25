@@ -7,6 +7,7 @@ import { usePoolContext } from "./PoolContext";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import { Hex } from "viem";
+import * as dn from "dnum";
 
 export type PayloadWithdrawalModal = {
   burnAmount: bigint
@@ -62,7 +63,7 @@ const WithdrawModal = ({ onWithdrawSuccess, onTxError, onClose, opened, data }: 
         {/* <Typography size="xl">$34.34</Typography> */}
       </div>
       <div className="flex gap-4 ">
-        <Typography fw={1000} className="text_light_gray" size="sm">{data?.burnAmount} SHARES</Typography>
+        <Typography fw={1000} className="text_light_gray" size="sm">{dn.format(dn.from([data?.burnAmount || 0n, 18]), { digits: 6, locale: "en" })} SHARES</Typography>
         <div className="flex items-center">
             <Image src={selectedPool?.token0.icon!} alt="" height={24} width={24} />
             <Image src={selectedPool?.token1.icon!} className="translate-x-[-5px]" alt="" height={24} width={24} />
