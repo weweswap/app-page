@@ -7,6 +7,7 @@ import WagmiProviderComp from "~/lib/wagmiProvider";
 import { Background, Footer, NavBar } from "~/components/ui";
 import { theme } from "~/theme";
 import { usePathname } from "next/navigation";
+import { ToastContainer, toast } from 'react-toastify';
 
 const App: AppType = ({ Component, pageProps }) => {
   const path = usePathname();
@@ -29,6 +30,7 @@ const App: AppType = ({ Component, pageProps }) => {
                 </div>
               )}
             </div>
+            <ToastContainer />
             <Footer />
           </main>
         </WagmiProviderComp>

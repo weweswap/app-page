@@ -7,6 +7,10 @@ import {
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { ERC20WeweABI, MergeABI } from "~/lib/abis";
 import { erc20Abi } from "viem";
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+import { showErrorToast } from "~/components/common/ToastError";
 
 export const useQuoteVult = (amount: bigint) => {
   const { data, isFetching } = useReadContract({
@@ -76,7 +80,7 @@ export const useApproveAndCall = () => {
       //   message: "Merge fail!",
       //   color: "red",
       // });
-      console.log(errorCreation?.message);
+      showErrorToast("User rejected the request!");
     }
     if (isConfirmError) {
       // notifications.show({
@@ -89,12 +93,15 @@ export const useApproveAndCall = () => {
   }, [isConfirmed, isCreationError, isConfirmError]);
 
   const onWriteAsync = async (amount: bigint) => {
-    await writeContractAsync({
+    try{await writeContractAsync({
       abi: ERC20WeweABI,
       address: CONTRACT_ADDRESSES.wewe,
       functionName: "approveAndCall",
       args: [CONTRACT_ADDRESSES.merge, amount, "0x"],
-    });
+    });}
+    catch(error) {
+      console.log("User rejected the request!")
+    }
   };
 
   return {

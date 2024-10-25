@@ -21,6 +21,8 @@ import { FailTXModal } from "~/components/common/FailTXModal";
 import { fetchWEWEPrice } from "~/services";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { usdConverter } from "~/utils";
+import { toast } from "react-toastify";
+import { showErrorToast } from "~/components/common/ToastError";
 
 const MergeOperation = () => {
   const { address } = useAccount();
