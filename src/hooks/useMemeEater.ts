@@ -39,8 +39,8 @@ export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
     const tx = await writeContractAsync({
       abi: MemeEaterAbi,
       address: eaterAddress,
-      functionName: "mergeAndSell",
-      args: [BigInt(amount), uniAdaptorAddress, '0x'],
+      functionName: "merge",
+      args: [BigInt(amount)],
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
 
