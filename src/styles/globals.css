@@ -6,9 +6,11 @@
   width: 3px;
   height: 3px;
 }
+
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #1a7964;
 }
@@ -21,9 +23,9 @@
   --red: #fe0000;
   --stroke: #505050;
   --dark: #0F0F0F;
-  --rich-dark:#090909;
+  --rich-dark: #090909;
   --light-dark: #191919;
-  --light-gray:#b9b9b9;
+  --light-gray: #b9b9b9;
   --active: #02bf87;
   --gray: #303030;
   --green: rgb(68, 238, 65, 29%);
@@ -72,7 +74,7 @@ body:before {
   background: var(--turq);
 }
 
-.bg_rich_dark{
+.bg_rich_dark {
   background: var(--rich-dark);
 }
 
@@ -104,11 +106,11 @@ body:before {
   color: var(--blue);
 }
 
-.text_turq  {
+.text_turq {
   color: var(--turq);
 }
 
-.text_light_gray  {
+.text_light_gray {
   color: var(--light-gray);
 }
 
@@ -141,9 +143,11 @@ button {
 input[type='range']::-webkit-slider-thumb {
   @apply appearance-none w-9 h-6 bg-blue-700 rounded-none;
 }
+
 input[type='range']::-moz-range-thumb {
   @apply appearance-none w-9 h-6 bg-blue-700 rounded-none;
 }
+
 input[type='range']::-ms-thumb {
   @apply appearance-none w-9 h-6 bg-blue-700 rounded-none;
 }
@@ -152,13 +156,13 @@ input[type='range']::-ms-thumb {
   border: 1px solid #0439c7;
 }
 
-.nav{
+.nav {
   cursor: pointer;
 }
 
 .nav_selected {
   color: var(--turq);
-  border-bottom: 2px  solid var(--turq);
+  border-bottom: 2px solid var(--turq);
   background: var(--dark);
 }
 
@@ -179,12 +183,15 @@ input[type='range']::-ms-thumb {
 
 .table_body {
   overflow: auto;
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+  scrollbar-width: none;
+  /* For Firefox */
+  -ms-overflow-style: none;
+  /* For Internet Explorer and Edge */
 }
 
 .table_body::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
+  display: none;
+  /* For Chrome, Safari, and Opera */
 
 }
 
@@ -211,4 +218,27 @@ input[type='range']::-ms-thumb {
   height: 3rem;
   padding: 5px 20px;
   font-weight: bolder;
+}
+
+/* dex screener charts */
+
+#dexscreener-embed {
+  position: relative;
+  width: 100%;
+  padding-bottom: 125%;
+}
+
+@media(min-width:1400px) {
+  #dexscreener-embed {
+    padding-bottom: 65%;
+  }
+}
+
+#dexscreener-embed iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border: 0;
 }
