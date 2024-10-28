@@ -171,3 +171,26 @@ export function useMemeGetTotalWeWe(eaterAddress: Hex, amount: bigint) {
     isLoading
   }
 }
+
+
+export function useMemeEaterIsPaused(eaterAddress: Hex) {
+  const { data, isLoading, refetch } = useReadContract({
+    abi: MemeEaterAbi,
+    address: eaterAddress,
+    functionName: "paused",
+  });
+
+  useWatchContractEvent({
+    address: eaterAddress,
+    abi: MemeEaterAbi,
+    eventName: "Paused",
+    onLogs: () => {
+      refetch();
+    },
+  });
+
+  return {
+    isPaused: data,
+    isLoading
+  }
+}
