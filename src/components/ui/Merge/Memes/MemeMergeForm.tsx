@@ -158,7 +158,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
           <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
             <Button
               className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
-              disabled={!address || !amount}
+              disabled={mergeConfig.isMergeDisabled || !address || !amount}
               onClick={
                 isConnected
                   ? () => handleMerge()

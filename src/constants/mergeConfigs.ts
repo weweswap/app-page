@@ -10,6 +10,7 @@ export interface MergeConfig {
   uniAdaptorAddress: Hex;
   chartUrl: string;
   mergeDeadline: string;
+  isMergeDisabled: boolean;
 }
 
 const fomoMergeConfig: MergeConfig = {
@@ -24,6 +25,7 @@ const fomoMergeConfig: MergeConfig = {
   uniAdaptorAddress: "0xbb1a07e99f7638dcC730b523e1b107FdC7c379Ac" as `0x${string}`,
   chartUrl: "https://dexscreener.com/base/0x7bCD8185B7f4171017397993345726E15457B1eE?embed=1&theme=dark&trades=0&info=0",
   mergeDeadline: dayjs().year(2024).month(9).date(31).format("DD.MMM"),
+  isMergeDisabled: true,
 }
 
 
