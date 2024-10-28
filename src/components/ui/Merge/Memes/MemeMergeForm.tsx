@@ -13,7 +13,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import * as dn from "dnum"
 import MergeProcessingModal from './MergeProcessingModal'
 import { ethers, formatUnits } from 'ethers'
-import { useMemeEaterRate, useMemeGetTotalWeWe, useVestingsInfo } from '~/hooks/useMemeEater'
+import { useMemeEaterIsPaused, useMemeEaterRate, useMemeGetTotalWeWe, useVestingsInfo } from '~/hooks/useMemeEater'
 import { MergeConfig } from '~/constants/mergeConfigs'
 
 interface MemeMergeFormProps {
@@ -30,6 +30,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
   const [isComplete, setIsComplete] = useState(false)
   const [hash, setHash] = useState<Hex>()
   const { rate, isLoading: isRateLoading } = useMemeEaterRate(mergeConfig.eaterContractAddress);
+  const { isPaused } = useMemeEaterIsPaused(mergeConfig.eaterContractAddress);
 
   const amountBigNumber = ethers.parseUnits(amount || "0", mergeConfig.inputToken.decimals);
 
@@ -158,7 +159,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
           <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
             <Button
               className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
-              disabled={mergeConfig.isMergeDisabled || !address || !amount}
+              disabled={mergeConfig.isMergeDisabled || !address || !amount || isPaused}
               onClick={
                 isConnected
                   ? () => handleMerge()
