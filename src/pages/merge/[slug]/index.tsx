@@ -61,7 +61,7 @@ const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
           </Card>
           <Card className="border-t-0">
             <div className="flex flex-col my-5">
-              <ul className="list-decimal list-inside text-sm text_light_gray">
+              <ul className="list-decimal list-inside text-base font-bold text_light_gray">
                 <li>Sacrifice your ${mergeConfig.inputToken.symbol} to get $WEWE</li>
                 <li>Speed pays. Be fast to get maximum $WEWE and $CHAOS</li>
                 <li>Claim your $WEWE in {vestingDuration}</li>

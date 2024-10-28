@@ -56,6 +56,7 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
               src={inputToken.icon}
               width={17}
               height={17}
+              className="rounded-full h-5 w-5"
               alt={`${inputToken.symbol} logo`}
             />
 
@@ -67,6 +68,7 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
               src="/img/tokens/wewe.svg"
               width={17}
               height={17}
+              className="rounded-full h-5 w-5"
               alt="WEWE logo"
             />
           </div>

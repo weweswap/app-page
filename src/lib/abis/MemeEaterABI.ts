@@ -18,7 +18,7 @@ const MemeEaterAbi = [
             },
             {
                 "internalType": "uint256",
-                "name": "_virtualFOMO",
+                "name": "_virtualToken",
                 "type": "uint256"
             },
             {
@@ -29,6 +29,19 @@ const MemeEaterAbi = [
         ],
         "stateMutability": "nonpayable",
         "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "Dumped",
+        "type": "event"
     },
     {
         "anonymous": false,
@@ -114,6 +127,37 @@ const MemeEaterAbi = [
         "type": "event"
     },
     {
+        "inputs": [],
+        "name": "adaptor",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "internalType": "bool",
+                "name": "status",
+                "type": "bool"
+            }
+        ],
+        "name": "addWhiteList",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "address",
@@ -186,6 +230,13 @@ const MemeEaterAbi = [
             }
         ],
         "name": "deposit",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "dump",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -275,26 +326,16 @@ const MemeEaterAbi = [
         "type": "function"
     },
     {
-        "inputs": [
+        "inputs": [],
+        "name": "name",
+        "outputs": [
             {
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "contract IAMM",
-                "name": "amm",
-                "type": "address"
-            },
-            {
-                "internalType": "bytes",
-                "name": "extraData",
-                "type": "bytes"
+                "internalType": "string",
+                "name": "",
+                "type": "string"
             }
         ],
-        "name": "mergeAndSell",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -362,6 +403,19 @@ const MemeEaterAbi = [
         "inputs": [
             {
                 "internalType": "address",
+                "name": "amm",
+                "type": "address"
+            }
+        ],
+        "name": "setAdaptor",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
                 "name": "_treasury",
                 "type": "address"
             }
@@ -388,11 +442,11 @@ const MemeEaterAbi = [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_maxSupply",
+                "name": "value",
                 "type": "uint256"
             }
         ],
-        "name": "setVitualBalance",
+        "name": "setVirtualTokenBalance",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -400,12 +454,12 @@ const MemeEaterAbi = [
     {
         "inputs": [
             {
-                "internalType": "address",
-                "name": "account",
-                "type": "address"
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
             }
         ],
-        "name": "setWhiteList",
+        "name": "setVirtualWeWEBalance",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -502,7 +556,7 @@ const MemeEaterAbi = [
     },
     {
         "inputs": [],
-        "name": "virtualFOMO",
+        "name": "virtualToken",
         "outputs": [
             {
                 "internalType": "uint256",
