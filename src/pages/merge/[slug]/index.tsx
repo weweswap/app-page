@@ -36,7 +36,8 @@ const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
     <div>
       <Card  className="mb-5">
         <Typography secondary size="lg" className="text-center uppercase text-yellow" >
-        Last Call to Merge & Upgrade, Merge live until {mergeConfig.mergeDeadline}! 
+        {/* Last Call to Merge & Upgrade, Merge live until {mergeConfig.mergeDeadline}!  */}
+        Last Call to Merge & Upgrade, Merge live until 31. OCT!
         </Typography>
       </Card>
       <div className="gap-5 grid grid-cols-12">
