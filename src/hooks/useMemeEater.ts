@@ -47,6 +47,7 @@ export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
     setPendingToConfirm(false);
     return receipt;
   };
+
   return {
     hash: hash,
     isPending: pendingToConfirm,

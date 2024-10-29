@@ -49,7 +49,7 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
         await approveToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'))
         await eat(data.amountToMerge)
       } catch (error) {
-        console.error(error)
+        onTxError(hashEatToken || hashApproveToken)
       }
     }
     startEat()
