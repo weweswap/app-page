@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios";
+import { API_BASE_URL } from "~/constants/configs";
 
 type TokenPriceResponse = {
   [key: string]: {
@@ -12,8 +13,7 @@ export const useCoinGeckoGetPrice = (tokenIds: string[]) => {
     queryKey: ["token-price", ...tokenIds],
     refetchInterval: 10000,
     queryFn: async () => {
-      // TODO: should change the base url
-      const response = await axios.get<TokenPriceResponse>(`https://app-backend-production-676d.up.railway.app/coingecko`, {
+      const response = await axios.get<TokenPriceResponse>(`${API_BASE_URL}/coingecko`, {
         params: {
           ids: tokenIds.join(","),
           vs_currencies: "usd"
