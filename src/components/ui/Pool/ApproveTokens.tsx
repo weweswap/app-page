@@ -1,13 +1,14 @@
 
 import { Divider, Loader, ModalRootProps } from '@mantine/core';
 import Image from 'next/image'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Modal, Typography } from '~/components/common'
 import { usePoolContext } from './PoolContext';
 import { useDualDeposit, useEstimateMintShares } from '~/hooks/useDepositWewePool';
 import { useApproveToken } from '~/hooks/useApproveToken';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
+import { usdConverter } from '~/utils';
 
 export type PayloadApproveModal = {
     amountToken0: number,
@@ -34,6 +35,7 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
   const { selectedPool } = usePoolContext();
   const { address } = useAccount();
   
+  const [totalGasFee, setTotalGasFee] = useState<number>()
   const { data: estimationMintShares } = useEstimateMintShares
   (
     selectedPool, 
@@ -67,10 +69,21 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
 
   useEffect(() => {
     async function deposit () {
+      console.log("Entered")
       if (selectedPool && estimationMintShares && address) {
+        console.log("Inside now")
         await approveToken0(selectedPool.token0.address, selectedPool.address, estimationMintShares.amount0)
         await approveToken1(selectedPool.token1.address, selectedPool.address, estimationMintShares.amount1)
-        await dualDeposit(selectedPool.address, estimationMintShares.mintAmount, address)
+        const txReceipt = await dualDeposit(selectedPool.address, estimationMintShares.mintAmount, address)
+        const gasUsed = txReceipt?.gasUsed ?? 0n;
+        const gasPrice = txReceipt?.gasUsed ?? 0n;
+        const totalFee = gasUsed * gasPrice;
+        const getUsdFees = async () => {
+          const finalUsdValue = totalFee > 0n ? await usdConverter(totalFee) : 0;
+          setTotalGasFee(finalUsdValue)
+  
+        }
+        getUsdFees()  
       }
     }
     deposit()
@@ -205,9 +218,9 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
         </div>
         <Divider className="border-blue-700" />
         <div className='flex justify-end'>
-            <Typography className='text_light_gray' size='xs'>
-                Total fee cost: $0.10
-            </Typography>
+            {totalGasFee && <Typography className='text_light_gray' size='xs'>
+                Total fee cost: {Number(totalGasFee).toFixed(4)}
+            </Typography>}
         </div>
         {
           finishSuccessfully &&
