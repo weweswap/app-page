@@ -6,8 +6,6 @@ import {
 } from "wagmi";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { ERC20WeweABI, MergeABI } from "~/lib/abis";
-import { erc20Abi } from "viem";
-import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { showErrorToast } from "~/components/common/ToastError";
