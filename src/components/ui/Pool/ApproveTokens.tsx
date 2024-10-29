@@ -69,9 +69,7 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
 
   useEffect(() => {
     async function deposit () {
-      console.log("Entered")
       if (selectedPool && estimationMintShares && address) {
-        console.log("Inside now")
         await approveToken0(selectedPool.token0.address, selectedPool.address, estimationMintShares.amount0)
         await approveToken1(selectedPool.token1.address, selectedPool.address, estimationMintShares.amount1)
         const txReceipt = await dualDeposit(selectedPool.address, estimationMintShares.mintAmount, address)
@@ -81,7 +79,6 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
         const getUsdFees = async () => {
           const finalUsdValue = totalFee > 0n ? await usdConverter(totalFee) : 0;
           setTotalGasFee(finalUsdValue)
-  
         }
         getUsdFees()  
       }
