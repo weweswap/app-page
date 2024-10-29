@@ -22,6 +22,7 @@ export type WewePool = {
   apr: string;
   dailyFeesInUsd: string;
   type: string;
+  incentives: string;
   logo: {
     first: string;
     second: string;
@@ -34,7 +35,9 @@ export interface VaultInfoResponse {
   address: string;
   feeApr: number;
   feesPerDay: number;
+  incentivesPerDay?: number
 }
+
 
 export async function calculateTlvForTokens(
   vaultAddress: string,
@@ -204,6 +207,11 @@ export function useWewePools(): UseQueryResult<
               vaultInfoData && typeof vaultInfoData.feesPerDay === "number"
                 ? vaultInfoData.feesPerDay / Number(ethers.formatUnits(poolFeePercentage, 6))
                 : 0;
+
+                const incentives =
+                vaultInfoData && typeof vaultInfoData.incentivesPerDay === "number"
+                  ? vaultInfoData.incentivesPerDay.toFixed(2)
+                  : "0.00";
       
             return {
               address: vaultAddress,
@@ -214,6 +222,7 @@ export function useWewePools(): UseQueryResult<
               range: "INFINITY",
               apr: feeApr,
               dailyFeesInUsd,
+              incentives,
               type: `${token0info?.symbol}/${token1info?.symbol}`,
               logo: {
                 first: token0info?.icon as string,

@@ -572,7 +572,7 @@ const PoolDeposit = ({
             </div>
             <div className="flex flex-col items-center gap-4">
               <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
-              <Typography className="text-sm sm:text-base">$ -</Typography>
+              <Typography className="text-sm sm:text-base">$ {selectedPool?.incentives}</Typography>
             </div>
             <div className="flex flex-col items-center gap-4">
               <Typography className="text-sm sm:text-base  font-extrabold line-clamp-1">DISTRIBUTED FEES</Typography>
