@@ -6,8 +6,8 @@ import { MemeClaimForm } from '~/components/ui/Merge/Memes/MemeClaimForm'
 import { MergeConfig, slugToMergeConfig } from '~/constants/mergeConfigs'
 import { GetServerSideProps } from 'next'
 import MemeMergeForm from '~/components/ui/Merge/Memes/MemeMergeForm'
-import { MergePriceChart } from '~/components/ui/Merge/Memes/MergePriceChart'
 import { ChaosRewardCard } from '~/components/ui/Merge/Memes/ChaosRewardCard'
+import { CapsCard } from '~/components/ui/Merge/Memes/CapsCard'
 
 interface MemeMergePageProps {
   mergeConfig: MergeConfig
@@ -35,8 +35,8 @@ const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
   return (
     <div>
       <Card  className="mb-5">
-        <Typography secondary size="lg" className="text-center uppercase text-yellow" >
-        Last Call to Merge & Upgrade, Merge live until {mergeConfig.mergeDeadline}! 
+        <Typography secondary size="lg" className="text-center uppercase" >
+        Last Call to Merge & Upgrade, <span className="text-yellow">Merge live until {mergeConfig.mergeDeadline}!</span> 
         </Typography>
       </Card>
       <div className="gap-5 grid grid-cols-12">
@@ -83,6 +83,9 @@ const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
         <div className="flex flex-col md:col-span-4 col-span-12 md:order-2 order-1 gap-5">
           <Card>
             <MemeClaimForm mergeConfig={mergeConfig} />
+          </Card>
+          <Card>
+            <CapsCard mergeConfig={mergeConfig}/>
           </Card>
           <Card>
             <ChaosRewardCard mergeConfig={mergeConfig} />
