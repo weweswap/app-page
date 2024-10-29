@@ -1,7 +1,7 @@
 import { NumberInput } from '@mantine/core'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
-import { formatEther, Hex } from 'viem'
+import React, { useState } from 'react'
+import { Hex } from 'viem'
 import { Button, Typography } from '~/components/common'
 import { dogica } from '~/fonts'
 import { cn } from '~/utils'
@@ -15,6 +15,8 @@ import MergeProcessingModal from './MergeProcessingModal'
 import { ethers, formatUnits } from 'ethers'
 import { useMemeEaterIsPaused, useMemeEaterRate, useMemeGetTotalWeWe, useVestingsInfo } from '~/hooks/useMemeEater'
 import { MergeConfig } from '~/constants/mergeConfigs'
+import { WEWE_COINGECKO_ID } from '~/constants'
+import { useCoinGeckoGetPrice } from '~/hooks/useCoingeckoGetPrice'
 
 interface MemeMergeFormProps {
   mergeConfig: MergeConfig;
@@ -31,6 +33,10 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
   const [hash, setHash] = useState<Hex>()
   const { rate, isLoading: isRateLoading } = useMemeEaterRate(mergeConfig.eaterContractAddress);
   const { isPaused } = useMemeEaterIsPaused(mergeConfig.eaterContractAddress);
+
+  const { data: tokenPrices, isLoading: isTokenPriceLoading } = useCoinGeckoGetPrice([mergeConfig.tokenCoinGeckoId, WEWE_COINGECKO_ID]);
+  const inputTokenPrice = tokenPrices?.[0] ?? 0;
+  const weweTokenPrice = tokenPrices?.[1] ?? 0;
 
   const amountBigNumber = ethers.parseUnits(amount || "0", mergeConfig.inputToken.decimals);
 
@@ -79,41 +85,61 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
         <div className="flex-1">
           <div className="grid grid-cols-11  md:bg-black items-center justify-between md:justify-normal gap-3">
             <div className="col-span-5 flex-1 flex items-center gap-3">
-              <NumberInput
-                classNames={{
-                  root: "w-full md:w-full",
-                  input: cn(
-                    dogica.className,
-                    "bg_light_dark md:p-4 p-0 text-white text-lg h-auto border-transparent rounded-none lg:w-[20.8rem]"
-                  ),
-                }}
-                hideControls
-                value={amount}
-                allowNegative={false}
-                trimLeadingZeroesOnBlur
-                thousandSeparator
-                onChange={(value) => setAmount(String(value))}
-              />
+              <div className="flex flex-col">
+                <NumberInput
+                  classNames={{
+                    root: "w-full md:w-full",
+                    input: cn(
+                      dogica.className,
+                      "bg_light_dark md:p-4 p-0 text-white text-lg h-auto border-transparent rounded-none lg:w-[20.8rem]"
+                    ),
+                  }}
+                  hideControls
+                  value={amount}
+                  allowNegative={false}
+                  trimLeadingZeroesOnBlur
+                  thousandSeparator
+                  onChange={(value) => setAmount(String(value))}
+                />
+                <div className="text_light_gray">
+                  {isTokenPriceLoading ? (
+                    <Typography size="sm" className="animate-pulse md:py-4 p-0">
+                      Calculating...
+                    </Typography>
+                  ) : (
+                    <Typography size="sm" className="md:py-4 p-0">
+                      ${dn.format(dn.mul(dn.from(amount || "0", mergeConfig.inputToken.decimals), inputTokenPrice), { locale: "en", digits: 6 })}
+                    </Typography>
+                  )}
+                </div>
+              </div>
+
             </div>
-            <Image
-              className="col-span-1"
-              src="/img/icons/arrow_right.svg"
-              width={16}
-              height={16}
-              alt=""
-            />
-            <div className="col-span-5 items-center flex-1  md:flex-none flex justify-end gap-3">
+            <div className="col-span-6 items-center flex-1  md:flex-none flex justify-end gap-3">
               {!isRateLoading && (
                 <div className="overflow-x-auto">
                   {
                     isTotalWeWeLoading ? (
-                      <Typography size="sm" className="animate-pulse">
+                      <Typography size="sm" className="animate-pulse md:py-4 p-0 text_light_gray">
                         Calculating...
                       </Typography>
                     ) : (
-                      <Typography size="md">
-                      {claimableAmount} WEWE
-                    </Typography>
+                      <div className="flex flex-col">
+                        <Typography size="md" className="md:py-4 p-0 text-right">
+                          {claimableAmount} WEWE
+                        </Typography>
+                        <div className="text-right text_light_gray">
+                          {isTokenPriceLoading ? (
+                            <Typography size="sm" className="animate-pulse md:py-4 p-0">
+                              Calculating...
+                            </Typography>
+                          ) : (
+                            <Typography size="sm" className="md:py-4 p-0">
+                              ${dn.format(dn.mul(dn.from([totalWeWe, 18]), weweTokenPrice), { locale: "en", digits: 6 })}
+                            </Typography>
+                          )}
+                        </div>
+                      </div>
                     )
                   }
                 </div>
@@ -196,7 +222,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
               setIsProcessing(false)
               setIsComplete(true)
               refetchBalance()
-              
+
             }}
             onOpen={() => { }} />
         )
