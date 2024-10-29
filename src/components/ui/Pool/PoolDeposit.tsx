@@ -506,6 +506,21 @@ const PoolDeposit = ({
                     hideControls
                   />
                 </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-center gap-5">
+                   <div className="flex items-center gap-2">
+                   <Image src={selectedPool?.token0.icon} height={24} width={24} alt="" />
+                    <Typography secondary>
+                    {selectedPool?.token0.chain}
+                    </Typography>
+                   </div>
+                   <div className="flex items-center gap-2">
+                   <Image src={selectedPool?.token1.icon} height={24} width={24} alt="" />
+                    <Typography secondary>
+                    {selectedPool?.token1.symbol}
+                    </Typography>
+                   </div>
+                  </div>
                 <div className="flex items-center justify-center gap-2 py-3">
                   <Image
                     alt=""
@@ -521,6 +536,7 @@ const PoolDeposit = ({
                     )}{" "}
                     SHARES
                   </Typography>
+                </div>
                 </div>
                 <div className="py-4">
                   <RangeSlider
