@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Typography } from "~/components/common";
@@ -21,11 +20,18 @@ const NavLink = (props: NavLinkProps) => {
       <Link
         href={href}
         aria-current="page"
-        className="flex items-center p-2 gap-2"
+        className="flex items-center gap-2 p-2"
         onClick={onClick}
       >
-        <props.icon className={cn("w-6 h-6", isActive(href) ? 'fill-turq' : 'fill-yellow')} />
-        <Typography secondary size="lg" tt="uppercase" className={isActive(href) ? 'text-turq' : 'text-yellow'}>
+        <props.icon
+          className={cn("size-6", isActive(href) ? "fill-turq" : "fill-yellow")}
+        />
+        <Typography
+          secondary
+          size="lg"
+          tt="uppercase"
+          className={isActive(href) ? "text-turq" : "text-yellow"}
+        >
           {text}
         </Typography>
       </Link>

@@ -1,7 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
 import React from "react";
+import Image from "next/image";
 import { Button, Card, Typography } from "~/components/common";
+
 import { usePoolContext } from "./PoolContext";
 
 type PoolDetailProps = {
@@ -14,8 +14,8 @@ const PoolDetail = ({ onBack }: PoolDetailProps) => {
     selectedPool && (
       <>
         <Card>
-          <div className=" w-full min-h-[10rem]">
-            <div className="sm:py-4  flex items-center justify-between gap-3 flex-wrap">
+          <div className=" min-h-40 w-full">
+            <div className="flex  flex-wrap items-center justify-between gap-3 sm:py-4">
               <div className="flex items-center gap-2">
                 <button onClick={onBack}>
                   <Typography secondary size="xl">
@@ -47,7 +47,7 @@ const PoolDetail = ({ onBack }: PoolDetailProps) => {
                 </Typography>
               </div>
               <div></div>
-              <div className="lg:text-right flex flex-col gap-2">
+              <div className="flex flex-col gap-2 lg:text-right">
                 <Typography size="xs" ta="center" className="text_light_gray">
                   APR
                 </Typography>
@@ -56,7 +56,7 @@ const PoolDetail = ({ onBack }: PoolDetailProps) => {
                 </Typography>
               </div>
             </div>
-            <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1 ">
+            <div className="flex flex-wrap items-center justify-between gap-4 py-4 sm:py-1 ">
               {/* <div className="flex gap-6">
               <Typography
                 size="xs"
@@ -102,7 +102,7 @@ const PoolDetail = ({ onBack }: PoolDetailProps) => {
                 </Typography>
               </div>
             </div>
-            <div className=" gap-5 py-5 my-5 flex-wrap bg_light_dark min-h-[12rem]">
+            <div className=" bg_light_dark my-5 min-h-48 flex-wrap gap-5 py-5">
               <Typography size="md" className="text-center">
                 POOLED TOKENS
               </Typography>
@@ -112,7 +112,7 @@ const PoolDetail = ({ onBack }: PoolDetailProps) => {
                 <Button  className="w-full md:w-auto">
                      <Typography secondary size="xs" fw={700} tt="uppercase">MANAGE</Typography>
                 </Button>
- 
+
                 <Button className="w-full md:w-auto">
                      <Typography secondary size="xs" fw={700} tt="uppercase">CLAIM</Typography>
                 </Button> */}
@@ -122,7 +122,7 @@ const PoolDetail = ({ onBack }: PoolDetailProps) => {
               <Typography size="xs">Rate</Typography>
               <Typography size="xs">1 USDC = 0.0027 ETH ($1.00)</Typography>
             </div>
-            <div className="flex items-center justify-between my-5">
+            <div className="my-5 flex items-center justify-between">
               <Typography size="xs">Range</Typography>
               <Typography size="xs"> Min. 1,02 - Max. 3,02</Typography>
             </div>
@@ -153,7 +153,7 @@ const PoolDetail = ({ onBack }: PoolDetailProps) => {
                 </div>
               </div>
             </div>
-            <Button  className="w-full mt-4">
+            <Button className="mt-4 w-full">
               <Typography secondary size="xs" fw={700} tt="uppercase">
                 ZAP-IN
               </Typography>
@@ -165,7 +165,7 @@ const PoolDetail = ({ onBack }: PoolDetailProps) => {
             When you add liquidity to an Active Pool:
           </Typography>
 
-          <ul className="list-decimal list-inside text-sm">
+          <ul className="list-inside list-decimal text-sm">
             <li>Your assets are swapped to be added correctly to the pool.</li>
             <li>
               Any assets that can’t fit in the pool are refunded back to you.

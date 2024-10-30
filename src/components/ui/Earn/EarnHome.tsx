@@ -1,5 +1,5 @@
-import { Divider } from "@mantine/core";
 import Image from "next/image";
+import { Divider } from "@mantine/core";
 import { Button, Card, Typography } from "~/components/common";
 
 export const EarnHome = () => {
@@ -22,12 +22,12 @@ export const EarnHome = () => {
           </Typography>
         </div>
 
-        <div className="border_violet p-4 flex flex-col gap-6">
+        <div className="border_violet flex flex-col gap-6 p-4">
           <Typography secondary size="xs">
             Claim CHAOS
           </Typography>
           <Divider className="border-blue-700" />
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
             <Typography secondary size="sm">
               Claim CHAOS
             </Typography>
@@ -48,12 +48,13 @@ export const EarnHome = () => {
         <div>
           {new Array(4).fill(0).map((_, key) => (
             <div
-              className={`flex items-center justify-between gap-3 py-5 border-t ${
+              key={key}
+              className={`flex items-center justify-between gap-3 border-t py-5 ${
                 key === 0 ? "border-blue-700" : "border-blue-900"
               }`}
             >
               <div className="flex items-center gap-4">
-                <button className="w-9 h-9 bg_turq flex items-center justify-center">
+                <button className="bg_turq flex size-9 items-center justify-center">
                   <Image
                     src="/img/icons/download.svg"
                     width={24}
@@ -72,7 +73,7 @@ export const EarnHome = () => {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="w-9 h-9 rounded-full bg_turq opacity-20" />
+                <div className="bg_turq size-9 rounded-full opacity-20" />
                 <Typography secondary size="sm">
                   500 CHAOS
                 </Typography>

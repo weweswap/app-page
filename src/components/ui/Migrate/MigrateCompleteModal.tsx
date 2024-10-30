@@ -1,17 +1,17 @@
 "use client";
-import Image from "next/image";
-import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
-import { Typography } from "~/components/common/Typography";
-import { Button } from "~/components/common/Button";
-import { Hex } from "viem";
-import { ethers, formatEther } from "ethers";
-import { useEffect, useState } from "react";
-import { fetchETHPrice } from "~/services";
 
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { Divider, ModalRootProps, Modal as MtModal } from "@mantine/core";
+import { Button } from "~/components/common/Button";
+import { Typography } from "~/components/common/Typography";
+import { fetchETHPrice } from "~/services";
+import { ethers, formatEther } from "ethers";
+import { Hex } from "viem";
 
 type MigrateCompleteProps = {
   hash: Hex;
-  data: any;
+  data: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   onClose: () => void;
 } & ModalRootProps;
 
@@ -58,7 +58,7 @@ export const MigrateCompleteModal = (props: MigrateCompleteProps) => {
       >
         {props.data && (
           <MtModal.Body className="flex flex-col gap-5 p-0">
-            <div className="w-full flex flex-col items-center justify-center gap-6">
+            <div className="flex w-full flex-col items-center justify-center gap-6">
               <Typography
                 secondary
                 size="xl"
@@ -74,8 +74,8 @@ export const MigrateCompleteModal = (props: MigrateCompleteProps) => {
                 className="max-w-full"
                 alt=""
               />
-              <div className="flex flex-col items-center w-full">
-                <div className="flex flex-col items-center gap-7 w-full">
+              <div className="flex w-full flex-col items-center">
+                <div className="flex w-full flex-col items-center gap-7">
                   <Image
                     src="/img/icons/success.svg"
                     width={50}
@@ -86,8 +86,8 @@ export const MigrateCompleteModal = (props: MigrateCompleteProps) => {
                     SUCCESSFULLY MIGRATED
                   </Typography>
 
-                  <Divider className="border-blue-700 w-full" />
-                  <div className="flex items-center justify-between w-auto gap-2">
+                  <Divider className="w-full border-blue-700" />
+                  <div className="flex w-auto items-center justify-between gap-2">
                     <div className="flex items-center gap-1">
                       <Image
                         src="/img/icons/memes.svg"
@@ -115,28 +115,28 @@ export const MigrateCompleteModal = (props: MigrateCompleteProps) => {
                       </Typography>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between gap-3 w-full">
+                  <div className="flex w-full items-center justify-between gap-3">
                     <Typography secondary size="sm">
                       AMOUNT
                     </Typography>
-                    <div className="text-right flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 text-right">
                       <Typography>
                         ${props.data.amountUsd.toFixed(2)}
                       </Typography>
-                      <div className="flex gap-2 items-center">
+                      <div className="flex items-center gap-2">
                         <Typography className="text_light_gray" size="xs">
                           {Number(formatEther(props.data.shares))} SHARES
                         </Typography>
                         <div className="flex items-center">
                           <Image
-                            className="min-w-6 min-h-6"
+                            className="min-h-6 min-w-6"
                             src="/img/tokens/wewe.svg"
                             alt=""
                             width={32}
                             height={32}
                           />
                           <Image
-                            className="ml-[-10px] min-w-6 min-h-6"
+                            className="ml-[-10px] min-h-6 min-w-6"
                             src="/img/tokens/usdc.png"
                             alt=""
                             width={32}
@@ -146,12 +146,12 @@ export const MigrateCompleteModal = (props: MigrateCompleteProps) => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 justify-between w-full">
+                  <div className="flex w-full items-center justify-between gap-3">
                     <Typography secondary size="sm">
                       LEFTOVERS
                     </Typography>
                     <div className="flex gap-2">
-                      <div className="flex gap-2 items-center">
+                      <div className="flex items-center gap-2">
                         <Typography className="text_light_gray" size="xs">
                           {props.data.leftover0}
                         </Typography>
@@ -162,7 +162,7 @@ export const MigrateCompleteModal = (props: MigrateCompleteProps) => {
                           width={32}
                         />
                       </div>
-                      <div className="flex gap-2 items-center">
+                      <div className="flex items-center gap-2">
                         <Typography className="text_light_gray" size="xs">
                           {props.data.leftover1}
                         </Typography>
@@ -176,20 +176,20 @@ export const MigrateCompleteModal = (props: MigrateCompleteProps) => {
                     </div>
                   </div>
                   <Typography
-                    className="flex justify-end w-full mb-3"
+                    className="mb-3 flex w-full justify-end"
                     size="xs"
                   >
                     Total fee cost: $ {Number(totalGasCostUSD!)}
                   </Typography>
                 </div>
-                <div className="flex flex-col gap-4 w-full">
+                <div className="flex w-full flex-col gap-4">
                   <Button className="w-full" onClick={props.onClose}>
                     <Typography secondary size="xs" fw={700} tt="uppercase">
                       COMPLETED
                     </Typography>
                   </Button>
                   <button
-                    className="w-full md:w-auto custom_btn"
+                    className="custom_btn w-full md:w-auto"
                     onClick={handleDetails}
                   >
                     <Typography secondary size="xs" fw={700} tt="uppercase">

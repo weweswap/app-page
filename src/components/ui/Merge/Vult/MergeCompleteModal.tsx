@@ -1,24 +1,20 @@
 "use client";
+
 import Image from "next/image";
-import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
-import { Typography } from "~/components/common/Typography";
+import { ModalRootProps, Modal as MtModal } from "@mantine/core";
 import { Button } from "~/components/common/Button";
-import { BuildData, TokenItem } from "~/models";
+import { Typography } from "~/components/common/Typography";
 import { formatEther, Hex } from "viem";
-import { formatBigIntegers } from "~/utils";
-import { useEffect } from "react";
 
 type MergeCompleteProps = {
   totalFees: number;
   hash: Hex;
   amount: string;
-  ratio: bigint
+  ratio: bigint;
   onClose: () => void;
 } & ModalRootProps;
 
-
 export const MergeCompleteModal = (props: MergeCompleteProps) => {
-
   const handleDetails = () => {
     window.open(
       `https://basescan.org/tx/${props.hash}`,
@@ -50,7 +46,7 @@ export const MergeCompleteModal = (props: MergeCompleteProps) => {
           >
             successfuly merged
           </Typography>
-          <div className="flex justify-center gap-2 md:my-5 my-2 md:mb-5 mb-10">
+          <div className="my-2 mb-10 flex justify-center gap-2 md:my-5">
             <Typography size="md" fw={600}>
               Ratio: 1000
             </Typography>
@@ -73,17 +69,14 @@ export const MergeCompleteModal = (props: MergeCompleteProps) => {
             />
           </div>
           <div className="flex items-center justify-center gap-2">
-            <img
-              src="/img/tokens/vult.base.svg"
-              alt="Vult"
-            />
+            <img src="/img/tokens/vult.base.svg" alt="Vult" />
             <div className="flex flex-col">
               <Typography size="md" fw={700}>
                 {/* ${Number(encodedData!.amountOutUsd).toFixed(2)} */}
                 {props.amount}
               </Typography>
               <Typography size="xs" className="text_light_gray">
-                US$ {props!?.totalFees.toFixed(4)} estimated fees
+                US$ {props?.totalFees.toFixed(4)} estimated fees
               </Typography>
             </div>
           </div>
@@ -95,7 +88,7 @@ export const MergeCompleteModal = (props: MergeCompleteProps) => {
             </Button>
 
             <Button
-              className="w-full bg-black border border-1 border-white"
+              className="border-1 w-full border border-white bg-black"
               onClick={handleDetails}
             >
               <Typography secondary size="md" fw={700} tt="uppercase">

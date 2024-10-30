@@ -1,16 +1,16 @@
 "use client";
 
-import { createConfig, http } from "wagmi";
-import { base } from "wagmi/chains";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
-  rainbowWallet,
-  metaMaskWallet,
   coinbaseWallet,
-  walletConnectWallet,
+  metaMaskWallet,
   phantomWallet,
+  rainbowWallet,
+  walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { fallback, webSocket } from "viem";
+import { createConfig, http } from "wagmi";
+import { base } from "wagmi/chains";
 
 export const projectId = "db99d4d311764dbfb7e4563ce13e71fb";
 
@@ -39,7 +39,7 @@ export const config = createConfig({
   transports: {
     [base.id]: fallback([
       http(process.env.NEXT_PUBLIC_RPC_URL),
-      webSocket(process.env.NEXT_PUBLIC_RPC_URL!?.replace('https://', 'wss://'))
+      webSocket(process.env.NEXT_PUBLIC_RPC_URL?.replace("https://", "wss://")),
     ]),
   },
 });

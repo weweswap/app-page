@@ -1,10 +1,9 @@
+"use client";
 
-"use client"
-import React from 'react'
-import Image from "next/image";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Card, Dropdown, Typography } from "~/components/common";
-import { DUMMY_POOL_OPTIONS } from './dummy';
+
+import { DUMMY_POOL_OPTIONS } from "./dummy";
 
 type PoolZapInProps = {
   // onNext: () => void;
@@ -14,24 +13,23 @@ type PoolZapInProps = {
 };
 
 const PoolZapIn = ({ onZap, onBack }: PoolZapInProps) => {
+  const [poolRange, setPoolRange] = useState<number>(0);
 
-    const [poolRange, setPoolRange] = useState<number>(0);
-
-    const poolOptions = DUMMY_POOL_OPTIONS.map((pool) => ({
-      value: pool.symbol,
-      icon: pool.icon,
-    }));
+  const poolOptions = DUMMY_POOL_OPTIONS.map((pool) => ({
+    value: pool.symbol,
+    icon: pool.icon,
+  }));
 
   return (
     <>
-     <div className="flex items-center justify-between gap-4 w-full p-6 bg_rich_dark">
+      <div className="bg_rich_dark flex w-full items-center justify-between gap-4 p-6">
         <button onClick={onBack}>
           <Typography secondary size="sm">
             {"<"} ZAP IN
           </Typography>
         </button>
         <div className="flex gap-4">
-        <Button disabled >
+          <Button disabled>
             <Typography secondary size="xs" fw={700}>
               MIGRATE
             </Typography>
@@ -44,29 +42,30 @@ const PoolZapIn = ({ onZap, onBack }: PoolZapInProps) => {
         </div>
       </div>
       <Card>
-        
-          <Typography size="lg" secondary className='py-3'>SELECT POOL AND RANGE</Typography>
+        <Typography size="lg" secondary className="py-3">
+          SELECT POOL AND RANGE
+        </Typography>
         <div className="flex flex-col gap-5">
           <div className="bg_dark flex items-center justify-between gap-3 p-4">
-          <div className="flex md:flex-row flex-col gap-4 justify-between w-full">
-          <div className="flex flex-col md:w-1/3  gap-5">
-            <Dropdown
-              defaultValue="USDC"
-              options={poolOptions}
-              className="w-full"
-            />
-          </div>
-          <Typography secondary size="xl"className='pt-2'>
-            {"<"}
-          </Typography>
-          <div className="flex flex-col md:w-1/3   gap-5">   
-            <Dropdown
-              defaultValue="BASE"
-              options={poolOptions}
-              className="w-full"
-            />
-          </div>
-        </div>
+            <div className="flex w-full flex-col justify-between gap-4 md:flex-row">
+              <div className="flex flex-col gap-5  md:w-1/3">
+                <Dropdown
+                  defaultValue="USDC"
+                  options={poolOptions}
+                  className="w-full"
+                />
+              </div>
+              <Typography secondary size="xl" className="pt-2">
+                {"<"}
+              </Typography>
+              <div className="flex flex-col gap-5   md:w-1/3">
+                <Dropdown
+                  defaultValue="BASE"
+                  options={poolOptions}
+                  className="w-full"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 pt-3">
@@ -90,30 +89,32 @@ const PoolZapIn = ({ onZap, onBack }: PoolZapInProps) => {
           </button>
         </div>
 
-        <div className='py-5'>
-        <Button onClick={onZap} className='w-full'>
-            <Typography secondary size="sm">ADD</Typography>
+        <div className="py-5">
+          <Button onClick={onZap} className="w-full">
+            <Typography secondary size="sm">
+              ADD
+            </Typography>
           </Button>
         </div>
       </Card>
-     
-     
-    
+
       <Card>
-        <Typography size="lg">When you add liquidity to an Active Pool:</Typography>
-        <ul className="list-decimal list-inside pt-3 text-sm">
-        
+        <Typography size="lg">
+          When you add liquidity to an Active Pool:
+        </Typography>
+        <ul className="list-inside list-decimal pt-3 text-sm">
           <li> Your assets are swapped to be added correctly to the pool.</li>
           <li>
-          Any assets that can’t fit in the pool are refunded back to you. 
+            Any assets that can’t fit in the pool are refunded back to you.
           </li>
           <li>
-          You may experience a small slip when you enter a pool that is out-of-balance.
+            You may experience a small slip when you enter a pool that is
+            out-of-balance.
           </li>
         </ul>
       </Card>
     </>
-  )
-}
+  );
+};
 
-export default PoolZapIn
+export default PoolZapIn;

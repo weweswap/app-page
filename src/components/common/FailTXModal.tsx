@@ -1,9 +1,8 @@
 "use client";
-import Image from "next/image";
-import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
-import { Typography } from "~/components/common/Typography";
+
+import { ModalRootProps, Modal as MtModal } from "@mantine/core";
 import { Button } from "~/components/common/Button";
-import { BuildData, TokenItem } from "~/models";
+import { Typography } from "~/components/common/Typography";
 import { Hex } from "viem";
 
 type FailTXProps = {
@@ -52,7 +51,7 @@ export const FailTXModal = (props: FailTXProps) => {
             </Button>
 
             <Button
-              className="w-full bg-black border border-1 border-white"
+              className="border-1 w-full border border-white bg-black"
               onClick={handleDetails}
             >
               <Typography secondary size="md" fw={700} tt="uppercase">

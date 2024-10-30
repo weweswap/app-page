@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { Position } from "~/models";
+
 import { MigrateDetail } from "./MigrateDetail";
 import { MigrateHome } from "./MigrateHome";
-import { Position } from "~/models";
 
 export const Migrate = () => {
   const [step, setStep] = useState(0);

@@ -1,28 +1,27 @@
-import * as dn from "dnum";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { ETH_TO_USD_CONVERSION_API } from "~/constants/configs";
+import { clsx, type ClassValue } from "clsx";
+import * as dn from "dnum";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatBigIntegers(num:number) {
-  return num < 1 ? num.toFixed(6) : num < 9 ? num.toFixed(4) : num.toFixed(2)
+export function formatBigIntegers(num: number) {
+  return num < 1 ? num.toFixed(6) : num < 9 ? num.toFixed(4) : num.toFixed(2);
 }
 
-export const usdConverter = async (weiVal:bigint | undefined) => {
+export const usdConverter = async (weiVal: bigint | undefined) => {
   const response = await fetch(ETH_TO_USD_CONVERSION_API);
   const data = await response.json();
-  
-  const ethVal = data.ethereum.usd
-  
-  const ethConversion = 1e18;
-  const amountInEther = Number(weiVal)/ethConversion;
-  
-  return amountInEther*ethVal;
 
-}
+  const ethVal = data.ethereum.usd;
+
+  const ethConversion = 1e18;
+  const amountInEther = Number(weiVal) / ethConversion;
+
+  return amountInEther * ethVal;
+};
 
 export function formatStringUnits(display: string, decimals: number) {
   const negative = display?.startsWith("-");
@@ -65,10 +64,9 @@ export function formatNumber(
   }
 ) {
   const dnValue = dn.isDnum(value) ? value : dn.from(value);
-  return dn.format(dnValue, { 
-    digits: options?.decimalDigits ?? 2, 
-    compact: options?.compact ?? false, 
-    locale: "en" 
+  return dn.format(dnValue, {
+    digits: options?.decimalDigits ?? 2,
+    compact: options?.compact ?? false,
+    locale: "en",
   });
 }
-

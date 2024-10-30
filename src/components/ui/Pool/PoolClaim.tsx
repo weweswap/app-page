@@ -1,5 +1,5 @@
-import { Divider } from "@mantine/core";
 import Image from "next/image";
+import { Divider } from "@mantine/core";
 import { Button, Card, Typography } from "~/components/common";
 
 type PoolClaimProps = {
@@ -41,12 +41,12 @@ export const PoolClaim = ({ onBack, onClaim }: PoolClaimProps) => {
         </div>
       </Card>
 
-      <div className="w-full sm:w-auto border_violet p-4 flex flex-col gap-6 translate-none lg:translate-x-[50%]">
+      <div className="border_violet translate-none flex w-full flex-col gap-6 p-4 sm:w-auto lg:translate-x-[50%]">
         <Typography secondary size="xs">
           Claim USDC
         </Typography>
         <Divider className="border-blue-700" />
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <Typography secondary size="sm">
             1200 USDC
           </Typography>

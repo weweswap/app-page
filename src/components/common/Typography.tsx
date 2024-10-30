@@ -1,10 +1,10 @@
-import clsx from "clsx";
 import { Text, TextProps } from "@mantine/core";
 import { dogica, verdana } from "~/fonts";
+import clsx from "clsx";
 
 type TypographyProps = {
   secondary?: boolean;
-  children: any;
+  children: React.ReactNode;
 } & TextProps;
 
 export const Typography = ({

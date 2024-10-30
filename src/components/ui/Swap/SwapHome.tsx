@@ -1,35 +1,34 @@
-import { NumberInput } from "@mantine/core";
-import clsx from "clsx";
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import { NumberInput } from "@mantine/core";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useQuery } from "@tanstack/react-query";
+import api from "~/api/swap";
 import { Button, Card, Dropdown, Typography } from "~/components/common";
+import { Chain } from "~/constants/chains";
 import { TOKEN_LIST } from "~/constants/tokens";
 import { dogica } from "~/fonts";
-import api from "~/api/swap";
-import { Chain } from "~/constants/chains";
+import { useDebounce } from "~/hooks/useDebounce";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { RouterMessageType, RoutingData } from "~/models";
-import { formatUnits, parseEther, parseUnits } from "viem";
-import { formatBigIntegers, formatStringUnits } from "~/utils";
+import { formatStringUnits } from "~/utils";
+import clsx from "clsx";
+import { formatUnits, parseUnits } from "viem";
 import { useAccount, useBalance } from "wagmi";
+
 import { SwapButton } from "./SwapButton";
 import { useSwapContext } from "./SwapContext";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { useTokenBalance } from "~/hooks/useTokenBalance";
-import { useDebounce } from "~/hooks/useDebounce";
-import { useQuery } from "@tanstack/react-query";
 
-
-
-let inTokenOptions = TOKEN_LIST.map((token, index) => ({
+const inTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
   icon: token.icon,
-  index: index
+  index: index,
 }));
 
-let outTokenOptions = TOKEN_LIST.map((token, index) => ({
+const outTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
   icon: token.icon,
-  index: index
+  index: index,
 }));
 
 type SwapHomeProps = {
@@ -54,10 +53,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     address: address,
   });
 
-  let {
-    data: inputBalance,
-    refetch: refetchBalance,
-  } = useTokenBalance(
+  const { data: inputBalance } = useTokenBalance(
     address,
     TOKEN_LIST[inTokenOptions[inputTokenIndex].index].address
   );
@@ -79,12 +75,9 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     );
   };
 
-  const {debouncedInputValue, isInputChanging} = useDebounce(inputValue, 500);
+  const { debouncedInputValue, isInputChanging } = useDebounce(inputValue, 500);
 
-  const {
-    isLoading:fetchLoading, 
-    isError:fetchError
-  } = useQuery({
+  const { isLoading: fetchLoading } = useQuery({
     queryKey: [inputTokenIndex, outputTokenIndex, debouncedInputValue],
     refetchInterval: 10000,
     queryFn: async () => {
@@ -93,7 +86,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         return;
       }
       setSwapState({ ...initialSwapState, loading: true });
-  
+
       api.router
         .get(
           Chain.BASE,
@@ -103,37 +96,38 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         )
         .then((res) => {
           setSwapState({ ...swapState, loading: false });
-          res.data.message == RouterMessageType.Successful
-            ? setRouteData({
+          if (res.data.message == RouterMessageType.Successful) {
+            setRouteData({
               inputToken: TOKEN_LIST[inputTokenIndex],
               outputToken: TOKEN_LIST[outputTokenIndex],
               routeSummary: (res.data.data as RoutingData).routeSummary,
               routerAddress: (res.data.data as RoutingData).routerAddress,
-            })
-            : //  setrouteData(res.data.data as RoutingData)
+            });
+          } else {
             console.log(res.data.message);
+          }
         })
         .catch((err) => {
           setSwapState({ ...swapState, loading: false });
           console.error(err);
-        });}
-  })
-  
-   useEffect(() => {
-       if (inputTokenIndex === outputTokenIndex) {
-         const isLastToken = inputTokenIndex === TOKEN_LIST.length - 1;
-         const newIndex = isLastToken ? inputTokenIndex - 1 : inputTokenIndex + 1;
-         if (inputTokenIndex === newIndex) {
-           setOutputTokenIndex(newIndex);
-         } else {
-           setInputTokenIndex(newIndex);
-         }
-       }
-     }, [inputTokenIndex, outputTokenIndex]);
+        });
+    },
+  });
 
+  useEffect(() => {
+    if (inputTokenIndex === outputTokenIndex) {
+      const isLastToken = inputTokenIndex === TOKEN_LIST.length - 1;
+      const newIndex = isLastToken ? inputTokenIndex - 1 : inputTokenIndex + 1;
+      if (inputTokenIndex === newIndex) {
+        setOutputTokenIndex(newIndex);
+      } else {
+        setInputTokenIndex(newIndex);
+      }
+    }
+  }, [inputTokenIndex, outputTokenIndex]);
 
   const handleReverse = () => {
-    let inToken = inputTokenIndex;
+    const inToken = inputTokenIndex;
     if (routeData) {
       setInputTokenIndex(outputTokenIndex);
       setInputValue(
@@ -145,18 +139,16 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         )
       );
       setOutputTokenIndex(inToken);
-    } 
-    else {
+    } else {
       const tempIndex = inputTokenIndex;
       setInputTokenIndex(outputTokenIndex);
       setOutputTokenIndex(tempIndex);
     }
   };
 
-
   return (
     <>
-      <div className="w-full flex items-center justify-between">
+      <div className="flex w-full items-center justify-between">
         <Typography secondary size="xl" tt="uppercase">
           Swap
         </Typography>
@@ -170,13 +162,13 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         />
       </div>
 
-      <div className="w-full flex flex-col">
+      <div className="flex w-full flex-col">
         <Card className="flex flex-col gap-4">
           <Typography secondary size="xs">
             Sell
           </Typography>
 
-          <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
+          <div className="grid grid-cols-12 items-center justify-between gap-3 md:flex-row">
             <NumberInput
               classNames={{
                 root: "sm:col-span-8 col-span-12",
@@ -197,7 +189,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
             <Dropdown
               value={TOKEN_LIST[inputTokenIndex].symbol}
               options={inTokenOptions}
-              className="order-first sm:order-none sm:col-span-4 col-span-12"
+              className="order-first col-span-12 sm:order-none sm:col-span-4"
               setIndexValue={setInputTokenIndex}
             />
           </div>
@@ -206,15 +198,24 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
             <Typography size="xs">
               $
               {routeData
-                ? Number(routeData.routeSummary.amountInUsd).toLocaleString("en-US")
+                ? Number(routeData.routeSummary.amountInUsd).toLocaleString(
+                    "en-US"
+                  )
                 : "0.00"}
             </Typography>
-            <div className="flex items-center gap-1 cursor-pointer" onClick={() => {
-              setInputValue(stringToNumberRoundDownTo8Decimals(formatUnits(
-                getCurrentBalance(),
-                TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
-              )))
-            }}>
+            <div
+              className="flex cursor-pointer items-center gap-1"
+              onClick={() => {
+                setInputValue(
+                  stringToNumberRoundDownTo8Decimals(
+                    formatUnits(
+                      getCurrentBalance(),
+                      TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+                    )
+                  )
+                );
+              }}
+            >
               <Image
                 src="/img/icons/wallet.svg"
                 width={16}
@@ -222,10 +223,12 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
                 alt=""
               />
               <Typography size="xs">
-                {Number(formatUnits(
-                  getCurrentBalance(),
-                  TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
-                )).toLocaleString("en-US", { maximumSignificantDigits: 6 })}{" "}
+                {Number(
+                  formatUnits(
+                    getCurrentBalance(),
+                    TOKEN_LIST[inTokenOptions[inputTokenIndex].index].decimals
+                  )
+                ).toLocaleString("en-US", { maximumSignificantDigits: 6 })}{" "}
                 {inTokenOptions[inputTokenIndex].value}
               </Typography>
             </div>
@@ -234,7 +237,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
 
         <div className=" flex items-center justify-center">
           <button
-            className="absolute bg-black border-[3px] border_turq p-3"
+            className="border_turq absolute border-[3px] bg-black p-3"
             onClick={handleReverse}
           >
             <Image
@@ -251,29 +254,34 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
             Buy
           </Typography>
 
-          <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
+          <div className="grid grid-cols-12 items-center justify-between gap-3 md:flex-row">
             <Typography
               secondary
-              className={`sm:col-span-8 col-span-12
-              text-start bg-transparent text-white text-2xl h-auto overflow-x-auto
-              border-transparent rounded-none`}
+              className={`col-span-12 h-auto
+              overflow-x-auto rounded-none border-transparent bg-transparent text-start text-2xl
+              text-white sm:col-span-8`}
             >
-              {isInputChanging || fetchLoading ? <Typography secondary className="animate-pulse">Loading...</Typography> :
-              routeData
-                ? Number(
+              {isInputChanging || fetchLoading ? (
+                <Typography secondary className="animate-pulse">
+                  Loading...
+                </Typography>
+              ) : routeData ? (
+                Number(
                   formatStringUnits(
                     routeData.routeSummary.amountOut,
                     TOKEN_LIST[outputTokenIndex].decimals
                   )
                 ).toLocaleString("en-US")
-                : "0.0"}
+              ) : (
+                "0.0"
+              )}
             </Typography>
 
             <Dropdown
               defaultValue={TOKEN_LIST[outputTokenIndex].symbol}
               value={TOKEN_LIST[outputTokenIndex].symbol}
               options={outTokenOptions}
-              className="order-first sm:order-none sm:col-span-4 col-span-12"
+              className="order-first col-span-12 sm:order-none sm:col-span-4"
               setIndexValue={setOutputTokenIndex}
             />
           </div>
@@ -281,18 +289,20 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
           <Typography size="xs" ta="center">
             $
             {routeData
-              ? Number(routeData.routeSummary.amountOutUsd).toLocaleString("en-US")
+              ? Number(routeData.routeSummary.amountOutUsd).toLocaleString(
+                  "en-US"
+                )
               : "0.00"}{" "}
             (
             {routeData
               ? Number(routeData.routeSummary.amountInUsd) == 0
                 ? "0.0"
                 : (
-                  (1 -
-                    Number(routeData.routeSummary.amountOutUsd) /
-                    Number(routeData.routeSummary.amountInUsd)) *
-                  -100
-                ).toLocaleString("en-US")
+                    (1 -
+                      Number(routeData.routeSummary.amountOutUsd) /
+                        Number(routeData.routeSummary.amountInUsd)) *
+                    -100
+                  ).toLocaleString("en-US")
               : "0.00"}
             %)
           </Typography>
@@ -324,7 +334,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
 
       {inputValue != 0 && routeData && (
         <>
-          <div className="flex justify-between w-full">
+          <div className="flex w-full justify-between">
             <Typography size="xs">Rate</Typography>
             <Typography size="xs">
               1 {TOKEN_LIST[inputTokenIndex].symbol} ={" "}
@@ -343,12 +353,13 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
                 )
               ).toLocaleString("en-US")}{" "}
               {TOKEN_LIST[outputTokenIndex].symbol} ($
-              {(Number(routeData.routeSummary.amountInUsd) / inputValue)
-                .toLocaleString("en-US", { maximumFractionDigits: 5 })}
+              {(
+                Number(routeData.routeSummary.amountInUsd) / inputValue
+              ).toLocaleString("en-US", { maximumFractionDigits: 5 })}
               )
             </Typography>
           </div>
-          <div className="flex justify-between w-full">
+          <div className="flex w-full justify-between">
             <Typography size="xs">Route</Typography>
             <Typography size="xs">Kyber Swap Aggregator</Typography>
             <Image
@@ -358,7 +369,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               alt=""
             />
           </div>
-          <div className="flex justify-between w-full">
+          <div className="flex w-full justify-between">
             <Typography size="xs">Total cost:</Typography>
             <div className="flex items-center gap-1">
               <Image src="/img/icons/fee.svg" width={14} height={14} alt="" />
@@ -373,7 +384,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               />
             </div>
           </div>
-          <div className="flex justify-between w-full">
+          <div className="flex w-full justify-between">
             <Typography size="xs">
               Total Fee:{" "}
               {routeData.routeSummary.extraFee.chargeFeeBy == ""
@@ -402,7 +413,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         <Typography size="lg">
           WEWESWAP uses a highly-efficient Aggregator and Zaps.
         </Typography>
-        <ul className="list-decimal list-inside pt-3 text-sm">
+        <ul className="list-inside list-decimal pt-3 text-sm">
           <li>The best prices when you swap!</li>
           <li>Low slip and fees.</li>
         </ul>

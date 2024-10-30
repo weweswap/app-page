@@ -1,14 +1,15 @@
-import React from 'react'
-import { Typography } from './Typography'
+import React from "react";
+
+import { Typography } from "./Typography";
 
 const ComingSoon = () => {
   return (
     <>
-    <Typography secondary className='text-center py-10 font-bold' size='xl'>
+      <Typography secondary className="py-10 text-center font-bold" size="xl">
         NOTHING TO SHOW HERE
-    </Typography>
+      </Typography>
     </>
-  )
-}
+  );
+};
 
-export default ComingSoon
+export default ComingSoon;

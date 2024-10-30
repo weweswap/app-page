@@ -2,162 +2,188 @@ const eaterABI = [
   {
     inputs: [],
     stateMutability: "nonpayable",
-    type: "constructor"
+    type: "constructor",
   },
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "uint256", name: "amount", type: "uint256" },
-      { indexed: true, internalType: "address", name: "account", type: "address" }
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
     ],
     name: "Merged",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "previousOwner", type: "address" },
-      { indexed: true, internalType: "address", name: "newOwner", type: "address" }
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
     ],
     name: "OwnershipTransferred",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "account", type: "address" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
     ],
     name: "Paused",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "uint256", name: "newRate", type: "uint256" }
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newRate",
+        type: "uint256",
+      },
     ],
     name: "RateChanged",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "account", type: "address" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
     ],
     name: "Unpaused",
-    type: "event"
+    type: "event",
   },
   {
-    inputs: [
-      { internalType: "uint256", name: "amount", type: "uint256" }
-    ],
+    inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
     name: "deposit",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "getRate",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "getToken",
     outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
-    inputs: [
-      { internalType: "uint256", name: "amount", type: "uint256" }
-    ],
+    inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
     name: "merge",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "mergeAll",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "owner",
     outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "paused",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       { internalType: "address", name: "from", type: "address" },
       { internalType: "uint256", name: "amount", type: "uint256" },
       { internalType: "address", name: "", type: "address" },
-      { internalType: "bytes", name: "", type: "bytes" }
+      { internalType: "bytes", name: "", type: "bytes" },
     ],
     name: "receiveApproval",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "renounceOwnership",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
-    inputs: [
-      { internalType: "uint256", name: "rate", type: "uint256" }
-    ],
+    inputs: [{ internalType: "uint256", name: "rate", type: "uint256" }],
     name: "setRate",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "sweep",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "togglePause",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
-    inputs: [
-      { internalType: "address", name: "newOwner", type: "address" }
-    ],
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "wewe",
     outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
-    type: "function"
-  }
-]
-
+    type: "function",
+  },
+];
 
 export default eaterABI;

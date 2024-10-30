@@ -30,7 +30,12 @@ export function PoolIcon({ className, size = 25 }: IconProps) {
       </g>
       <defs>
         <clipPath id="clip0_2775_11850">
-          <rect width="24" height="24" fill="white" transform="translate(0.910706)" />
+          <rect
+            width="24"
+            height="24"
+            fill="white"
+            transform="translate(0.910706)"
+          />
         </clipPath>
       </defs>
     </svg>
@@ -52,7 +57,12 @@ export function SwapIcon({ className, size = 24 }: IconProps) {
       </g>
       <defs>
         <clipPath id="clip0_2775_11853">
-          <rect width="25.1786" height="24" fill="white" transform="translate(0.910706)" />
+          <rect
+            width="25.1786"
+            height="24"
+            fill="white"
+            transform="translate(0.910706)"
+          />
         </clipPath>
       </defs>
     </svg>
@@ -90,10 +100,14 @@ export function EarnIcon({ className, size = 24 }: IconProps) {
       </g>
       <defs>
         <clipPath id="clip0_2775_11856">
-          <rect width="24" height="24" fill="white" transform="translate(0.0892944)" />
+          <rect
+            width="24"
+            height="24"
+            fill="white"
+            transform="translate(0.0892944)"
+          />
         </clipPath>
       </defs>
     </svg>
-
   );
 }

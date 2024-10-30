@@ -1,9 +1,7 @@
-import React from 'react'
-import { Modal as MtModal, ModalRootProps, Loader } from "@mantine/core";
+import React from "react";
+import { Loader, ModalRootProps, Modal as MtModal } from "@mantine/core";
 import { Button, Typography } from "~/components/common";
-import Image from "next/image";
-import * as dn from "dnum";
-import { Hex } from 'viem';
+import { Hex } from "viem";
 
 type ClaimCompleteModalProps = {
   hash: Hex;
@@ -11,7 +9,7 @@ type ClaimCompleteModalProps = {
   onClose: () => void;
 } & ModalRootProps;
 
-const ClaimCompleteModal = (props:ClaimCompleteModalProps) => {
+const ClaimCompleteModal = (props: ClaimCompleteModalProps) => {
   const handleDetails = () => {
     window.open(
       `https://basescan.org/tx/${props.hash}`,
@@ -44,25 +42,22 @@ const ClaimCompleteModal = (props:ClaimCompleteModalProps) => {
           >
             successfully claimed
           </Typography>
-          
+
           <div className="flex items-center justify-center gap-2">
-            <img
-              src="/img/tokens/wewe.svg"
-              alt="WEWE logo"
-            />
+            <img src="/img/tokens/wewe.svg" alt="WEWE logo" />
             <div className="flex flex-col">
-            {
-                props.amount
-                  ? <>
-                    <Typography size="sm" className="text_light_gray">
-                      CLAIMED
-                    </Typography>
-                    <Typography size="md" className="font-bold">
-                      {props.amount}
-                    </Typography>
-                  </>
-                  : <Loader />
-              }
+              {props.amount ? (
+                <>
+                  <Typography size="sm" className="text_light_gray">
+                    CLAIMED
+                  </Typography>
+                  <Typography size="md" className="font-bold">
+                    {props.amount}
+                  </Typography>
+                </>
+              ) : (
+                <Loader />
+              )}
             </div>
           </div>
           <div className="flex flex-col gap-2">
@@ -73,7 +68,7 @@ const ClaimCompleteModal = (props:ClaimCompleteModalProps) => {
             </Button>
 
             <Button
-              className="w-full !bg-none !bg-black border border-1 border-white"
+              className="border-1 w-full border border-white !bg-black !bg-none"
               onClick={handleDetails}
             >
               <Typography secondary size="md" fw={700} tt="uppercase">
@@ -84,7 +79,7 @@ const ClaimCompleteModal = (props:ClaimCompleteModalProps) => {
         </MtModal.Body>
       </MtModal.Content>
     </MtModal.Root>
-  )
-}
+  );
+};
 
-export default ClaimCompleteModal
+export default ClaimCompleteModal;

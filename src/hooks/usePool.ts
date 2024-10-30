@@ -1,16 +1,17 @@
 import { UseQueryResult } from "@tanstack/react-query";
-import { ethers } from "ethers";
-import { erc20Abi, Hex } from "viem";
-import { useQuery } from "wagmi/query";
 import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
+import { API_BASE_URL } from "~/constants/configs";
 import { ArrakisFactoryABI } from "~/lib/abis/ArrakisFactory";
 import { ArrakisV2HelperABI } from "~/lib/abis/ArrakisHelper";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
+import uniswapV3PoolAbi from "~/lib/abis/UniswapPool";
 import { TokenItem } from "~/models";
 import { fetchPricePerAddressInUsdc } from "~/services/price";
+import { ethers } from "ethers";
+import { erc20Abi, Hex } from "viem";
+import { useQuery } from "wagmi/query";
+
 import { provider } from "./provider";
-import uniswapV3PoolAbi from "~/lib/abis/UniswapPool";
-import { API_BASE_URL } from "~/constants/configs";
 
 export type WewePool = {
   address: Hex;
@@ -35,9 +36,8 @@ export interface VaultInfoResponse {
   address: string;
   feeApr: number;
   feesPerDay: number;
-  incentivesPerDay?: number
+  incentivesPerDay?: number;
 }
-
 
 export async function calculateTlvForTokens(
   vaultAddress: string,
@@ -46,7 +46,6 @@ export async function calculateTlvForTokens(
   token0: string,
   token1: string
 ) {
-
   const token0Contract = new ethers.Contract(token0, erc20Abi, provider);
   const token1Contract = new ethers.Contract(token1, erc20Abi, provider);
 
@@ -90,14 +89,17 @@ async function getUniswapFeePercentage(poolAddress: string) {
     );
 
     const poolFeePercentage = await uniswapContract.fee();
-    
+
     // Store the result in the cache with the poolAddress as the key
     cache.set(poolAddress, poolFeePercentage);
-    
+
     return poolFeePercentage;
   } catch (error) {
-    console.error(`Failed to fetch fee percentage for pool address ${poolAddress}:`, error);
-    throw error;  // Rethrow error to let the caller handle it
+    console.error(
+      `Failed to fetch fee percentage for pool address ${poolAddress}:`,
+      error
+    );
+    throw error; // Rethrow error to let the caller handle it
   }
 }
 
@@ -126,7 +128,7 @@ export function useWewePools(): UseQueryResult<
       const wewePools: WewePool[] = [];
       const poolAddresses: string[] = [];
 
-      for (let key in weweVaults) {
+      for (const key in weweVaults) {
         if (Object.hasOwn(weweVaults, key)) {
           poolAddresses.push(weweVaults[key]);
         }
@@ -161,15 +163,15 @@ export function useWewePools(): UseQueryResult<
             ArrakisVaultABI,
             provider
           );
-      
+
           try {
             // Fetch token0, token1, poolAddressList in parallel
             const [token0, token1, poolAddressList] = await Promise.all([
               arrakisVault.token0(),
               arrakisVault.token1(),
-              arrakisVault.getPools()
+              arrakisVault.getPools(),
             ]);
-      
+
             // Calculate TLV and fetch Uniswap fee percentage in parallel
             const [tlv, poolFeePercentage] = await Promise.all([
               calculateTlvForTokens(
@@ -179,40 +181,42 @@ export function useWewePools(): UseQueryResult<
                 token0,
                 token1
               ),
-              getUniswapFeePercentage(poolAddressList[0])
+              getUniswapFeePercentage(poolAddressList[0]),
             ]);
-      
+
             const token0info = TOKEN_LIST.find(
               ({ address }) => address.toLowerCase() === token0.toLowerCase()
             );
             const token1info = TOKEN_LIST.find(
               ({ address }) => address.toLowerCase() === token1.toLowerCase()
             );
-      
+
             const vaultInfoData = vaultInfoResponses.find(
               (apr) => apr.address.toLowerCase() === vaultAddress.toLowerCase()
             );
-      
+
             const feeApr =
               vaultInfoData && typeof vaultInfoData.feeApr === "number"
                 ? vaultInfoData.feeApr.toFixed(2)
                 : "0.00";
-      
+
             const dailyFeesInUsd =
               vaultInfoData && typeof vaultInfoData.feesPerDay === "number"
                 ? vaultInfoData.feesPerDay.toFixed(2)
                 : "0.00";
-      
+
             const volume =
               vaultInfoData && typeof vaultInfoData.feesPerDay === "number"
-                ? vaultInfoData.feesPerDay / Number(ethers.formatUnits(poolFeePercentage, 6))
+                ? vaultInfoData.feesPerDay /
+                  Number(ethers.formatUnits(poolFeePercentage, 6))
                 : 0;
 
-                const incentives =
-                vaultInfoData && typeof vaultInfoData.incentivesPerDay === "number"
-                  ? vaultInfoData.incentivesPerDay.toFixed(2)
-                  : "0.00";
-      
+            const incentives =
+              vaultInfoData &&
+              typeof vaultInfoData.incentivesPerDay === "number"
+                ? vaultInfoData.incentivesPerDay.toFixed(2)
+                : "0.00";
+
             return {
               address: vaultAddress,
               poolType: "MEMES 1%",
@@ -232,7 +236,10 @@ export function useWewePools(): UseQueryResult<
               token1: token1info!,
             };
           } catch (error) {
-            console.error(`Failed to fetch data for vault ${vaultAddress}:`, error);
+            console.error(
+              `Failed to fetch data for vault ${vaultAddress}:`,
+              error
+            );
           }
         }
       });

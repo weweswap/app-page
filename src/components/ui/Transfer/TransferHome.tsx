@@ -1,10 +1,10 @@
-import { Divider, NumberInput } from "@mantine/core";
-import clsx from "clsx";
 import Image from "next/image";
+import { Divider, NumberInput } from "@mantine/core";
 import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { CHAIN_LIST } from "~/constants/chains";
 import { TOKEN_LIST } from "~/constants/tokens";
-import { dogica, verdana } from "~/fonts";
+import { verdana } from "~/fonts";
+import clsx from "clsx";
 
 const tokenOptions = TOKEN_LIST.map((token) => ({
   value: token.symbol,
@@ -23,16 +23,16 @@ type TransferHomeProps = {
 export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
   return (
     <>
-      <div className="w-full flex items-center justify-between">
+      <div className="flex w-full items-center justify-between">
         <Typography secondary size="xl" tt="uppercase">
           Bridge
         </Typography>
         <Image src="/img/icons/settings.svg" width={24} height={24} alt="" />
       </div>
 
-      <Card className="w-full flex flex-col">
-        <div className="flex md:flex-row flex-col gap-4 justify-between ">
-          <div className="flex flex-col md:w-1/2 w-full gap-5">
+      <Card className="flex w-full flex-col">
+        <div className="flex flex-col justify-between gap-4 md:flex-row ">
+          <div className="flex w-full flex-col gap-5 md:w-1/2">
             <Typography secondary size="sm" className="text-start">
               Token
             </Typography>
@@ -42,7 +42,7 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
               className="w-full "
             />
           </div>
-          <div className="flex flex-col md:w-1/2 w-full  gap-5">
+          <div className="flex w-full flex-col gap-5  md:w-1/2">
             <Typography secondary size="sm" className="">
               From
             </Typography>
@@ -54,15 +54,15 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
           </div>
         </div>
 
-        <div className="h-1 flex items-center justify-center mt-10 ">
+        <div className="mt-10 flex h-1 items-center justify-center ">
           <button className="absolute bg-black  p-3">
             <Image src="/img/icons/refresh.svg" width={24} height={24} alt="" />
           </button>
         </div>
 
-        <div className="flex flex-col gap-4 mt-10">
-          <div className="flex md:flex-row flex-col gap-4 justify-between ">
-            <div className="flex flex-col md:w-1/2 w-full gap-5">
+        <div className="mt-10 flex flex-col gap-4">
+          <div className="flex flex-col justify-between gap-4 md:flex-row ">
+            <div className="flex w-full flex-col gap-5 md:w-1/2">
               <Typography secondary size="sm" className="text-start">
                 Token
               </Typography>
@@ -72,7 +72,7 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
                 className="w-full "
               />
             </div>
-            <div className="flex flex-col md:w-1/2 w-full  gap-5">
+            <div className="flex w-full flex-col gap-5  md:w-1/2">
               <Typography secondary size="sm" className="">
                 From
               </Typography>
@@ -84,7 +84,7 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
             </div>
           </div>
 
-          <div className="flex bg_rich_dark flex-row items-center bg justify-between px-2">
+          <div className="bg_rich_dark bg flex flex-row items-center justify-between px-2">
             <NumberInput
               classNames={{
                 root: "flex-1  my-5 w-auto",
@@ -96,7 +96,7 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
               defaultValue="0"
               hideControls
             />
-            <div className="flex gap-5 items-center">
+            <div className="flex items-center gap-5">
               <div className="flex flex-col ">
                 <Typography size="sm">Balance</Typography>
                 <Typography size="sm" className="text-end">
@@ -107,7 +107,7 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
               <div>
                 <Typography
                   size="md"
-                  className="text_turq underline cursor-pointer"
+                  className="text_turq cursor-pointer underline"
                 >
                   MAX
                 </Typography>
@@ -117,8 +117,8 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
           <div>
             <Typography size="xs">Est. Value:- </Typography>
 
-            <div className="flex md:flex-row flex-col gap-10">
-              <div className="w-full flex flex-col gap-5 md:w-1/2 p-2 bg_rich_dark">
+            <div className="flex flex-col gap-10 md:flex-row">
+              <div className="bg_rich_dark flex w-full flex-col gap-5 p-2 md:w-1/2">
                 <div className="flex flex-row justify-between gap-3">
                   <Typography size="xs">Gas Cost: </Typography>
                   <Typography size="xs" className="text_turq">
@@ -129,7 +129,7 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
                 <Typography size="xs">Est. Time:-</Typography>
               </div>
 
-              <div className="w-full flex flex-col gap-5 md:w-1/2 p-2 bg_rich_dark">
+              <div className="bg_rich_dark flex w-full flex-col gap-5 p-2 md:w-1/2">
                 <div className="flex flex-row justify-between gap-3">
                   <Typography size="xs">Gas Cost: </Typography>
                   <Typography size="xs" className="text_yellow">
@@ -143,7 +143,7 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
 
             <Divider className="border_stroke my-5" />
 
-            <div className="flex items-center justify-between gap-3 my-2">
+            <div className="my-2 flex items-center justify-between gap-3">
               <Typography size="xs">You will receive</Typography>
               <Typography size="xs">-</Typography>
             </div>
@@ -153,7 +153,7 @@ export const TransferHome = ({ onTransfer }: TransferHomeProps) => {
             </div>
           </div>
         </div>
-        <Button className="w-full my-2" onClick={onTransfer}>
+        <Button className="my-2 w-full" onClick={onTransfer}>
           <Typography secondary size="sm" tt="uppercase" fw="bold">
             Transfer
           </Typography>

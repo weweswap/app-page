@@ -1,13 +1,13 @@
 import { UseQueryResult } from "@tanstack/react-query";
-import { ethers } from "ethers";
-import { useQuery } from "wagmi/query";
-import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
+import { CONTRACT_ADDRESSES } from "~/constants";
 import { ArrakisV2HelperABI } from "~/lib/abis/ArrakisHelper";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
-import { calculateTlvForTokens, WewePool } from "./usePool";
 import feeManagerABI from "~/lib/abis/FeeManager";
+import { ethers } from "ethers";
+import { useQuery } from "wagmi/query";
+
 import { provider } from "./provider";
-import * as dn from "dnum";
+import { calculateTlvForTokens, WewePool } from "./usePool";
 
 export type WewePosition = {
   title: string;
@@ -64,7 +64,7 @@ async function getPendingRewards(
   userAddress: string,
   provider: ethers.JsonRpcProvider,
   vaultAddress: string
-): Promise<{ usdc: string, chaos: string }> {
+): Promise<{ usdc: string; chaos: string }> {
   const feeManagerContract = new ethers.Contract(
     feeManagerAddress,
     feeManagerABI,
@@ -91,7 +91,8 @@ async function getPendingRewards(
     feeManagerContract.rate(),
   ]);
 
-  const totalReward = (userBalance * accumulatedRewardsPerShare) / rewardsPrecision;
+  const totalReward =
+    (userBalance * accumulatedRewardsPerShare) / rewardsPrecision;
 
   const pendingToHarvest = totalReward - userRewardsDebt;
   const chaosRewardBigNumber = pendingToHarvest * chaosRate;
@@ -100,7 +101,7 @@ async function getPendingRewards(
   return {
     usdc: ethers.formatUnits(pendingToHarvest, 6).toString(),
     chaos: ethers.formatUnits(pendingToHarvestChaos, 6).toString(),
-  }
+  };
 }
 
 export function useWewePositions(
@@ -146,19 +147,25 @@ export function useWewePositions(
           ),
         ]);
 
-        return { 
-          vault: wewePool, 
-          balance, 
-          balanceInUsdc, 
-          pendingUsdcReward: pendingReward.usdc, 
-          pendingChaosReward: pendingReward.chaos 
+        return {
+          vault: wewePool,
+          balance,
+          balanceInUsdc,
+          pendingUsdcReward: pendingReward.usdc,
+          pendingChaosReward: pendingReward.chaos,
         };
       });
 
       const balances = await Promise.all(requestsBalances);
 
       balances.forEach(
-        ({ vault, balance, balanceInUsdc, pendingUsdcReward, pendingChaosReward }) => {
+        ({
+          vault,
+          balance,
+          balanceInUsdc,
+          pendingUsdcReward,
+          pendingChaosReward,
+        }) => {
           wewePositions.push({
             title: "EXOTIC 1%",
             exchangePair: vault.type,

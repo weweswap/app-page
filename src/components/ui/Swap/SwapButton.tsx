@@ -1,16 +1,18 @@
-import { BuildData, RouteData, RouterMessageType } from "~/models";
+import { useEffect } from "react";
+import api from "~/api/swap";
+import { Button, Typography } from "~/components/common";
+import { Chain, CONTRACT_ADDRESSES } from "~/constants";
+import { ERC20Abi } from "~/lib/abis";
+import { BuildData, RouterMessageType } from "~/models";
 import {
   useAccount,
   useReadContract,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { ERC20Abi } from "~/lib/abis";
-import { Chain, CONTRACT_ADDRESSES } from "~/constants";
-import { Button, Typography } from "~/components/common";
-import { useEffect } from "react";
+
 import { useSwapContext } from "./SwapContext";
-import api from "~/api/swap";
+
 type SwapButtonProps = {
   hasBalance: boolean;
 };
@@ -23,20 +25,16 @@ export const SwapButton = (props: SwapButtonProps) => {
     swapSlippage,
     setEncodedData,
     openSwapModal,
-    initialSwapState,
   } = useSwapContext();
-  const { address, chain } = useAccount();
+  const { address } = useAccount();
   const { data: allowance, refetch } = useReadContract({
     address: routeData?.inputToken.address,
     abi: ERC20Abi,
     functionName: "allowance",
     args: [address, CONTRACT_ADDRESSES.kyberSwapAgg],
   });
-  const {
-    data: writeContractResult,
-    writeContractAsync: writeContract,
-    error: approveError,
-  } = useWriteContract();
+  const { data: writeContractResult, writeContractAsync: writeContract } =
+    useWriteContract();
 
   const { data: approvalReceiptData, isLoading: isApproving } =
     useWaitForTransactionReceipt({

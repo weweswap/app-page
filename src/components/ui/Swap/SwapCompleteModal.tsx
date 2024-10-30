@@ -1,21 +1,19 @@
 "use client";
+
 import Image from "next/image";
-import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
-import { Typography } from "~/components/common/Typography";
+import { ModalRootProps, Modal as MtModal } from "@mantine/core";
 import { Button } from "~/components/common/Button";
-import { BuildData, TokenItem } from "~/models";
-import { useSwapContext } from "./SwapContext";
-import { Hex } from "viem";
+import { Typography } from "~/components/common/Typography";
 import { formatBigIntegers, formatStringUnits } from "~/utils";
-import { TOKEN_LIST } from "~/constants";
-import { useState } from "react";
+import { Hex } from "viem";
+
+import { useSwapContext } from "./SwapContext";
 
 type SwapCompleteProps = {
   hash: Hex;
   onClose: () => void;
 } & ModalRootProps;
 export const SwapCompleteModal = (props: SwapCompleteProps) => {
-
   const { encodedData, routeData } = useSwapContext();
   const handleDetails = () => {
     window.open(
@@ -57,13 +55,16 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
               height={40}
             />
             <div className="flex flex-col">
-              <Typography size="sm" fw={1000} >
-                {formatBigIntegers(Number(
-                  formatStringUnits(
-                    routeData!.routeSummary.amountIn,
-                    routeData!.inputToken.decimals
+              <Typography size="sm" fw={1000}>
+                {formatBigIntegers(
+                  Number(
+                    formatStringUnits(
+                      routeData!.routeSummary.amountIn,
+                      routeData!.inputToken.decimals
+                    )
                   )
-                ))} {routeData!.inputToken.symbol}
+                )}{" "}
+                {routeData!.inputToken.symbol}
               </Typography>
               <Typography size="xs" fw={700} className="opacity-50">
                 ${formatBigIntegers(Number(encodedData!.amountInUsd))}
@@ -86,13 +87,16 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
               height={40}
             />
             <div className="flex flex-col">
-            <Typography size="sm" fw={1000} >
-                {formatBigIntegers(Number(
-                  formatStringUnits(
-                    routeData!.routeSummary.amountOut,
-                    routeData!.outputToken.decimals
+              <Typography size="sm" fw={1000}>
+                {formatBigIntegers(
+                  Number(
+                    formatStringUnits(
+                      routeData!.routeSummary.amountOut,
+                      routeData!.outputToken.decimals
+                    )
                   )
-                ))} {routeData!.outputToken.symbol}
+                )}{" "}
+                {routeData!.outputToken.symbol}
               </Typography>
               <Typography size="xs" fw={700} className="opacity-50">
                 ${formatBigIntegers(Number(encodedData!.amountOutUsd))}
@@ -110,7 +114,7 @@ export const SwapCompleteModal = (props: SwapCompleteProps) => {
             </Button>
 
             <Button
-              className="w-full bg-black border border-1 border-white"
+              className="border-1 w-full border border-white bg-black"
               onClick={handleDetails}
             >
               <Typography secondary size="md" fw={700} tt="uppercase">

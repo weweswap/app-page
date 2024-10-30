@@ -1,8 +1,8 @@
 "use client";
-import { Divider, ModalRootProps } from "@mantine/core";
-import Image from "next/image";
+
 import { useState } from "react";
-import { Button, Dropdown, Modal, Typography } from "~/components/common";
+import { Divider, ModalRootProps } from "@mantine/core";
+import { Button, Modal, Typography } from "~/components/common";
 
 type TransferModalProps = {
   onClose: () => void;
@@ -15,7 +15,6 @@ export const TransferModal = (props: TransferModalProps) => {
     // Handle token approval logic here, then move to the next step
     setCurrentStep(2);
   };
-
 
   return (
     <Modal title="conversion" {...props}>
@@ -34,7 +33,7 @@ export const TransferModal = (props: TransferModalProps) => {
       <div className="flex items-center gap-3">
         <img src="/img/tokens/vult.base.svg" alt="Vult.Base" />
         <img src="/img/tokens/vult.eth.svg" alt="Vult.Eth" />
-        <div className="flex flex-col ms-auto ">
+        <div className="ms-auto flex flex-col ">
           <Typography size="xs" className="text_light_gray">
             Sending from Base via Layer Zero
           </Typography>
@@ -94,7 +93,7 @@ export const TransferModal = (props: TransferModalProps) => {
 
       <div className="flex justify-between">
         <Typography size="xs">1 VULT = 0.0027 ETH ($1.00)</Typography>
-        <div className="flex gap-1 items-center">
+        <div className="flex items-center gap-1">
           <img src="img/icons/fee.svg" alt="fee" />
           <Typography size="xs">$0.34</Typography>
           <img src="/img/icons/chevron-down.svg" alt="chevron-down" />

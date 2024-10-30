@@ -1,9 +1,10 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
+import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { State, WagmiProvider } from "wagmi";
+
 import { config } from "./config";
 
 export const WagmiProviderComp = ({

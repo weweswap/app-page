@@ -1,22 +1,22 @@
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import { Button, Card, Typography } from "~/components/common";
 
 type PoolsManageProps = {
-    onBack: () => void
-}
+  onBack: () => void;
+};
 
-const PoolsManage = ({onBack}: PoolsManageProps) => {
+const PoolsManage = ({ onBack }: PoolsManageProps) => {
   return (
     <Card>
-      <div className="flex flex-col md:flex-row text-center md:text-start items-center justify-between gap-5 mb-5">
+      <div className="mb-5 flex flex-col items-center justify-between gap-5 text-center md:flex-row md:text-start">
         <div onClick={onBack} className="cursor-pointer">
           <Typography secondary size="xl" tt="uppercase">
             {"<"}POOLS MANAGE
           </Typography>
         </div>
-        <div className="flex sm:flex-row flex-col sm:w-fit w-full gap-5">
+        <div className="flex w-full flex-col gap-5 sm:w-fit sm:flex-row">
           <Link href="/migrate" className="w-full">
             <Button className="w-full md:w-auto">
               <Typography secondary size="xs" fw={700} tt="uppercase">
@@ -32,8 +32,8 @@ const PoolsManage = ({onBack}: PoolsManageProps) => {
         </div>
       </div>
 
-      <div className="bg_dark w-full min-h-[10rem] p-4">
-        <div className="sm:py-4 py-7 flex items-center justify-between gap-3 flex-wrap">
+      <div className="bg_dark min-h-40 w-full p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 py-7 sm:py-4">
           <div className="flex items-center gap-2">
             <div className="flex items-center">
               <Image src="/img/tokens/weth.png" width={24} height={24} alt="" />
@@ -55,7 +55,7 @@ const PoolsManage = ({onBack}: PoolsManageProps) => {
             </Typography>
           </div>
           <div></div>
-          <div className="lg:text-right flex flex-col gap-2">
+          <div className="flex flex-col gap-2 lg:text-right">
             <Typography size="xs" className="text_light_gray">
               APR
             </Typography>
@@ -64,7 +64,7 @@ const PoolsManage = ({onBack}: PoolsManageProps) => {
             </Typography>
           </div>
 
-          <div className="lg:text-right flex flex-col gap-2">
+          <div className="flex flex-col gap-2 lg:text-right">
             <Typography size="xs" className="text_light_gray">
               LP VALUE
             </Typography>
@@ -72,7 +72,7 @@ const PoolsManage = ({onBack}: PoolsManageProps) => {
               $23
             </Typography>
           </div>
-          <div className="text-right flex flex-col gap-2">
+          <div className="flex flex-col gap-2 text-right">
             <Typography size="xs" className="text_light_gray">
               REWARDS
             </Typography>
@@ -81,11 +81,11 @@ const PoolsManage = ({onBack}: PoolsManageProps) => {
             </Typography>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1 ">
+        <div className="flex flex-wrap items-center justify-between gap-4 py-4 sm:py-1 ">
           <div className="flex gap-6">
             <Typography
               size="xs"
-              className={`bg_green flex justify-center rounded-full w-[6rem] py-1 `}
+              className={`bg_green flex w-24 justify-center rounded-full py-1 `}
             >
               IN RANGE
             </Typography>
@@ -105,7 +105,7 @@ const PoolsManage = ({onBack}: PoolsManageProps) => {
           <Typography size="xs">Position ID: 234</Typography>
           <Typography size="xs">{`RANGE: 0.0006900>0.007000`}</Typography>
         </div>
-        <div className=" gap-5 py-5 my-5 flex-wrap bg_light_dark min-h-[12rem]">
+        <div className=" bg_light_dark my-5 min-h-48 flex-wrap gap-5 py-5">
           <Typography size="md" className="text-center">
             POOLED TOKENS
           </Typography>
@@ -125,7 +125,7 @@ const PoolsManage = ({onBack}: PoolsManageProps) => {
           <Typography size="xs">Rate</Typography>
           <Typography size="xs">1 USDC = 0.0027 ETH ($1.00)</Typography>
         </div>
-        <div className="flex items-center justify-between my-5">
+        <div className="my-5 flex items-center justify-between">
           <Typography size="xs">POSITION SHARES</Typography>
           <Typography size="lg" fw={900}>
             0.0000001231231
@@ -150,38 +150,42 @@ const PoolsManage = ({onBack}: PoolsManageProps) => {
             </Typography>
           </div>
         </div>
-        <div className="flex items-center justify-between my-5">
+        <div className="my-5 flex items-center justify-between">
           <Typography size="xs">PENDING FEES: $2,36</Typography>
-          <div className="flex sm:flex-row flex-col sm:w-fit w-full gap-5">
-          {/* <Link href="/migrate" className="w-full"> */}
+          <div className="flex w-full flex-col gap-5 sm:w-fit sm:flex-row">
+            {/* <Link href="/migrate" className="w-full"> */}
             <Button className="w-full md:w-auto">
               <Typography secondary size="xs" fw={700} tt="uppercase">
                 ZAP-IN
               </Typography>
             </Button>
-          {/* </Link> */}
-          <Button className="w-full md:w-auto">
-            <Typography secondary size="xs" fw={700} tt="uppercase">
-              CLAIM
-            </Typography>
-          </Button>
-        </div>
+            {/* </Link> */}
+            <Button className="w-full md:w-auto">
+              <Typography secondary size="xs" fw={700} tt="uppercase">
+                CLAIM
+              </Typography>
+            </Button>
+          </div>
         </div>
       </div>
 
-<div className="my-5">
+      <div className="my-5">
         <Typography size="lg">
-        When you add liquidity to an Active Pool:
+          When you add liquidity to an Active Pool:
         </Typography>
 
-        <ul className="list-decimal list-inside pt-3 text-sm">
-        <li>Your assets are swapped to be added correctly to the pool.</li>
-        <li>Any assets that can’t fit in the pool are refunded back to you.</li>
-        <li>You may experience a small slip when you enter a pool that is out-of-balance.</li>
+        <ul className="list-inside list-decimal pt-3 text-sm">
+          <li>Your assets are swapped to be added correctly to the pool.</li>
+          <li>
+            Any assets that can’t fit in the pool are refunded back to you.
+          </li>
+          <li>
+            You may experience a small slip when you enter a pool that is
+            out-of-balance.
+          </li>
         </ul>
-        </div>
+      </div>
     </Card>
-
   );
 };
 

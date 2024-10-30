@@ -1,5 +1,6 @@
 import { ModalRootProps } from "@mantine/core";
 import { Modal } from "~/components/common";
+
 import { PAGE_LINKS } from "./links";
 import NavLink from "./NavLink";
 

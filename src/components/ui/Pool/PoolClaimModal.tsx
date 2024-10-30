@@ -1,5 +1,5 @@
-import { Divider, ModalRootProps, Slider } from "@mantine/core";
 import Image from "next/image";
+import { Divider, ModalRootProps, Slider } from "@mantine/core";
 import { Button, Modal, Typography } from "~/components/common";
 
 export const PoolClaimModal = (props: ModalRootProps) => {

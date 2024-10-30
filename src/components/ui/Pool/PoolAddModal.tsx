@@ -1,5 +1,5 @@
-import { Divider, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
+import { Divider, ModalRootProps } from "@mantine/core";
 import { Button, Modal, Typography } from "~/components/common";
 
 type PoolAddModalProps = {

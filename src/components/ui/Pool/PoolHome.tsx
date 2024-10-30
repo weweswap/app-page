@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Button, Card, Typography } from "~/components/common";
 import Link from "next/link";
+import { Button, Typography } from "~/components/common";
+import { WewePosition } from "~/hooks/useWewePositions";
 
 import Liquidity from "./Liquidity";
 import MyShares from "./MyShares";
-import { WewePosition } from "~/hooks/useWewePositions";
 
 type PoolHomeProps = {
   onClaim: (wewePositon: WewePosition) => void;
@@ -18,22 +18,22 @@ type PoolHomeProps = {
 export const PoolHome = ({
   onClaim,
   onNext,
-  onBack, 
+  onBack,
   onDeposit,
   onWithdraw,
 }: PoolHomeProps) => {
   const [poolTypes, setPoolTypes] = useState<number>(0);
-  const [backOption, setBackOption] = useState(false);
+  const [backOption] = useState(false);
 
   return (
     <>
-      <div className="w-full flex bg-black p-2 flex-col md:flex-row text-center md:text-start items-center justify-between gap-5">
+      <div className="flex w-full flex-col items-center justify-between gap-5 bg-black p-2 text-center md:flex-row md:text-start">
         <div className="">
           <Typography secondary size="xl" tt="uppercase">
             <>{backOption ? <span>{"<"}</span> : ""}</>POOLS
           </Typography>
         </div>
-        <div className="flex sm:flex-row flex-col sm:w-fit w-full gap-5">
+        <div className="flex w-full flex-col gap-5 sm:w-fit sm:flex-row">
           <Link href="/migrate" className="w-full">
             <Button className="w-full md:w-auto">
               <Typography
@@ -67,7 +67,7 @@ export const PoolHome = ({
           <Typography secondary size="xs" >
             +NEW POOL
           </Typography>
-          </button> 
+          </button>
     </div> */}
       {poolTypes === 0 && (
         <Liquidity

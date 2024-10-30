@@ -2,23 +2,24 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { PAGE_LINKS } from "./links";
-import NavLink from "./NavLink";
-import { ConnectButton } from "~/components/common";
 import { useDisclosure } from "@mantine/hooks";
+import { ConnectButton } from "~/components/common";
+
+import { PAGE_LINKS } from "./links";
 import { NavBarModal } from "./NavBarModal";
+import NavLink from "./NavLink";
 
 export const NavBar = () => {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <header className="w-full">
-      <nav className="flex items-center justify-between gap-4 py-8 px-4 md:px-8">
+      <nav className="flex items-center justify-between gap-4 px-4 py-8 md:px-8">
         <Link href="/" className="flex items-center">
           <Image src="/img/logo.svg" width={115} height={50} alt="logo" />
         </Link>
 
-        <ul className="items-center gap-4 hidden lg:flex">
+        <ul className="hidden items-center gap-4 lg:flex">
           {PAGE_LINKS.map((link, key) => (
             <NavLink
               icon={link.icon}

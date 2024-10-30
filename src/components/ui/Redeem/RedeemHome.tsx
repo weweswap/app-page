@@ -1,21 +1,18 @@
 "use client";
 
-import { Loader, NumberInput } from "@mantine/core";
-import clsx from "clsx";
-import Image from "next/image";
+/* eslint-disable */
 import { useEffect, useState } from "react";
-import { formatEther, parseEther } from "viem";
-import { useAccount } from "wagmi";
-
+import Image from "next/image";
+import { NumberInput } from "@mantine/core";
 import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { dogica } from "~/fonts";
-import {
-  useVultBalance,
-  useWeweBalance,
-} from "~/hooks";
+import { useVultBalance, useWeweBalance } from "~/hooks";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { fetchWEWEPrice } from "~/services";
+import clsx from "clsx";
+import { formatEther, parseEther } from "viem";
+import { useAccount } from "wagmi";
 
 export const RedeemHome = () => {
   const { address } = useAccount();
@@ -50,8 +47,8 @@ export const RedeemHome = () => {
       const weweFDV = wewePrice * totalWeweSupply;
       setVultFDV(
         ((weweBalanceNumber + virtualBalance) / totalWeweSupply) *
-        weweFDV *
-        (totalVultSupply / vultBalanceNumber)
+          weweFDV *
+          (totalVultSupply / vultBalanceNumber)
       );
     }
   }, [weweBalance, vultBalance, wewePrice]);
@@ -74,15 +71,15 @@ export const RedeemHome = () => {
   };
   return (
     <>
-      <div className=" gap-5 grid grid-cols-12">
-        <div className="md:col-span-8 col-span-12 md:order-1 order-2">
+      <div className=" grid grid-cols-12 gap-5">
+        <div className="order-2 col-span-12 md:order-1 md:col-span-8">
           <Card>
-            <div className="md:flex items-center py-3 justify-between gap-3 text-center md:text-start  ">
+            <div className="items-center justify-between gap-3 py-3 text-center md:flex md:text-start  ">
               <Typography secondary size="xl" tt="uppercase">
                 REDEEM YOUR COINS
               </Typography>
             </div>
-            <div className="md:flex items-center py-3 justify-between gap-3 text-center md:text-start mt-2">
+            <div className="mt-2 items-center justify-between gap-3 py-3 text-center md:flex md:text-start">
               <Typography
                 size="sm"
                 tt="uppercase"
@@ -93,9 +90,9 @@ export const RedeemHome = () => {
             </div>
           </Card>
 
-          <Card className="flex flex-col gap-5 my-5">
-            <div className="bg-gray-900 flex items-center justify-between gap-3 p-4">
-              <div className="flex-1 flex items-center gap-3">
+          <Card className="my-5 flex flex-col gap-5">
+            <div className="flex items-center justify-between gap-3 bg-gray-900 p-4">
+              <div className="flex flex-1 items-center gap-3">
                 <Image
                   src="/img/tokens/iou-vult.svg"
                   width={32}
@@ -112,7 +109,7 @@ export const RedeemHome = () => {
                 height={16}
                 alt=""
               />
-              <div className="flex-1 flex items-center justify-end gap-3">
+              <div className="flex flex-1 items-center justify-end gap-3">
                 <Image
                   src="/img/tokens/vult.svg"
                   width={32}
@@ -125,10 +122,10 @@ export const RedeemHome = () => {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-5">
+            <div className="flex flex-col items-center justify-between gap-5 sm:flex-row sm:items-start">
               <div className="flex-1">
-                <div className="grid grid-cols-11 bg-gray-900 md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
-                  <div className="col-span-5 flex-1 flex items-center gap-3">
+                <div className="flex grid grid-cols-11 items-center justify-between gap-3 bg-gray-900 p-4 md:justify-normal md:bg-black md:p-0">
+                  <div className="col-span-5 flex flex-1 items-center gap-3">
                     <NumberInput
                       classNames={{
                         root: "w-full md:w-full",
@@ -149,14 +146,14 @@ export const RedeemHome = () => {
                     height={16}
                     alt=""
                   />
-                  <div className="col-span-5 flex-1  md:flex-none flex items-center justify-end gap-3">
+                  <div className="col-span-5 flex  flex-1 items-center justify-end gap-3 md:flex-none">
                     <div className="overflow-x-auto">
                       <Typography size="xl">{amount} VULT</Typography>
                     </div>
                   </div>
                 </div>
 
-                <div className="w-full flex items-center gap-3 mt-3">
+                <div className="mt-3 flex w-full items-center gap-3">
                   <button
                     className="bg-gray-900 px-3 py-2"
                     onClick={() => handleSelect(1)}
@@ -167,10 +164,10 @@ export const RedeemHome = () => {
               </div>
 
               <div className="flex flex-col gap-3">
-                <div className="flex-1 flex flex-col sm:flex-row items-center gap-3">
+                <div className="flex flex-1 flex-col items-center gap-3 sm:flex-row">
                   <Button
                     onClick={handleRedeem}
-                    className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
+                    className="flex w-full items-center justify-center gap-3 md:h-[62px] md:w-auto"
                   >
                     {state == 0 ? (
                       <Typography secondary size="md" fw={700} tt="uppercase">
@@ -188,58 +185,59 @@ export const RedeemHome = () => {
           </Card>
 
           <Card>
-            <Typography size="lg" ta="center" className="my-20 text_light_gray">
+            <Typography size="lg" ta="center" className="text_light_gray my-20">
               Redeem at 1:1 Your $IOU.VULT into $VULT <br />
               Bridge Your $BASE.VULT To $ETH.VULT
             </Typography>
           </Card>
         </div>
-        <div className="md:col-span-4 col-span-12 md:order-2 order-1">
-          <Card className="text-center h-full relative">
+        <div className="order-1 col-span-12 md:order-2 md:col-span-4">
+          <Card className="relative h-full text-center">
             <Typography
               secondary
               size="md"
               tt="uppercase"
               fw={600}
-              className="leading-10 p-5"
+              className="p-5 leading-10"
             >
               <span className="text_yellow leading-10">
                 TOTAL $WEWE <br /> LOCKED: <br />
               </span>
               {!isWeweBalanceFetching && (
                 <>
-                  {Math.trunc(
-                    Number(formatEther(weweBalance))
-                  ).toLocaleString("en-US")}
+                  {Math.trunc(Number(formatEther(weweBalance))).toLocaleString(
+                    "en-US"
+                  )}
                 </>
               )}
             </Typography>
 
-            <div className="md:mt-5 mt-2">
-              <div className="flex gap-2 md:justify-start justify-center ">
+            <div className="mt-2 md:mt-5">
+              <div className="flex justify-center gap-2 md:justify-start ">
                 <Image
                   src="/img/tokens/vult-border.svg"
                   width={17}
                   height={17}
                   alt="Vult"
                 />
-                <Typography size="md" fw={600} className="md:py-5 py-2">
+                <Typography size="md" fw={600} className="py-2 md:py-5">
                   ≈ Value: ${vultPrice.toPrecision(4)}
                 </Typography>
               </div>
 
-              <div className="flex gap-2 md:justify-start justify-center ">
+              <div className="flex justify-center gap-2 md:justify-start ">
                 <Image
                   src="/img/tokens/vult-border.svg"
                   width={17}
                   height={17}
                   alt="Vult"
                 />
-                <Typography size="md" fw={600} className="md:py-5 py-2">
-                  Balance: {Number(formatEther(balanceVult)).toLocaleString("en-US")}
+                <Typography size="md" fw={600} className="py-2 md:py-5">
+                  Balance:{" "}
+                  {Number(formatEther(balanceVult)).toLocaleString("en-US")}
                 </Typography>
               </div>
-              <div className="flex gap-2 md:my-5 my-2 md:mb-5 md:justify-start justify-center ">
+              <div className="my-2 flex justify-center gap-2 md:my-5 md:justify-start ">
                 <Image
                   src="/img/tokens/vult.svg"
                   width={17}
@@ -256,14 +254,14 @@ export const RedeemHome = () => {
                   alt="Vult"
                 />
               </div>
-              <div className="flex gap-2 md:justify-start justify-center  ">
+              <div className="flex justify-center gap-2 md:justify-start  ">
                 <Image
                   src="/img/tokens/vult-border.svg"
                   width={17}
                   height={17}
                   alt="Vult"
                 />
-                <Typography size="md" fw={600} className="md:py-5 py-2">
+                <Typography size="md" fw={600} className="py-2 md:py-5">
                   Balance ≈ Value: $
                   {(
                     Number(formatEther(balanceVult)) * vultPrice
@@ -274,14 +272,14 @@ export const RedeemHome = () => {
                 <Typography
                   size="md"
                   fw={600}
-                  className="md:py-5 py-2 text_yellow"
+                  className="text_yellow py-2 md:py-5"
                 >
                   FDV: ${Math.trunc(vultFDV).toLocaleString("en-US")}
                 </Typography>
               )}
             </div>
 
-            <div className="  right-0 left-0">
+            <div className="  inset-x-0">
               <Typography secondary size="xl">
                 🔥 🔥 🔥
               </Typography>

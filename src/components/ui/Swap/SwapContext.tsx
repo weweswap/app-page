@@ -1,6 +1,6 @@
-import { useDisclosure } from "@mantine/hooks";
 import React, { createContext, useContext, useState } from "react";
-import { RouteData, BuildData } from "~/models";
+import { useDisclosure } from "@mantine/hooks";
+import { BuildData, RouteData } from "~/models";
 
 interface SwapContextType {
   initialSwapState: SwapStateProps;

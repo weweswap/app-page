@@ -1,13 +1,18 @@
-import React from 'react';
+import React from "react";
 
 type RangeSliderProps = {
-    min?: number;
-    max?: number;
-    value: number;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+  min?: number;
+  max?: number;
+  value: number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
 
-const RangeSlider = ({ min = 0, max = 100, value = 50, onChange }: RangeSliderProps) => {
+const RangeSlider = ({
+  min = 0,
+  max = 100,
+  value = 50,
+  onChange,
+}: RangeSliderProps) => {
   return (
     <input
       type="range"
@@ -15,7 +20,7 @@ const RangeSlider = ({ min = 0, max = 100, value = 50, onChange }: RangeSliderPr
       max={max}
       value={value}
       onChange={onChange}
-      className="w-full h-2 bg-[#33E6BF] rounded-lg appearance-none cursor-pointer"
+      className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-[#33E6BF]"
     />
   );
 };

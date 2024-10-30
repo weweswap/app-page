@@ -1,15 +1,15 @@
 "use client";
+
 import Image from "next/image";
-import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
-import { Typography } from "~/components/common/Typography";
+import { ModalRootProps, Modal as MtModal } from "@mantine/core";
 import { Button } from "~/components/common/Button";
-import { BuildData, TokenItem } from "~/models";
-import { formatEther, Hex } from "viem";
+import { Typography } from "~/components/common/Typography";
+import { Hex } from "viem";
 
 type RedeemCompleteProps = {
   hash: Hex;
   amount: string;
-  ratio: bigint
+  ratio: bigint;
   onClose: () => void;
 } & ModalRootProps;
 
@@ -45,7 +45,7 @@ export const RedeemCompleteModal = (props: RedeemCompleteProps) => {
           >
             successful redeem
           </Typography>
-          <div className="flex gap-2 md:my-5 my-2 md:mb-5 md:justify-start justify-center ">
+          <div className="my-2 flex justify-center gap-2 md:my-5 md:justify-start ">
             <Image
               src="/img/tokens/vult.svg"
               width={17}
@@ -63,10 +63,7 @@ export const RedeemCompleteModal = (props: RedeemCompleteProps) => {
             />
           </div>
           <div className="flex items-center justify-center gap-2">
-            <img
-              src="/img/tokens/vult.base.svg"
-              alt="Vult"
-            />
+            <img src="/img/tokens/vult.base.svg" alt="Vult" />
             <div className="flex flex-col">
               <Typography size="md" fw={700}>
                 {/* ${Number(encodedData!.amountOutUsd).toFixed(2)} */}
@@ -86,7 +83,7 @@ export const RedeemCompleteModal = (props: RedeemCompleteProps) => {
             </Button>
 
             <Button
-              className="w-full bg-black border border-1 border-white"
+              className="border-1 w-full border border-white bg-black"
               onClick={handleDetails}
             >
               <Typography secondary size="md" fw={700} tt="uppercase">

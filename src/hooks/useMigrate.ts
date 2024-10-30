@@ -1,20 +1,13 @@
+import IQuoterABI from "@uniswap/v3-periphery/artifacts/contracts/interfaces/IQuoterV2.sol/IQuoterV2.json";
+import NonfungiblePositionManagerAbi from "@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json";
+import { CONTRACT_ADDRESSES } from "~/constants";
+import { Position } from "~/models";
 import { ethers } from "ethers";
 import { erc20Abi, Hex } from "viem";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useQuery } from "wagmi/query";
-import {
-  useWriteContract,
-  useWaitForTransactionReceipt,
-} from "wagmi";
-import { CONTRACT_ADDRESSES } from "~/constants";
-import NonfungiblePositionManagerAbi from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json';
-import { Position, TokenItem } from "~/models";
-import { provider } from "./provider";
-import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import IQuoterABI from '@uniswap/v3-periphery/artifacts/contracts/interfaces/IQuoterV2.sol/IQuoterV2.json';
 
-import { Token } from '@uniswap/sdk-core';
-import { computePoolAddress, Pool, Route } from "@uniswap/v3-sdk";
-import { Percent } from '@uniswap/sdk-core';
+import { provider } from "./provider";
 
 export function useTokenNames(token0Address: string, token1Address: string) {
   return useQuery({
@@ -126,12 +119,20 @@ export function useSafeTransfer() {
     data: receipt,
   } = useWaitForTransactionReceipt({ hash });
 
-  const safeTransferFrom = async (userAddress: Hex, tokenID: bigint, amountIn: bigint) => {
-    const expectedAmount = await getMinAmount(CONTRACT_ADDRESSES.wethAddress, CONTRACT_ADDRESSES.usdc, amountIn)
+  const safeTransferFrom = async (
+    userAddress: Hex,
+    tokenID: bigint,
+    amountIn: bigint
+  ) => {
+    const expectedAmount = await getMinAmount(
+      CONTRACT_ADDRESSES.wethAddress,
+      CONTRACT_ADDRESSES.usdc,
+      amountIn
+    );
 
     const amountOutMinimum = ethers.AbiCoder.defaultAbiCoder().encode(
-      ["uint256"], 
-      [expectedAmount]          
+      ["uint256"],
+      [expectedAmount]
     );
 
     await writeContractAsync({
@@ -153,12 +154,21 @@ export function useSafeTransfer() {
   };
 }
 
-export async function getMinAmount(tokenInAddress: string, tokenOutAddress: string, amountIn: bigint, slippage: number = 5, fee: number = 10000) {
-
+export async function getMinAmount(
+  tokenInAddress: string,
+  tokenOutAddress: string,
+  amountIn: bigint,
+  slippage: number = 5,
+  fee: number = 10000
+) {
   if (!tokenInAddress || !tokenOutAddress) {
-    return
+    return;
   }
-  const quoterContract = new ethers.Contract("0x3d4e44eb1374240ce5f1b871ab261cd16335b76a", IQuoterABI.abi, provider);
+  const quoterContract = new ethers.Contract(
+    "0x3d4e44eb1374240ce5f1b871ab261cd16335b76a",
+    IQuoterABI.abi,
+    provider
+  );
 
   const params = {
     tokenIn: tokenInAddress,
@@ -166,11 +176,13 @@ export async function getMinAmount(tokenInAddress: string, tokenOutAddress: stri
     fee: fee,
     amountIn: amountIn,
     sqrtPriceLimitX96: 0,
-  }; 
+  };
 
-  const { amountOut } = await quoterContract.quoteExactInputSingle.staticCall(params); 
+  const { amountOut } =
+    await quoterContract.quoteExactInputSingle.staticCall(params);
 
-  const slippageAdjustedAmountOut = BigInt(amountOut) * BigInt((100 - slippage)) / BigInt(100)
+  const slippageAdjustedAmountOut =
+    (BigInt(amountOut) * BigInt(100 - slippage)) / BigInt(100);
 
   return slippageAdjustedAmountOut;
 }
