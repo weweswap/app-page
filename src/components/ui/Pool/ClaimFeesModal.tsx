@@ -29,7 +29,7 @@ const ClaimedFeesModal = ({ wewePosition, opened, onClose, onClaim, loading}: Cl
         const data = await usdConverter(estimateFeeWei)
         setEstimateFee(data)
       } catch (error) {
-        console.log("Error:", error)
+        console.log("Error calculating fees:", error)
       }
     }
   }
