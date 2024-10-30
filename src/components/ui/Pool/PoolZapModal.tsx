@@ -1,149 +1,203 @@
-import { Card, Divider, ModalRootProps } from "@mantine/core";
+import {Divider, Loader, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
-import { useState } from "react";
-import { Button, Dropdown, Modal, Typography } from "~/components/common";
-import { DUMMY_POOL_OPTIONS } from "./dummy";
+import { useEffect, useMemo } from "react";
+import { Button, Modal, Typography } from "~/components/common";
+import { Hex } from "viem";
+import { usePoolContext } from "./PoolContext";
+import { useAccount } from "wagmi";
+import { useZapIn } from "../../../hooks/useZapIn";
+import { ethers } from "ethers";
+import { useApproveToken } from "../../../hooks/useApproveToken";
+
+export type PayloadZapInModal = {
+  zapInAmount: number;
+  zapInTokenAddress: Hex;
+};
+
+const handleDetails = (hash: string) => {
+  window.open(
+    `https://basescan.org/tx/${hash}`,
+    "_blank",
+    "noopener,noreferrer"
+  );
+};
 
 type ZapModalProps = {
-    onClose: () => void;
-    onOpen: () => void;
-    onConfirm: () => void;
-    onSettings: () => void
-  } & ModalRootProps;
+  onOpen: () => void;
+  onClose: () => void;
+  onTxError: (hash?: string) => void;
+  data?: PayloadZapInModal;
+} & ModalRootProps;
 
-export const PoolZapModal = (props: ZapModalProps) => {
+const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
+  const { selectedPool } = usePoolContext();
+  const { address } = useAccount();
 
-  const poolOptions = DUMMY_POOL_OPTIONS.map((pool) => ({
-    value: pool.symbol,
-    icon: pool.icon,
-  }));
+  const {
+    hash: hashApproveToken,
+    isPending: isPendingApproveToken,
+    isConfirming: isConfirmingApproveToken,
+    isError: isErrorApproveToken,
+    approve: approveToken,
+  } = useApproveToken();
 
-  const [migrateRange, setMigrateRange] = useState<number>(0);
+  const {
+    hash: hashZapIn,
+    isPending: isPendingZapIn,
+    isConfirming: isConfirmingZapIn,
+    isError: isErrorZapIn,
+    zapIn,
+  } = useZapIn();
+
+  // Determine the zap-in token based on the address
+  const zapInToken = useMemo(() => {
+    if (!data || !selectedPool) return null;
+    const { zapInTokenAddress } = data;
+    if (
+      zapInTokenAddress.toLowerCase() ===
+      selectedPool.token0.address.toLowerCase()
+    ) {
+      return selectedPool.token0;
+    } else if (
+      zapInTokenAddress.toLowerCase() ===
+      selectedPool.token1.address.toLowerCase()
+    ) {
+      return selectedPool.token1;
+    }
+  }, [data, selectedPool]);
+
+  useEffect(() => {
+    async function deposit() {
+      if (selectedPool && data && address) {
+        await approveToken(
+          data.zapInTokenAddress,
+          "0x9377daBe42574cFB0BA202ed1A3a133C68fA1Bfd",
+          ethers.parseUnits(data.zapInAmount.toString(), zapInToken?.decimals),
+        );
+        await zapIn(
+          selectedPool.address,
+          zapInToken!.address,
+          ethers
+            .parseUnits(String(data.zapInAmount), zapInToken!.decimals)
+            .toString()
+        );
+      }
+    }
+    deposit();
+  }, [selectedPool, data, address]);
+
+  useEffect(() => {
+    if (isErrorApproveToken || isErrorZapIn) {
+      onTxError(hashApproveToken || hashZapIn);
+    }
+  }, [isErrorApproveToken, isErrorZapIn, hashApproveToken, hashZapIn]);
+
+  const finishSuccessfully =
+    hashApproveToken &&
+    hashZapIn &&
+    (!isPendingApproveToken || !isPendingZapIn) &&
+    (!isConfirmingApproveToken || !isConfirmingZapIn);
 
   return (
-    
-    <Modal title="ZAP IN" onClose={props.onClose} opened={props.opened}>
-      <div className="flex items-center justify-between gap-3">
-      <Image
-                src="/img/icons/arrow_right.svg"
-                width={16}
-                height={16}
-                alt=""
-              />
-              <div className="flex-1 flex items-center gap-3">
-              <div className='flex items-center'>
-                <Image className='min-w-6 min-h-6' src="/img/tokens/wewe.svg" alt='' width={24} height={24} />
-                <Image className='ml-[-10px] min-w-6 min-h-6'  src="/img/tokens/usdc.png" alt=''  width={24} height={24} />
-              </div>
-                <Typography secondary size="xs">
-                  WEWE/USDC
-                </Typography>
-              </div>
-            </div>
-            <Card className="bg_dark">
-        <div className="flex items-center justify-between">
-          <Typography size="xs" secondary>SELECT AMOUNT</Typography>
-          <button onClick={props.onSettings} className="flex items-center gap-2">
-            <Image
-              src="/img/icons/settings.svg"
-              width={24}
-              height={24}
-              alt=""
-            />
-          </button>
-        </div>
-        <div className="flex items-center justify-between">
-        <div className="flex md:flex-row flex-col gap-4 justify-between w-full my-5">
-          <div className="flex flex-col md:w-1/2  gap-5">
-            <input value={35.56} className="inputField"/>
-          </div>
-         
-          <div className="flex flex-col md:w-1/2   gap-5">   
-            <Dropdown
-              defaultValue="USDC"
-              options={poolOptions}
-              className="w-full bg-black"
-            />
-          </div>
-        </div>
-        </div>
-        <div className="pb-1">
-          <input
-            type="range"
-            min="0"
-            max="100"
-            defaultValue="50"
-            className="w-full h-2 bg-[#33E6BF] rounded-lg appearance-none cursor-pointer "
+    <Modal title="ZAP IN" onClose={onClose} opened={opened}>
+      <div className="flex items-center justify-between gap-2">
+        <Typography size="lg" secondary>
+          ZAP-IN
+        </Typography>
+      </div>
+      <div className="flex gap-4 ">
+        <Typography fw={1000} className="text_light_gray" size="sm">
+          {data?.zapInAmount} {zapInToken?.symbol}
+        </Typography>
+        <div className="flex items-center">
+          <Image
+            src={zapInToken!.icon!}
+            alt=""
+            height={24}
+            width={24}
           />
         </div>
-        <div className="flex items-center justify-between py-3">
-
-          <div>
-          </div>
-          <div className="flex items-center gap-2 font-extrabold text-black text-sm">
-          <Button className="bg_turq">
-                     <Typography secondary size="xs" fw={700} tt="uppercase">50%</Typography>
-                </Button>
-                <Button className="bg_turq">
-                     <Typography secondary size="xs" fw={700} tt="uppercase">MAX</Typography>
-                </Button>
-          </div>
-        </div>
-      </Card>
-
-      <div className="flex items-center justify-between text-center">
-        <Typography size="xs">Zap Route</Typography>
-        <Image src="/img/icons/arrow_right.svg" alt="" height={12} width={12} />
-        <Typography size="xs">Kyber Swap Aggregator</Typography>
-        <Image src="/img/icons/arrow_right.svg" alt="" height={12} width={12} />
-        <Typography size="xs">Uniswap v3</Typography>
       </div>
-
-      <div className="w-full">
-        <Typography secondary size="xs">RANGE</Typography>
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 py-3  w-full">
-          <button disabled
-            className={`bg_gray flex items-center justify-center gap-2 px-3 py-2`}
-          >
-            <Image src="/img/links/wide.svg" width={12} height={12} alt="" />
-            <Typography size="xs">WIDE</Typography>
-          </button>
-          <button disabled
-            className={`bg_gray flex items-center justify-center gap-2 px-3 py-2`}
-          >
-            <Image src="/img/links/mid.svg" width={12} height={12} alt="" />
-            <Typography size="xs">MID</Typography>
-          </button>
-          <button disabled
-            className={`bg_gray flex items-center justify-center gap-2 px-3 py-2`}
-          >
-            <Image src="/img/links/narrow.svg" width={12} height={12} alt="" />
-            <Typography size="xs">NARROW</Typography>
-          </button>
-          <button 
-            className={`bg_gray flex items-center justify-center gap-2 px-3 py-2`}
-          >
-            <Image src="/img/icons/Infinity.svg" width={12} height={12} alt="" />
-            <Typography size="xs">INFINITY</Typography>
-          </button>
+      <div className="flex flex-col gap-3">
+        <div className="flex gap-3 items-center">
+          {isPendingApproveToken ||
+          isConfirmingApproveToken ||
+          !hashApproveToken ? (
+            <>
+              <Loader color="grey" />
+              <Typography>
+                Please Approve {zapInToken!.symbol}
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Image
+                src="/img/icons/success.svg"
+                width={36}
+                height={36}
+                alt=""
+              />
+              <Typography>{zapInToken!.symbol} Approved</Typography>
+            </>
+          )}
         </div>
-        <div className="flex justify-between gap-1">
-          <Typography secondary size="xs">EXPECTED DEPOSIT</Typography>
-          <div className="text-right">
-            <Typography fw={900} size="lg">$34</Typography>
-            <Typography fw={500} size="xs">0.0000001231231 SHARES </Typography>
-          </div>
+        <div className="flex gap-3 items-center">
+          {isPendingZapIn || !hashZapIn ? (
+            <>
+              <Loader color="grey" />
+              <Typography>Please deposit tokens</Typography>
+            </>
+          ) : (
+            <>
+              <Image
+                src="/img/icons/success.svg"
+                width={36}
+                height={36}
+                alt=""
+              />
+              <Typography>Tokens deposited</Typography>
+            </>
+          )}
         </div>
-        <div className="flex items-center justify-between gap-2 py-4">
-        <Typography fw={500} size="xs">0.05% Performance Fee</Typography>
-        <Typography fw={500} size="xs">Estimated ammount: $0,017</Typography>
-        </div>
-       <Button onClick={props.onConfirm} className="w-full"> 
-        <Typography secondary size="sm">
-          CONFIRM
+        {!isConfirmingApproveToken &&
+          !isConfirmingZapIn &&
+          !finishSuccessfully && (
+            <div className="flex gap-3 items-center">
+              <Image
+                src="/img/icons/inform.svg"
+                width={36}
+                height={36}
+                alt=""
+              />
+              <Typography>Please sign transaction</Typography>
+            </div>
+          )}
+      </div>
+      <Divider className="border-blue-700" />
+      <div className="flex justify-end">
+        <Typography className="text_light_gray" size="xs">
+          Total fee cost: $0.10
         </Typography>
-       </Button>
       </div>
+      {finishSuccessfully && (
+        <div className="flex flex-col gap-4 w-full">
+          <Button onClick={onClose} className="w-full">
+            <Typography secondary size="xs" fw={700} tt="uppercase">
+              COMPLETED
+            </Typography>
+          </Button>
+          <Button
+            className="w-full md:w-auto"
+            onClick={() => handleDetails(hashZapIn!)}
+          >
+            <Typography secondary size="xs" fw={700} tt="uppercase">
+              VIEW DETAILS
+            </Typography>
+          </Button>
+        </div>
+      )}
     </Modal>
   );
 };
+
+export default PoolZapModal;

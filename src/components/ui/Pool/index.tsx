@@ -16,6 +16,7 @@ import DepositSuccessModal from "./DepositSuccessModal";
 import WithdrawModal, { PayloadWithdrawalModal } from "./WithdrawModal";
 import WithdrawSuccessModal, { PayloadWithdrawalSuccess } from "./WithdrawSuccessModal";
 import { Hex } from "viem";
+import PoolZapModal, { PayloadZapInModal } from "./PoolZapModal";
 
 
 export const Pool = () => {
@@ -25,6 +26,8 @@ export const Pool = () => {
   const [payloadApprovalModal, setPayloadApprovalModal] = useState<PayloadApproveModal>()
   const [payloadWithdrawalModal, setPayloadWithdrawalModal] = useState<PayloadWithdrawalModal>()
   const [payloadWithdrawalSuccessModal, setPayloadWithdrawalSuccessModal] = useState<PayloadWithdrawalSuccess>()
+  const [payloadZapInModal, setPayloadZapInModal] = useState<PayloadZapInModal>()
+
   const [openedDepositModal,{ open: openDepositModal, close: closeDepositModal }] =
   useDisclosure(false);
   const [openedDepositSuccessModal,{ open: openDepositSuccessModal, close: closeDepositSuccessModal }] =
@@ -34,6 +37,9 @@ export const Pool = () => {
   useDisclosure(false);
   const [openedWithdrawSuccessModal,{ open: openWithdrawSuccessModal, close: closeWithdrawSuccessModal }] =
   useDisclosure(false);
+  const [openedZapInModal,{ open: openZapInModal, close: closeZapInModal }] =
+  useDisclosure(false);
+
   const [
     openedApproveModal,
     { open: openApproveModal, close: closeApproveModal },
@@ -148,6 +154,16 @@ export const Pool = () => {
     closeWithdrawModal()
   }
 
+  const handleZapInModal = (zapInAmount: number, zapInTokenAddress: Hex) => {
+    setPayloadZapInModal({zapInAmount, zapInTokenAddress})
+    openZapInModal()
+  }
+
+  const handleCloseZapIn = () => {
+    setPayloadZapInModal(undefined)
+    closeZapInModal()
+  }
+
   return (
     <>
       {step === 0 && (
@@ -155,6 +171,7 @@ export const Pool = () => {
           onClaim={handleClaimFeesModal}
           onDeposit={handleApproveTokenModal}
           onWithdraw={handleWithdrawalModal}
+          onZapIn={handleZapInModal}
           onNext={() => setStep(1)}
           onBack={() => setStep(0)} 
           onAdd={openAdd}
@@ -198,7 +215,16 @@ export const Pool = () => {
           data={payloadWithdrawalModal}
         />
       }
-
+      {
+        payloadZapInModal &&
+        <PoolZapModal 
+          opened={openedZapInModal}
+          onOpen={() => {}}
+          onClose={handleCloseZapIn}
+          onTxError={handleErrorModal}
+          data={payloadZapInModal}
+        />
+      }
       {
         payloadApprovalModal &&
         <ApproveTokens
