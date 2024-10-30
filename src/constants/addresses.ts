@@ -8,7 +8,8 @@ export const CONTRACT_ADDRESSES = {
   helper: "0x76B4B28194170f9847Ae1566E44dCB4f2D97Ac24" as `0x${string}`,
   resolver: "0x4faFE3078F0aFa3048AfD19522e047EC764FBF48" as `0x${string}`,
   feeManager: "0xCCa8EFb0537bD55a372c9bE076650e5B88251fDa" as `0x${string}`,
-  weweVaultFactory: "0x7Af5148b733354FC25eAE912Ad5189e0E0a90670" as `0x${string}`,
+  weweVaultFactory:
+    "0x7Af5148b733354FC25eAE912Ad5189e0E0a90670" as `0x${string}`,
   weweVault: "0x3Fd7957D9F98D46c755685B67dFD8505468A7Cb6" as `0x${string}`,
   wethAddress: "0x4200000000000000000000000000000000000006" as `0x${string}`,
   quoter: "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a" as `0x${string}`,

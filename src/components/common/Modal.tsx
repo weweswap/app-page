@@ -1,5 +1,6 @@
-import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
+import { Divider, ModalRootProps, Modal as MtModal } from "@mantine/core";
+
 import { Typography } from "./Typography";
 
 type ModalProps = {
@@ -11,10 +12,12 @@ export const Modal = ({ title, children, ...props }: ModalProps) => {
     <MtModal.Root centered {...props}>
       <MtModal.Overlay />
       <MtModal.Content
-        classNames={{ content: "bg-black border_stroke text-white p-4 sm:min-w-[32rem] " }}
+        classNames={{
+          content: "bg-black border_stroke text-white p-4 sm:min-w-[32rem] ",
+        }}
       >
         <MtModal.Header className="bg-black p-0 ">
-          <div className="w-full flex items-center justify-between pb-3 ">
+          <div className="flex w-full items-center justify-between pb-3 ">
             <MtModal.Title>
               <Typography secondary size="lg" tt="uppercase">
                 {title}

@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Hex } from "viem";
-import { useAccount, usePublicClient, useReadContract, useWatchContractEvent, useWriteContract } from "wagmi";
 import MemeEaterAbi from "~/lib/abis/MemeEaterABI";
 import * as dn from "dnum";
+import { Hex } from "viem";
+import {
+  useAccount,
+  usePublicClient,
+  useReadContract,
+  useWatchContractEvent,
+  useWriteContract,
+} from "wagmi";
 
 function formatMinutesToHumanReadable(minutes: number) {
   const days = Math.floor(minutes / 60 / 24);
@@ -20,8 +26,8 @@ function formatMinutesToHumanReadable(minutes: number) {
   return "0m";
 }
 
-export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
-  const [pendingToConfirm, setPendingToConfirm] = useState(false)
+export function useMemeEat(eaterAddress: Hex) {
+  const [pendingToConfirm, setPendingToConfirm] = useState(false);
   const {
     data: hash,
     isError: isCreationError,
@@ -57,8 +63,8 @@ export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
 }
 
 export function useMemeEaterRate(address: Hex): {
-  rate: number,
-  isLoading: boolean
+  rate: number;
+  isLoading: boolean;
 } {
   const { data, isLoading, refetch } = useReadContract({
     abi: MemeEaterAbi,
@@ -75,13 +81,11 @@ export function useMemeEaterRate(address: Hex): {
     },
   });
 
-
   return {
-    rate: dn.toNumber(dn.from([data as bigint ?? 0n, 3])),
-    isLoading
-  }
+    rate: dn.toNumber(dn.from([(data as bigint) ?? 0n, 3])),
+    isLoading,
+  };
 }
-
 
 export function useVestingsInfo(address: Hex) {
   const { address: account, isConnected } = useAccount();
@@ -97,13 +101,12 @@ export function useVestingsInfo(address: Hex) {
   });
 
   return {
-    lockedAmount: data?.[0] as bigint ?? 0n,
-    lockedUntil: data?.[1] as bigint ?? 0n,
+    lockedAmount: (data?.[0] as bigint) ?? 0n,
+    lockedUntil: (data?.[1] as bigint) ?? 0n,
     isLoading,
-    refetch
+    refetch,
   };
 }
-
 
 export function useMemeEaterVestingDuration(address: Hex) {
   const { data, isLoading } = useReadContract({
@@ -121,9 +124,8 @@ export function useMemeEaterVestingDuration(address: Hex) {
   };
 }
 
-
 export function useMemeEaterClaim(eaterAddress: Hex) {
-  const [pendingToConfirm, setPendingToConfirm] = useState(false)
+  const [pendingToConfirm, setPendingToConfirm] = useState(false);
   const {
     data: hash,
     isError: isCreationError,
@@ -164,15 +166,14 @@ export function useMemeGetTotalWeWe(eaterAddress: Hex, amount: bigint) {
     args: [amount],
     query: {
       enabled: !!amount,
-    }
+    },
   });
 
   return {
-    totalWeWe: data as bigint ?? 0n,
-    isLoading
-  }
+    totalWeWe: (data as bigint) ?? 0n,
+    isLoading,
+  };
 }
-
 
 export function useMemeEaterIsPaused(eaterAddress: Hex) {
   const { data, isLoading, refetch } = useReadContract({
@@ -192,6 +193,6 @@ export function useMemeEaterIsPaused(eaterAddress: Hex) {
 
   return {
     isPaused: data,
-    isLoading
-  }
+    isLoading,
+  };
 }

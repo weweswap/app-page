@@ -1,8 +1,11 @@
 "use client";
-import { TransferHome } from "./TransferHome";
+
 import { useDisclosure } from "@mantine/hooks";
-import { TransferModal } from "./TransferModal";
+
 import { TransferComplete } from "./TransferComplete";
+import { TransferHome } from "./TransferHome";
+import { TransferModal } from "./TransferModal";
+
 export const Transfer = () => {
   const [openedTransfer, { open: openTrasfer, close: closeTransfer }] =
     useDisclosure(false);

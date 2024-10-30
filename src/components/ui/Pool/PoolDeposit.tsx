@@ -1,20 +1,21 @@
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Dropdown, Typography } from "~/components/common";
-import { usePoolContext } from "./PoolContext";
+import Image from "next/image";
 import { Divider, NumberInput } from "@mantine/core";
-import clsx from "clsx";
-import { verdana } from "~/fonts";
-import { TOKEN_LIST } from "~/constants";
-import { useTokenBalance } from "~/hooks/useTokenBalance";
-import { useAccount } from "wagmi";
-import RangeSlider from "~/components/common/RangeSlider";
-import { ethers } from "ethers";
-import { useGetPrices } from "~/hooks/useGetPrices";
-import { WewePosition } from "~/hooks/useWewePositions";
-import { PoolChartCard } from "./PoolChartCard";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { Button, Card, Dropdown, Typography } from "~/components/common";
+import RangeSlider from "~/components/common/RangeSlider";
+import { TOKEN_LIST } from "~/constants";
+import { verdana } from "~/fonts";
+import { useGetPrices } from "~/hooks/useGetPrices";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { WewePosition } from "~/hooks/useWewePositions";
 import { formatNumber } from "~/utils";
+import clsx from "clsx";
+import { ethers } from "ethers";
+import { useAccount } from "wagmi";
+
+import { PoolChartCard } from "./PoolChartCard";
+import { usePoolContext } from "./PoolContext";
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -110,32 +111,32 @@ const PoolDeposit = ({
 
       const formattedToken1 = Number(
         ethers.formatUnits(resultToken1, selectedPool?.token1.decimals)
-      )
+      );
 
-      const token1Equivalent =
-        (formattedToken0 * prices.priceToken0) / prices.priceToken1;
+      // const token1Equivalent =
+      //   (formattedToken0 * prices.priceToken0) / prices.priceToken1;
       const token0Equivalent =
         (formattedToken1 * prices.priceToken1) / prices.priceToken0;
 
       const walletToken0 = Number(
         ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
-      )
+      );
 
       const walletToken1 = Number(
         ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
-      )
+      );
 
-
-      if (prices.priceToken0 * walletToken0 / prices.priceToken1 < walletToken1) {
+      if (
+        (prices.priceToken0 * walletToken0) / prices.priceToken1 <
+        walletToken1
+      ) {
         setInputValueToken0(formattedToken0);
         setFormattedShares(formattedShares);
         setInputValueToken1(formattedToken1);
-      }
-
-      else {
+      } else {
         setInputValueToken1(formattedToken1);
         setFormattedShares(formattedShares);
-        setInputValueToken0(Number(token0Equivalent.toFixed(6)))
+        setInputValueToken0(Number(token0Equivalent.toFixed(6)));
       }
     }
   }, [prices, sliderValue, balanceToken0, selectedPool]);
@@ -144,39 +145,44 @@ const PoolDeposit = ({
     if (prices) {
       const token1Equivalent =
         (newValue * prices.priceToken0) / prices.priceToken1;
-      setInputValueToken0(newValue)
+      setInputValueToken0(newValue);
       setInputValueToken1(Number(token1Equivalent.toFixed(6)));
     }
-  }
+  };
 
   const handleChangeToken1 = (newValue: number) => {
     if (prices) {
       const token0Equivalent =
         (newValue * prices.priceToken1) / prices.priceToken0;
-      setInputValueToken1(newValue)
+      setInputValueToken1(newValue);
       setInputValueToken0(Number(token0Equivalent.toFixed(6)));
     }
-  }
+  };
 
   const handleWithdraw = () => {
-    if(!isConnected) {
-      openConnectModal && openConnectModal()
-      return
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+      return;
     }
-    try{
-      const sharesInBigNumber = ethers.parseUnits(formattedShares.toString(), 18);
-      onWithdraw(sharesInBigNumber > balanceShares ? balanceShares : sharesInBigNumber);
+    try {
+      const sharesInBigNumber = ethers.parseUnits(
+        formattedShares.toString(),
+        18
+      );
+      onWithdraw(
+        sharesInBigNumber > balanceShares ? balanceShares : sharesInBigNumber
+      );
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   return (
     selectedPool && (
       <>
         <Card>
-          <div className=" w-full min-h-[10rem] ">
-            <div className="sm:py-4  flex items-center justify-between gap-3 flex-wrap">
+          <div className=" min-h-40 w-full ">
+            <div className="flex  flex-wrap items-center justify-between gap-3 sm:py-4">
               <div className="flex items-center gap-2">
                 <button onClick={onBack}>
                   <Typography secondary size="xl">
@@ -208,7 +214,7 @@ const PoolDeposit = ({
                 </Typography>
               </div>
               <div></div>
-              <div className="lg:text-right flex flex-col gap-2">
+              <div className="flex flex-col gap-2 lg:text-right">
                 <Typography size="xs" ta="center" className="text_light_gray">
                   APR
                 </Typography>
@@ -217,15 +223,15 @@ const PoolDeposit = ({
                 </Typography>
               </div>
             </div>
-            <div className="flex items-center justify-between gap-4 flex-wrap py-4 sm:py-1">
-              <div className="flex items-center gap-2 max-w-full">
+            <div className="flex flex-wrap items-center justify-between gap-4 py-4 sm:py-1">
+              <div className="flex max-w-full items-center gap-2">
                 <Image
                   src="/img/icons/memes.svg"
                   width={20}
                   height={20}
                   alt=""
                 />
-                <Typography size="xs" className="break-words line-clamp-1">
+                <Typography size="xs" className="line-clamp-1 break-words">
                   {selectedPool.address}
                 </Typography>
               </div>
@@ -244,13 +250,13 @@ const PoolDeposit = ({
                 </Typography>
               </div>
             </div>
-            <Divider className="border-blue-700 mt-4" />
+            <Divider className="mt-4 border-blue-700" />
             {enableClaimBlock && (
               <div className="mt-10">
-                <div className="flex gap-20 justify-center mb-5">
+                <div className="mb-5 flex justify-center gap-20">
                   <div>
                     <div className="flex items-center justify-center">
-                      <Typography size="xs" className="font-bold mr-2">
+                      <Typography size="xs" className="mr-2 font-bold">
                         PENDING REWARDS
                       </Typography>
                       <Image
@@ -260,18 +266,19 @@ const PoolDeposit = ({
                         height={24}
                       />
                     </div>
-                    <Typography size="lg" className="font-bold py-4 text-center">
-                      {
-                        formatNumber(selectedPosition?.pendingChaosReward || 0, {
-                          decimalDigits: 6
-                        })
-                      }
+                    <Typography
+                      size="lg"
+                      className="py-4 text-center font-bold"
+                    >
+                      {formatNumber(selectedPosition?.pendingChaosReward || 0, {
+                        decimalDigits: 6,
+                      })}
                     </Typography>
                   </div>
 
                   <div>
                     <div className="flex items-center justify-center">
-                      <Typography size="xs" className="font-bold mr-2">
+                      <Typography size="xs" className="mr-2 font-bold">
                         PENDING FEES
                       </Typography>
                       <Image
@@ -281,15 +288,16 @@ const PoolDeposit = ({
                         height={24}
                       />
                     </div>
-                    <Typography size="lg" className="font-bold py-4 text-center">
-                      ${
-                        formatNumber(selectedPosition?.pendingUsdcReward || 0, {
-                          decimalDigits: 6
-                        })
-                      }
+                    <Typography
+                      size="lg"
+                      className="py-4 text-center font-bold"
+                    >
+                      $
+                      {formatNumber(selectedPosition?.pendingUsdcReward || 0, {
+                        decimalDigits: 6,
+                      })}
                     </Typography>
                   </div>
-
                 </div>
                 <button
                   className="custom_btn w-full uppercase"
@@ -303,12 +311,13 @@ const PoolDeposit = ({
                 </button>
               </div>
             )}
-            <div className="mt-5 flex items-center justify-between w-full gap-6 md:flex-row flex-col">
-              <div className="bg_light_dark w-full flex items-center justify-between gap-3 h-[3rem]">
+            <div className="mt-5 flex w-full flex-col items-center justify-between gap-6 md:flex-row">
+              <div className="bg_light_dark flex h-12 w-full items-center justify-between gap-3">
                 <div
                   onClick={() => setSelectedAction("deposit")}
-                  className={`${selectedAction === "deposit" && "nav_selected"
-                    } nav`}
+                  className={`${
+                    selectedAction === "deposit" && "nav_selected"
+                  } nav`}
                 >
                   <Typography size="sm" tt="uppercase">
                     Deposit
@@ -316,8 +325,9 @@ const PoolDeposit = ({
                 </div>
                 <div
                   onClick={() => setSelectedAction("withdraw")}
-                  className={`${selectedAction === "withdraw" && "nav_selected"
-                    } nav`}
+                  className={`${
+                    selectedAction === "withdraw" && "nav_selected"
+                  } nav`}
                 >
                   <Typography size="sm" tt="uppercase">
                     Withdraw
@@ -330,8 +340,8 @@ const PoolDeposit = ({
                 <div className="mt-4">
                   <Typography>Deposit amount</Typography>
                 </div>
-                <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
-                  <div className="bg_gray my-3 col-span-12 md:col-span-6 md:flex md:items-center md:mr-4">
+                <div className="grid grid-cols-12 items-center justify-between gap-3 md:flex-row">
+                  <div className="bg_gray col-span-12 my-3 md:col-span-6 md:mr-4 md:flex md:items-center">
                     <Dropdown
                       value={TOKEN_LIST[inputTokenIndex].address}
                       options={TOKEN_LIST.map((token, index) => ({
@@ -365,7 +375,7 @@ const PoolDeposit = ({
                   {/* <button className="md:col-span-2 col-span-12 flex justify-center">
                       <Image src="/img/icons/swapwewe.svg" alt="" width={36} height={36} />
                     </button> */}
-                  <div className="bg_gray my-3 col-span-12 md:col-span-6 md:flex md:items-center md:ml-4">
+                  <div className="bg_gray col-span-12 my-3 md:col-span-6 md:ml-4 md:flex md:items-center">
                     <Dropdown
                       value={TOKEN_LIST[secondaryTokenIndex].address}
                       options={TOKEN_LIST.map((token, index) => ({
@@ -405,7 +415,7 @@ const PoolDeposit = ({
                     onChange={(e) => setSliderValue(Number(e.target.value))}
                   />
                 </div>
-                <div className="flex items-center justify-evenly text_light_gray">
+                <div className="text_light_gray flex items-center justify-evenly">
                   <div className="flex items-center gap-2">
                     <Image
                       alt=""
@@ -415,9 +425,13 @@ const PoolDeposit = ({
                     />
                     <Typography size="xs">
                       {formatNumber(
-                        ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals), {
-                        decimalDigits: 6
-                      }
+                        ethers.formatUnits(
+                          balanceToken0,
+                          selectedPool?.token0.decimals
+                        ),
+                        {
+                          decimalDigits: 6,
+                        }
                       )}{" "}
                       {selectedPool?.token0.symbol}
                     </Typography>
@@ -431,15 +445,19 @@ const PoolDeposit = ({
                     />
                     <Typography size="xs">
                       {formatNumber(
-                        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals), {
-                        decimalDigits: 6
-                      }
+                        ethers.formatUnits(
+                          balanceToken1,
+                          selectedPool?.token1.decimals
+                        ),
+                        {
+                          decimalDigits: 6,
+                        }
                       )}{" "}
                       {selectedPool?.token1.symbol}
                     </Typography>
                   </div>
                 </div>
-                <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
+                <div className="flex justify-end gap-4 text-sm font-extrabold text-black">
                   <Button
                     className="bg_turq"
                     onClick={() => setSliderValue(50)}
@@ -458,19 +476,33 @@ const PoolDeposit = ({
                   </Button>
                 </div>
                 <Button
-                  disabled={BigInt(ethers.parseUnits(String(inputValueToken1 || 0), selectedPool.token1.decimals)) > balanceToken1}
-                  className="w-full mt-4"
+                  disabled={
+                    BigInt(
+                      ethers.parseUnits(
+                        String(inputValueToken1 || 0),
+                        selectedPool.token1.decimals
+                      )
+                    ) > balanceToken1
+                  }
+                  className="mt-4 w-full"
                   onClick={
                     isConnected
                       ? () => {
-                        onDeposit(inputValueToken0, inputValueToken1);
-                        setSliderValue(50);
-                      }
+                          onDeposit(inputValueToken0, inputValueToken1);
+                          setSliderValue(50);
+                        }
                       : () => openConnectModal && openConnectModal()
                   }
                 >
                   <Typography secondary tt="uppercase">
-                    {BigInt(ethers.parseUnits(String(inputValueToken1 || 0), selectedPool.token1.decimals)) > balanceToken1 ? "Not Enough Balance" : "Deposit"}
+                    {BigInt(
+                      ethers.parseUnits(
+                        String(inputValueToken1 || 0),
+                        selectedPool.token1.decimals
+                      )
+                    ) > balanceToken1
+                      ? "Not Enough Balance"
+                      : "Deposit"}
                   </Typography>
                 </Button>
               </div>
@@ -488,7 +520,7 @@ const PoolDeposit = ({
                         index: 0,
                       },
                     ]}
-                    className="md:col-span-3 col-span-6 w-fit "
+                    className="col-span-6 w-fit md:col-span-3 "
                     disabled
                   />
                   <NumberInput
@@ -508,35 +540,45 @@ const PoolDeposit = ({
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center justify-center gap-5">
-                   <div className="flex items-center gap-2">
-                   <Image src={selectedPool?.token0.icon} height={24} width={24} alt="" />
-                    <Typography secondary>
-                    {selectedPool?.token0.chain}
-                    </Typography>
-                   </div>
-                   <div className="flex items-center gap-2">
-                   <Image src={selectedPool?.token1.icon} height={24} width={24} alt="" />
-                    <Typography secondary>
-                    {selectedPool?.token1.symbol}
-                    </Typography>
-                   </div>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src={selectedPool?.token0.icon}
+                        height={24}
+                        width={24}
+                        alt=""
+                      />
+                      <Typography secondary>
+                        {selectedPool?.token0.chain}
+                      </Typography>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src={selectedPool?.token1.icon}
+                        height={24}
+                        width={24}
+                        alt=""
+                      />
+                      <Typography secondary>
+                        {selectedPool?.token1.symbol}
+                      </Typography>
+                    </div>
                   </div>
-                <div className="flex items-center justify-center gap-2 py-3">
-                  <Image
-                    alt=""
-                    src="/img/icons/wallet.svg"
-                    width={24}
-                    height={24}
-                  />
-                  <Typography size="xs" className="text_light_gray">
-                    {parseFloat(
-                      Number(
-                        ethers.formatUnits(balanceShares.toString(), 18)
-                      ).toFixed(8)
-                    )}{" "}
-                    SHARES
-                  </Typography>
-                </div>
+                  <div className="flex items-center justify-center gap-2 py-3">
+                    <Image
+                      alt=""
+                      src="/img/icons/wallet.svg"
+                      width={24}
+                      height={24}
+                    />
+                    <Typography size="xs" className="text_light_gray">
+                      {parseFloat(
+                        Number(
+                          ethers.formatUnits(balanceShares.toString(), 18)
+                        ).toFixed(8)
+                      )}{" "}
+                      SHARES
+                    </Typography>
+                  </div>
                 </div>
                 <div className="py-4">
                   <RangeSlider
@@ -546,7 +588,7 @@ const PoolDeposit = ({
                     onChange={(e) => setSliderValue(Number(e.target.value))}
                   />
                 </div>
-                <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
+                <div className="flex justify-end gap-4 text-sm font-extrabold text-black">
                   <Button
                     className="bg_turq"
                     onClick={() => setSliderValue(50)}
@@ -564,38 +606,51 @@ const PoolDeposit = ({
                     </Typography>
                   </Button>
                 </div>
-                <Button
-                  onClick={handleWithdraw}
-                  className="w-full mt-5 mb-2"
-                >
+                <Button onClick={handleWithdraw} className="mb-2 mt-5 w-full">
                   <Typography secondary>WITHDRAW</Typography>
                 </Button>
               </div>
             )}
           </div>
-          <Divider className="border-blue-700 mt-4" />
-          <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">
+          <Divider className="mt-4 border-blue-700" />
+          <div className="bg_light_dark my-5 flex h-full flex-wrap items-center justify-center p-5">
             <PoolChartCard address={selectedPool.address} />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 my-3 gap-4 gap-y-8">
+          <div className="my-3 grid grid-cols-2 gap-4 gap-y-8 md:grid-cols-4">
             <div className="flex flex-col items-center gap-4">
-              <Typography className="text-sm sm:text-base font-extrabold">TVL</Typography>
-              <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.tvl)}</Typography>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <Typography className="text-sm sm:text-base  font-extrabold">VOLUME</Typography>
-              <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.volume)}/day</Typography>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
-              <Typography className="text-sm sm:text-base">$ {selectedPool?.incentives}</Typography>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <Typography className="text-sm sm:text-base  font-extrabold line-clamp-1">DISTRIBUTED FEES</Typography>
+              <Typography className="text-sm font-extrabold sm:text-base">
+                TVL
+              </Typography>
               <Typography className="text-sm sm:text-base">
-                $ {new Intl.NumberFormat("en-US", {
+                $ {formatNumber(selectedPool.tvl)}
+              </Typography>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Typography className="text-sm font-extrabold  sm:text-base">
+                VOLUME
+              </Typography>
+              <Typography className="text-sm sm:text-base">
+                $ {formatNumber(selectedPool.volume)}/day
+              </Typography>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Typography className="text-sm font-extrabold  sm:text-base">
+                INCENTIVES
+              </Typography>
+              <Typography className="text-sm sm:text-base">
+                $ {selectedPool?.incentives}
+              </Typography>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Typography className="line-clamp-1 text-sm  font-extrabold sm:text-base">
+                DISTRIBUTED FEES
+              </Typography>
+              <Typography className="text-sm sm:text-base">
+                ${" "}
+                {new Intl.NumberFormat("en-US", {
                   minimumFractionDigits: 2,
-                }).format(Number(selectedPool.dailyFeesInUsd))}/day
+                }).format(Number(selectedPool.dailyFeesInUsd))}
+                /day
               </Typography>
             </div>
           </div>
@@ -605,7 +660,7 @@ const PoolDeposit = ({
             When you add liquidity to an Active Pool:
           </Typography>
 
-          <ul className="list-decimal list-inside text-sm">
+          <ul className="list-inside list-decimal text-sm">
             <li>Your assets are swapped to be added correctly to the pool.</li>
             <li>
               Any assets that can’t fit in the pool are refunded back to you.

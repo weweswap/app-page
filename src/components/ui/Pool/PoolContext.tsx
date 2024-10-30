@@ -6,11 +6,13 @@ interface PoolContextType {
   selectedPool?: WewePool;
   setSelectedPool: React.Dispatch<React.SetStateAction<WewePool | undefined>>;
   selectedPosition?: WewePosition;
-  setSelectedPosition: React.Dispatch<React.SetStateAction<WewePosition | undefined>>;
+  setSelectedPosition: React.Dispatch<
+    React.SetStateAction<WewePosition | undefined>
+  >;
 }
 
 const PoolContext = createContext<PoolContextType | undefined>(undefined);
-export type PoolStateProps = {};
+
 export const PoolProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -20,7 +22,7 @@ export const PoolProvider: React.FC<{ children: React.ReactNode }> = ({
     selectedPool,
     setSelectedPool,
     selectedPosition,
-    setSelectedPosition
+    setSelectedPosition,
   };
 
   return <PoolContext.Provider value={value}>{children}</PoolContext.Provider>;

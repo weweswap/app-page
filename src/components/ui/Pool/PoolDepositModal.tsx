@@ -1,7 +1,7 @@
-import { Divider, Loader, ModalRootProps } from "@mantine/core";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Modal, Typography } from "~/components/common";
+import Image from "next/image";
+import { Divider, Loader, ModalRootProps } from "@mantine/core";
+import { Modal, Typography } from "~/components/common";
 
 type DepositModalProps = {
   onOpen: () => void;
@@ -9,16 +9,16 @@ type DepositModalProps = {
   onDepositSuccess: () => void;
 } & ModalRootProps;
 
-const PoolDepositModal = ({ onDepositSuccess, onClose, opened }: DepositModalProps) => {
-    
+const PoolDepositModal = ({
+  onDepositSuccess,
+  onClose,
+  opened,
+}: DepositModalProps) => {
+  const [depositApproval] = useState<boolean>(false);
 
-    const [depositApproval, setDepositApproval] = useState<boolean>(false)
-
-    useEffect(() => {
-        if(depositApproval) onDepositSuccess()
-    }, [depositApproval])
-
-    
+  useEffect(() => {
+    if (depositApproval) onDepositSuccess();
+  }, [depositApproval]);
 
   return (
     <Modal title="DEPOSIT TOKENS" onClose={onClose} opened={opened}>
@@ -55,30 +55,28 @@ const PoolDepositModal = ({ onDepositSuccess, onClose, opened }: DepositModalPro
           </div>
         </div>
       </div>
-<div className="flex flex-col gap-6">
-    <div className="flex items-center gap-3">
-          <Loader color="gray" size="md"/>
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center gap-3">
+          <Loader color="gray" size="md" />
           <Typography>Please approve USDC</Typography>
-    </div>
-    <div className="flex items-center gap-3">
+        </div>
+        <div className="flex items-center gap-3">
           <Loader color="gray" size="md" className="" />
           <Typography>Please approve WEWE</Typography>
-    </div>
-    <div className="flex items-center gap-3">
+        </div>
+        <div className="flex items-center gap-3">
           <Loader color="gray" size="md" />
           <Typography>Please deposit and stake</Typography>
-    </div>
-    <div className="flex items-center gap-3">
+        </div>
+        <div className="flex items-center gap-3">
           <Loader color="gray" size="md" />
           <Typography>Please sign transaction</Typography>
-    </div>
-</div>
-<Divider className="border-blue-700" />
-<div className="flex justify-end">
-    <Typography size="xs">
-        Total fee cost: $0.10
-    </Typography>
-</div>
+        </div>
+      </div>
+      <Divider className="border-blue-700" />
+      <div className="flex justify-end">
+        <Typography size="xs">Total fee cost: $0.10</Typography>
+      </div>
     </Modal>
   );
 };

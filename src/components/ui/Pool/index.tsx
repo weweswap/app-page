@@ -1,42 +1,54 @@
 "use client";
 
-import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
-import { PoolHome } from "./PoolHome";
-import SuccessModal from "./SuccessModal";
+import { useDisclosure } from "@mantine/hooks";
+import { useClaimFees } from "~/hooks/useClaimFees";
+import { WewePosition } from "~/hooks/useWewePositions";
+import { usdConverter } from "~/utils";
+import { Hex } from "viem";
+import { useAccount } from "wagmi";
+
 import ApproveTokens, { PayloadApproveModal } from "./ApproveTokens";
 import ClaimedFeesModal from "./ClaimFeesModal";
 import ClaimSuccessModal from "./ClaimSuccessModal";
-import { WewePosition } from "~/hooks/useWewePositions";
-import { useClaimFees } from "~/hooks/useClaimFees";
-import FailedModal from "./FailedModal";
-import { useAccount } from "wagmi";
-import PoolDepositModal from "./PoolDepositModal";
 import DepositSuccessModal from "./DepositSuccessModal";
+import FailedModal from "./FailedModal";
+import PoolDepositModal from "./PoolDepositModal";
+import { PoolHome } from "./PoolHome";
+import SuccessModal from "./SuccessModal";
 import WithdrawModal, { PayloadWithdrawalModal } from "./WithdrawModal";
-import WithdrawSuccessModal, { PayloadWithdrawalSuccess } from "./WithdrawSuccessModal";
-import { formatUnits, Hex } from "viem";
-import { ethers } from "ethers";
-import { usdConverter } from "~/utils";
-
+import WithdrawSuccessModal, {
+  PayloadWithdrawalSuccess,
+} from "./WithdrawSuccessModal";
 
 export const Pool = () => {
   const [step, setStep] = useState(0);
-  const [genericHashError, setGenericHashError] = useState<string>()
-  const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
-  const [totalGasFee, setTotalGasFee] = useState<number>()
-  const [payloadApprovalModal, setPayloadApprovalModal] = useState<PayloadApproveModal>()
-  const [payloadWithdrawalModal, setPayloadWithdrawalModal] = useState<PayloadWithdrawalModal>()
-  const [payloadWithdrawalSuccessModal, setPayloadWithdrawalSuccessModal] = useState<PayloadWithdrawalSuccess>()
-  const [openedDepositModal,{ open: openDepositModal, close: closeDepositModal }] =
-  useDisclosure(false);
-  const [openedDepositSuccessModal,{ open: openDepositSuccessModal, close: closeDepositSuccessModal }] =
-  useDisclosure(false);
+  const [genericHashError, setGenericHashError] = useState<string>();
+  const [wewePositionSelected, setWewePosition] = useState<WewePosition>();
+  const [totalGasFee, setTotalGasFee] = useState<number>();
+  const [payloadApprovalModal, setPayloadApprovalModal] =
+    useState<PayloadApproveModal>();
+  const [payloadWithdrawalModal, setPayloadWithdrawalModal] =
+    useState<PayloadWithdrawalModal>();
+  const [payloadWithdrawalSuccessModal, setPayloadWithdrawalSuccessModal] =
+    useState<PayloadWithdrawalSuccess>();
+  const [
+    openedDepositModal,
+    { open: openDepositModal, close: closeDepositModal },
+  ] = useDisclosure(false);
+  const [
+    openedDepositSuccessModal,
+    { open: openDepositSuccessModal, close: closeDepositSuccessModal },
+  ] = useDisclosure(false);
 
-  const [openedWithdrawModal,{ open: openWithdrawModal, close: closeWithdrawModal }] =
-  useDisclosure(false);
-  const [openedWithdrawSuccessModal,{ open: openWithdrawSuccessModal, close: closeWithdrawSuccessModal }] =
-  useDisclosure(false);
+  const [
+    openedWithdrawModal,
+    { open: openWithdrawModal, close: closeWithdrawModal },
+  ] = useDisclosure(false);
+  const [
+    openedWithdrawSuccessModal,
+    { open: openWithdrawSuccessModal, close: closeWithdrawSuccessModal },
+  ] = useDisclosure(false);
   const [
     openedApproveModal,
     { open: openApproveModal, close: closeApproveModal },
@@ -53,8 +65,9 @@ export const Pool = () => {
     openedClaimSuccessModal,
     { open: openClaimSuccessModal, close: closeClaimSuccessModal },
   ] = useDisclosure(false);
-  const [openedFailModal, { open: openFailModal, close: closeFailModal }] = useDisclosure(false);
-  const [addOpened, { open: openAdd, close: closeAdd }] = useDisclosure(false);
+  const [openedFailModal, { open: openFailModal, close: closeFailModal }] =
+    useDisclosure(false);
+  const [_addOpened, { open: openAdd }] = useDisclosure(false);
 
   useDisclosure(false);
 
@@ -68,7 +81,6 @@ export const Pool = () => {
     isConfirmed,
     receipt: txReceipt,
     claimFees,
-    gasPriceData
   } = useClaimFees();
 
   useEffect(() => {
@@ -80,21 +92,23 @@ export const Pool = () => {
       const totalFee = gasUsed * gasPrice;
       const getUsdFees = async () => {
         const finalUsdValue = totalFee > 0n ? await usdConverter(totalFee) : 0;
-        setTotalGasFee(finalUsdValue)
-
-      }
-      getUsdFees()  
+        setTotalGasFee(finalUsdValue);
+      };
+      getUsdFees();
     }
     if (isError) {
       openFailModal();
     }
   }, [isConfirmed, txReceipt, isError, isPending, isTxConfirming]);
-  
-  const handleApproveTokenModal = (amountToken0: number, amountToken1: number) => {
+
+  const handleApproveTokenModal = (
+    amountToken0: number,
+    amountToken1: number
+  ) => {
     setPayloadApprovalModal({
       amountToken0,
-      amountToken1
-    })
+      amountToken1,
+    });
     openApproveModal();
   };
 
@@ -104,63 +118,63 @@ export const Pool = () => {
   };
 
   const handleCloseApproveTokensModal = () => {
-    setPayloadApprovalModal(undefined)
-    closeApproveModal()
-  }
+    setPayloadApprovalModal(undefined);
+    closeApproveModal();
+  };
 
   const handleErrorModal = (hash?: string | undefined) => {
-    setPayloadApprovalModal(undefined)
-    setPayloadWithdrawalModal(undefined)
-    setGenericHashError(hash)
-    closeApproveModal()
-    closeWithdrawModal()
-    openFailModal()
-  }
+    setPayloadApprovalModal(undefined);
+    setPayloadWithdrawalModal(undefined);
+    setGenericHashError(hash);
+    closeApproveModal();
+    closeWithdrawModal();
+    openFailModal();
+  };
 
   const handleCloseSuccesModal = () => {
-    closeClaimFeesModal()
-    closeClaimSuccessModal()
-  }
+    closeClaimFeesModal();
+    closeClaimSuccessModal();
+  };
 
   const handleClaimFeesModal = (wewePositionSelected: WewePosition) => {
-    setWewePosition(wewePositionSelected)
-    openClaimFeesModal()
-  }
+    setWewePosition(wewePositionSelected);
+    openClaimFeesModal();
+  };
 
   const handleClaimSuccessModal = () => {
-    claimFees(address!)
-  }
+    claimFees(address!);
+  };
 
   const handleCloseFailModal = () => {
-    setGenericHashError(undefined)
-    closeFailModal()
-  }
+    setGenericHashError(undefined);
+    closeFailModal();
+  };
 
-  const handleDepositModal = () => {
-    openDepositModal()
-  }
+  // const handleDepositModal = () => {
+  //   openDepositModal();
+  // };
 
   const handleDepositSuccess = () => {
-    closeDepositModal()
-    openDepositSuccessModal()
-  }
+    closeDepositModal();
+    openDepositSuccessModal();
+  };
 
   const handleWithdrawSuccess = (hash?: Hex) => {
-    setPayloadWithdrawalModal(undefined)
-    setPayloadWithdrawalSuccessModal({hash: hash})
-    closeWithdrawModal()
-    openWithdrawSuccessModal()
-  }
+    setPayloadWithdrawalModal(undefined);
+    setPayloadWithdrawalSuccessModal({ hash: hash });
+    closeWithdrawModal();
+    openWithdrawSuccessModal();
+  };
 
   const handleWithdrawalModal = (burnAmount: bigint) => {
-    setPayloadWithdrawalModal({burnAmount})
-    openWithdrawModal()
-  }
+    setPayloadWithdrawalModal({ burnAmount });
+    openWithdrawModal();
+  };
 
   const handleCloseWithdraw = () => {
-    setPayloadWithdrawalModal(undefined)
-    closeWithdrawModal()
-  }
+    setPayloadWithdrawalModal(undefined);
+    closeWithdrawModal();
+  };
 
   return (
     <>
@@ -170,14 +184,14 @@ export const Pool = () => {
           onDeposit={handleApproveTokenModal}
           onWithdraw={handleWithdrawalModal}
           onNext={() => setStep(1)}
-          onBack={() => setStep(0)} 
+          onBack={() => setStep(0)}
           onAdd={openAdd}
         />
       )}
 
-      <PoolDepositModal 
-        opened={openedDepositModal} 
-        onOpen={() => openDepositModal()} 
+      <PoolDepositModal
+        opened={openedDepositModal}
+        onOpen={() => openDepositModal()}
         onClose={() => closeDepositModal()}
         onDepositSuccess={() => handleDepositSuccess()}
       />
@@ -193,17 +207,16 @@ export const Pool = () => {
         onOpen={handleSuccessModal}
         onClose={closeSuccessModal}
       />
-      <ClaimedFeesModal 
-        loading={isPending || isTxConfirming} 
-        wewePosition={wewePositionSelected} 
-        onClaim={handleClaimSuccessModal} 
-        onOpen={() => {}} 
-        opened={openedClaimFeesModal} 
-        onClose={closeClaimFeesModal} 
+      <ClaimedFeesModal
+        loading={isPending || isTxConfirming}
+        wewePosition={wewePositionSelected}
+        onClaim={handleClaimSuccessModal}
+        onOpen={() => {}}
+        opened={openedClaimFeesModal}
+        onClose={closeClaimFeesModal}
       />
-      {
-        payloadWithdrawalModal &&
-        <WithdrawModal 
+      {payloadWithdrawalModal && (
+        <WithdrawModal
           opened={openedWithdrawModal}
           onOpen={() => {}}
           onClose={handleCloseWithdraw}
@@ -211,18 +224,17 @@ export const Pool = () => {
           onTxError={handleErrorModal}
           data={payloadWithdrawalModal}
         />
-      }
+      )}
 
-      {
-        payloadApprovalModal &&
+      {payloadApprovalModal && (
         <ApproveTokens
           opened={openedApproveModal}
-          onOpen={() => {}} 
+          onOpen={() => {}}
           onClose={handleCloseApproveTokensModal}
           onTxError={handleErrorModal}
           data={payloadApprovalModal}
         />
-      }
+      )}
 
       {isConfirmed && txReceipt && hash && (
         <ClaimSuccessModal
@@ -232,14 +244,16 @@ export const Pool = () => {
           data={{
             pendingUsdcReward: wewePositionSelected?.pendingUsdcReward || "0",
             pendingChaosReward: wewePositionSelected?.pendingChaosReward || "0",
-            gasFee: totalGasFee
+            gasFee: totalGasFee,
           }}
         />
       )}
 
-      <DepositSuccessModal opened={openedDepositSuccessModal}
-       onClose={closeDepositSuccessModal}  />
-      
+      <DepositSuccessModal
+        opened={openedDepositSuccessModal}
+        onClose={closeDepositSuccessModal}
+      />
+
       <FailedModal
         hash={hash! || genericHashError}
         opened={openedFailModal}

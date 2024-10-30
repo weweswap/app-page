@@ -1,16 +1,17 @@
-import { Divider, Loader, ModalRootProps } from "@mantine/core";
-import Image from "next/image";
 import React from "react";
+import Image from "next/image";
+import { Divider, Loader, ModalRootProps } from "@mantine/core";
 import { Button, Modal, Typography } from "~/components/common";
 import { useGetBurnEvents } from "~/hooks/useGetBurnEvents";
-import { usePoolContext } from "./PoolContext";
-import { Hex } from "viem";
-import { ethers } from "ethers";
 import { formatNumber } from "~/utils";
+import { ethers } from "ethers";
+import { Hex } from "viem";
+
+import { usePoolContext } from "./PoolContext";
 
 export type PayloadWithdrawalSuccess = {
-  hash?: Hex
-}
+  hash?: Hex;
+};
 
 type WithdrawSuccessModalProps = {
   onOpen: () => void;
@@ -50,7 +51,7 @@ const WithdrawSuccessModal = ({
         <Typography size="lg" secondary className="text-center">
           WITHDRAW CONFIRMED
         </Typography>
-        <div className="my-2 mx-auto">
+        <div className="mx-auto my-2">
           <Image src={"/img/icons/success.svg"} alt="" height={64} width={64} />
         </div>
         <Typography secondary size="md" className="text-center">
@@ -64,14 +65,19 @@ const WithdrawSuccessModal = ({
             34.34
           </Typography>
         </div> */}
-        <div className="flex gap-4 justify-center">
+        <div className="flex justify-center gap-4">
           <Typography fw={1000} className="text_light_gray" size="sm">
             {ethers.formatUnits(event.args.burnAmount.toString(), 18)} SHARES
           </Typography>
           <div className="flex items-center">
-            <Image src={selectedPool?.token0.icon!} alt="" height={24} width={24} />
             <Image
-              src={selectedPool?.token1.icon!}
+              src={selectedPool?.token0.icon || ""}
+              alt=""
+              height={24}
+              width={24}
+            />
+            <Image
+              src={selectedPool?.token1.icon || ""}
               className="translate-x-[-5px]"
               alt=""
               height={24}
@@ -79,28 +85,38 @@ const WithdrawSuccessModal = ({
             />
           </div>
         </div>
-        <div className="flex items-center gap-4 justify-between w-full">
+        <div className="flex w-full items-center justify-between gap-4">
           <Typography fw={1000} className="text_light_gray" size="sm">
             TOKENS CLAIMED
           </Typography>
           <div className="flex  gap-3">
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2">
               <Typography fw={1000} size="sm">
-                {Number(ethers.formatUnits(event.args.amount0Out.toString(), selectedPool?.token0.decimals)).toFixed(4)}
+                {Number(
+                  ethers.formatUnits(
+                    event.args.amount0Out.toString(),
+                    selectedPool?.token0.decimals
+                  )
+                ).toFixed(4)}
               </Typography>
               <Image
-                src={selectedPool?.token0.icon!}
+                src={selectedPool?.token0.icon || ""}
                 alt=""
                 height={32}
                 width={32}
               />
             </div>
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2">
               <Typography fw={1000} size="sm">
-                {Number(ethers.formatUnits(event.args.amount1Out.toString(), selectedPool?.token1.decimals)).toFixed(4)}
+                {Number(
+                  ethers.formatUnits(
+                    event.args.amount1Out.toString(),
+                    selectedPool?.token1.decimals
+                  )
+                ).toFixed(4)}
               </Typography>
               <Image
-                src={selectedPool?.token1.icon!}
+                src={selectedPool?.token1.icon || ""}
                 alt=""
                 height={32}
                 width={32}
@@ -108,13 +124,16 @@ const WithdrawSuccessModal = ({
             </div>
           </div>
         </div>
-        <Divider className="border-blue-700 w-full" />
+        <Divider className="w-full border-blue-700" />
         <Typography secondary size="lg">
           CLAIMED FEES
         </Typography>
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <Typography fw={1000} size="lg">
-            {formatNumber(selectedPosition?.pendingUsdcReward ?? 0, { decimalDigits: 6 })} USDC
+            {formatNumber(selectedPosition?.pendingUsdcReward ?? 0, {
+              decimalDigits: 6,
+            })}{" "}
+            USDC
           </Typography>
           <Image src={"/img/tokens/usdc.png"} alt="" height={40} width={40} />
         </div>
@@ -122,17 +141,34 @@ const WithdrawSuccessModal = ({
           CLAIMED CHAOS
         </Typography>
 
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <Typography fw={1000} size="lg">
-            {formatNumber(selectedPosition?.pendingChaosReward ?? 0, { decimalDigits: 6 })} CHAOS
+            {formatNumber(selectedPosition?.pendingChaosReward ?? 0, {
+              decimalDigits: 6,
+            })}{" "}
+            CHAOS
           </Typography>
-          <Image src={"/img/tokens/rewards.svg"} alt="" height={40} width={40} />
+          <Image
+            src={"/img/tokens/rewards.svg"}
+            alt=""
+            height={40}
+            width={40}
+          />
         </div>
-        <Typography size="sm" fw={1000} className="text-right w-full text_light_gray">Total fee cost: $0.10</Typography>
+        <Typography
+          size="sm"
+          fw={1000}
+          className="text_light_gray w-full text-right"
+        >
+          Total fee cost: $0.10
+        </Typography>
         <Button className="w-full" onClick={onClose}>
           COMPLETED
         </Button>
-        <button className="custom_btn w-full" onClick={() => handleDetails(data?.hash!)}>
+        <button
+          className="custom_btn w-full"
+          onClick={() => handleDetails(data?.hash || "")}
+        >
           VIEW DETAILS
         </button>
       </div>

@@ -1,8 +1,9 @@
 "use client";
+
 import Image from "next/image";
-import { Divider, Modal as MtModal, ModalRootProps } from "@mantine/core";
-import { Typography } from "~/components/common/Typography";
+import { ModalRootProps, Modal as MtModal } from "@mantine/core";
 import { Button } from "~/components/common/Button";
+import { Typography } from "~/components/common/Typography";
 
 type TransferCompleteProps = {
   onClose: () => void;
@@ -62,7 +63,7 @@ export const TransferComplete = (props: TransferCompleteProps) => {
               </Typography>
             </Button>
 
-            <Button className="w-full opacity-60"  onClick={props.onClose}>
+            <Button className="w-full opacity-60" onClick={props.onClose}>
               <Typography secondary size="md" fw={700} tt="uppercase">
                 view details
               </Typography>

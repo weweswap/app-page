@@ -1,11 +1,10 @@
 "use client";
 
-import { Loader, NumberInput } from "@mantine/core";
-import clsx from "clsx";
-import Image from "next/image";
+/* eslint-disable */
 import { useEffect, useState } from "react";
-import { formatEther, formatUnits, parseEther } from "viem";
-import { useAccount } from "wagmi";
+import Image from "next/image";
+import Link from "next/link";
+import { Loader, NumberInput } from "@mantine/core";
 import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { dogica } from "~/fonts";
@@ -15,12 +14,15 @@ import {
   useVultBalance,
   useWeweBalance,
 } from "~/hooks";
+import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { fetchWEWEPrice } from "~/services";
+import clsx from "clsx";
+import { formatEther, formatUnits, parseEther } from "viem";
+import { useAccount } from "wagmi";
+
+import BridgeOperation from "./BridgeOperation";
 import MergeOperation from "./MergeOperation";
 import RedeemOperation from "./RedeemOperation";
-import BridgeOperation from "./BridgeOperation";
-import { fetchWEWEPrice } from "~/services";
-import { useTokenBalance } from "~/hooks/useTokenBalance";
-import Link from "next/link";
 
 type MergeHomeProps = {
   onConversion: () => void;
@@ -61,7 +63,7 @@ export const MergeHome = (props: MergeHomeProps) => {
 
   const totalVultSupply = 100000000; //100m
   const totalWeweSupply = 100000000000; //100bn
-  const virtualBalance = 10000000000 ; //10bn (fixed from the last update)
+  const virtualBalance = 10000000000; //10bn (fixed from the last update)
   useEffect(() => {
     if (wewePrice > 0) {
       const weweBalanceNumber = Number(formatEther(weweBalance));
@@ -69,8 +71,8 @@ export const MergeHome = (props: MergeHomeProps) => {
       const weweFDV = wewePrice * totalWeweSupply;
       setVultFDV(
         ((weweBalanceNumber + virtualBalance) / totalWeweSupply) *
-        weweFDV *
-        (totalVultSupply / vultBalanceNumber)
+          weweFDV *
+          (totalVultSupply / vultBalanceNumber)
       );
     }
   }, [weweBalance, vultBalance, wewePrice]);
@@ -97,17 +99,17 @@ export const MergeHome = (props: MergeHomeProps) => {
 
   return (
     <>
-      <div className="gap-5 grid grid-cols-12">
-        <div className="md:col-span-8 col-span-12 gap-3 xl:w-[45rem] h-[100%]">
+      <div className="grid grid-cols-12 gap-5">
+        <div className="col-span-12 h-full gap-3 md:col-span-8 xl:w-[45rem]">
           <Card>
-            <div className="md:flex items-center justify-between gap-3 text-center md:text-start  ">
+            <div className="items-center justify-between gap-3 text-center md:flex md:text-start  ">
               <Link href="/merge">
                 <Typography secondary size="xl" tt="uppercase">
-                  <span>{"<"}</span>  MERGE NO&ensp;W
+                  <span>{"<"}</span> MERGE NO&ensp;W
                 </Typography>
               </Link>
             </div>
-            <div className="md:flex items-center justify-between gap-3 text-center md:text-start mt-5">
+            <div className="mt-5 items-center justify-between gap-3 text-center md:flex md:text-start">
               <Typography
                 size="sm"
                 tt="uppercase"
@@ -119,7 +121,7 @@ export const MergeHome = (props: MergeHomeProps) => {
           </Card>
 
           <Card className="mt-4 ">
-            <div className="bg_light_dark flex items-center justify-between gap-3 h-[3.3rem] mb-5 overflow-x-scroll">
+            <div className="bg_light_dark mb-5 flex h-[3.3rem] items-center justify-between gap-3 overflow-x-scroll">
               <div
                 onClick={() => setOperations(0)}
                 className={`${operations === 0 && "nav_selected"} nav`}
@@ -147,33 +149,35 @@ export const MergeHome = (props: MergeHomeProps) => {
             )}
           </Card>
         </div>
-        <div className="md:col-span-4 col-span-12 md:order-2 order-1 h-full">
-          <Card className="text-center h-full relative">
+        <div className="order-1 col-span-12 h-full md:order-2 md:col-span-4">
+          <Card className="relative h-full text-center">
             <Typography
               secondary
               size="md"
               tt="uppercase"
               fw={600}
-              className="leading-10 p-5"
+              className="p-5 leading-10"
             >
               <span className="text_yellow leading-10">
                 TOTAL $WEWE <br /> LOCKED: <br />
               </span>
 
               <>
-                {Math.trunc(Number(formatEther(weweBalance))).toLocaleString("en-US")}
+                {Math.trunc(Number(formatEther(weweBalance))).toLocaleString(
+                  "en-US"
+                )}
               </>
             </Typography>
 
             <div className="mt-2">
-              <div className="flex gap-2 justify-center">
+              <div className="flex justify-center gap-2">
                 <Typography size="md" fw={600} className="py-2">
                   ≈ Value:
                 </Typography>
                 <Typography
                   size="md"
                   fw={600}
-                  className="py-2 flex items-center gap-1"
+                  className="flex items-center gap-1 py-2"
                 >
                   <Image
                     src="/img/tokens/vult-border.svg"
@@ -190,14 +194,14 @@ export const MergeHome = (props: MergeHomeProps) => {
                 </Typography>
               )} */}
 
-              <div className="flex gap-2 justify-center">
+              <div className="flex justify-center gap-2">
                 <Typography size="md" fw={600} className=" py-2">
                   Balance:
                 </Typography>
                 <Typography
                   size="md"
                   fw={600}
-                  className="py-2 flex items-center gap-1"
+                  className="flex items-center gap-1 py-2"
                 >
                   <Image
                     src="/img/tokens/vult-border.svg"
@@ -209,7 +213,7 @@ export const MergeHome = (props: MergeHomeProps) => {
                 </Typography>
               </div>
 
-              <div className="flex justify-center gap-2 md:my-5 my-2 md:mb-5 mb-10">
+              <div className="my-2 mb-10 flex justify-center gap-2 md:my-5">
                 <Typography size="md" fw={600}>
                   Ratio: 1000
                 </Typography>
@@ -232,7 +236,7 @@ export const MergeHome = (props: MergeHomeProps) => {
                 />
               </div>
 
-              <div className="flex justify-center gap-2 md:my-5 my-2 md:mb-5 mb-10">
+              <div className="my-2 mb-10 flex justify-center gap-2 md:my-5">
                 <Typography size="md" fw={600}>
                   Total ≈ Value:
                 </Typography>
@@ -253,13 +257,13 @@ export const MergeHome = (props: MergeHomeProps) => {
               <Typography
                 size="md"
                 fw={600}
-                className="md:py-5 py-2 text_yellow"
+                className="text_yellow py-2 md:py-5"
               >
                 FDV: ${Math.trunc(vultFDV).toLocaleString("en-US")}
               </Typography>
             </div>
 
-            <div className="mt-10  md:bottom-10 bottom-5 right-0 left-0">
+            <div className="inset-x-0  bottom-5 mt-10 md:bottom-10">
               <Typography secondary size="xl">
                 🔥 🔥 🔥
               </Typography>

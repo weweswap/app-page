@@ -1,21 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import dayjs from "dayjs";
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Hex } from "viem";
 import { Typography } from "~/components/common";
 import { LoadingScreen } from "~/components/common/LoadingScreen";
 import { API_BASE_URL } from "~/constants/configs";
 import { formatNumber } from "~/utils";
+import axios from "axios";
+import dayjs from "dayjs";
+import {
+  Area,
+  AreaChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { Hex } from "viem";
 
 interface PoolTvlChartProps {
-  address: Hex,
-  timeFrame: string
+  address: Hex;
+  timeFrame: string;
 }
 
 interface TvlResponse {
-  timestamp: number,
-  tvl: number
+  timestamp: number;
+  tvl: number;
 }
 
 export const PoolTvlChart = ({ address, timeFrame }: PoolTvlChartProps) => {
@@ -23,34 +30,36 @@ export const PoolTvlChart = ({ address, timeFrame }: PoolTvlChartProps) => {
     queryKey: ["pool-tvl-chart", address, timeFrame],
     staleTime: 1000 * 60 * 5,
     queryFn: async () => {
-      const response = await axios.get<TvlResponse[]>(`${API_BASE_URL}/tvl/${address}`, {
-        params: {
-          timeframe: timeFrame === "1D" ? "daily" : "weekly"
+      const response = await axios.get<TvlResponse[]>(
+        `${API_BASE_URL}/tvl/${address}`,
+        {
+          params: {
+            timeframe: timeFrame === "1D" ? "daily" : "weekly",
+          },
         }
-      });
+      );
 
       return response.data.map((item) => {
         return {
           timestamp: item.timestamp * 1000,
-          tvl: item.tvl
-        }
+          tvl: item.tvl,
+        };
       });
     },
   });
 
-  if (isLoading) return <LoadingScreen />
+  if (isLoading) return <LoadingScreen />;
 
-  if (!data || data.length === 0) return (
-    <Typography secondary className='text-center py-10 font-bold' size='xl'>
-      NOTHING TO SHOW HERE
-    </Typography>
-  );
+  if (!data || data.length === 0)
+    return (
+      <Typography secondary className="py-10 text-center font-bold" size="xl">
+        NOTHING TO SHOW HERE
+      </Typography>
+    );
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <AreaChart
-        data={data}
-      >
+      <AreaChart data={data}>
         <XAxis
           axisLine={false}
           tickLine={false}
@@ -59,20 +68,31 @@ export const PoolTvlChart = ({ address, timeFrame }: PoolTvlChartProps) => {
           padding="gap"
           allowDuplicatedCategory={false}
           minTickGap={0}
-          tickFormatter={(v) => dayjs(v).format(timeFrame === "1W" ? "DD.MMM HH:mm" : "HH:mm")}
+          tickFormatter={(v) =>
+            dayjs(v).format(timeFrame === "1W" ? "DD.MMM HH:mm" : "HH:mm")
+          }
         />
         <YAxis
           axisLine={false}
           width={40}
           tickLine={false}
           className="text-xs"
-          tickFormatter={(value) => `$${formatNumber(value, {compact: true})}`}
+          tickFormatter={(value) =>
+            `$${formatNumber(value, { compact: true })}`
+          }
         />
         <Tooltip
           cursor={{ radius: 3, fillOpacity: 0.1 }}
-          contentStyle={{ backgroundColor: "rgba(0,0,0,0.7)", border: "none", fontSize: "14px" }}
+          contentStyle={{
+            backgroundColor: "rgba(0,0,0,0.7)",
+            border: "none",
+            fontSize: "14px",
+          }}
           formatter={(value) => {
-            return [`$${formatNumber(value as string, { compact: true })}`, "TVL"]
+            return [
+              `$${formatNumber(value as string, { compact: true })}`,
+              "TVL",
+            ];
           }}
           labelFormatter={(v) => dayjs(v).format("DD.MMM YYYY HH:mm")}
         />
@@ -80,4 +100,4 @@ export const PoolTvlChart = ({ address, timeFrame }: PoolTvlChartProps) => {
       </AreaChart>
     </ResponsiveContainer>
   );
-}
+};

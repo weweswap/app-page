@@ -1,13 +1,14 @@
 import { useEffect } from "react";
+import { CONTRACT_ADDRESSES } from "~/constants";
+import { ERC20WeweABI, MergeABI } from "~/lib/abis";
 import {
   useReadContract,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { CONTRACT_ADDRESSES } from "~/constants";
-import { ERC20WeweABI, MergeABI } from "~/lib/abis";
 
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
+
 import { showErrorToast } from "~/components/common/ToastError";
 
 export const useQuoteVult = (amount: bigint) => {
@@ -18,12 +19,12 @@ export const useQuoteVult = (amount: bigint) => {
     args: [amount],
   });
 
-  const {data:txReceipt} = useWaitForTransactionReceipt();
+  const { data: txReceipt } = useWaitForTransactionReceipt();
 
   return {
     data: data ?? 0n,
     isFetching,
-    txReceipt
+    txReceipt,
   };
 };
 
@@ -52,7 +53,6 @@ export const useVultBalance = () => {
 export const useApproveAndCall = () => {
   const {
     data: hash,
-    error: errorCreation,
     isPending: isTxCreating,
     isError: isCreationError,
     writeContractAsync,
@@ -62,7 +62,7 @@ export const useApproveAndCall = () => {
     error: errorConfirm,
     isError: isConfirmError,
     isSuccess: isConfirmed,
-    data: txReceipt
+    data: txReceipt,
   } = useWaitForTransactionReceipt({ hash });
 
   useEffect(() => {
@@ -91,14 +91,15 @@ export const useApproveAndCall = () => {
   }, [isConfirmed, isCreationError, isConfirmError]);
 
   const onWriteAsync = async (amount: bigint) => {
-    try{await writeContractAsync({
-      abi: ERC20WeweABI,
-      address: CONTRACT_ADDRESSES.wewe,
-      functionName: "approveAndCall",
-      args: [CONTRACT_ADDRESSES.merge, amount, "0x"],
-    });}
-    catch(error) {
-      console.log("User rejected the request!")
+    try {
+      await writeContractAsync({
+        abi: ERC20WeweABI,
+        address: CONTRACT_ADDRESSES.wewe,
+        functionName: "approveAndCall",
+        args: [CONTRACT_ADDRESSES.merge, amount, "0x"],
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -108,6 +109,6 @@ export const useApproveAndCall = () => {
     onWriteAsync,
     isConfirmed,
     isError: isConfirmError || isCreationError,
-    txReceipt
+    txReceipt,
   };
 };

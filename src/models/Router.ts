@@ -20,7 +20,7 @@ export interface RouterApiResponse {
 
 export interface RoutingData {
   routeSummary: RouteSummary;
-  routerAddress:  `0x${string}`;
+  routerAddress: `0x${string}`;
 }
 
 export interface RouteSummary {

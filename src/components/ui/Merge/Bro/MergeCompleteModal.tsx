@@ -1,8 +1,8 @@
-import { formatEther, Hex } from "viem";
-import { Modal as MtModal, ModalRootProps, Loader } from "@mantine/core";
-import { Button, Typography } from "~/components/common";
 import Image from "next/image";
+import { Loader, ModalRootProps, Modal as MtModal } from "@mantine/core";
+import { Button, Typography } from "~/components/common";
 import * as dn from "dnum";
+import { Hex } from "viem";
 
 type MergeCompleteModalProps = {
   hash: Hex;
@@ -44,12 +44,16 @@ export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
           >
             successfully merged
           </Typography>
-          <div className="flex justify-center gap-2 md:my-5 my-2 md:mb-5 mb-10">
+          <div className="my-2 mb-10 flex justify-center gap-2 md:my-5">
             <Typography size="md" fw={600}>
               Ratio: 1
             </Typography>
             <Image
-              src={props.inputToken === "BRO" ? "/img/tokens/bro.svg" : "/img/tokens/bbro.svg"}
+              src={
+                props.inputToken === "BRO"
+                  ? "/img/tokens/bro.svg"
+                  : "/img/tokens/bbro.svg"
+              }
               width={17}
               height={17}
               alt="BRO logo"
@@ -67,23 +71,20 @@ export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
             />
           </div>
           <div className="flex items-center justify-center gap-2">
-            <img
-              src="/img/tokens/wewe.svg"
-              alt="WEWE logo"
-            />
+            <img src="/img/tokens/wewe.svg" alt="WEWE logo" />
             <div className="flex flex-col">
-              {
-                props.amount
-                  ? <>
-                    <Typography size="sm" className="text_light_gray">
-                      CLAIMED
-                    </Typography>
-                    <Typography size="md" className="font-bold">
-                      {props.amount}
-                    </Typography>
-                  </>
-                  : <Loader />
-              }
+              {props.amount ? (
+                <>
+                  <Typography size="sm" className="text_light_gray">
+                    CLAIMED
+                  </Typography>
+                  <Typography size="md" className="font-bold">
+                    {props.amount}
+                  </Typography>
+                </>
+              ) : (
+                <Loader />
+              )}
             </div>
           </div>
           <Image
@@ -101,7 +102,7 @@ export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
             </Button>
 
             <Button
-              className="w-full !bg-none !bg-black border border-1 border-white"
+              className="border-1 w-full border border-white !bg-black !bg-none"
               onClick={handleDetails}
             >
               <Typography secondary size="md" fw={700} tt="uppercase">
@@ -113,4 +114,4 @@ export const MergeCompleteModal = (props: MergeCompleteModalProps) => {
       </MtModal.Content>
     </MtModal.Root>
   );
-}
+};

@@ -11,7 +11,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "w-full bg-black border border-[var(--stroke)] text-white p-4",
+        "w-full border border-[var(--stroke)] bg-black p-4 text-white",
         className
       )}
       {...props}

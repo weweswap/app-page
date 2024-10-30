@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
+import { FailTXModal } from "~/components/common/FailTXModal";
+import { Hash } from "viem";
+
+import { SwapCompleteModal } from "./SwapCompleteModal";
+import { useSwapContext } from "./SwapContext";
 import { SwapHome } from "./SwapHome";
 import { SwapModal } from "./SwapModal";
-import { SwapCompleteModal } from "./SwapCompleteModal";
 import { SwapSettingModal } from "./SwapSettingModal";
-import { useSwapContext } from "./SwapContext";
-import { Hash } from "viem";
-import { FailTXModal } from "~/components/common/FailTXModal";
-
 
 export const Swap: React.FC = () => {
-  const {
-    swapState,
-    setSwapState,
-    routeData,
-    encodedData,
-    closeSwapModal,
-    openedSwapModal,
-  } = useSwapContext();
+  const { swapState, routeData, encodedData, closeSwapModal, openedSwapModal } =
+    useSwapContext();
 
   const [
     openedSwapCompleteModal,

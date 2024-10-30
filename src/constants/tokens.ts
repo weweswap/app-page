@@ -1,4 +1,5 @@
 import { TokenItem } from "~/models";
+
 import { Chain } from "./chains";
 
 export const ETH_BASE = {
@@ -9,7 +10,7 @@ export const ETH_BASE = {
   decimals: 18,
 };
 
-export const USDC_BASE =   {
+export const USDC_BASE = {
   chain: Chain.BASE,
   symbol: "USDC",
   address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913" as `0x${string}`,
@@ -17,7 +18,7 @@ export const USDC_BASE =   {
   decimals: 6,
 };
 
-export const WEWE =   {
+export const WEWE = {
   chain: Chain.BASE,
   symbol: "WEWE",
   address: "0x6b9bb36519538e0C073894E964E90172E1c0B41F" as `0x${string}`,
@@ -25,12 +26,7 @@ export const WEWE =   {
   decimals: 18,
 };
 
-export const TOKEN_LIST: TokenItem[] = [
-  ETH_BASE,
-  USDC_BASE,
-  WEWE,
-];
-
+export const TOKEN_LIST: TokenItem[] = [ETH_BASE, USDC_BASE, WEWE];
 
 export const TO_TOKEN_LIST = [
   {
@@ -38,7 +34,6 @@ export const TO_TOKEN_LIST = [
     icon: "/img/tokens/vult.eth.svg",
   },
 ];
-
 
 export const FROM_TOKEN_LIST = [
   {

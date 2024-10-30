@@ -1,13 +1,13 @@
-import axios from "axios";
 import { Chain } from "~/constants";
 import { RouterApiResponse, RouteSummary, TokenItem } from "~/models";
+import axios from "axios";
 
 const AGGREGATOR_KYBERSWAP_BASEURL = "https://aggregator-api.kyberswap.com";
 const CLIENT_ID = "weweswap";
 
 const api = axios.create({
   baseURL: AGGREGATOR_KYBERSWAP_BASEURL,
-  headers: { accept: "application/json","x-client-id": CLIENT_ID },
+  headers: { accept: "application/json", "x-client-id": CLIENT_ID },
 });
 
 export default {

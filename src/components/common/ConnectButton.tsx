@@ -1,4 +1,5 @@
 import { ConnectButton as RBConnectButton } from "@rainbow-me/rainbowkit";
+
 import { Typography } from "./Typography";
 
 export const ConnectButton = () => {
@@ -32,7 +33,7 @@ export const ConnectButton = () => {
                   <button
                     onClick={openConnectModal}
                     type="button"
-                    className="flex items-center bg_violet text-black px-4 h-10"
+                    className="bg_violet flex h-10 items-center px-4 text-black"
                   >
                     <Typography secondary size="xs" fw={700}>
                       Connect
@@ -46,7 +47,7 @@ export const ConnectButton = () => {
                   <button
                     onClick={openChainModal}
                     type="button"
-                    className="flex items-center bg_violet text-black px-4 h-10"
+                    className="bg_violet flex h-10 items-center px-4 text-black"
                   >
                     <Typography secondary size="xs" fw={700}>
                       Wrong network
@@ -56,11 +57,11 @@ export const ConnectButton = () => {
               }
 
               return (
-                <div className="flex items-center gap-2 bg_violet px-2 h-10">
+                <div className="bg_violet flex h-10 items-center gap-2 px-2">
                   <button
                     onClick={openChainModal}
                     type="button"
-                    className="flex items-center text-black gap-2"
+                    className="flex items-center gap-2 text-black"
                   >
                     {chain.hasIcon && (
                       <div

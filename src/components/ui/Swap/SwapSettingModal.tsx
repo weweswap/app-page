@@ -1,19 +1,15 @@
 "use client";
+
 import Image from "next/image";
-import {
-  Divider,
-  Modal as MtModal,
-  ModalRootProps,
-  NumberInput,
-} from "@mantine/core";
-import { Slider, rem } from "@mantine/core";
-import { Typography } from "~/components/common/Typography";
+import { ModalRootProps, NumberInput, Slider } from "@mantine/core";
 import { Button } from "~/components/common/Button";
 import { Modal } from "~/components/common/Modal";
-import classes from "./SwapSettingModal.module.scss";
-import clsx from "clsx";
+import { Typography } from "~/components/common/Typography";
 import { dogica } from "~/fonts";
+import clsx from "clsx";
+
 import { useSwapContext } from "./SwapContext";
+import classes from "./SwapSettingModal.module.scss";
 
 type SwapSettingProps = {
   onClose: () => void;
@@ -24,13 +20,13 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
     useSwapContext();
   return (
     <Modal title="Settings" onClose={props.onClose} opened={props.opened}>
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <Typography secondary size="sm" tt="uppercase">
           SWAP
         </Typography>
         <Image src="/img/icons/settings.svg" width={24} height={24} alt="" />
       </div>
-      <div className="gap-2 items-center grid grid-cols-12">
+      <div className="grid grid-cols-12 items-center gap-2">
         <Typography
           className="col-span-5"
           secondary
@@ -68,7 +64,7 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
             2%
           </Typography>
         </Button>
-        <div className="bg_turq flex col-span-3 items-center px-1">
+        <div className="bg_turq col-span-3 flex items-center px-1">
           <NumberInput
             classNames={{
               root: "w-auto",
@@ -100,13 +96,13 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
         max={19.99}
       />
 
-      <div className="flex justify-between items-center ps-2">
+      <div className="flex items-center justify-between ps-2">
         <Typography secondary size="sm" tt="uppercase">
           ZAPS
         </Typography>
         <Image src="/img/icons/settings.svg" width={24} height={24} alt="" />
       </div>
-      <div className="gap-2 items-center grid grid-cols-12">
+      <div className="grid grid-cols-12 items-center gap-2">
         <Typography
           className="col-span-5"
           secondary
@@ -144,14 +140,11 @@ export const SwapSettingModal = (props: SwapSettingProps) => {
             2%
           </Typography>
         </Button>
-        <div className="bg_turq flex col-span-3 items-center px-1">
+        <div className="bg_turq col-span-3 flex items-center px-1">
           <NumberInput
             classNames={{
               root: "w-auto",
-              input: clsx(
-                dogica.className,
-                classes.inputField
-              ),
+              input: clsx(dogica.className, classes.inputField),
             }}
             defaultValue={zapSlippage}
             hideControls

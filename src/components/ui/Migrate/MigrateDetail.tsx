@@ -1,25 +1,26 @@
 "use client";
 
+/* eslint-disable */
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useState } from "react";
-import { Button, Card, Typography } from "~/components/common";
-import { Pool, Position, FeeAmount } from "@uniswap/v3-sdk";
-import { useEffect } from "react";
-import { Token, BigintIsh } from "@uniswap/sdk-core";
-import { CONTRACT_ADDRESSES } from "~/constants";
-import { ethers, formatEther, formatUnits } from "ethers";
-import { formatPrice, tickToPrice } from "~/utils";
-import { MigrateCompleteModal } from "./MigrateCompleteModal";
-import { useDisclosure } from "@mantine/hooks";
-import { useSafeTransfer } from "~/hooks/useMigrate";
-import { useAccount, useWatchContractEvent } from "wagmi";
 import { Loader } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { BigintIsh, Token } from "@uniswap/sdk-core";
+import { FeeAmount, Pool, Position } from "@uniswap/v3-sdk";
+import { Button, Card, Typography } from "~/components/common";
 import { FailTXModal } from "~/components/common/FailTXModal";
+import { CONTRACT_ADDRESSES } from "~/constants";
+import { provider } from "~/hooks/provider";
+import { useSafeTransfer } from "~/hooks/useMigrate";
+import { ERC20Abi } from "~/lib/abis";
+import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { COMMON_POOL_CONTRACT_ABI } from "~/lib/abis/CommonPool";
 import { fetchETHPrice, fetchWEWEPrice } from "~/services";
-import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
-import { provider } from "~/hooks/provider";
-import { ERC20Abi } from "~/lib/abis";
+import { formatPrice, tickToPrice } from "~/utils";
+import { ethers, formatEther, formatUnits } from "ethers";
+import { useAccount, useWatchContractEvent } from "wagmi";
+
+import { MigrateCompleteModal } from "./MigrateCompleteModal";
 
 type MigrateDetailProps = {
   onBack: () => void;
@@ -40,8 +41,12 @@ export const MigrateDetail = ({
     { open: openMigrateFailModal, close: closeMigrateFailModal },
   ] = useDisclosure(false);
 
-  const handleMigrate = () => {   
-    safeTransferFrom(address!, currentPosition.tokenId, ethers.parseUnits(String(amountWETH), 18));
+  const handleMigrate = () => {
+    safeTransferFrom(
+      address!,
+      currentPosition.tokenId,
+      ethers.parseUnits(String(amountWETH), 18)
+    );
   };
 
   const {
@@ -52,7 +57,7 @@ export const MigrateDetail = ({
     isConfirmed,
     receipt,
     safeTransferFrom,
-  } = useSafeTransfer()
+  } = useSafeTransfer();
 
   const [currentTick, setCurrentTick] = useState<number>(0);
   const [sqrtPriceX96, setSqrtPriceX96] = useState<BigintIsh>(0);
@@ -69,8 +74,8 @@ export const MigrateDetail = ({
     mintAmount: bigint;
   }>();
 
-  const [leftover0, setLeftover0] = useState<string>('0');
-  const [leftover1, setLeftover1] = useState<string>('0');
+  const [leftover0, setLeftover0] = useState<string>("0");
+  const [leftover1, setLeftover1] = useState<string>("0");
 
   const handleCloseCompleteModal = () => {
     closeMigrateCompleteModal();
@@ -152,16 +157,18 @@ export const MigrateDetail = ({
   useWatchContractEvent({
     address: CONTRACT_ADDRESSES.weweVault,
     abi: ArrakisVaultABI,
-    eventName: 'LogMint',
+    eventName: "LogMint",
     poll: false,
     onLogs(logs: any[]) {
-      const mintEvent = logs.find(log => log['args'].receiver.toLowerCase() === address?.toLowerCase())
+      const mintEvent = logs.find(
+        (log) => log["args"].receiver.toLowerCase() === address?.toLowerCase()
+      );
       if (mintEvent) {
         setMintAmount({
           amount0: mintEvent.args.amount0In,
           amount1: mintEvent.args.amount1In,
-          mintAmount: mintEvent.args.mintAmount
-        })
+          mintAmount: mintEvent.args.mintAmount,
+        });
       }
     },
   });
@@ -169,22 +176,26 @@ export const MigrateDetail = ({
   useWatchContractEvent({
     address: CONTRACT_ADDRESSES.usdc,
     abi: ERC20Abi,
-    eventName: 'Transfer',
+    eventName: "Transfer",
     args: [CONTRACT_ADDRESSES.migration, address],
     poll: false,
     onLogs(logs: any[]) {
-      setLeftover1(Number(ethers.formatUnits(logs[0]?.args?.value || 0, 6)).toFixed(2))
+      setLeftover1(
+        Number(ethers.formatUnits(logs[0]?.args?.value || 0, 6)).toFixed(2)
+      );
     },
   });
 
   useWatchContractEvent({
     address: CONTRACT_ADDRESSES.wewe,
     abi: ERC20Abi,
-    eventName: 'Transfer',
+    eventName: "Transfer",
     args: [CONTRACT_ADDRESSES.migration, address],
     poll: false,
     onLogs(logs: any[]) {
-      setLeftover0(Number(ethers.formatUnits(logs[0]?.args?.value || 0, 18)).toFixed(2))
+      setLeftover0(
+        Number(ethers.formatUnits(logs[0]?.args?.value || 0, 18)).toFixed(2)
+      );
     },
   });
 
@@ -201,7 +212,10 @@ export const MigrateDetail = ({
         provider
       );
       const amountToDeposit0 = ethers.parseEther(amountWEWE.toString());
-      const amountToDeposit1 = ethers.parseUnits((amountWETH * wethPrice).toFixed(6), 6);
+      const amountToDeposit1 = ethers.parseUnits(
+        (amountWETH * wethPrice).toFixed(6),
+        6
+      );
       const result = await resolver.getMintAmounts(
         CONTRACT_ADDRESSES.weweVault,
         amountToDeposit0,
@@ -225,7 +239,7 @@ export const MigrateDetail = ({
     <>
       <div className="w-full">
         <button onClick={onBack} className="w-full text-start">
-          <div className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap">
+          <div className="flex flex-wrap items-center justify-between gap-3 lg:flex-nowrap">
             <Typography secondary size="md" tt="uppercase">
               MIGRATE UNISWAP LIQUIDITY
             </Typography>
@@ -237,7 +251,7 @@ export const MigrateDetail = ({
           and earn fees. This migration will move your liquidity over.
         </Typography>
       </div>
-      <div className="py-2 w-full">UNISWAP MIGRATION STATUS</div>
+      <div className="w-full py-2">UNISWAP MIGRATION STATUS</div>
       <Card>
         <div className="flex items-center justify-between">
           <Typography size="lg">VALUE</Typography>
@@ -253,7 +267,7 @@ export const MigrateDetail = ({
 
         <div className="flex flex-col gap-5">
           <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
-            <div className="flex-1 flex items-center">
+            <div className="flex flex-1 items-center">
               <div className="flex items-center">
                 <Image
                   src="/img/tokens/wewe.png"
@@ -277,7 +291,7 @@ export const MigrateDetail = ({
               height={16}
               alt=""
             />
-            <div className="flex-1 flex items-center justify-end gap-3">
+            <div className="flex flex-1 items-center justify-end gap-3">
               <div className="flex items-center">
                 <Image
                   src="/img/tokens/wewe.png"
@@ -299,7 +313,7 @@ export const MigrateDetail = ({
         </div>
         <Button
           disabled={isPending || isTxConfirming}
-          className="px-10 my-5 w-full flex items-center justify-center gap-2"
+          className="my-5 flex w-full items-center justify-center gap-2 px-10"
           onClick={handleMigrate}
         >
           <Typography secondary size="xs" fw={700}>
@@ -468,7 +482,7 @@ export const MigrateDetail = ({
       </div>
       <Card>
         <Typography size="lg">By pairing with USDC, WEWESWAP:</Typography>
-        <ul className="list-decimal list-inside pt-3 text-sm">
+        <ul className="list-inside list-decimal pt-3 text-sm">
           <li>Allows you to earn a stream of stable yield (nice!)</li>
           <li>
             Is a more stable “working asset”, which means less volatility in
@@ -490,7 +504,7 @@ export const MigrateDetail = ({
             amountUsd: totalLPUSD,
             receipt: receipt,
             leftover0,
-            leftover1
+            leftover1,
           }}
         />
       )}

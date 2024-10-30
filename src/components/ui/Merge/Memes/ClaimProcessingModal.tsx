@@ -1,11 +1,10 @@
-import { Divider, Loader, ModalRootProps } from '@mantine/core';
-import React, { useEffect } from 'react'
-import { Hex } from 'viem';
-import { Modal, Typography } from '~/components/common';
-import Image from 'next/image';
-import { useMemeEat, useMemeEaterClaim } from '~/hooks/useMemeEater';
-import { useAccount } from 'wagmi';
-import { CONTRACT_ADDRESSES } from '~/constants';
+import React, { useEffect } from "react";
+import Image from "next/image";
+import { Divider, Loader, ModalRootProps } from "@mantine/core";
+import { Modal, Typography } from "~/components/common";
+import { useMemeEaterClaim } from "~/hooks/useMemeEater";
+import { Hex } from "viem";
+import { useAccount } from "wagmi";
 
 type ClaimProcessingProps = {
   onClose: () => void;
@@ -16,73 +15,72 @@ type ClaimProcessingProps = {
   eaterContractAddress: Hex;
 } & ModalRootProps;
 
-const ClaimProcessingModal = ({ onClose, onTxError, onMergeSuccess, opened, eaterContractAddress }: ClaimProcessingProps) => {
-
+const ClaimProcessingModal = ({
+  onClose,
+  onTxError,
+  onMergeSuccess,
+  opened,
+  eaterContractAddress,
+}: ClaimProcessingProps) => {
   const { address } = useAccount();
 
-  const {
-    hash,
-    isPending,
-    isError,
-    claim,
-  } = useMemeEaterClaim(eaterContractAddress);
+  const { hash, isPending, isError, claim } =
+    useMemeEaterClaim(eaterContractAddress);
 
   useEffect(() => {
     async function startClaim() {
       try {
-        await claim()
+        await claim();
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     }
-    startClaim()
-  }, [address])
-
+    startClaim();
+  }, [address]);
 
   useEffect(() => {
     if (isError) {
-      onTxError(hash)
+      onTxError(hash);
     }
-  }, [isError, hash])
+  }, [isError, hash]);
 
-  const finishSuccessfully = hash && (!isPending)
+  const finishSuccessfully = hash && !isPending;
 
   useEffect(() => {
     if (hash && !isPending) {
-      onMergeSuccess(hash)
+      onMergeSuccess(hash);
     }
-  }, [hash, isPending])
-
+  }, [hash, isPending]);
 
   return (
-    <Modal title='CLAIM WEWE TOKENS' onClose={onClose} opened={opened}>
-      <div className='flex gap-3 items-center'>
-        {isPending || !hash
-          ? <>
+    <Modal title="CLAIM WEWE TOKENS" onClose={onClose} opened={opened}>
+      <div className="flex items-center gap-3">
+        {isPending || !hash ? (
+          <>
             <Loader color="grey" />
             <Typography>Please claim tokens</Typography>
           </>
-          : <>
-            <Image src="/img/icons/success.svg" width={36} height={36} alt='' />
+        ) : (
+          <>
+            <Image src="/img/icons/success.svg" width={36} height={36} alt="" />
             <Typography>Tokens claimed</Typography>
           </>
-        }
+        )}
       </div>
-      {
-        !isPending && !finishSuccessfully &&
-        <div className='flex gap-3 items-center'>
-          <Image src="/img/icons/inform.svg" width={36} height={36} alt='' />
+      {!isPending && !finishSuccessfully && (
+        <div className="flex items-center gap-3">
+          <Image src="/img/icons/inform.svg" width={36} height={36} alt="" />
           <Typography>Please sign transaction</Typography>
         </div>
-      }
+      )}
       <Divider className="border-blue-700" />
-      <div className='flex justify-end'>
-        <Typography className='text_light_gray' size='xs'>
+      <div className="flex justify-end">
+        <Typography className="text_light_gray" size="xs">
           Total fee cost: $0.10
         </Typography>
       </div>
     </Modal>
-  )
-}
+  );
+};
 
 export default ClaimProcessingModal;

@@ -1,12 +1,12 @@
 "use client";
 
-import { Loader } from "@mantine/core";
 import Image from "next/image";
-import { useAccount } from "wagmi";
+import { Loader } from "@mantine/core";
 import { Button, Card, Typography } from "~/components/common";
 import { usePositions } from "~/hooks/useMigrate";
 import { Position } from "~/models";
 import { formatPrice, tickToPrice } from "~/utils";
+import { useAccount } from "wagmi";
 
 type MigrateHomeProps = {
   onSelectPosition: (position: Position) => void;
@@ -20,7 +20,7 @@ export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
   return (
     <>
       <div className="w-full py-5">
-        <div className="flex items-center justify-between gap-3 lg:flex-nowrap flex-wrap">
+        <div className="flex flex-wrap items-center justify-between gap-3 lg:flex-nowrap">
           <Typography secondary>MIGRATE AND EARN CHAOS!</Typography>
         </div>
         <Typography size="sm" tt="uppercase" className="pt-4">
@@ -28,11 +28,11 @@ export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
         </Typography>
       </div>
 
-      <div className="py-2 w-full">YOUR UNISWAP ACTIVE POSITIONS</div>
+      <div className="w-full py-2">YOUR UNISWAP ACTIVE POSITIONS</div>
       {positions && (
         <Card className="flex flex-col gap-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex-1 bg_light_dark px-4 py-3 flex items-center gap-3 lg:w-fit w-full">
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <div className="bg_light_dark flex w-full flex-1 items-center gap-3 px-4 py-3 lg:w-fit">
               <Image
                 className="rounded"
                 src="/img/tokens/uniswap-migrate.png"
@@ -45,15 +45,15 @@ export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
               </Typography>
             </div>
             <Typography size="sm" ta="right" flex={1}>
-              Your positions ({(positions as any).length})
+              Your positions ({(positions || []).length})
             </Typography>
           </div>
           {positions.map((position, index) => (
             <div
               key={index}
-              className="flex flex-col md:flex-row items-center justify-between gap-4 my-2"
+              className="my-2 flex flex-col items-center justify-between gap-4 md:flex-row"
             >
-              <div className="flex-1 flex flex-col items-center md:items-start">
+              <div className="flex flex-1 flex-col items-center md:items-start">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center">
                     <Image
@@ -78,7 +78,7 @@ export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
                   </Typography>
                 </div>
 
-                <div className="flex items-center gap-3 mt-3">
+                <div className="mt-3 flex items-center gap-3">
                   <Typography size="xs">
                     ID: {Number(position.tokenId)}
                   </Typography>
@@ -102,7 +102,7 @@ export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
               <Button
                 key={index}
                 onClick={() => onSelectPosition(position)}
-                className="sm:w-fit w-full md:w-auto flex gap-2"
+                className="flex w-full gap-2 sm:w-fit md:w-auto"
               >
                 <Typography secondary size="sm" fw={700}>
                   Migrate
@@ -130,7 +130,7 @@ export const MigrateHome = ({ onSelectPosition }: MigrateHomeProps) => {
           WEWESWAP uses a new high-performance liquidity design that:
         </Typography>
 
-        <ul className="list-decimal list-inside pt-3 text-sm">
+        <ul className="list-inside list-decimal pt-3 text-sm">
           <li>Is very simple to add or remove liquidity (yay!)</li>
           <li>
             Is fully passive, using auto-rebalancing for you (you never go out

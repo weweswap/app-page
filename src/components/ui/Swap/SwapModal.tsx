@@ -1,11 +1,13 @@
-import { Divider, ModalRootProps } from "@mantine/core";
+import { useEffect } from "react";
 import Image from "next/image";
+import { Divider, ModalRootProps } from "@mantine/core";
 import { Button, Modal, Typography } from "~/components/common";
 import { formatStringUnits } from "~/utils";
-import { SetStateAction, useEffect } from "react";
-import { useSwapContext } from "./SwapContext";
-import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
 import { Hash } from "viem";
+import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
+
+import { useSwapContext } from "./SwapContext";
+
 type SwapModalProps = {
   onClose: () => void;
   openSwapComplete: () => void;
@@ -53,7 +55,7 @@ export const SwapModal = (props: SwapModalProps) => {
       props.onClose();
       props.openSwapFail();
     }
-  }, [isPending, isConfirming, isConfirmed, , isError]);
+  }, [isPending, isConfirming, isConfirmed, isError]);
   return (
     <Modal title="Review swap" onClose={props.onClose} opened={props.opened}>
       {routeData && (
@@ -80,7 +82,10 @@ export const SwapModal = (props: SwapModalProps) => {
               />
             </div>
             <Typography size="xs">
-              ${Number(routeData.routeSummary.amountInUsd).toLocaleString("en-US")}
+              $
+              {Number(routeData.routeSummary.amountInUsd).toLocaleString(
+                "en-US"
+              )}
             </Typography>
           </div>
 
@@ -106,7 +111,10 @@ export const SwapModal = (props: SwapModalProps) => {
               />
             </div>
             <Typography size="xs">
-              ${Number(routeData.routeSummary.amountOutUsd).toLocaleString("en-US")}
+              $
+              {Number(routeData.routeSummary.amountOutUsd).toLocaleString(
+                "en-US"
+              )}
             </Typography>
           </div>
 
@@ -133,7 +141,7 @@ export const SwapModal = (props: SwapModalProps) => {
               {routeData.outputToken.symbol} ($1.00)
             </Typography>
           </div>
-          <div className="flex justify-between w-full">
+          <div className="flex w-full justify-between">
             <Typography size="xs">Route</Typography>
             <Typography size="xs">Kyber Swap Aggregator</Typography>
             <Image
@@ -152,9 +160,9 @@ export const SwapModal = (props: SwapModalProps) => {
             </Typography>
             <Typography size="xs" fw={700}>
               {"<"}$
-              {Number(
-                routeData.routeSummary.extraFee.feeAmount
-              ).toLocaleString("en-US")}
+              {Number(routeData.routeSummary.extraFee.feeAmount).toLocaleString(
+                "en-US"
+              )}
             </Typography>
           </div>
 
@@ -169,7 +177,7 @@ export const SwapModal = (props: SwapModalProps) => {
           </div>
 
           {swapState.buildErrorCode == "422" && (
-            <div className="rounded rounded-lg bg-orange-600 p-2">
+            <div className="rounded-lg bg-orange-600 p-2">
               <Typography size="xs">
                 There was an issue while confirming your price and minimum
                 amount received. You may consider adjusting your Max Slippage

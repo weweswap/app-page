@@ -1,15 +1,21 @@
-import { useQuery } from "@tanstack/react-query"
-import { Hex } from "viem";
-import { request, gql } from "graphql-request";
-import { ethers } from "ethers";
-import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
-import { provider } from "~/hooks/provider";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import dayjs from "dayjs";
-import { formatNumber } from "~/utils";
-import { LoadingScreen } from "~/components/common/LoadingScreen";
+import { useQuery } from "@tanstack/react-query";
 import { Typography } from "~/components/common";
-
+import { LoadingScreen } from "~/components/common/LoadingScreen";
+import { provider } from "~/hooks/provider";
+import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
+import { formatNumber } from "~/utils";
+import dayjs from "dayjs";
+import { ethers } from "ethers";
+import { gql, request } from "graphql-request";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { Hex } from "viem";
 
 interface PoolVolumeChartProps {
   address: Hex;
@@ -22,7 +28,7 @@ interface VolumeHourlySnapshotResponse {
       timestamp: string;
       hourlyVolumeUSD: string;
     }[];
-  }
+  };
 }
 
 interface VolumeDailySnapshotResponse {
@@ -31,15 +37,11 @@ interface VolumeDailySnapshotResponse {
       timestamp: string;
       dailyVolumeUSD: string;
     }[];
-  }
+  };
 }
 
 async function fetchOneDayVolume(address: Hex) {
-  const arrakisVault = new ethers.Contract(
-    address,
-    ArrakisVaultABI,
-    provider
-  );
+  const arrakisVault = new ethers.Contract(address, ArrakisVaultABI, provider);
   const poolAddressList = await arrakisVault.getPools();
 
   const response = await request<VolumeHourlySnapshotResponse>({
@@ -52,24 +54,21 @@ async function fetchOneDayVolume(address: Hex) {
           timestamp
         },
       }
-    }`
+    }`,
   });
 
-  return response?.liquidityPool?.hourlySnapshots.map((item) => {
-    return {
-      timestamp: parseInt(item.timestamp) * 1000,
-      value: parseFloat(item.hourlyVolumeUSD)
-    }
-  }) || [];
+  return (
+    response?.liquidityPool?.hourlySnapshots.map((item) => {
+      return {
+        timestamp: parseInt(item.timestamp) * 1000,
+        value: parseFloat(item.hourlyVolumeUSD),
+      };
+    }) || []
+  );
 }
 
-
 async function fetchOneWeekVolume(address: Hex) {
-  const arrakisVault = new ethers.Contract(
-    address,
-    ArrakisVaultABI,
-    provider
-  );
+  const arrakisVault = new ethers.Contract(address, ArrakisVaultABI, provider);
   const poolAddressList = await arrakisVault.getPools();
 
   const response = await request<VolumeDailySnapshotResponse>({
@@ -82,63 +81,80 @@ async function fetchOneWeekVolume(address: Hex) {
           timestamp
         },
       }
-    }`
+    }`,
   });
 
-  return response?.liquidityPool?.dailySnapshots.map((item) => {
-    return {
-      timestamp: parseInt(item.timestamp) * 1000,
-      value: parseFloat(item.dailyVolumeUSD)
-    }
-  }) || [];
+  return (
+    response?.liquidityPool?.dailySnapshots.map((item) => {
+      return {
+        timestamp: parseInt(item.timestamp) * 1000,
+        value: parseFloat(item.dailyVolumeUSD),
+      };
+    }) || []
+  );
 }
 
-export const PoolVolumeChart = ({ address, timeFrame }: PoolVolumeChartProps) => {
+export const PoolVolumeChart = ({
+  address,
+  timeFrame,
+}: PoolVolumeChartProps) => {
   const { data, isLoading } = useQuery({
     queryKey: ["pool-volume-chart", address, timeFrame],
     staleTime: 1000 * 60 * 5,
-    queryFn: () => timeFrame === "1D" ? fetchOneDayVolume(address) : fetchOneWeekVolume(address),
+    queryFn: () =>
+      timeFrame === "1D"
+        ? fetchOneDayVolume(address)
+        : fetchOneWeekVolume(address),
   });
 
+  if (isLoading) return <LoadingScreen />;
 
-  if (isLoading) return <LoadingScreen />
-
-  if (!data || data.length === 0) return (
-    <Typography secondary className='text-center py-10 font-bold' size='xl'>
-      NOTHING TO SHOW HERE
-    </Typography>
-  );
+  if (!data || data.length === 0)
+    return (
+      <Typography secondary className="py-10 text-center font-bold" size="xl">
+        NOTHING TO SHOW HERE
+      </Typography>
+    );
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart
-        data={[...data].reverse()}
-      >
+      <BarChart data={[...data].reverse()}>
         <XAxis
           axisLine={false}
           tickLine={false}
           className="text-xs"
           dataKey="timestamp"
           padding="gap"
-          tickFormatter={(v) => dayjs(v).format(timeFrame === "1W" ? "DD.MMM" : "HH:mm")}
+          tickFormatter={(v) =>
+            dayjs(v).format(timeFrame === "1W" ? "DD.MMM" : "HH:mm")
+          }
         />
         <YAxis
           axisLine={false}
           width={40}
           tickLine={false}
           className="text-xs"
-          tickFormatter={(value) => `$${formatNumber(value, {compact: true})}`}
+          tickFormatter={(value) =>
+            `$${formatNumber(value, { compact: true })}`
+          }
         />
         <Tooltip
           cursor={{ radius: 3, fillOpacity: 0.1 }}
-          contentStyle={{ backgroundColor: "rgba(0,0,0,0.7)", border: "none", fontSize: "14px" }}
+          contentStyle={{
+            backgroundColor: "rgba(0,0,0,0.7)",
+            border: "none",
+            fontSize: "14px",
+          }}
           formatter={(value) => {
-            return [`$${formatNumber(value as string, {compact: true})}`, "Volume"]
+            return [
+              `$${formatNumber(value as string, { compact: true })}`,
+              "Volume",
+            ];
           }}
           labelFormatter={(v) => dayjs(v).format("DD.MMM YYYY HH:mm")}
         />
         <Bar dataKey="value" fill="#32e7bf" radius={3} />
       </BarChart>
     </ResponsiveContainer>
-  )
-}
+  );
+};

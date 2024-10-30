@@ -1,10 +1,10 @@
-import { Hex } from "viem";
 import { Chain } from "~/constants";
+import { Hex } from "viem";
 
 export interface TokenItem {
   chain: Chain;
   symbol: string;
-  address:Hex;
+  address: Hex;
   icon: string;
   decimals: number;
 }

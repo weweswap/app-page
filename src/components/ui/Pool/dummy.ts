@@ -9,8 +9,8 @@ export const DUMMY_TABLE_CONTENT = [
     type: "WEWE/USDC",
     logo: {
       first: "/img/tokens/wewe.png",
-      second: "/img/tokens/usdc.png"
-    }
+      second: "/img/tokens/usdc.png",
+    },
   },
 
   // {
@@ -47,7 +47,7 @@ export const DUMMY_POOLS = [
     state: "Active",
     range: "INFINITY",
     apr: "420%",
-    shares:"0.0000023434234",
+    shares: "0.0000023434234",
     lpValue: "34,54",
     rewards: "45,65",
     positionId: "69",
@@ -70,25 +70,27 @@ export const DUMMY_POOLS = [
   //     rewards: "45,65",
   //     positionId: "69",
   // },
-]
+];
 
 export const DUMMY_POOL_TYPES = [
   {
     title: "EXOTIC",
-    description: "1% Fee Tier 6,000,000,000 WEWE ($1,000,000)  $1,000,000 volume",
-    icon: "/img/tokens/wewe.png"
+    description:
+      "1% Fee Tier 6,000,000,000 WEWE ($1,000,000)  $1,000,000 volume",
+    icon: "/img/tokens/wewe.png",
   },
   {
     title: "STABLE",
-    description: "0.05% Fee Tier 6,000,000 USDC ($1,000,000)  $1,000,000 volume",
-    icon: "/img/tokens/usdc.png"
+    description:
+      "0.05% Fee Tier 6,000,000 USDC ($1,000,000)  $1,000,000 volume",
+    icon: "/img/tokens/usdc.png",
   },
   {
     title: "BLUE CHIPS",
     description: "0.3% Fee Tier 6,000 BTC ($1,000,000)  $1,000,000 volume",
-    icon: "/img/tokens/eth.png"
-  }
-]
+    icon: "/img/tokens/eth.png",
+  },
+];
 
 export const DUMMY_POOL_OPTIONS = [
   {
@@ -107,4 +109,4 @@ export const DUMMY_POOL_OPTIONS = [
     symbol: "WEWE",
     icon: "/img/tokens/wewe.png",
   },
-]
+];

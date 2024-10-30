@@ -14,50 +14,37 @@ export const ChaosRewardCard = ({ mergeConfig }: ChaosRewardCardProps) => {
       <Typography
         size="sm"
         secondary
-        className="font-black text-yellow text-center">
+        className="text-center font-black text-yellow"
+      >
         CURRENT <br />
         {mergeConfig.inputToken.symbol}:WEWE RATIO
       </Typography>
 
-      <Typography
-        size="lg"
-        secondary
-        className="mb-3"
-      >
+      <Typography size="lg" secondary className="mb-3">
         1:{rate}
       </Typography>
 
-      <Typography
-        size="xs"
-        className="text-center mb-5"
-      >
+      <Typography size="xs" className="mb-5 text-center">
         BE FAST. RATIO WILL DROP TO ZERO BY THE END OF THE MERGE.
       </Typography>
 
       <Typography
         size="sm"
         secondary
-        className="font-black text-yellow text-center">
+        className="text-center font-black text-yellow"
+      >
         CURRENT <br />
         CHAOS MULTIPLIER
       </Typography>
 
-      <Typography
-        size="lg"
-        className="mb-3"
-        secondary
-      >
+      <Typography size="lg" className="mb-3" secondary>
         5X
       </Typography>
 
-      <Typography
-        size="xs"
-        className="text-center"
-      >
+      <Typography size="xs" className="text-center">
         HIGHEST MULTIPLIER OUTSET. <br />
         DETERMINES ALLOCATION TO FUTURE $WEWE AIRDROP.
       </Typography>
-
     </div>
   );
-}
+};

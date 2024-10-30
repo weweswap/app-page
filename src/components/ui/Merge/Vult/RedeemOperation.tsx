@@ -1,12 +1,10 @@
 "use client";
 
+/* eslint-disable */
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Loader, NumberInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import clsx from "clsx";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { formatEther, parseEther } from "viem";
-import { useAccount } from "wagmi";
 import { Button, Card, Typography } from "~/components/common";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { dogica } from "~/fonts";
@@ -18,6 +16,9 @@ import {
 } from "~/hooks";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { fetchWEWEPrice } from "~/services";
+import clsx from "clsx";
+import { formatEther, parseEther } from "viem";
+import { useAccount } from "wagmi";
 
 const RedeemOperation = () => {
   const { address } = useAccount();
@@ -25,7 +26,10 @@ const RedeemOperation = () => {
     address,
     CONTRACT_ADDRESSES.vult
   );
-  const [openedRedeemCompleteModal, { open: openRedeemCompleteModal, close: closeRedeemCompleteModal }] = useDisclosure(false)
+  const [
+    openedRedeemCompleteModal,
+    { open: openRedeemCompleteModal, close: closeRedeemCompleteModal },
+  ] = useDisclosure(false);
   const [
     openedRedeemFailModal,
     { open: openRedeemFailModal, close: closeRedeemFailModal },
@@ -62,8 +66,8 @@ const RedeemOperation = () => {
       const weweFDV = wewePrice * totalWeweSupply;
       setVultFDV(
         ((weweBalanceNumber + virtualBalance) / totalWeweSupply) *
-        weweFDV *
-        (totalVultSupply / vultBalanceNumber)
+          weweFDV *
+          (totalVultSupply / vultBalanceNumber)
       );
     }
   }, [weweBalance, vultBalance, wewePrice]);
@@ -87,7 +91,7 @@ const RedeemOperation = () => {
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-5">
         <div className="bg_light_dark flex items-center justify-between gap-3 p-4">
-          <div className="flex-1 flex items-center gap-3">
+          <div className="flex flex-1 items-center gap-3">
             <Image src="/img/tokens/vult.svg" width={32} height={32} alt="" />
             <Typography secondary size="md">
               IOU-VULT
@@ -99,7 +103,7 @@ const RedeemOperation = () => {
             height={16}
             alt=""
           />
-          <div className="flex-1 flex items-center justify-end gap-3">
+          <div className="flex flex-1 items-center justify-end gap-3">
             <Image src="/img/tokens/vult.svg" width={32} height={32} alt="" />
             <Typography secondary size="md">
               VULT
@@ -107,10 +111,10 @@ const RedeemOperation = () => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
+        <div className="flex flex-col items-center justify-between gap-3 sm:flex-row sm:items-start">
           <div className="flex-1">
-            <div className="grid grid-cols-11 bg_light_dark md:bg-black flex items-center justify-between md:justify-normal gap-3 p-4 md:p-0">
-              <div className="col-span-5 flex-1 flex items-center gap-3">
+            <div className="bg_light_dark flex grid grid-cols-11 items-center justify-between gap-3 p-4 md:justify-normal md:bg-black md:p-0">
+              <div className="col-span-5 flex flex-1 items-center gap-3">
                 <NumberInput
                   defaultValue={"10000"}
                   classNames={{
@@ -132,7 +136,7 @@ const RedeemOperation = () => {
                 height={16}
                 alt=""
               />
-              <div className="col-span-5 items-center flex-1  md:flex-none flex justify-end gap-3">
+              <div className="col-span-5 flex flex-1  items-center justify-end gap-3 md:flex-none">
                 {
                   <div className="overflow-x-auto">
                     <Typography size="xl">{amount} VULT</Typography>
@@ -141,15 +145,15 @@ const RedeemOperation = () => {
               </div>
             </div>
 
-            <div className="w-full flex items-center gap-5 mt-3">
+            <div className="mt-3 flex w-full items-center gap-5">
               <div>
                 <Typography size="xs" className="text_light_gray">
                   Available:
                 </Typography>
                 <Typography size="xs" className="text_light_gray">
-                  {Math.trunc(
-                    Number(formatEther(balanceVult))
-                  ).toLocaleString("en-US")}
+                  {Math.trunc(Number(formatEther(balanceVult))).toLocaleString(
+                    "en-US"
+                  )}
                 </Typography>
               </div>
               <button
@@ -161,10 +165,10 @@ const RedeemOperation = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 w-full md:w-auto ">
-            <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
+          <div className="flex w-full flex-col gap-3 md:w-auto ">
+            <div className="flex flex-1 flex-col items-center gap-3 sm:flex-row ">
               <Button
-                className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
+                className="flex w-full items-center justify-center gap-3 md:h-[62px] md:w-auto"
                 disabled={true || !address || !amountValue || isPending}
               >
                 {isPending && <Loader color="white" size="sm" />}
@@ -176,8 +180,10 @@ const RedeemOperation = () => {
           </div>
         </div>
       </div>
-      <Card className="h-[8rem] text-center">
-        <Typography className="text_light_gray" size="md">Redeem 1:1 IOU.VULT for $VULT</Typography>
+      <Card className="h-32 text-center">
+        <Typography className="text_light_gray" size="md">
+          Redeem 1:1 IOU.VULT for $VULT
+        </Typography>
       </Card>
     </div>
   );
