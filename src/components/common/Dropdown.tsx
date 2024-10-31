@@ -1,6 +1,6 @@
 import { Combobox, InputBase, useCombobox } from "@mantine/core";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Typography } from "./Typography";
 
 type DropdownProps = {
@@ -37,10 +37,9 @@ export const Dropdown = ({
     value ? option.value === value : option.value === val
   );
 
-
   return (
     <Combobox
-      disabled={disabled}
+      
       store={combobox}
       onOptionSubmit={(val) => {
         setVal(val);

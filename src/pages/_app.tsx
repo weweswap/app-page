@@ -7,6 +7,7 @@ import WagmiProviderComp from "~/lib/wagmiProvider";
 import { Background, Footer, NavBar } from "~/components/ui";
 import { theme } from "~/theme";
 import { usePathname } from "next/navigation";
+import { ToastContainer, toast } from 'react-toastify';
 
 const App: AppType = ({ Component, pageProps }) => {
   const path = usePathname();
@@ -19,7 +20,7 @@ const App: AppType = ({ Component, pageProps }) => {
             <Background />
             <div className="w-full flex flex-col items-center">
               <NavBar />
-              {path.startsWith("/merge") || path === "/redeem" ? (
+              {!path || (path.startsWith("/merge") || path === "/redeem") ? (
                 <div className="w-full max-w-[1245px] flex flex-col items-center p-4 gap-5">
                   <Component {...pageProps} />
                 </div>
@@ -29,6 +30,7 @@ const App: AppType = ({ Component, pageProps }) => {
                 </div>
               )}
             </div>
+            <ToastContainer />
             <Footer />
           </main>
         </WagmiProviderComp>

@@ -15,14 +15,17 @@ import PoolDepositModal from "./PoolDepositModal";
 import DepositSuccessModal from "./DepositSuccessModal";
 import WithdrawModal, { PayloadWithdrawalModal } from "./WithdrawModal";
 import WithdrawSuccessModal, { PayloadWithdrawalSuccess } from "./WithdrawSuccessModal";
-import { Hex } from "viem";
 import PoolZapModal, { PayloadZapInModal } from "./PoolZapModal";
+import { formatUnits, Hex } from "viem";
+import { ethers } from "ethers";
+import { usdConverter } from "~/utils";
 
 
 export const Pool = () => {
   const [step, setStep] = useState(0);
   const [genericHashError, setGenericHashError] = useState<string>()
   const [wewePositionSelected, setWewePosition] = useState<WewePosition>()
+  const [totalGasFee, setTotalGasFee] = useState<number>()
   const [payloadApprovalModal, setPayloadApprovalModal] = useState<PayloadApproveModal>()
   const [payloadWithdrawalModal, setPayloadWithdrawalModal] = useState<PayloadWithdrawalModal>()
   const [payloadWithdrawalSuccessModal, setPayloadWithdrawalSuccessModal] = useState<PayloadWithdrawalSuccess>()
@@ -69,18 +72,29 @@ export const Pool = () => {
     isError,
     isTxConfirming,
     isConfirmed,
-    receipt,
+    receipt: txReceipt,
     claimFees,
+    gasPriceData
   } = useClaimFees();
 
   useEffect(() => {
     if (isConfirmed) {
       openClaimSuccessModal();
+
+      const gasUsed = txReceipt?.gasUsed ?? 0n;
+      const gasPrice = txReceipt?.effectiveGasPrice ?? 0n;
+      const totalFee = gasUsed * gasPrice;
+      const getUsdFees = async () => {
+        const finalUsdValue = totalFee > 0n ? await usdConverter(totalFee) : 0;
+        setTotalGasFee(finalUsdValue)
+
+      }
+      getUsdFees()  
     }
     if (isError) {
       openFailModal();
     }
-  }, [isConfirmed, receipt, isError, isPending, isTxConfirming]);
+  }, [isConfirmed, txReceipt, isError, isPending, isTxConfirming]);
   
   const handleApproveTokenModal = (amountToken0: number, amountToken1: number) => {
     setPayloadApprovalModal({
@@ -144,7 +158,7 @@ export const Pool = () => {
     openWithdrawSuccessModal()
   }
 
-  const handleWithdrawalModal = (burnAmount: number) => {
+  const handleWithdrawalModal = (burnAmount: bigint) => {
     setPayloadWithdrawalModal({burnAmount})
     openWithdrawModal()
   }
@@ -236,7 +250,7 @@ export const Pool = () => {
         />
       }
 
-      {isConfirmed && receipt && hash && (
+      {isConfirmed && txReceipt && hash && (
         <ClaimSuccessModal
           opened={openedClaimSuccessModal}
           onClose={handleCloseSuccesModal}
@@ -244,6 +258,7 @@ export const Pool = () => {
           data={{
             pendingUsdcReward: wewePositionSelected?.pendingUsdcReward || "0",
             pendingChaosReward: wewePositionSelected?.pendingChaosReward || "0",
+            gasFee: totalGasFee
           }}
         />
       )}

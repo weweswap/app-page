@@ -1,7 +1,7 @@
 import { NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import Image from "next/image";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Dropdown, Typography } from "~/components/common";
 import { TOKEN_LIST } from "~/constants/tokens";
 import { dogica } from "~/fonts";
@@ -15,19 +15,21 @@ import { SwapButton } from "./SwapButton";
 import { useSwapContext } from "./SwapContext";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
+import { useDebounce } from "~/hooks/useDebounce";
+import { useQuery } from "@tanstack/react-query";
+
+
 
 let inTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
   icon: token.icon,
-  index: index,
+  index: index
 }));
-// interval ref
-let intervalId: any = null;
 
 let outTokenOptions = TOKEN_LIST.map((token, index) => ({
   value: token.symbol,
   icon: token.icon,
-  index: index,
+  index: index
 }));
 
 type SwapHomeProps = {
@@ -47,7 +49,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
   const { address, isConnected } = useAccount();
   const [inputValue, setInputValue] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState<number>(0);
-  const [outputTokenIndex, setOutputTokenIndex] = useState<number>(0);
+  const [outputTokenIndex, setOutputTokenIndex] = useState<number>(1);
   const { data: ethBalance } = useBalance({
     address: address,
   });
@@ -68,20 +70,6 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     return inputBalance;
   };
 
-  const useDebounce = (value: number, delay: number) => {
-    const [debouncedValue, setDebouncedValue] = useState(value);
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedValue(value);
-      }, delay);
-
-      return () => {
-        clearTimeout(handler);
-      };
-    }, [value, delay]);
-    return debouncedValue;
-  };
-
   const checkHasBalance = (): boolean => {
     return (
       parseUnits(
@@ -91,54 +79,21 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
     );
   };
 
-  const debouncedInputValue = useDebounce(inputValue, 500);
+  const {debouncedInputValue, isInputChanging} = useDebounce(inputValue, 500);
 
-  const clearRouteChecking = () => {
-    if (intervalId) clearInterval(intervalId);
-  };
-
-  useEffect(() => {
-    setInterval(() => refetchBalance(), 5000);
-    return () => {
-      clearRouteChecking();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (debouncedInputValue == 0) {
-      setRouteData(undefined);
-      clearRouteChecking();
-      return;
-    }
-    clearRouteChecking();
-    setSwapState({ ...initialSwapState, loading: true });
-
-    api.router
-      .get(
-        Chain.BASE,
-        TOKEN_LIST[inputTokenIndex],
-        debouncedInputValue,
-        TOKEN_LIST[outputTokenIndex]
-      )
-      .then((res) => {
-        setSwapState({ ...swapState, loading: false });
-        res.data.message == RouterMessageType.Successful
-          ? setRouteData({
-            inputToken: TOKEN_LIST[inputTokenIndex],
-            outputToken: TOKEN_LIST[outputTokenIndex],
-            routeSummary: (res.data.data as RoutingData).routeSummary,
-            routerAddress: (res.data.data as RoutingData).routerAddress,
-          })
-          : //  setrouteData(res.data.data as RoutingData)
-          console.log(res.data.message);
-      })
-      .catch((err) => {
-        setSwapState({ ...swapState, loading: false });
-        console.error(err);
-      });
-    intervalId = setInterval(() => {
+  const {
+    isLoading:fetchLoading, 
+    isError:fetchError
+  } = useQuery({
+    queryKey: [inputTokenIndex, outputTokenIndex, debouncedInputValue],
+    refetchInterval: 10000,
+    queryFn: async () => {
+      if (debouncedInputValue == 0) {
+        setRouteData(undefined);
+        return;
+      }
       setSwapState({ ...initialSwapState, loading: true });
-
+  
       api.router
         .get(
           Chain.BASE,
@@ -161,19 +116,21 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         .catch((err) => {
           setSwapState({ ...swapState, loading: false });
           console.error(err);
-        });
-    }, 5000);
-  }, [inputTokenIndex, outputTokenIndex, debouncedInputValue]);
+        });}
+  })
+  
+   useEffect(() => {
+       if (inputTokenIndex === outputTokenIndex) {
+         const isLastToken = inputTokenIndex === TOKEN_LIST.length - 1;
+         const newIndex = isLastToken ? inputTokenIndex - 1 : inputTokenIndex + 1;
+         if (inputTokenIndex === newIndex) {
+           setOutputTokenIndex(newIndex);
+         } else {
+           setInputTokenIndex(newIndex);
+         }
+       }
+     }, [inputTokenIndex, outputTokenIndex]);
 
-  useEffect(() => {
-    outTokenOptions = TOKEN_LIST.map((token, index) => ({
-      value: token.symbol,
-      icon: token.icon,
-      index: index,
-    }));
-    outTokenOptions.splice(inTokenOptions[inputTokenIndex].index, 1);
-    setOutputTokenIndex(outTokenOptions[0].index);
-  }, [inputTokenIndex]);
 
   const handleReverse = () => {
     let inToken = inputTokenIndex;
@@ -188,11 +145,14 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
         )
       );
       setOutputTokenIndex(inToken);
-    } else {
+    } 
+    else {
+      const tempIndex = inputTokenIndex;
       setInputTokenIndex(outputTokenIndex);
-      setOutputTokenIndex(inToken);
+      setOutputTokenIndex(tempIndex);
     }
   };
+
 
   return (
     <>
@@ -274,7 +234,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
 
         <div className=" flex items-center justify-center">
           <button
-            className="absolute bg-black border border-[3px] border_turq p-3"
+            className="absolute bg-black border-[3px] border_turq p-3"
             onClick={handleReverse}
           >
             <Image
@@ -298,7 +258,8 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
               text-start bg-transparent text-white text-2xl h-auto overflow-x-auto
               border-transparent rounded-none`}
             >
-              {routeData
+              {isInputChanging || fetchLoading ? <Typography secondary className="animate-pulse">Loading...</Typography> :
+              routeData
                 ? Number(
                   formatStringUnits(
                     routeData.routeSummary.amountOut,
@@ -340,7 +301,7 @@ export const SwapHome = ({ onSetting }: SwapHomeProps) => {
       {isConnected ? (
         <>
           {routeData ? (
-            <div className="w-full" onClick={() => clearRouteChecking()}>
+            <div className="w-full">
               <SwapButton hasBalance={checkHasBalance()} />
             </div>
           ) : (

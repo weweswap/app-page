@@ -13,7 +13,7 @@ type PoolHomeProps = {
   onBack: () => void;
   onAdd: () => void;
   onDeposit: (token0: number, token1: number) => void;
-  onWithdraw: (sharesAmount: number) => void;
+  onWithdraw: (sharesAmount: bigint) => void;
   onZapIn: (tokenAmount: number, tokenAddress: Hex) => void;
 };
 

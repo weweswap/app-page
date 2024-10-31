@@ -11,8 +11,8 @@ import { Hex } from 'viem';
 
 export type PayloadMergeProcessingModal = {
   amountToMerge: string,
-  token: TokenItem
-  eater: Hex
+  token: TokenItem,
+  eater: Hex,
 }
 
 type MergeProcessingModalProps = {
@@ -48,7 +48,7 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
         await approveBroToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'))
         await eat(data.amountToMerge)
       } catch (error) {
-        console.error(error)
+        onTxError(hashEatBroToken || hashApproveBroToken)
       }
     }
     startEat()

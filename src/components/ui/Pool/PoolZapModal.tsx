@@ -72,13 +72,13 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
         await approveToken(
           data.zapInTokenAddress,
           "0x9377daBe42574cFB0BA202ed1A3a133C68fA1Bfd",
-          ethers.parseUnits(data.zapInAmount.toString(), zapInToken?.decimals),
+          ethers.parseUnits(data.zapInAmount.toFixed(zapInToken?.decimals), zapInToken?.decimals),
         );
         await zapIn(
           selectedPool.address,
           zapInToken!.address,
           ethers
-            .parseUnits(String(data.zapInAmount), zapInToken!.decimals)
+            .parseUnits(String(data.zapInAmount.toFixed(zapInToken?.decimals)), zapInToken?.decimals)
             .toString()
         );
       }
@@ -111,7 +111,7 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
         </Typography>
         <div className="flex items-center">
           <Image
-            src={zapInToken!.icon!}
+            src={zapInToken?.icon!}
             alt=""
             height={24}
             width={24}
@@ -126,7 +126,7 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
             <>
               <Loader color="grey" />
               <Typography>
-                Please Approve {zapInToken!.symbol}
+                Please Approve {zapInToken?.symbol}
               </Typography>
             </>
           ) : (
@@ -137,7 +137,7 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
                 height={36}
                 alt=""
               />
-              <Typography>{zapInToken!.symbol} Approved</Typography>
+              <Typography>{zapInToken?.symbol} Approved</Typography>
             </>
           )}
         </div>
