@@ -6,11 +6,13 @@ import { useAccount } from "wagmi";
 import { useWewePools } from "~/hooks/usePool";
 import PoolDeposit from "./PoolDeposit";
 import { usePoolContext } from "./PoolContext";
+import { Hex } from "viem";
 
 type MySharesProps = {
   onClaim: (wewePositon: WewePosition) => void;
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
+  onZapIn: (tokenAmount: number, tokenAddress: Hex) => void;
   setPoolTypes: (number: number) => void;
   poolTypes: number;
 };
@@ -19,6 +21,7 @@ const MyShares = ({
   onClaim,
   onDeposit,
   onWithdraw,
+  onZapIn,
   setPoolTypes,
   poolTypes,
 }: MySharesProps) => {
@@ -281,6 +284,7 @@ const MyShares = ({
           onWithdraw={onWithdraw}
           onDeposit={onDeposit}
           onBack={() => setCurrentPage("")}
+          onZapIn={onZapIn}
         />
       )}
     </>
