@@ -15,6 +15,9 @@ import { WewePosition } from "~/hooks/useWewePositions";
 import { PoolChartCard } from "./PoolChartCard";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { formatNumber } from "~/utils";
+import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
+import { provider } from "~/hooks/provider";
+import { Hex } from "viem";
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -170,6 +173,26 @@ const PoolDeposit = ({
       console.error(error)
     }
   }
+
+  // useEffect(() => {
+  //  if(address) {
+  //   async function fetchBalanceShares (address:Hex) {
+  //     const arrakisVault = new ethers.Contract(
+  //       address,
+  //       ArrakisVaultABI,
+  //       provider
+  //     )
+  
+  //     const balanceShare0 = await arrakisVault.getPools()
+
+  //     console.log("Balance0:", balanceShare0)
+  //   }  
+
+  //   fetchBalanceShares(address)
+  //  }
+
+  // }, [])
+
 
   return (
     selectedPool && (
