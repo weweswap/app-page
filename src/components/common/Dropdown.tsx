@@ -1,6 +1,6 @@
 import { Combobox, InputBase, useCombobox } from "@mantine/core";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Typography } from "./Typography";
 
 type DropdownProps = {
@@ -16,6 +16,7 @@ type DropdownProps = {
   className?: string;
   disabled?: boolean
   setIndexValue?: (value: number) => void;
+  onChange?: (value: string) => void;
 };
 
 export const Dropdown = ({
@@ -25,6 +26,7 @@ export const Dropdown = ({
   placeholder,
   className,
   setIndexValue,
+  onChange,
   disabled
 }: DropdownProps) => {
   const combobox = useCombobox({
@@ -41,12 +43,18 @@ export const Dropdown = ({
     <Combobox
       
       store={combobox}
-      onOptionSubmit={(val) => {
-        setVal(val);
-        setIndexValue &&
-          setIndexValue(options.find((o) => o.value === val)?.index ?? 0);
+      onOptionSubmit={(selectedValue) => {
+        setVal(selectedValue);
+        if (setIndexValue) {
+          const selectedOption = options.find((o) => o.value === selectedValue);
+          setIndexValue(selectedOption?.index ?? 0);
+        }
+        if (onChange) {
+          onChange(selectedValue);
+        }
         combobox.closeDropdown();
       }}
+      disabled={disabled}
     >
       <Combobox.Target>
         <InputBase

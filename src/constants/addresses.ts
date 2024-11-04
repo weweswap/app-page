@@ -25,4 +25,5 @@ export const CONTRACT_ADDRESSES = {
     "0x6f71796114b9cdaef29a801bc5cdbcb561990eeb" as `0x${string}`,
   nonFungiblePositionManagerAddress:
     "0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1" as `0x${string}`,
+  zapContract: "0x9377daBe42574cFB0BA202ed1A3a133C68fA1Bfd" as `0x${string}`,
 };
