@@ -29,6 +29,7 @@ type PoolDepositProps = {
   enableClaimBlock?: boolean;
 };
 
+
 const PoolDeposit = ({
   onBack,
   onDeposit,
@@ -44,11 +45,13 @@ const PoolDeposit = ({
   const [inputValueToken1, setInputValueToken1] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
   const [secondaryTokenIndex, setSecondaryTokenIndex] = useState(0);
+  const [tokenShare0, setTokenShare0] = useState<bigint | number>(0);
+  const [tokenShare1, setTokenShare1] = useState<bigint | number>(0);
+
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
-  const {totalSupply, isPending:totalSupplyPending} = useVaultTotalSupply(selectedPool)
-  const {data:vaultInfo,} = useVaultInfo(selectedPool)
-  console.log("VaultInfo:", vaultInfo)
+  const {totalSupply} = useVaultTotalSupply(selectedPool)
+  const {token0UnderlyingAmount, token1UnderlyingAmount} = useVaultInfo(selectedPool) 
 
   const { address } = useAccount();
 
@@ -96,13 +99,19 @@ const PoolDeposit = ({
   );
 
   useEffect(() => {
+
     const intervalId = setInterval(() => {
       refechToken1Balance();
       refechToken0Balance();
       refechShares();
     }, 5000);
+
     return () => clearInterval(intervalId);
   }, []);
+
+  const formattedShare0 = totalSupply ? (token0UnderlyingAmount/totalSupply)*balanceShares : 0
+  const formattedShare1 = totalSupply ? (token1UnderlyingAmount/totalSupply)*balanceShares : 0
+
 
   useEffect(() => {
     if (prices && selectedPool) {
@@ -146,7 +155,12 @@ const PoolDeposit = ({
         setInputValueToken0(Number(token0Equivalent.toFixed(6)))
       }
     }
+
+    setTokenShare0(formattedShare0)
+    setTokenShare1(formattedShare1)
+    
   }, [prices, sliderValue, balanceToken0, selectedPool]);
+
 
   const handleChangeToken0 = (newValue: number) => {
     if (prices) {
@@ -178,7 +192,6 @@ const PoolDeposit = ({
       console.error(error)
     }
   }
-
 
   return (
     selectedPool && (
@@ -518,15 +531,15 @@ const PoolDeposit = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center justify-center gap-5">
                    <div className="flex items-center gap-2">
-                   <Image src={selectedPool?.token0.icon} height={24} width={24} alt="" />
-                    <Typography secondary>
-                    {selectedPool?.token0.chain}
+                   <Image src={selectedPool?.token0.icon} height={20} width={20} alt="" />
+                    <Typography size="xs">
+                    {Number(ethers.formatUnits(tokenShare0)).toFixed(4)}
                     </Typography>
                    </div>
                    <div className="flex items-center gap-2">
-                   <Image src={selectedPool?.token1.icon} height={24} width={24} alt="" />
-                    <Typography secondary>
-                    {selectedPool?.token1.symbol}
+                   <Image src={selectedPool?.token1.icon} height={20} width={20} alt="" />
+                    <Typography size="xs">
+                    {Number(ethers.formatUnits(tokenShare1)).toFixed(4)}
                     </Typography>
                    </div>
                   </div>

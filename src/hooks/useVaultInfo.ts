@@ -4,18 +4,25 @@ import { ArrakisV2HelperABI } from "~/lib/abis/ArrakisHelper";
 import { WewePool } from "./usePool";
 import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
 import { ethers } from "ethers";
+import { CONTRACT_ADDRESSES } from "~/constants";
+
+interface VaultData {
+  amount0: bigint;
+  amount1: bigint;
+}
 
 export function useVaultInfo(selectedPool: WewePool | undefined) {
 
-    const { data, isPending, isError, error } = useReadContract({
+    const { data } = useReadContract({
       abi: ArrakisV2HelperABI,
       functionName: "totalUnderlyingWithFeesAndLeftOver",
-      address: selectedPool?.address as `0x${string}`,
-      args: [], 
-    })
+      address: CONTRACT_ADDRESSES.arrakisV2Helper,
+      args: [selectedPool?.address]
+    }) as {data: VaultData}
+
     return {
-        data,
-        isPending, isError, error
-      };
+      token0UnderlyingAmount: data?.amount0 || BigInt(0),
+      token1UnderlyingAmount: data?.amount1 || BigInt(0),
+    };
 
   }
