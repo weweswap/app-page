@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Button, Card, Typography } from "~/components/common";
+import { Button, Typography } from "~/components/common";
 import Link from "next/link";
 
 import Liquidity from "./Liquidity";
 import MyShares from "./MyShares";
 import { WewePosition } from "~/hooks/useWewePositions";
+import { Hex } from "viem";
 
 type PoolHomeProps = {
   onClaim: (wewePositon: WewePosition) => void;
@@ -13,6 +14,7 @@ type PoolHomeProps = {
   onAdd: () => void;
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
+  onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
 };
 
 export const PoolHome = ({
@@ -21,6 +23,7 @@ export const PoolHome = ({
   onBack, 
   onDeposit,
   onWithdraw,
+  onZapIn
 }: PoolHomeProps) => {
   const [poolTypes, setPoolTypes] = useState<number>(0);
   const [backOption, setBackOption] = useState(false);
@@ -73,6 +76,7 @@ export const PoolHome = ({
         <Liquidity
           onDeposit={onDeposit}
           onWithdraw={onWithdraw}
+          onZapIn={onZapIn}
           setPoolTypes={setPoolTypes}
           poolTypes={poolTypes}
           onNext={onNext}
@@ -84,6 +88,7 @@ export const PoolHome = ({
           onClaim={onClaim}
           onWithdraw={onWithdraw}
           onDeposit={onDeposit}
+          onZapIn={onZapIn}
           setPoolTypes={setPoolTypes}
           poolTypes={poolTypes}
         />
