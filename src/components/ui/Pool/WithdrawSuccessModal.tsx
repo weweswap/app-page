@@ -1,12 +1,13 @@
 import { Divider, Loader, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Modal, Typography } from "~/components/common";
 import { useGetBurnEvents } from "~/hooks/useGetBurnEvents";
 import { usePoolContext } from "./PoolContext";
 import { Hex } from "viem";
 import { ethers } from "ethers";
-import { formatNumber } from "~/utils";
+import { formatNumber, usdConverter } from "~/utils";
+import { useEstimateGas, useGasPrice } from "wagmi";
 
 export type PayloadWithdrawalSuccess = {
   hash?: Hex
@@ -33,6 +34,24 @@ const WithdrawSuccessModal = ({
 }: WithdrawSuccessModalProps) => {
   const { selectedPool, selectedPosition } = usePoolContext();
   const { data: event } = useGetBurnEvents(selectedPool?.address, data?.hash);
+  const {data: gasPrice} = useGasPrice()
+  const {data: gasLimit} = useEstimateGas();
+  const [estimateFee, setEstimateFee] = useState<number>();
+
+  useEffect(() => {
+    const feeCalculate = async () => {
+      if(gasPrice && gasLimit) {
+        const estimateFeeWei = gasPrice*gasLimit
+        try {
+          const data = await usdConverter(estimateFeeWei)
+          setEstimateFee(data)
+        } catch (error) {
+          console.log("Error calculating fees:", error)
+        }
+      }
+    }
+    feeCalculate()
+   }, [estimateFee])
 
   if (!event) {
     return (
@@ -128,7 +147,7 @@ const WithdrawSuccessModal = ({
           </Typography>
           <Image src={"/img/tokens/rewards.svg"} alt="" height={40} width={40} />
         </div>
-        <Typography size="sm" fw={1000} className="text-right w-full text_light_gray">Total fee cost: $0.10</Typography>
+        <Typography size="sm" fw={1000} className="text-right w-full text_light_gray">Total fee cost: ${estimateFee?.toFixed(4)}</Typography>
         <Button className="w-full" onClick={onClose}>
           COMPLETED
         </Button>
