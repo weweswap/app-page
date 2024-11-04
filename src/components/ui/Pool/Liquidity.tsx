@@ -16,7 +16,7 @@ type LiquidityProps = {
   onBack: () => void;
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
-  onZapIn: (tokenAmount: number, tokenAddress: Hex) => void;
+  onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
 };
 
 const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw, onZapIn }: LiquidityProps) => {

@@ -16,8 +16,7 @@ import DepositSuccessModal from "./DepositSuccessModal";
 import WithdrawModal, { PayloadWithdrawalModal } from "./WithdrawModal";
 import WithdrawSuccessModal, { PayloadWithdrawalSuccess } from "./WithdrawSuccessModal";
 import PoolZapModal, { PayloadZapInModal } from "./PoolZapModal";
-import { formatUnits, Hex } from "viem";
-import { ethers } from "ethers";
+import { Hex } from "viem";
 import { usdConverter } from "~/utils";
 
 
@@ -168,7 +167,7 @@ export const Pool = () => {
     closeWithdrawModal()
   }
 
-  const handleZapInModal = (zapInAmount: number, zapInTokenAddress: Hex) => {
+  const handleZapInModal = (zapInAmount: string, zapInTokenAddress: Hex) => {
     setPayloadZapInModal({zapInAmount, zapInTokenAddress})
     openZapInModal()
   }

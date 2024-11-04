@@ -14,7 +14,7 @@ type PoolHomeProps = {
   onAdd: () => void;
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
-  onZapIn: (tokenAmount: number, tokenAddress: Hex) => void;
+  onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
 };
 
 export const PoolHome = ({

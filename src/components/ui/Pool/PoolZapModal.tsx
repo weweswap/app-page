@@ -8,9 +8,10 @@ import { useAccount } from "wagmi";
 import { useZapIn } from "../../../hooks/useZapIn";
 import { ethers } from "ethers";
 import { useApproveToken } from "../../../hooks/useApproveToken";
+import { CONTRACT_ADDRESSES } from "../../../constants";
 
 export type PayloadZapInModal = {
-  zapInAmount: number;
+  zapInAmount: string;
   zapInTokenAddress: Hex;
 };
 
@@ -71,14 +72,14 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
       if (selectedPool && data && address) {
         await approveToken(
           data.zapInTokenAddress,
-          "0x9377daBe42574cFB0BA202ed1A3a133C68fA1Bfd",
-          ethers.parseUnits(data.zapInAmount.toFixed(zapInToken?.decimals), zapInToken?.decimals),
+          CONTRACT_ADDRESSES.zapContract,
+          ethers.parseUnits(data.zapInAmount, zapInToken?.decimals),
         );
         await zapIn(
           selectedPool.address,
           zapInToken!.address,
           ethers
-            .parseUnits(String(data.zapInAmount.toFixed(zapInToken?.decimals)), zapInToken?.decimals)
+            .parseUnits(data.zapInAmount, zapInToken?.decimals)
             .toString()
         );
       }

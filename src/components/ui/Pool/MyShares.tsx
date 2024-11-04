@@ -12,7 +12,7 @@ type MySharesProps = {
   onClaim: (wewePositon: WewePosition) => void;
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
-  onZapIn: (tokenAmount: number, tokenAddress: Hex) => void;
+  onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
   setPoolTypes: (number: number) => void;
   poolTypes: number;
 };

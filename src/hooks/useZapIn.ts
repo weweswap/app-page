@@ -5,6 +5,17 @@ import { Hex } from "viem";
 import { ZapKyberABI } from "../lib/abis/ZapKyber";
 import { provider } from "./provider";
 import { CONTRACT_ADDRESSES } from "../constants";
+import * as dn from "dnum";
+
+interface ZapInResponse {
+  amount0: string,
+  amount1: string,
+  mintAmount: string,
+  swapAmount: string,
+  swapFromToken: string,
+  swapToToken: string,
+  kyberSwapEncodedRoute: string,
+};
 
 export const useZapIn = () => {
   const [pendingToConfirm, setPendingToConfirm] = useState(false);
@@ -22,7 +33,9 @@ export const useZapIn = () => {
     tokenInAmount: string
   ) => {
     try {
-      const response = await axios.post(
+      setPendingToConfirm(true);
+
+      const response = await axios.post<ZapInResponse>(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/zap-in`,
         {
           vaultAddress,
@@ -48,7 +61,7 @@ export const useZapIn = () => {
         result.swapFromToken,
         BigInt(tokenInAmount),
         //95% of the mintAmount from result to be on the safe side for tx success
-        (BigInt(result.mintAmount) * BigInt(95)) / BigInt(100),
+        dn.div(dn.mul(result.mintAmount,95),100)[0],
         result.kyberSwapEncodedRoute,
         result.kyberSwapEncodedRoute,
       ];
@@ -60,7 +73,6 @@ export const useZapIn = () => {
         args,
       });
 
-      setPendingToConfirm(true);
       const receipt = await provider.waitForTransaction(tx);
       setPendingToConfirm(false);
 
