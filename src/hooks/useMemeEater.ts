@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { Hex } from "viem";
 import { useAccount, usePublicClient, useReadContract, useWatchContractEvent, useWriteContract } from "wagmi";
 import MemeEaterAbi from "~/lib/abis/MemeEaterABI";
 import * as dn from "dnum";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+interface WhiteListResponse {
+  whitelistInfo: {
+    amount: string;
+    proof: string[];
+    address: Hex;
+  }
+}
 
 function formatMinutesToHumanReadable(minutes: number) {
   const days = Math.floor(minutes / 60 / 24);
@@ -194,4 +204,36 @@ export function useMemeEaterIsPaused(eaterAddress: Hex) {
     isPaused: data,
     isLoading
   }
+}
+
+export function useMemeEaterMerklInfo(eaterAddress: Hex) {
+  const { address } = useAccount();
+
+  const { data: merkleRoot, isLoading: isMerkleRootLoading } = useReadContract({
+    abi: MemeEaterAbi,
+    address: eaterAddress,
+    functionName: "merkleRoot",
+    query: {
+      enabled: !!address,
+    }
+  });
+
+  const { data: whitelistData, isLoading: isWhitelistDataLoading } = useQuery({
+    queryKey: ["isWhitelisted", eaterAddress, address],
+    queryFn: async () => {
+      // TODO: replace it with prod url
+      const response = await axios.get<WhiteListResponse>(`https://app-backend-development.up.railway.app/api/merge/whitelist/${address}`);
+
+      return response.data;
+    },
+    enabled: !!address,
+  });
+
+
+  return {
+    isLoading: isMerkleRootLoading || isWhitelistDataLoading,
+    merkleRoot: merkleRoot,
+    whitelistData: whitelistData
+  }
+
 }

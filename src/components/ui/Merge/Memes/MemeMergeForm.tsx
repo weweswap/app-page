@@ -2,7 +2,7 @@ import { NumberInput } from '@mantine/core'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import { Hex } from 'viem'
-import { Button, Typography } from '~/components/common'
+import { Button, Card, Typography } from '~/components/common'
 import { dogica } from '~/fonts'
 import { cn } from '~/utils'
 import MergeCompleteModal from './MergeCompleteModal'
@@ -13,13 +13,48 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import * as dn from "dnum"
 import MergeProcessingModal from './MergeProcessingModal'
 import { ethers, formatUnits } from 'ethers'
-import { useMemeEaterIsPaused, useMemeEaterRate, useMemeGetTotalWeWe, useVestingsInfo } from '~/hooks/useMemeEater'
+import { useMemeEaterIsPaused, useMemeEaterMerklInfo, useMemeEaterRate, useMemeGetTotalWeWe, useVestingsInfo } from '~/hooks/useMemeEater'
 import { MergeConfig } from '~/constants/mergeConfigs'
 import { WEWE_COINGECKO_ID } from '~/constants'
 import { useCoinGeckoGetPrice } from '~/hooks/useCoingeckoGetPrice'
+import { MerkleTree } from 'merkletreejs';
+import { keccak256, encodeAbiParameters, padHex } from 'viem';
+
 
 interface MemeMergeFormProps {
   mergeConfig: MergeConfig;
+}
+
+function checkIsValidProof({
+  merkleRoot,
+  proof,
+  amount,
+  address,
+}: {
+  merkleRoot?: string,
+  proof?: string[],
+  amount?: string,
+  address?: Hex,
+} ) {
+  if(merkleRoot === padHex('0x0', { size: 32 })) {
+    return true;
+  }
+
+  if(!merkleRoot || !proof || !amount || !address) {
+    return true;
+  }
+
+  const encoded = encodeAbiParameters(
+    [
+      { type: 'address', name: 'address' },
+      { type: 'uint256', name: 'amount' },
+    ],
+    [address, BigInt(amount)],
+  );
+
+  const leaf = keccak256(keccak256(encoded));
+
+  return MerkleTree.verify(proof, leaf, merkleRoot)
 }
 
 const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
@@ -33,6 +68,14 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
   const [hash, setHash] = useState<Hex>()
   const { rate, isLoading: isRateLoading } = useMemeEaterRate(mergeConfig.eaterContractAddress);
   const { isPaused } = useMemeEaterIsPaused(mergeConfig.eaterContractAddress);
+  const { isLoading: isMerklInfoLoading, merkleRoot, whitelistData } = useMemeEaterMerklInfo(mergeConfig.eaterContractAddress);
+
+  const isWhitelisted = !isConnected ? true : checkIsValidProof({
+    merkleRoot,
+    proof: whitelistData?.whitelistInfo.proof,
+    amount: whitelistData?.whitelistInfo.amount,
+    address: whitelistData?.whitelistInfo.address,
+  });
 
   const { data: tokenPrices, isLoading: isTokenPriceLoading } = useCoinGeckoGetPrice([mergeConfig.tokenCoinGeckoId, WEWE_COINGECKO_ID]);
   const inputTokenPrice = tokenPrices?.[0] ?? 0;
@@ -61,6 +104,15 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
 
   return (
     <>
+      {
+        !isWhitelisted ? (
+          <Card>
+          <Typography secondary size="sm">
+            Your address is not whitelisted for the merge!
+          </Typography>
+        </Card> 
+        ) : null
+      }
       <div className="bg_light_dark flex items-center justify-between gap-3 p-4 mt-5">
         <div className="flex-1 flex items-center gap-1">
           <Image className="rounded-full" src={mergeConfig.inputToken.icon} width={32} height={32} alt="" />
@@ -185,7 +237,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
           <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
             <Button
               className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
-              disabled={mergeConfig.isMergeDisabled || !address || !amount || isPaused}
+              disabled={mergeConfig.isMergeDisabled || !address || !amount || isPaused || !isWhitelisted || isMerklInfoLoading}
               onClick={
                 isConnected
                   ? () => handleMerge()
