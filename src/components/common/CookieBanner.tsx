@@ -21,16 +21,15 @@ const CookieBanner: React.FC = () => {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-2 py-4 lg:p-5 flex-col flex gap-4 z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-black text-white p-2 py-4 lg:p-5 flex flex-col lg:flex-row justify-between items-center gap-4 z-50 border-2 border-white border-opacity-40">
       <Typography  size="sm">
-      We use cookies to personalize content, improve your experience, and analyze site traffic. By clicking 'Accept,' you agree to our use of cookies. For more information, please refer to our 
-        <Link className="text-blue-400 underline hover:text-blue-300" href={""} onClick={() => {toast.info("Work in progress.", {theme: "dark"})}}> Privacy Policy.</Link>
+      We use cookies and similar technologies to analyze our traffic. You can choose not to allow some type of cookies by clicking Manage Settings in <Link className="text-blue-400 underline hover:text-blue-300" href={""} onClick={() => {toast.info("Work in progress.", {theme: "dark"})}}> Cookie Policy.</Link>
       </Typography>
       <Button
         onClick={handleAccept}
-        className="w-fit bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-md focus:outline-none"
+        className="bg_pink hover:bg-[#fb7bff] text-white text-sm px-4 py-2 rounded-md focus:outline-none"
       >
-        <Typography size="lg" className="px-5">Accept</Typography>
+        <Typography size="sm" secondary className="text-black uppercase font-extrabold">Accept</Typography>
       </Button>
       </div>
   );
