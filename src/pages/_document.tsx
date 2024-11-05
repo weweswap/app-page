@@ -1,10 +1,29 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import Script from "next/script";
 import { verdana } from "~/fonts";
 
 const Document = () => {
   return (
     <Html lang="en">
       <Head>
+      <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-4TKBWDD7DG"
+          strategy="afterInteractive"
+          async
+        />
+        <Script
+          id="gtag-init"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', 
+ new Date());
+              gtag('config',
+ 'G-4TKBWDD7DG');
+            `,
+          }}
+        />
         <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/fav.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/fav.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/fav.png" />

@@ -15,11 +15,17 @@ import { WewePosition } from "~/hooks/useWewePositions";
 import { PoolChartCard } from "./PoolChartCard";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { formatNumber } from "~/utils";
+import { Hex } from "viem";
+import ActionNav from "./ActionNav";
+import ZapInSection from "./ZapInSection";
+
+type Action = "zap" | "deposit" | "withdraw";
 
 type PoolDepositProps = {
   onBack: () => void;
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
+  onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
   onClaim?: (wewePositon: WewePosition) => void;
   enableClaimBlock?: boolean;
 };
@@ -28,13 +34,16 @@ const PoolDeposit = ({
   onBack,
   onDeposit,
   onWithdraw,
+  onZapIn,
   onClaim,
   enableClaimBlock,
 }: PoolDepositProps) => {
   const { selectedPool, selectedPosition } = usePoolContext();
-  const [selectedAction, setSelectedAction] = useState("deposit");
+  const [selectedAction, setSelectedAction] = useState<Action>("deposit");
   const [sliderValue, setSliderValue] = useState<number>(50);
   const [formattedShares, setFormattedShares] = useState<number>(0);
+  const [zapAmount, setZapAmount] = useState<string>("0");
+  const [zapTokenAddress, setZapTokenAddress] = useState<string>("");
   const [inputValueToken0, setInputValueToken0] = useState<number>(0);
   const [inputValueToken1, setInputValueToken1] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
@@ -49,6 +58,11 @@ const PoolDeposit = ({
     selectedPool?.token1
   );
 
+  // Define poolTokens containing token0 and token1
+  const poolTokens = selectedPool
+    ? [selectedPool.token0, selectedPool.token1]
+    : [];
+
   useEffect(() => {
     if (selectedPool) {
       setInputTokenIndex(
@@ -61,6 +75,8 @@ const PoolDeposit = ({
           ({ address }) => address === selectedPool?.token1?.address
         )
       );
+      // Reset zapTokenAddress to the first token's address when pool changes
+      setZapTokenAddress(poolTokens[0]?.address || "");
     }
   }, [selectedPool]);
 
@@ -92,6 +108,9 @@ const PoolDeposit = ({
       refechToken1Balance();
       refechToken0Balance();
       refechShares();
+      if (zapTokenAddress) {
+        refetchZapTokenBalance();
+      }
     }, 5000);
     return () => clearInterval(intervalId);
   }, []);
@@ -110,7 +129,7 @@ const PoolDeposit = ({
 
       const formattedToken1 = Number(
         ethers.formatUnits(resultToken1, selectedPool?.token1.decimals)
-      )
+      );
 
       const token1Equivalent =
         (formattedToken0 * prices.priceToken0) / prices.priceToken1;
@@ -119,57 +138,95 @@ const PoolDeposit = ({
 
       const walletToken0 = Number(
         ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals)
-      )
+      );
 
       const walletToken1 = Number(
         ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
-      )
+      );
 
-
-      if (prices.priceToken0 * walletToken0 / prices.priceToken1 < walletToken1) {
+      if (
+        (prices.priceToken0 * walletToken0) / prices.priceToken1 <
+        walletToken1
+      ) {
         setInputValueToken0(formattedToken0);
         setFormattedShares(formattedShares);
         setInputValueToken1(formattedToken1);
-      }
-
-      else {
+      } else {
         setInputValueToken1(formattedToken1);
         setFormattedShares(formattedShares);
-        setInputValueToken0(Number(token0Equivalent.toFixed(6)))
+        setInputValueToken0(Number(token0Equivalent.toFixed(6)));
+      }
+
+      if (selectedAction === "zap") {
+        const selectedZapToken = poolTokens.find(
+          (token) => token.address === zapTokenAddress
+        );
+        const selectedZapTokenBalanceFormatted = Number(
+          ethers.formatUnits(
+            selectedZapTokenBalance || BigInt(0),
+            selectedZapToken?.decimals
+          )
+        );
+        const newZapAmount =
+          (sliderValue / 100) * selectedZapTokenBalanceFormatted;
+        setZapAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
       }
     }
-  }, [prices, sliderValue, balanceToken0, selectedPool]);
+  }, [
+    prices,
+    sliderValue,
+    balanceToken0,
+    selectedPool,
+    selectedAction,
+    zapTokenAddress,
+  ]);
 
   const handleChangeToken0 = (newValue: number) => {
     if (prices) {
       const token1Equivalent =
         (newValue * prices.priceToken0) / prices.priceToken1;
-      setInputValueToken0(newValue)
+      setInputValueToken0(newValue);
       setInputValueToken1(Number(token1Equivalent.toFixed(6)));
     }
-  }
+  };
 
   const handleChangeToken1 = (newValue: number) => {
     if (prices) {
       const token0Equivalent =
         (newValue * prices.priceToken1) / prices.priceToken0;
-      setInputValueToken1(newValue)
+      setInputValueToken1(newValue);
       setInputValueToken0(Number(token0Equivalent.toFixed(6)));
     }
-  }
+  };
+
+  const { data: selectedZapTokenBalance, refetch: refetchZapTokenBalance } =
+    useTokenBalance(address, zapTokenAddress as Hex, {
+      enabled: !!zapTokenAddress,
+    });
+
+  const handleZapTokenChange = (selectedAddress: string) => {
+    setZapTokenAddress(selectedAddress);
+    setZapAmount("0");
+    setSliderValue(50);
+  };
 
   const handleWithdraw = () => {
-    if(!isConnected) {
-      openConnectModal && openConnectModal()
-      return
+    if (!isConnected) {
+      openConnectModal && openConnectModal();
+      return;
     }
-    try{
-      const sharesInBigNumber = ethers.parseUnits(formattedShares.toString(), 18);
-      onWithdraw(sharesInBigNumber > balanceShares ? balanceShares : sharesInBigNumber);
+    try {
+      const sharesInBigNumber = ethers.parseUnits(
+        formattedShares.toString(),
+        18
+      );
+      onWithdraw(
+        sharesInBigNumber > balanceShares ? balanceShares : sharesInBigNumber
+      );
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   return (
     selectedPool && (
@@ -260,12 +317,13 @@ const PoolDeposit = ({
                         height={24}
                       />
                     </div>
-                    <Typography size="lg" className="font-bold py-4 text-center">
-                      {
-                        formatNumber(selectedPosition?.pendingChaosReward || 0, {
-                          decimalDigits: 6
-                        })
-                      }
+                    <Typography
+                      size="lg"
+                      className="font-bold py-4 text-center"
+                    >
+                      {formatNumber(selectedPosition?.pendingChaosReward || 0, {
+                        decimalDigits: 6,
+                      })}
                     </Typography>
                   </div>
 
@@ -281,15 +339,16 @@ const PoolDeposit = ({
                         height={24}
                       />
                     </div>
-                    <Typography size="lg" className="font-bold py-4 text-center">
-                      ${
-                        formatNumber(selectedPosition?.pendingUsdcReward || 0, {
-                          decimalDigits: 6
-                        })
-                      }
+                    <Typography
+                      size="lg"
+                      className="font-bold py-4 text-center"
+                    >
+                      $
+                      {formatNumber(selectedPosition?.pendingUsdcReward || 0, {
+                        decimalDigits: 6,
+                      })}
                     </Typography>
                   </div>
-
                 </div>
                 <button
                   className="custom_btn w-full uppercase"
@@ -304,26 +363,10 @@ const PoolDeposit = ({
               </div>
             )}
             <div className="mt-5 flex items-center justify-between w-full gap-6 md:flex-row flex-col">
-              <div className="bg_light_dark w-full flex items-center justify-between gap-3 h-[3rem]">
-                <div
-                  onClick={() => setSelectedAction("deposit")}
-                  className={`${selectedAction === "deposit" && "nav_selected"
-                    } nav`}
-                >
-                  <Typography size="sm" tt="uppercase">
-                    Deposit
-                  </Typography>
-                </div>
-                <div
-                  onClick={() => setSelectedAction("withdraw")}
-                  className={`${selectedAction === "withdraw" && "nav_selected"
-                    } nav`}
-                >
-                  <Typography size="sm" tt="uppercase">
-                    Withdraw
-                  </Typography>
-                </div>
-              </div>
+              <ActionNav
+                selectedAction={selectedAction}
+                setSelectedAction={setSelectedAction}
+              />
             </div>
             {selectedAction === "deposit" ? (
               <div>
@@ -415,9 +458,13 @@ const PoolDeposit = ({
                     />
                     <Typography size="xs">
                       {formatNumber(
-                        ethers.formatUnits(balanceToken0, selectedPool?.token0.decimals), {
-                        decimalDigits: 6
-                      }
+                        ethers.formatUnits(
+                          balanceToken0,
+                          selectedPool?.token0.decimals
+                        ),
+                        {
+                          decimalDigits: 6,
+                        }
                       )}{" "}
                       {selectedPool?.token0.symbol}
                     </Typography>
@@ -431,9 +478,13 @@ const PoolDeposit = ({
                     />
                     <Typography size="xs">
                       {formatNumber(
-                        ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals), {
-                        decimalDigits: 6
-                      }
+                        ethers.formatUnits(
+                          balanceToken1,
+                          selectedPool?.token1.decimals
+                        ),
+                        {
+                          decimalDigits: 6,
+                        }
                       )}{" "}
                       {selectedPool?.token1.symbol}
                     </Typography>
@@ -458,23 +509,37 @@ const PoolDeposit = ({
                   </Button>
                 </div>
                 <Button
-                  disabled={BigInt(ethers.parseUnits(String(inputValueToken1 || 0), selectedPool.token1.decimals)) > balanceToken1}
+                  disabled={
+                    BigInt(
+                      ethers.parseUnits(
+                        String(inputValueToken1 || 0),
+                        selectedPool.token1.decimals
+                      )
+                    ) > balanceToken1
+                  }
                   className="w-full mt-4"
                   onClick={
                     isConnected
                       ? () => {
-                        onDeposit(inputValueToken0, inputValueToken1);
-                        setSliderValue(50);
-                      }
+                          onDeposit(inputValueToken0, inputValueToken1);
+                          setSliderValue(50);
+                        }
                       : () => openConnectModal && openConnectModal()
                   }
                 >
                   <Typography secondary tt="uppercase">
-                    {BigInt(ethers.parseUnits(String(inputValueToken1 || 0), selectedPool.token1.decimals)) > balanceToken1 ? "Not Enough Balance" : "Deposit"}
+                    {BigInt(
+                      ethers.parseUnits(
+                        String(inputValueToken1 || 0),
+                        selectedPool.token1.decimals
+                      )
+                    ) > balanceToken1
+                      ? "Not Enough Balance"
+                      : "Deposit"}
                   </Typography>
                 </Button>
               </div>
-            ) : (
+            ) : selectedAction === "withdraw" ? (
               <div className="mt-5">
                 <Typography>Withdraw amount</Typography>
                 <div className="bg_gray my-3 flex items-center gap-4">
@@ -508,35 +573,45 @@ const PoolDeposit = ({
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center justify-center gap-5">
-                   <div className="flex items-center gap-2">
-                   <Image src={selectedPool?.token0.icon} height={24} width={24} alt="" />
-                    <Typography secondary>
-                    {selectedPool?.token0.chain}
-                    </Typography>
-                   </div>
-                   <div className="flex items-center gap-2">
-                   <Image src={selectedPool?.token1.icon} height={24} width={24} alt="" />
-                    <Typography secondary>
-                    {selectedPool?.token1.symbol}
-                    </Typography>
-                   </div>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src={selectedPool?.token0.icon}
+                        height={24}
+                        width={24}
+                        alt=""
+                      />
+                      <Typography secondary>
+                        {selectedPool?.token0.chain}
+                      </Typography>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src={selectedPool?.token1.icon}
+                        height={24}
+                        width={24}
+                        alt=""
+                      />
+                      <Typography secondary>
+                        {selectedPool?.token1.symbol}
+                      </Typography>
+                    </div>
                   </div>
-                <div className="flex items-center justify-center gap-2 py-3">
-                  <Image
-                    alt=""
-                    src="/img/icons/wallet.svg"
-                    width={24}
-                    height={24}
-                  />
-                  <Typography size="xs" className="text_light_gray">
-                    {parseFloat(
-                      Number(
-                        ethers.formatUnits(balanceShares.toString(), 18)
-                      ).toFixed(8)
-                    )}{" "}
-                    SHARES
-                  </Typography>
-                </div>
+                  <div className="flex items-center justify-center gap-2 py-3">
+                    <Image
+                      alt=""
+                      src="/img/icons/wallet.svg"
+                      width={24}
+                      height={24}
+                    />
+                    <Typography size="xs" className="text_light_gray">
+                      {parseFloat(
+                        Number(
+                          ethers.formatUnits(balanceShares.toString(), 18)
+                        ).toFixed(8)
+                      )}{" "}
+                      SHARES
+                    </Typography>
+                  </div>
                 </div>
                 <div className="py-4">
                   <RangeSlider
@@ -564,13 +639,24 @@ const PoolDeposit = ({
                     </Typography>
                   </Button>
                 </div>
-                <Button
-                  onClick={handleWithdraw}
-                  className="w-full mt-5 mb-2"
-                >
+                <Button onClick={handleWithdraw} className="w-full mt-5 mb-2">
                   <Typography secondary>WITHDRAW</Typography>
                 </Button>
               </div>
+            ) : (
+              <ZapInSection
+                zapAmount={zapAmount}
+                setZapAmount={setZapAmount}
+                zapTokenAddress={zapTokenAddress}
+                handleZapTokenChange={handleZapTokenChange}
+                selectedZapTokenBalance={selectedZapTokenBalance}
+                poolTokens={poolTokens}
+                sliderValue={sliderValue}
+                setSliderValue={setSliderValue}
+                onZapIn={onZapIn}
+                isConnected={isConnected}
+                openConnectModal={openConnectModal}
+              />
             )}
           </div>
           <Divider className="border-blue-700 mt-4" />
@@ -579,23 +665,39 @@ const PoolDeposit = ({
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 my-3 gap-4 gap-y-8">
             <div className="flex flex-col items-center gap-4">
-              <Typography className="text-sm sm:text-base font-extrabold">TVL</Typography>
-              <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.tvl)}</Typography>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <Typography className="text-sm sm:text-base  font-extrabold">VOLUME</Typography>
-              <Typography className="text-sm sm:text-base">$ {formatNumber(selectedPool.volume)}/day</Typography>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <Typography className="text-sm sm:text-base  font-extrabold">INCENTIVES</Typography>
-              <Typography className="text-sm sm:text-base">$ {selectedPool?.incentives}</Typography>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <Typography className="text-sm sm:text-base  font-extrabold line-clamp-1">DISTRIBUTED FEES</Typography>
+              <Typography className="text-sm sm:text-base font-extrabold">
+                TVL
+              </Typography>
               <Typography className="text-sm sm:text-base">
-                $ {new Intl.NumberFormat("en-US", {
+                $ {formatNumber(selectedPool.tvl)}
+              </Typography>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Typography className="text-sm sm:text-base  font-extrabold">
+                VOLUME
+              </Typography>
+              <Typography className="text-sm sm:text-base">
+                $ {formatNumber(selectedPool.volume)}/day
+              </Typography>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Typography className="text-sm sm:text-base  font-extrabold">
+                INCENTIVES
+              </Typography>
+              <Typography className="text-sm sm:text-base">
+                $ {selectedPool?.incentives}
+              </Typography>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Typography className="text-sm sm:text-base  font-extrabold line-clamp-1">
+                DISTRIBUTED FEES
+              </Typography>
+              <Typography className="text-sm sm:text-base">
+                ${" "}
+                {new Intl.NumberFormat("en-US", {
                   minimumFractionDigits: 2,
-                }).format(Number(selectedPool.dailyFeesInUsd))}/day
+                }).format(Number(selectedPool.dailyFeesInUsd))}
+                /day
               </Typography>
             </div>
           </div>

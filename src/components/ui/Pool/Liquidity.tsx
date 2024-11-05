@@ -7,6 +7,7 @@ import { useWewePools, WewePool } from "~/hooks/usePool";
 import { usePoolContext } from "./PoolContext";
 import PoolDeposit from "./PoolDeposit";
 import { formatNumber } from "~/utils";
+import { Hex } from "viem";
 
 type LiquidityProps = {
   setPoolTypes: (number: number) => void;
@@ -15,9 +16,10 @@ type LiquidityProps = {
   onBack: () => void;
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
+  onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
 };
 
-const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: LiquidityProps) => {
+const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw, onZapIn }: LiquidityProps) => {
   const [currentPage, setCurrentPage] = useState("");
   const { setSelectedPool } = usePoolContext();
 
@@ -174,7 +176,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw }: Liquidity
       {/* {currentPage === "pool-details" && (
         <PoolDetail onBack={handleHideDetails} />
       )} */}
-      {currentPage === "deposit" && <PoolDeposit onWithdraw={onWithdraw} onDeposit={onDeposit} onBack={() => setCurrentPage("")} />}
+      {currentPage === "deposit" && <PoolDeposit onWithdraw={onWithdraw} onDeposit={onDeposit} onZapIn={onZapIn} onBack={() => setCurrentPage("")} />}
     </>
   );
 };
