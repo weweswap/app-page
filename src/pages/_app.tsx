@@ -36,7 +36,7 @@ const App: AppType = ({ Component, pageProps }) => {
                 )}
               </div>
               <ToastContainer />
-              <CookieBanner />
+              {/* <CookieBanner /> */}
               <Footer />
             </main>
           </WagmiProviderComp>
