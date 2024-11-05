@@ -79,6 +79,7 @@ export const PoolHome = ({
           onDeposit={onDeposit}
           onWithdraw={onWithdraw}
           onZapIn={onZapIn}
+          onZapOut={onZapOut}
           setPoolTypes={setPoolTypes}
           poolTypes={poolTypes}
           onNext={onNext}
