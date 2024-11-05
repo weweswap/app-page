@@ -42,7 +42,7 @@ const PoolDeposit = ({
   enableClaimBlock,
 }: PoolDepositProps) => {
   const { selectedPool, selectedPosition } = usePoolContext();
-  const [selectedAction, setSelectedAction] = useState<Action>("deposit");
+  const [selectedAction, setSelectedAction] = useState<Action>("zapIn");
   const [sliderValue, setSliderValue] = useState<number>(50);
   const [formattedShares, setFormattedShares] = useState<number>(0);
   const [zapAmount, setZapAmount] = useState<string>("0");
