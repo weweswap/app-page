@@ -15,6 +15,7 @@ type PoolHomeProps = {
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
   onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
+  onZapOut: (tokenAmount: string, tokenAddress: Hex) => void;
 };
 
 export const PoolHome = ({
@@ -23,7 +24,8 @@ export const PoolHome = ({
   onBack, 
   onDeposit,
   onWithdraw,
-  onZapIn
+  onZapIn,
+  onZapOut
 }: PoolHomeProps) => {
   const [poolTypes, setPoolTypes] = useState<number>(0);
   const [backOption, setBackOption] = useState(false);
@@ -89,6 +91,7 @@ export const PoolHome = ({
           onWithdraw={onWithdraw}
           onDeposit={onDeposit}
           onZapIn={onZapIn}
+          onZapOut={onZapOut}
           setPoolTypes={setPoolTypes}
           poolTypes={poolTypes}
         />

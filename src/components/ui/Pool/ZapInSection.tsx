@@ -55,6 +55,7 @@ const ZapInSection: React.FC<ZapInSectionProps> = ({
           disabled={!poolTokens.length}
         />
         <NumberInput
+        thousandSeparator
           classNames={{
             root: "flex-1 w-auto",
             input: clsx(

@@ -15,6 +15,11 @@ export type PayloadZapInModal = {
   zapInTokenAddress: Hex;
 };
 
+export type PayloadZapOutModal = {
+  zapOutAmount: string;
+  zapOutTokenAddress: Hex;
+};
+
 const handleDetails = (hash: string) => {
   window.open(
     `https://basescan.org/tx/${hash}`,

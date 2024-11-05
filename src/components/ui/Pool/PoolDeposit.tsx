@@ -18,14 +18,16 @@ import { formatNumber } from "~/utils";
 import { Hex } from "viem";
 import ActionNav from "./ActionNav";
 import ZapInSection from "./ZapInSection";
+import ZapOutSection from "./ZapOutSection";
 
-type Action = "zap" | "deposit" | "withdraw";
+type Action = "zapIn" | "zapOut" | "deposit" | "withdraw";
 
 type PoolDepositProps = {
   onBack: () => void;
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
   onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
+  onZapOut: (tokenAmount: string, tokenAddress: Hex) => void;
   onClaim?: (wewePositon: WewePosition) => void;
   enableClaimBlock?: boolean;
 };
@@ -35,6 +37,7 @@ const PoolDeposit = ({
   onDeposit,
   onWithdraw,
   onZapIn,
+  onZapOut,
   onClaim,
   enableClaimBlock,
 }: PoolDepositProps) => {
@@ -50,6 +53,10 @@ const PoolDeposit = ({
   const [secondaryTokenIndex, setSecondaryTokenIndex] = useState(0);
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+
+  const [zapOutAmount, setZapOutAmount] = useState<string>("0")
+  const [zapOutTokenAddress, setZapOutTokenAddress] = useState<string>("");
+  const [sliderZapOutValue, setSliderZapOutValue] = useState<number>(50);
 
   const { address } = useAccount();
 
@@ -157,7 +164,7 @@ const PoolDeposit = ({
         setInputValueToken0(Number(token0Equivalent.toFixed(6)));
       }
 
-      if (selectedAction === "zap") {
+      if (selectedAction === "zapIn") {
         const selectedZapToken = poolTokens.find(
           (token) => token.address === zapTokenAddress
         );
@@ -171,10 +178,26 @@ const PoolDeposit = ({
           (sliderValue / 100) * selectedZapTokenBalanceFormatted;
         setZapAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
       }
+
+      if (selectedAction === "zapOut") {
+        const selectedZapToken = poolTokens.find(
+          (token) => token.address === zapTokenAddress
+        );
+        const selectedZapTokenBalanceFormatted = Number(
+          ethers.formatUnits(
+            selectedZapTokenBalance || BigInt(0),
+            selectedZapToken?.decimals
+          )
+        );
+        const newZapAmount =
+          (sliderZapOutValue / 100) * selectedZapTokenBalanceFormatted;
+        setZapOutAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
+      }
     }
   }, [
     prices,
     sliderValue,
+    sliderZapOutValue,
     balanceToken0,
     selectedPool,
     selectedAction,
@@ -208,6 +231,12 @@ const PoolDeposit = ({
     setZapTokenAddress(selectedAddress);
     setZapAmount("0");
     setSliderValue(50);
+  };
+
+  const handleZapOutTokenChange = (selectedAddress: string) => {
+    setZapOutTokenAddress(selectedAddress);
+    setZapOutAmount("0");
+    setSliderZapOutValue(50);
   };
 
   const handleWithdraw = () => {
@@ -643,7 +672,7 @@ const PoolDeposit = ({
                   <Typography secondary>WITHDRAW</Typography>
                 </Button>
               </div>
-            ) : (
+            ) : selectedAction === "zapIn" ? (
               <ZapInSection
                 zapAmount={zapAmount}
                 setZapAmount={setZapAmount}
@@ -657,7 +686,23 @@ const PoolDeposit = ({
                 isConnected={isConnected}
                 openConnectModal={openConnectModal}
               />
-            )}
+            )
+            :
+            <ZapOutSection 
+            zapAmount={zapOutAmount}
+            setZapAmount={setZapOutAmount}
+            zapTokenAddress={zapOutTokenAddress}
+            handleZapTokenChange={handleZapOutTokenChange}
+            selectedZapTokenBalance={selectedZapTokenBalance}
+            poolTokens={poolTokens}
+            sliderValue={sliderZapOutValue}
+            setSliderValue={setSliderZapOutValue}
+            onZapOut={onZapOut}
+            isConnected={isConnected}
+            openConnectModal={openConnectModal}
+
+               />
+          }
           </div>
           <Divider className="border-blue-700 mt-4" />
           <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">
