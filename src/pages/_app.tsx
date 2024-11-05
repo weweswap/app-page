@@ -9,7 +9,6 @@ import { theme } from "~/theme";
 import { usePathname } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import { GoogleTagManager } from '@next/third-parties/google'
-import CookieBanner from "~/components/common/CookieBanner";
 
 const App: AppType = ({ Component, pageProps }) => {
   const path = usePathname();
@@ -20,7 +19,6 @@ const App: AppType = ({ Component, pageProps }) => {
       <DirectionProvider>
         <MantineProvider theme={theme} defaultColorScheme="dark">
           <WagmiProviderComp>
-         
             <main className="overflow-hidden relative text-white w-full min-h-screen flex flex-col items-center justify-between">
               <Background />
               <div className="w-full flex flex-col items-center">
@@ -36,7 +34,6 @@ const App: AppType = ({ Component, pageProps }) => {
                 )}
               </div>
               <ToastContainer />
-              <CookieBanner />
               <Footer />
             </main>
           </WagmiProviderComp>

@@ -94,10 +94,6 @@ body:before {
   background: var(--stroke);
 }
 
-.bg_pink {
-  background: var(--violet);
-}
-
 .text_violet {
   color: var(--violet);
 }
