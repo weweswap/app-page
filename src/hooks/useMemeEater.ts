@@ -5,6 +5,7 @@ import MemeEaterAbi from "~/lib/abis/MemeEaterABI";
 import * as dn from "dnum";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { API_BASE_URL } from "~/constants/configs";
 
 interface WhiteListResponse {
   whitelistInfo: {
@@ -39,7 +40,7 @@ export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
   } = useWriteContract();
   const publicClient = usePublicClient();
 
-  const eat = async (amount: string) => {
+  const eat = async (amount: string, proof: string[]) => {
     if (!publicClient) {
       throw Error("Public client not found");
     }
@@ -49,8 +50,8 @@ export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
     const tx = await writeContractAsync({
       abi: MemeEaterAbi,
       address: eaterAddress,
-      functionName: "merge",
-      args: [BigInt(amount)],
+      functionName: "mergeWithProof",
+      args: [BigInt(amount), (proof as `0x${string}`[])],
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
 
@@ -222,7 +223,11 @@ export function useMemeEaterMerklInfo(eaterAddress: Hex) {
     queryKey: ["isWhitelisted", eaterAddress, address],
     queryFn: async () => {
       // TODO: replace it with prod url
-      const response = await axios.get<WhiteListResponse>(`https://app-backend-development.up.railway.app/api/merge/whitelist/${address}`);
+      const response = await axios.get<WhiteListResponse>(`${API_BASE_URL}/merge/whitelist/${eaterAddress}`, {
+        params: {
+          userAddress: address,
+        }
+      });
 
       return response.data;
     },

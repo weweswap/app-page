@@ -12,7 +12,8 @@ export type PayloadMergeProcessingModal = {
   amountToMerge: string,
   token: TokenItem
   eater: Hex
-  uniAdapter: Hex
+  uniAdapter: Hex,
+  proof: string[],
 }
 
 type MergeProcessingProps = {
@@ -47,7 +48,7 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
     async function startEat() {
       try {
         await approveToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'))
-        await eat(data.amountToMerge)
+        await eat(data.amountToMerge, data.proof)
       } catch (error) {
         onTxError(hashEatToken || hashApproveToken)
       }
