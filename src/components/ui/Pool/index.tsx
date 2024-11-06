@@ -18,6 +18,7 @@ import WithdrawSuccessModal, { PayloadWithdrawalSuccess } from "./WithdrawSucces
 import PoolZapModal, { PayloadZapInModal, PayloadZapOutModal } from "./PoolZapModal";
 import { Hex } from "viem";
 import { usdConverter } from "~/utils";
+import PoolZapOutModal from "./PoolZapOutModal";
 
 
 export const Pool = () => {
@@ -176,15 +177,19 @@ export const Pool = () => {
     openZapInModal()
   }
 
+  const handleCloseZapIn = () => {
+    setPayloadZapInModal(undefined)
+    closeZapInModal()
+  }
+
   const handleZapOutModal = (zapOutAmount: string, zapOutTokenAddress: Hex) => {
     setPayloadZapOutModal({zapOutAmount, zapOutTokenAddress})
     openZapOutModal()
   }
 
-
-  const handleCloseZapIn = () => {
-    setPayloadZapInModal(undefined)
-    closeZapInModal()
+  const handleCloseZapOut = () => {
+    setPayloadZapOutModal(undefined)
+    closeZapOutModal()
   }
 
   return (
@@ -247,6 +252,15 @@ export const Pool = () => {
           onClose={handleCloseZapIn}
           onTxError={handleErrorModal}
           data={payloadZapInModal}
+        />
+      }
+      {
+        <PoolZapOutModal 
+        opened={openedZapOutModal}
+        onOpen={() => {}}
+        onClose={handleCloseZapOut}
+        onTxError={handleErrorModal}
+        data={payloadZapOutModal}
         />
       }
       {

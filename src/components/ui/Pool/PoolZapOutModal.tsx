@@ -5,15 +5,10 @@ import { Button, Modal, Typography } from "~/components/common";
 import { Hex } from "viem";
 import { usePoolContext } from "./PoolContext";
 import { useAccount } from "wagmi";
-import { useZapIn } from "../../../hooks/useZapIn";
 import { ethers } from "ethers";
 import { useApproveToken } from "../../../hooks/useApproveToken";
 import { CONTRACT_ADDRESSES } from "../../../constants";
-
-export type PayloadZapInModal = {
-  zapInAmount: string;
-  zapInTokenAddress: Hex;
-};
+import { useZapOut } from "~/hooks/useZapOut";
 
 export type PayloadZapOutModal = {
   zapOutAmount: string;
@@ -32,10 +27,10 @@ type ZapModalProps = {
   onOpen: () => void;
   onClose: () => void;
   onTxError: (hash?: string) => void;
-  data?: PayloadZapInModal;
+  data?: PayloadZapOutModal;
 } & ModalRootProps;
 
-const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
+const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
   const { selectedPool } = usePoolContext();
   const { address } = useAccount();
 
@@ -48,77 +43,74 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
   } = useApproveToken();
 
   const {
-    hash: hashZapIn,
+    hash: hashZapOut,
     isPending: isPendingZapIn,
     isConfirming: isConfirmingZapIn,
     isError: isErrorZapIn,
-    zapIn,
-  } = useZapIn();
+    zapOut,
+  } = useZapOut();
 
-  // Determine the zap-in token based on the address
-  const zapInToken = useMemo(() => {
+
+  const zapOutToken = useMemo(() => {
     if (!data || !selectedPool) return null;
-    const { zapInTokenAddress } = data;
+    const { zapOutTokenAddress } = data;
     if (
-      zapInTokenAddress.toLowerCase() ===
+      zapOutTokenAddress.toLowerCase() ===
       selectedPool.token0.address.toLowerCase()
     ) {
       return selectedPool.token0;
     } else if (
-      zapInTokenAddress.toLowerCase() ===
+        zapOutTokenAddress.toLowerCase() ===
       selectedPool.token1.address.toLowerCase()
     ) {
       return selectedPool.token1;
     }
   }, [data, selectedPool]);
 
+  console.log("Zapout details: ", data)
 
   useEffect(() => {
-    async function deposit() {
-      if (selectedPool && data && address) {
-        await approveToken(
-          data.zapInTokenAddress,
-          CONTRACT_ADDRESSES.zapContract,
-          ethers.parseUnits(data.zapInAmount, zapInToken?.decimals),
-        );
-        await zapIn(
-          selectedPool.address,
-          zapInToken!.address,
-          ethers
-            .parseUnits(data.zapInAmount, zapInToken?.decimals)
-            .toString()
-        );
-      }
+    async function withdraw () {
+        if(selectedPool && data && address) {
+            await approveToken(
+                data.zapOutTokenAddress,
+                CONTRACT_ADDRESSES.zapContract,
+                ethers.parseUnits(data.zapOutAmount, zapOutToken?.decimals)
+            )
+
+        await zapOut(
+            selectedPool?.address, 
+            zapOutToken!.address,  
+            ethers.parseUnits(data?.zapOutAmount, zapOutToken?.decimals)
+            .toString() as `0x${string}`)
+        }
     }
-    deposit();
-  }, [selectedPool, data, address]);
+    withdraw()
+  }, [data, selectedPool, address])
 
   useEffect(() => {
     if (isErrorApproveToken || isErrorZapIn) {
-      onTxError(hashApproveToken || hashZapIn);
+      onTxError(hashApproveToken || hashZapOut);
     }
-  }, [isErrorApproveToken, isErrorZapIn, hashApproveToken, hashZapIn]);
+  }, [isErrorApproveToken, isErrorZapIn, hashApproveToken, hashZapOut]);
 
   const finishSuccessfully =
     hashApproveToken &&
-    hashZapIn &&
+    hashZapOut &&
     (!isPendingApproveToken || !isPendingZapIn) &&
     (!isConfirmingApproveToken || !isConfirmingZapIn);
 
+
+
   return (
-    <Modal title="ZAP IN" onClose={onClose} opened={opened}>
-      <div className="flex items-center justify-between gap-2">
-        <Typography size="lg" secondary>
-          ZAP-IN
-        </Typography>
-      </div>
-      <div className="flex gap-4 ">
+    <Modal title="ZAP OUT" onClose={onClose} opened={opened}>
+     <div className="flex gap-4 ">
         <Typography fw={1000} className="text_light_gray" size="sm">
-          {data?.zapInAmount} {zapInToken?.symbol}
+          {data?.zapOutAmount} {zapOutToken?.symbol}
         </Typography>
         <div className="flex items-center">
           <Image
-            src={zapInToken?.icon!}
+            src={zapOutToken?.icon!}
             alt=""
             height={24}
             width={24}
@@ -133,7 +125,7 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
             <>
               <Loader color="grey" />
               <Typography>
-                Please Approve {zapInToken?.symbol}
+                Please Approve {zapOutToken?.symbol}
               </Typography>
             </>
           ) : (
@@ -144,12 +136,12 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
                 height={36}
                 alt=""
               />
-              <Typography>{zapInToken?.symbol} Approved</Typography>
+              <Typography>{zapOutToken?.symbol} Approved</Typography>
             </>
           )}
         </div>
         <div className="flex gap-3 items-center">
-          {isPendingZapIn || !hashZapIn ? (
+          {isPendingZapIn || !hashZapOut ? (
             <>
               <Loader color="grey" />
               <Typography>Please deposit tokens</Typography>
@@ -195,7 +187,7 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
           </Button>
           <Button
             className="w-full md:w-auto"
-            onClick={() => handleDetails(hashZapIn!)}
+            onClick={() => handleDetails(hashZapOut!)}
           >
             <Typography secondary size="xs" fw={700} tt="uppercase">
               VIEW DETAILS
@@ -203,8 +195,9 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
           </Button>
         </div>
       )}
+      
     </Modal>
   );
 };
 
-export default PoolZapModal;
+export default PoolZapOutModal;

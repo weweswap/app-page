@@ -76,15 +76,15 @@ const ZapOutSection: React.FC<ZapOutSectionProps> = ({
           <div className="flex items-center justify-center gap-2 py-3">
             <Image alt="" src="/img/icons/wallet.svg" width={24} height={24} />
             <Typography size="xs" className="text_light_gray">
-              {formatNumber(
-                ethers.formatUnits(
-                  selectedZapTokenBalance || BigInt(0),
-                  poolTokens.find((token) => token.address === zapTokenAddress)?.decimals || 18
-                ),
-                { decimalDigits: 6 }
-              )}{" "}
-              {poolTokens.find((token) => token.address === zapTokenAddress)?.symbol}
-            </Typography>
+          {formatNumber(
+            ethers.formatUnits(
+              selectedZapTokenBalance || BigInt(0),
+              poolTokens.find((token) => token.address === zapTokenAddress)?.decimals || 18
+            ),
+            { decimalDigits: 6 }
+          )}{" "}
+          {poolTokens?.find((token) => token.address === zapTokenAddress)?.symbol}
+        </Typography>
           </div>
           <div className="py-4">
             <RangeSlider
@@ -107,11 +107,11 @@ const ZapOutSection: React.FC<ZapOutSectionProps> = ({
             </Button>
           </div>
           <Button
-            // onClick={
-            //   isConnected
-            //     ? () => onZapOut(zapAmount, zapTokenAddress as Hex)
-            //     : () => openConnectModal && openConnectModal()
-            // }
+            onClick={
+              isConnected
+                ? () => onZapOut(zapAmount, zapTokenAddress as Hex)
+                : () => openConnectModal && openConnectModal()
+            }
             className="w-full mt-5 mb-2"
           >
             <Typography secondary>ZAP-OUT</Typography>

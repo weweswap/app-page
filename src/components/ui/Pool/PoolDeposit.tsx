@@ -84,6 +84,7 @@ const PoolDeposit = ({
       );
       // Reset zapTokenAddress to the first token's address when pool changes
       setZapTokenAddress(poolTokens[0]?.address || "");
+      setZapOutTokenAddress(poolTokens[0]?.address || "");
     }
   }, [selectedPool]);
 
@@ -115,7 +116,7 @@ const PoolDeposit = ({
       refechToken1Balance();
       refechToken0Balance();
       refechShares();
-      if (zapTokenAddress) {
+      if (zapTokenAddress || zapOutTokenAddress) {
         refetchZapTokenBalance();
       }
     }, 5000);
@@ -181,11 +182,11 @@ const PoolDeposit = ({
 
       if (selectedAction === "zapOut") {
         const selectedZapToken = poolTokens.find(
-          (token) => token.address === zapTokenAddress
+          (token) => token.address === zapOutTokenAddress
         );
         const selectedZapTokenBalanceFormatted = Number(
           ethers.formatUnits(
-            selectedZapTokenBalance || BigInt(0),
+            selectedZapOutTokenBalance || BigInt(0),
             selectedZapToken?.decimals
           )
         );
@@ -202,6 +203,7 @@ const PoolDeposit = ({
     selectedPool,
     selectedAction,
     zapTokenAddress,
+    zapOutTokenAddress
   ]);
 
   const handleChangeToken0 = (newValue: number) => {
@@ -225,6 +227,11 @@ const PoolDeposit = ({
   const { data: selectedZapTokenBalance, refetch: refetchZapTokenBalance } =
     useTokenBalance(address, zapTokenAddress as Hex, {
       enabled: !!zapTokenAddress,
+    });
+
+    const { data: selectedZapOutTokenBalance, refetch: refetchZapOutTokenBalance } =
+    useTokenBalance(address, zapOutTokenAddress as Hex, {
+      enabled: !!zapOutTokenAddress,
     });
 
   const handleZapTokenChange = (selectedAddress: string) => {
@@ -693,15 +700,13 @@ const PoolDeposit = ({
             setZapAmount={setZapOutAmount}
             zapTokenAddress={zapOutTokenAddress}
             handleZapTokenChange={handleZapOutTokenChange}
-            selectedZapTokenBalance={selectedZapTokenBalance}
+            selectedZapTokenBalance={selectedZapOutTokenBalance}
             poolTokens={poolTokens}
             sliderValue={sliderZapOutValue}
             setSliderValue={setSliderZapOutValue}
             onZapOut={onZapOut}
             isConnected={isConnected}
-            openConnectModal={openConnectModal}
-
-               />
+            openConnectModal={openConnectModal}/>
           }
           </div>
           <Divider className="border-blue-700 mt-4" />
