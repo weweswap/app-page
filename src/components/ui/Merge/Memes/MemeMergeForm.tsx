@@ -47,18 +47,28 @@ function checkIsValidProof({
 }
 
 const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
-  const { refetch: refetchVestings } = useVestingsInfo(mergeConfig.eaterContractAddress)
+  const { refetch: refetchVestings } = useVestingsInfo(mergeConfig.eaterContractAddress);
   // const [amount, setAmount] = useState("")
-  const { address, isConnected } = useAccount()
-  const { openConnectModal } = useConnectModal()
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [isFailed, setIsFailed] = useState(false)
-  const [isComplete, setIsComplete] = useState(false)
-  const [hash, setHash] = useState<Hex>()
+  const { address, isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isFailed, setIsFailed] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [hash, setHash] = useState<Hex>();
   const { rate, isLoading: isRateLoading } = useMemeEaterRate(mergeConfig.eaterContractAddress);
   const { isPaused } = useMemeEaterIsPaused(mergeConfig.eaterContractAddress);
+  const { data: balanceMeme, refetch: refetchBalance } = useTokenBalance(
+    address,
+    mergeConfig.inputToken.address,
+  )
   const { isLoading: isMerklInfoLoading, merkleRoot, whitelistData } = useMemeEaterMerklInfo(mergeConfig.eaterContractAddress, mergeConfig.inputToken.address);
-  const amount = ethers.formatUnits(whitelistData?.whitelistInfo.amount || "0", mergeConfig.inputToken.decimals);
+
+  const { data: tokenPrices, isLoading: isTokenPriceLoading } = useCoinGeckoGetPrice([mergeConfig.tokenCoinGeckoId, WEWE_COINGECKO_ID]);
+  const inputTokenPrice = tokenPrices?.[0] ?? 0;
+  const weweTokenPrice = tokenPrices?.[1] ?? 0;
+
+  const maxAmount = BigInt(whitelistData?.whitelistInfo.amount || "0") > balanceMeme ? balanceMeme : BigInt(whitelistData?.whitelistInfo.amount || "0");
+  const amount = ethers.formatUnits(maxAmount, mergeConfig.inputToken.decimals);
 
   const isWhitelisted = !isConnected ? true : checkIsValidProof({
     merkleRoot,
@@ -67,16 +77,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
     address: whitelistData?.whitelistInfo.address,
   });
 
-  const { data: tokenPrices, isLoading: isTokenPriceLoading } = useCoinGeckoGetPrice([mergeConfig.tokenCoinGeckoId, WEWE_COINGECKO_ID]);
-  const inputTokenPrice = tokenPrices?.[0] ?? 0;
-  const weweTokenPrice = tokenPrices?.[1] ?? 0;
-
   const amountBigNumber = ethers.parseUnits(amount || "0", mergeConfig.inputToken.decimals);
-
-  const { data: balanceMeme, refetch: refetchBalance } = useTokenBalance(
-    address,
-    mergeConfig.inputToken.address,
-  )
 
   // const handleSelect = (div: number) => {
   //   setAmount(dn.toString(dn.div([balanceMeme, mergeConfig.inputToken.decimals], div)))
@@ -98,7 +99,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
         !isWhitelisted ? (
           <Card>
             <Typography secondary size="sm">
-              Your address is not whitelisted for the merge!
+              Your address is <span className="text-yellow">not whitelisted</span> for the merge!
             </Typography>
           </Card>
         ) : null

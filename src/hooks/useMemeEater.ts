@@ -31,7 +31,7 @@ function formatMinutesToHumanReadable(minutes: number) {
   return "0m";
 }
 
-export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
+export function useMemeEat(eaterAddress: Hex) {
   const [pendingToConfirm, setPendingToConfirm] = useState(false)
   const {
     data: hash,
@@ -40,24 +40,35 @@ export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
   } = useWriteContract();
   const publicClient = usePublicClient();
 
-  const eat = async (amount: string, proof: string[]) => {
+  const eat = async (amount: string, proof: Readonly<Hex[]>) => {
     if (!publicClient) {
       throw Error("Public client not found");
     }
 
     setPendingToConfirm(true);
 
+    console.log(amount, proof)
+
+    // const tx = await writeContractAsync({
+    //   abi: MemeEaterAbi,
+    //   address: eaterAddress,
+    //   functionName: "mergeWithProof",
+    //   args: [BigInt(amount), (proof as `0x${string}`[])],
+    // });
+
     const tx = await writeContractAsync({
       abi: MemeEaterAbi,
       address: eaterAddress,
       functionName: "mergeWithProof",
-      args: [BigInt(amount), (proof as `0x${string}`[])],
+      args: [BigInt(amount), proof],
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
 
     setPendingToConfirm(false);
     return receipt;
   };
+
+  console.log("isCreationError", isCreationError)
 
   return {
     hash: hash,
@@ -222,7 +233,6 @@ export function useMemeEaterMerklInfo(eaterAddress: Hex, tokenAddress: Hex) {
   const { data: whitelistData, isLoading: isWhitelistDataLoading } = useQuery({
     queryKey: ["isWhitelisted", tokenAddress, address],
     queryFn: async () => {
-      // TODO: replace it with prod url
       const response = await axios.get<WhiteListResponse>(`${API_BASE_URL}/merge/whitelist/${tokenAddress}`, {
         params: {
           userAddress: address,

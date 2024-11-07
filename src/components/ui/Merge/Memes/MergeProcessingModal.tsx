@@ -42,14 +42,15 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
     isPending: isPendingEatToken,
     isError: isErrorEatToken,
     eat: eat,
-  } = useMemeEat(data.eater, data.uniAdapter);
+  } = useMemeEat(data.eater);
 
   useEffect(() => {
     async function startEat() {
       try {
-        await approveToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'))
-        await eat(data.amountToMerge, data.proof)
+        // await approveToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'))
+        await eat(data.amountToMerge, (data.proof as `0x${string}`[]))
       } catch (error) {
+        console.log(error)
         onTxError(hashEatToken || hashApproveToken)
       }
     }
