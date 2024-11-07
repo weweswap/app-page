@@ -15,7 +15,7 @@ export interface MergeConfig {
 }
 
 const fomoMergeConfig: MergeConfig = {
-  eaterContractAddress: "0x5F0922b8dF86B028571B84cB943f7Dbb13E3fcB2" as `0x${string}`,
+  eaterContractAddress: "0x0108a9A62EEABb26cF318D8E25B476804f23bdEb" as `0x${string}`,
   inputToken: {
     chain: Chain.BASE,
     symbol: "FOMO",
