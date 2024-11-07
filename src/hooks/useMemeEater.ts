@@ -207,7 +207,7 @@ export function useMemeEaterIsPaused(eaterAddress: Hex) {
   }
 }
 
-export function useMemeEaterMerklInfo(eaterAddress: Hex) {
+export function useMemeEaterMerklInfo(eaterAddress: Hex, tokenAddress: Hex) {
   const { address } = useAccount();
 
   const { data: merkleRoot, isLoading: isMerkleRootLoading } = useReadContract({
@@ -220,10 +220,10 @@ export function useMemeEaterMerklInfo(eaterAddress: Hex) {
   });
 
   const { data: whitelistData, isLoading: isWhitelistDataLoading } = useQuery({
-    queryKey: ["isWhitelisted", eaterAddress, address],
+    queryKey: ["isWhitelisted", tokenAddress, address],
     queryFn: async () => {
       // TODO: replace it with prod url
-      const response = await axios.get<WhiteListResponse>(`${API_BASE_URL}/merge/whitelist/${eaterAddress}`, {
+      const response = await axios.get<WhiteListResponse>(`${API_BASE_URL}/merge/whitelist/${tokenAddress}`, {
         params: {
           userAddress: address,
         }

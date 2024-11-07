@@ -57,7 +57,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
   const [hash, setHash] = useState<Hex>()
   const { rate, isLoading: isRateLoading } = useMemeEaterRate(mergeConfig.eaterContractAddress);
   const { isPaused } = useMemeEaterIsPaused(mergeConfig.eaterContractAddress);
-  const { isLoading: isMerklInfoLoading, merkleRoot, whitelistData } = useMemeEaterMerklInfo(mergeConfig.eaterContractAddress);
+  const { isLoading: isMerklInfoLoading, merkleRoot, whitelistData } = useMemeEaterMerklInfo(mergeConfig.eaterContractAddress, mergeConfig.inputToken.address);
   const amount = ethers.formatUnits(whitelistData?.whitelistInfo.amount || "0", mergeConfig.inputToken.decimals);
 
   const isWhitelisted = !isConnected ? true : checkIsValidProof({
