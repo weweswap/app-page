@@ -254,7 +254,7 @@ export const Pool = () => {
           data={payloadZapInModal}
         />
       }
-      {
+      {payloadZapOutModal &&
         <PoolZapOutModal 
         opened={openedZapOutModal}
         onOpen={() => {}}

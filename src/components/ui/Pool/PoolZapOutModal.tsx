@@ -31,6 +31,15 @@ type ZapModalProps = {
 } & ModalRootProps;
 
 const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
+
+  const handleDetails = (hash: string) => {
+    window.open(
+      `https://basescan.org/tx/${hash}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
   const { selectedPool } = usePoolContext();
   const { address } = useAccount();
 
@@ -76,7 +85,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
                 CONTRACT_ADDRESSES.zapContract,
                 ethers.parseUnits(data.zapOutAmount, zapOutToken?.decimals)
             )
-
+            console.log("Is approved:", isErrorApproveToken)
         await zapOut(
             selectedPool?.address, 
             zapOutToken!.address,  
@@ -98,8 +107,6 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
     hashZapOut &&
     (!isPendingApproveToken || !isPendingZapIn) &&
     (!isConfirmingApproveToken || !isConfirmingZapIn);
-
-
 
   return (
     <Modal title="ZAP OUT" onClose={onClose} opened={opened}>

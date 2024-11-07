@@ -1,16 +1,19 @@
 import axios from "axios";
 import { useState } from "react"
-import { Hex } from "viem";
+import { erc20Abi, Hex } from "viem";
 import { useWriteContract } from "wagmi";
 import { CONTRACT_ADDRESSES } from "~/constants";
 import { ZapKyberABI } from "~/lib/abis/ZapKyber";
 import { provider } from "./provider";
+import { useApproveToken } from "./useApproveToken";
 
 interface ZapOutResponse {
     vaultAddress: string,
     tokenToSwap: string,
     sharesToBurn: string,
-    routeToExecute: string
+    routeToExecute: string,
+    kyberSwapEncodedRoute: string
+    swapToToken: string
 }
 
 export const useZapOut = () => {
@@ -40,22 +43,26 @@ export const useZapOut = () => {
                 throw new Error('No data returned from Zap-out API.');
             }
 
+            console.log("Zap out result:", response)
+
             const result = response.data;
-            if (
-                !result.vaultAddress ||
-                !result.tokenToSwap ||
-                !result.sharesToBurn || 
-                !result.routeToExecute
-              ) {
-                throw new Error("Incomplete data returned from Zap-Out API.");
-              }
+            // if (
+            //     !vaultAddress ||
+            //     !result.tokenToSwap ||
+            //     !result.sharesToBurn || 
+            //     !result.kyberSwapEncodedRoute
+            //   ) {
+            //     throw new Error("Incomplete data returned from Zap-Out API.");
+            //   }
 
               const args = [
                 vaultAddress,
-                result.sharesToBurn,
-                result.tokenToSwap,
-                result.routeToExecute
+                sharesToBurn,
+                result?.swapToToken,
+                result?.kyberSwapEncodedRoute
               ]
+
+              console.log("Receipt:", args)
 
               const tx = await writeContractAsync({
                 abi: ZapKyberABI,
