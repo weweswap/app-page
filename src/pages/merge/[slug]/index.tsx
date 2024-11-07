@@ -32,6 +32,8 @@ export const getServerSideProps: GetServerSideProps<MemeMergePageProps> = async 
 const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
   const { vestingDuration } = useMemeEaterVestingDuration(mergeConfig.eaterContractAddress);
 
+  console.log("Vesting:", vestingDuration)
+
   return (
     <div>
       <Card  className="mb-5">
