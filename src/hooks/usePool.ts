@@ -181,7 +181,7 @@ export function useWewePools(): UseQueryResult<
               ),
               getUniswapFeePercentage(poolAddressList[0])
             ]);
-      
+
             const token0info = TOKEN_LIST.find(
               ({ address }) => address.toLowerCase() === token0.toLowerCase()
             );
