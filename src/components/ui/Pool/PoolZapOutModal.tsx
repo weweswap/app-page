@@ -81,15 +81,15 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
     async function withdraw () {
         if(selectedPool && data && address) {
             await approveToken(
-                data.zapOutTokenAddress,
+                CONTRACT_ADDRESSES.weweVault, //we need to approve SHARES token
                 CONTRACT_ADDRESSES.zapContract,
-                ethers.parseUnits(data.zapOutAmount, zapOutToken?.decimals)
+                ethers.parseUnits(data.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
             )
             console.log("Is approved:", isErrorApproveToken)
         await zapOut(
             selectedPool?.address, 
             zapOutToken!.address,  
-            ethers.parseUnits(data?.zapOutAmount, zapOutToken?.decimals)
+            ethers.parseUnits(data?.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
             .toString() as `0x${string}`)
         }
     }
