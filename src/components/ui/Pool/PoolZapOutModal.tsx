@@ -67,8 +67,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
     }
   }, [data, selectedPool]);
 
-  console.log("Zapout details: ", data)
-
+  
   useEffect(() => {
     async function withdraw () {
         if(selectedPool && data && address) {
