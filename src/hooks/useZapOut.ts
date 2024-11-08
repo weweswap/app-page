@@ -43,8 +43,6 @@ export const useZapOut = () => {
                 throw new Error('No data returned from Zap-out API.');
             }
 
-            console.log("Zap out result:", response)
-
             const result = response.data;
             // if (
             //     !vaultAddress ||

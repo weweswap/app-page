@@ -86,14 +86,11 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
                 CONTRACT_ADDRESSES.zapContract,
                 ethers.parseUnits(data.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
             )
-            console.log("Is approved:", !isErrorApproveToken)
         const txReceipt = await zapOut(
             selectedPool?.address, 
             zapOutToken!.address,  
             ethers.parseUnits(data?.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
             .toString() as `0x${string}`)
-
-            console.log("REceipt:", txReceipt)
 
             const totalFee = (txReceipt!?.gasUsed * txReceipt!?.gasPrice);
             const getUsdFees = async () => {
