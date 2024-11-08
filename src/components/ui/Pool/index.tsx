@@ -124,6 +124,7 @@ export const Pool = () => {
     setGenericHashError(hash)
     closeApproveModal()
     closeWithdrawModal()
+    closeZapOutModal()
     openFailModal()
   }
 

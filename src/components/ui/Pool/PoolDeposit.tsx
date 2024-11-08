@@ -181,6 +181,7 @@ const PoolDeposit = ({
       }
 
       if (selectedAction === "zapOut") {
+        const resultShares = (BigInt(sliderZapOutValue) * balanceShares) / BigInt(100);
         const selectedZapToken = poolTokens.find(
           (token) => token.address === zapOutTokenAddress
         );
@@ -190,8 +191,7 @@ const PoolDeposit = ({
             selectedZapToken?.decimals
           )
         );
-        const newZapAmount =
-          (sliderZapOutValue / 100) * selectedZapTokenBalanceFormatted;
+        const newZapAmount = Number(ethers.formatUnits(resultShares, 18));
         setZapOutAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
       }
     }
@@ -242,8 +242,6 @@ const PoolDeposit = ({
 
   const handleZapOutTokenChange = (selectedAddress: string) => {
     setZapOutTokenAddress(selectedAddress);
-    setZapOutAmount("0");
-    setSliderZapOutValue(50);
   };
 
   const handleWithdraw = () => {

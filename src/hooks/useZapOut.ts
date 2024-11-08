@@ -62,7 +62,6 @@ export const useZapOut = () => {
                 result?.kyberSwapEncodedRoute
               ]
 
-              console.log("Receipt:", args)
 
               const tx = await writeContractAsync({
                 abi: ZapKyberABI,
@@ -70,6 +69,7 @@ export const useZapOut = () => {
                 functionName: "zapOut",
                 args,
               });
+
         
               const receipt = await provider.waitForTransaction(tx);
               setPendingToConfirm(false);

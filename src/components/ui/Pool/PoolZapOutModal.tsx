@@ -9,6 +9,7 @@ import { ethers } from "ethers";
 import { useApproveToken } from "../../../hooks/useApproveToken";
 import { CONTRACT_ADDRESSES } from "../../../constants";
 import { useZapOut } from "~/hooks/useZapOut";
+import { usdConverter } from "~/utils";
 
 export type PayloadZapOutModal = {
   zapOutAmount: string;
@@ -75,7 +76,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
       return selectedPool.token1;
     }
   }, [data, selectedPool]);
-
+  
   
   useEffect(() => {
     async function withdraw () {
@@ -85,12 +86,23 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
                 CONTRACT_ADDRESSES.zapContract,
                 ethers.parseUnits(data.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
             )
-            console.log("Is approved:", isErrorApproveToken)
-        await zapOut(
+            console.log("Is approved:", !isErrorApproveToken)
+        const txReceipt = await zapOut(
             selectedPool?.address, 
             zapOutToken!.address,  
             ethers.parseUnits(data?.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
             .toString() as `0x${string}`)
+
+            console.log("REceipt:", txReceipt)
+
+            const totalFee = (txReceipt!?.gasUsed * txReceipt!?.gasPrice);
+            const getUsdFees = async () => {
+              const finalUsdValue = await usdConverter(totalFee)
+              // setTotalGasFee(finalUsdValue)
+      
+            }
+      
+          getUsdFees() 
         }
     }
     withdraw()
@@ -150,7 +162,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
           {isPendingZapIn || !hashZapOut ? (
             <>
               <Loader color="grey" />
-              <Typography>Please deposit tokens</Typography>
+              <Typography>Please withdraw tokens</Typography>
             </>
           ) : (
             <>
@@ -160,7 +172,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
                 height={36}
                 alt=""
               />
-              <Typography>Tokens deposited</Typography>
+              <Typography>Token withdrawal successful</Typography>
             </>
           )}
         </div>
