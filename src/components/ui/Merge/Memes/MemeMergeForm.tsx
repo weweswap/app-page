@@ -13,7 +13,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import * as dn from "dnum"
 import MergeProcessingModal from './MergeProcessingModal'
 import { ethers, formatUnits } from 'ethers'
-import { useMemeEaterIsPaused, useMemeEaterMerklInfo, useMemeEaterRate, useMemeGetTotalWeWe, useVestingsInfo } from '~/hooks/useMemeEater'
+import { useMemeEaterCapsInfo, useMemeEaterIsPaused, useMemeEaterMerklInfo, useMemeEaterRate, useMemeGetTotalWeWe, useVestingsInfo } from '~/hooks/useMemeEater'
 import { MergeConfig } from '~/constants/mergeConfigs'
 import { WEWE_COINGECKO_ID } from '~/constants'
 import { useCoinGeckoGetPrice } from '~/hooks/useCoingeckoGetPrice';
@@ -48,7 +48,7 @@ function checkIsValidProof({
 
 const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
   const { refetch: refetchVestings } = useVestingsInfo(mergeConfig.eaterContractAddress);
-  // const [amount, setAmount] = useState("")
+  const [amount, setAmount] = useState("");
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -58,7 +58,9 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
   const { rate, isLoading: isRateLoading } = useMemeEaterRate(mergeConfig.eaterContractAddress);
   const { isPaused } = useMemeEaterIsPaused(mergeConfig.eaterContractAddress);
   const { isLoading: isMerklInfoLoading, merkleRoot, whitelistData } = useMemeEaterMerklInfo(mergeConfig.eaterContractAddress, mergeConfig.inputToken.address);
-  const amount = ethers.formatUnits(whitelistData?.whitelistInfo.amount || "0", mergeConfig.inputToken.decimals);
+  const { mergedAmount } = useVestingsInfo(mergeConfig.eaterContractAddress);
+  const { totalMerged, maxSupply } = useMemeEaterCapsInfo(mergeConfig.eaterContractAddress);
+
 
   const isWhitelisted = !isConnected ? true : checkIsValidProof({
     merkleRoot,
@@ -76,13 +78,18 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
   const { data: balanceMeme, refetch: refetchBalance } = useTokenBalance(
     address,
     mergeConfig.inputToken.address,
-  )
+  );
 
-  // const handleSelect = (div: number) => {
-  //   setAmount(dn.toString(dn.div([balanceMeme, mergeConfig.inputToken.decimals], div)))
-  // };
+  const remainingCap = maxSupply - totalMerged;
+  const remainedAmountToMerge = BigInt(whitelistData?.whitelistInfo.amount ?? 0) > 0 ? BigInt(whitelistData?.whitelistInfo.amount ?? 0) - mergedAmount : 0n;
+  const maxAmountToMerge = remainedAmountToMerge > remainingCap ?
+    remainingCap :
+    remainedAmountToMerge > balanceMeme ?
+      balanceMeme : remainedAmountToMerge;
 
-
+  const handleSelect = (div: number) => {
+    setAmount(dn.toString(dn.div([maxAmountToMerge, mergeConfig.inputToken.decimals], div)))
+  };
 
   const handleMerge = () => {
     isConnected ? setIsProcessing(true) : openConnectModal?.()
@@ -141,9 +148,15 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
                   allowNegative={false}
                   trimLeadingZeroesOnBlur
                   thousandSeparator
-                  disabled
-                  // onChange={(value) => setAmount(String(value))}
+                  onChange={(value) => setAmount(String(value))}
                 />
+                {
+                  amountBigNumber > remainingCap ? (
+                    <div className="text-red-400 text-sm">
+                      Amount is greater than remaining cap
+                    </div>
+                  ) : null
+                }
                 <div className="text_light_gray">
                   {isTokenPriceLoading ? (
                     <Typography size="sm" className="animate-pulse md:py-4 p-0">
@@ -190,14 +203,14 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
             </div>
           </div>
 
-          {/* <div className="w-full flex items-center gap-4 mt-3">
+          <div className="w-full flex items-center gap-4 mt-3">
             <div>
               <Typography size="xs" className="text_light_gray">
                 Available:
               </Typography>
               <Typography size="xs" className="text_light_gray">
                 {Math.trunc(
-                  Number(formatUnits(balanceMeme, mergeConfig.inputToken.decimals))
+                  Number(formatUnits(maxAmountToMerge, mergeConfig.inputToken.decimals))
                 ).toLocaleString("en-US")}
               </Typography>
             </div>
@@ -221,14 +234,23 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
                 <Typography size="xs">MAX</Typography>
               </button>
             </div>
-          </div> */}
+          </div>
         </div>
 
         <div className="flex flex-col gap-3 w-full sm:w-auto ">
           <div className="flex-1 flex flex-col sm:flex-row items-center gap-3 ">
             <Button
               className="flex items-center justify-center gap-3 w-full md:w-auto md:h-[62px]"
-              disabled={mergeConfig.isMergeDisabled || !address || Number(amount) === 0 || isPaused || !isWhitelisted || isMerklInfoLoading}
+              disabled={
+                mergeConfig.isMergeDisabled ||
+                !address ||
+                Number(amount) === 0 ||
+                isPaused ||
+                !isWhitelisted ||
+                isMerklInfoLoading ||
+                amountBigNumber > remainingCap ||
+                remainedAmountToMerge === 0n
+              }
               onClick={
                 isConnected
                   ? () => handleMerge()
@@ -248,6 +270,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
             opened={isProcessing}
             data={{
               amountToMerge: amountBigNumber < balanceMeme ? amountBigNumber.toString() : balanceMeme.toString(),
+              whitelistedAmount: whitelistData?.whitelistInfo.amount || "0",
               token: mergeConfig.inputToken,
               eater: mergeConfig.eaterContractAddress,
               uniAdapter: mergeConfig.uniAdaptorAddress,
@@ -286,7 +309,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
         ratio={rate}
         inputToken={mergeConfig.inputToken}
         onClose={() => {
-          // setAmount("")
+          setAmount("")
           setIsComplete(false)
           refetchVestings()
         }}

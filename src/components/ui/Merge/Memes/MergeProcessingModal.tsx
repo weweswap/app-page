@@ -10,6 +10,7 @@ import { TokenItem } from '~/models';
 
 export type PayloadMergeProcessingModal = {
   amountToMerge: string,
+  whitelistedAmount: string,
   token: TokenItem
   eater: Hex
   uniAdapter: Hex,
@@ -47,8 +48,12 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
   useEffect(() => {
     async function startEat() {
       try {
-        // await approveToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'))
-        await eat(data.amountToMerge, (data.proof as `0x${string}`[]))
+        await approveToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'));
+        await eat({
+          amount: data.amountToMerge, 
+          proof: (data.proof as `0x${string}`[]),
+          whitelistedAmount: data.whitelistedAmount
+        });
       } catch (error) {
         console.log(error)
         onTxError(hashEatToken || hashApproveToken)

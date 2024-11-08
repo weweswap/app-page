@@ -1,6 +1,6 @@
 import { use, useState } from "react";
 import { Hex } from "viem";
-import { useAccount, usePublicClient, useReadContract, useWatchContractEvent, useWriteContract } from "wagmi";
+import { useAccount, usePublicClient, useReadContract, useReadContracts, useWatchContractEvent, useWriteContract } from "wagmi";
 import MemeEaterAbi from "~/lib/abis/MemeEaterABI";
 import * as dn from "dnum";
 import { useQuery } from "@tanstack/react-query";
@@ -40,35 +40,33 @@ export function useMemeEat(eaterAddress: Hex) {
   } = useWriteContract();
   const publicClient = usePublicClient();
 
-  const eat = async (amount: string, proof: Readonly<Hex[]>) => {
+  const eat = async ({
+    amount,
+    proof,
+    whitelistedAmount,
+  }: {
+    amount: string;
+    proof: Readonly<Hex[]>;
+    whitelistedAmount: string;
+  }) => {
     if (!publicClient) {
       throw Error("Public client not found");
     }
 
     setPendingToConfirm(true);
 
-    console.log(amount, proof)
-
-    // const tx = await writeContractAsync({
-    //   abi: MemeEaterAbi,
-    //   address: eaterAddress,
-    //   functionName: "mergeWithProof",
-    //   args: [BigInt(amount), (proof as `0x${string}`[])],
-    // });
-
     const tx = await writeContractAsync({
       abi: MemeEaterAbi,
       address: eaterAddress,
       functionName: "mergeWithProof",
       args: [BigInt(amount), proof],
+      // args: [BigInt(whitelistedAmount), BigInt(amount), proof],
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
 
     setPendingToConfirm(false);
     return receipt;
   };
-
-  console.log("isCreationError", isCreationError)
 
   return {
     hash: hash,
@@ -121,6 +119,7 @@ export function useVestingsInfo(address: Hex) {
   return {
     lockedAmount: data?.[0] as bigint ?? 0n,
     lockedUntil: data?.[1] as bigint ?? 0n,
+    mergedAmount: data?.[2] as bigint ?? 0n,
     isLoading,
     refetch
   };
@@ -250,5 +249,28 @@ export function useMemeEaterMerklInfo(eaterAddress: Hex, tokenAddress: Hex) {
     merkleRoot: merkleRoot,
     whitelistData: whitelistData
   }
+}
 
+export function useMemeEaterCapsInfo(eaterAddress: Hex) {
+  const { data, isLoading } = useReadContracts({
+    contracts: [
+      {
+        abi: MemeEaterAbi,
+        address: eaterAddress,
+        functionName: "maxSupply",
+      },
+      // {
+      //   abi: MemeEaterAbi,
+      //   address: eaterAddress,
+      //   functionName: "totalMerged",
+      // }
+    ]
+  });
+
+  return {
+    maxSupply: data?.[0].result ?? 0n,
+    // totalMerged: data?.[1].result ?? 0n,
+    totalMerged: 0n,
+    isLoading
+  }
 }
