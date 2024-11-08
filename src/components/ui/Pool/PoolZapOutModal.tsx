@@ -121,11 +121,11 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
     <Modal title="ZAP OUT" onClose={onClose} opened={opened}>
      <div className="flex gap-4 ">
         <Typography fw={1000} className="text_light_gray" size="sm">
-          {data?.zapOutAmount} {zapOutToken?.symbol}
+          {data?.zapOutAmount} SHARES
         </Typography>
         <div className="flex items-center">
           <Image
-            src={zapOutToken?.icon!}
+            src="/img/tokens/shares.png"
             alt=""
             height={24}
             width={24}
@@ -140,7 +140,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
             <>
               <Loader color="grey" />
               <Typography>
-                Please Approve {zapOutToken?.symbol}
+                Please Approve Shares
               </Typography>
             </>
           ) : (
@@ -151,7 +151,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
                 height={36}
                 alt=""
               />
-              <Typography>{zapOutToken?.symbol} Approved</Typography>
+              <Typography>Shares Approved</Typography>
             </>
           )}
         </div>
