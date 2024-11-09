@@ -59,8 +59,7 @@ export function useMemeEat(eaterAddress: Hex) {
       abi: MemeEaterAbi,
       address: eaterAddress,
       functionName: "mergeWithProof",
-      args: [BigInt(amount), proof],
-      // args: [BigInt(whitelistedAmount), BigInt(amount), proof],
+      args: [BigInt(whitelistedAmount), BigInt(amount), proof],
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
 
@@ -259,18 +258,17 @@ export function useMemeEaterCapsInfo(eaterAddress: Hex) {
         address: eaterAddress,
         functionName: "maxSupply",
       },
-      // {
-      //   abi: MemeEaterAbi,
-      //   address: eaterAddress,
-      //   functionName: "totalMerged",
-      // }
+      {
+        abi: MemeEaterAbi,
+        address: eaterAddress,
+        functionName: "totalMerged",
+      }
     ]
   });
 
   return {
     maxSupply: data?.[0].result ?? 0n,
-    // totalMerged: data?.[1].result ?? 0n,
-    totalMerged: 0n,
+    totalMerged: data?.[1].result ?? 0n,
     isLoading
   }
 }
