@@ -54,12 +54,12 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
 
   const {
     hash: hashZapOut,
-    isPending: isPendingZapIn,
-    isConfirming: isConfirmingZapIn,
-    isError: isErrorZapIn,
+    isPending: isPendingZapOut,
+    isConfirming: isConfirmingZapOut,
+    isError: isErrorZapOut,
     zapOut,
+    zapOutError
   } = useZapOut();
-
 
   const zapOutToken = useMemo(() => {
     if (!data || !selectedPool) return null;
@@ -86,7 +86,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
                 CONTRACT_ADDRESSES.zapContract,
                 ethers.parseUnits(data.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
             )
-        const txReceipt = await zapOut(
+        const txReceipt= await zapOut(
             selectedPool?.address, 
             zapOutToken!.address,  
             ethers.parseUnits(data?.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
@@ -96,7 +96,6 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
             const getUsdFees = async () => {
               const finalUsdValue = await usdConverter(totalFee)
               // setTotalGasFee(finalUsdValue)
-      
             }
       
           getUsdFees() 
@@ -106,16 +105,16 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
   }, [data, selectedPool, address])
 
   useEffect(() => {
-    if (isErrorApproveToken || isErrorZapIn) {
+    if (isErrorApproveToken || isErrorZapOut) {
       onTxError(hashApproveToken || hashZapOut);
     }
-  }, [isErrorApproveToken, isErrorZapIn, hashApproveToken, hashZapOut]);
+  }, [isErrorApproveToken, isErrorZapOut, hashApproveToken, hashZapOut]);
 
   const finishSuccessfully =
     hashApproveToken &&
-    hashZapOut &&
-    (!isPendingApproveToken || !isPendingZapIn) &&
-    (!isConfirmingApproveToken || !isConfirmingZapIn);
+    hashZapOut && (!isPendingZapOut) && (!isConfirmingZapOut) &&
+    (!zapOutError)
+
 
   return (
     <Modal title="ZAP OUT" onClose={onClose} opened={opened}>
@@ -144,6 +143,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
               </Typography>
             </>
           ) : (
+            !isErrorApproveToken ?
             <>
               <Image
                 src="/img/icons/success.svg"
@@ -153,15 +153,35 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
               />
               <Typography>Shares Approved</Typography>
             </>
+            :
+             <>
+             <Image
+               src="/img/icons/fail.png"
+               width={36}
+               height={36}
+               alt=""
+             />
+             <Typography>Error approving tokens</Typography>
+           </>
           )}
         </div>
         <div className="flex gap-3 items-center">
-          {isPendingZapIn || !hashZapOut ? (
+          {(isPendingZapOut || !hashZapOut) && !zapOutError ? (
             <>
               <Loader color="grey" />
               <Typography>Please withdraw tokens</Typography>
             </>
-          ) : (
+          ) : (zapOutError ?
+            <>
+              <Image
+                src="/img/icons/fail.png"
+                width={36}
+                height={36}
+                alt=""
+              />
+              <Typography>Error in withdrawal</Typography>
+            </>
+            :
             <>
               <Image
                 src="/img/icons/success.svg"
@@ -173,9 +193,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
             </>
           )}
         </div>
-        {!isConfirmingApproveToken &&
-          !isConfirmingZapIn &&
-          !finishSuccessfully && (
+        {!finishSuccessfully && (
             <div className="flex gap-3 items-center">
               <Image
                 src="/img/icons/inform.svg"

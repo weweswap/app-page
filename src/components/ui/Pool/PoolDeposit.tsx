@@ -19,8 +19,9 @@ import { Hex } from "viem";
 import ActionNav from "./ActionNav";
 import ZapInSection from "./ZapInSection";
 import ZapOutSection from "./ZapOutSection";
+import Switch from "~/components/common/Switch";
 
-type Action = "zapIn" | "zapOut" | "deposit" | "withdraw";
+type Action = "deposit" | "withdraw" ;
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -42,7 +43,7 @@ const PoolDeposit = ({
   enableClaimBlock,
 }: PoolDepositProps) => {
   const { selectedPool, selectedPosition } = usePoolContext();
-  const [selectedAction, setSelectedAction] = useState<Action>("zapIn");
+  const [selectedAction, setSelectedAction] = useState<Action>("deposit");
   const [sliderValue, setSliderValue] = useState<number>(50);
   const [formattedShares, setFormattedShares] = useState<number>(0);
   const [zapAmount, setZapAmount] = useState<string>("0");
@@ -53,6 +54,9 @@ const PoolDeposit = ({
   const [secondaryTokenIndex, setSecondaryTokenIndex] = useState(0);
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+
+  const [zapInSwitch, setZapInSwitch] = useState<number>(0)
+  const [zapOutSwitch, setZapOutSwitch] = useState<number>(0)
 
   const [zapOutAmount, setZapOutAmount] = useState<string>("0")
   const [zapOutTokenAddress, setZapOutTokenAddress] = useState<string>("");
@@ -165,7 +169,7 @@ const PoolDeposit = ({
         setInputValueToken0(Number(token0Equivalent.toFixed(6)));
       }
 
-      if (selectedAction === "zapIn") {
+      if (zapInSwitch === 1) {
         const selectedZapToken = poolTokens.find(
           (token) => token.address === zapTokenAddress
         );
@@ -180,7 +184,7 @@ const PoolDeposit = ({
         setZapAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
       }
 
-      if (selectedAction === "zapOut") {
+      if (zapOutSwitch === 1) {
         const resultShares = (BigInt(sliderZapOutValue) * balanceShares) / BigInt(100);
         const selectedZapToken = poolTokens.find(
           (token) => token.address === zapOutTokenAddress
@@ -203,7 +207,9 @@ const PoolDeposit = ({
     selectedPool,
     selectedAction,
     zapTokenAddress,
-    zapOutTokenAddress
+    zapOutTokenAddress,
+    zapInSwitch,
+    zapOutSwitch
   ]);
 
   const handleChangeToken0 = (newValue: number) => {
@@ -402,8 +408,18 @@ const PoolDeposit = ({
                 setSelectedAction={setSelectedAction}
               />
             </div>
+            <div></div>
             {selectedAction === "deposit" ? (
-              <div>
+                 <div>
+                <div className="my-8">
+                  <Switch 
+                  value={zapInSwitch}
+                  onClick={() => setZapInSwitch(() => zapInSwitch === 0 ? 1:0)} 
+                  label="ZAP IN"
+                  description="Deposit in the pool with a single token. Half of your deposit will be automatically sold for the other asset in the pool ratio." />
+                </div>
+             
+                {zapInSwitch===0 ? <div>
                 <div className="mt-4">
                   <Typography>Deposit amount</Typography>
                 </div>
@@ -572,9 +588,35 @@ const PoolDeposit = ({
                       : "Deposit"}
                   </Typography>
                 </Button>
+                </div>
+                :
+                (
+                     <ZapInSection
+                zapAmount={zapAmount}
+                setZapAmount={setZapAmount}
+                zapTokenAddress={zapTokenAddress}
+                handleZapTokenChange={handleZapTokenChange}
+                selectedZapTokenBalance={selectedZapTokenBalance}
+                poolTokens={poolTokens}
+                sliderValue={sliderValue}
+                setSliderValue={setSliderValue}
+                onZapIn={onZapIn}
+                isConnected={isConnected}
+                openConnectModal={openConnectModal}
+              />
+                )}
               </div>
-            ) : selectedAction === "withdraw" ? (
+            ) : (
               <div className="mt-5">
+                   <div className="my-8">
+                  <Switch 
+                  value={zapOutSwitch}
+                  onClick={() => setZapOutSwitch(() => zapOutSwitch === 0 ? 1:0)} 
+                  label="ZAP-OUT"
+                  description="Withdraw from the pool into one token. The other pool token will be sold for the desired coin." />
+                
+                </div>
+                {zapOutSwitch === 0 ? <>
                 <Typography>Withdraw amount</Typography>
                 <div className="bg_gray my-3 flex items-center gap-4">
                   <Dropdown
@@ -676,24 +718,9 @@ const PoolDeposit = ({
                 <Button onClick={handleWithdraw} className="w-full mt-5 mb-2">
                   <Typography secondary>WITHDRAW</Typography>
                 </Button>
-              </div>
-            ) : selectedAction === "zapIn" ? (
-              <ZapInSection
-                zapAmount={zapAmount}
-                setZapAmount={setZapAmount}
-                zapTokenAddress={zapTokenAddress}
-                handleZapTokenChange={handleZapTokenChange}
-                selectedZapTokenBalance={selectedZapTokenBalance}
-                poolTokens={poolTokens}
-                sliderValue={sliderValue}
-                setSliderValue={setSliderValue}
-                onZapIn={onZapIn}
-                isConnected={isConnected}
-                openConnectModal={openConnectModal}
-              />
-            )
-            :
-            <ZapOutSection 
+                </>
+                :
+                <ZapOutSection 
             zapAmount={zapOutAmount}
             setZapAmount={setZapOutAmount}
             zapTokenAddress={zapOutTokenAddress}
@@ -704,7 +731,37 @@ const PoolDeposit = ({
             setSliderValue={setSliderZapOutValue}
             onZapOut={onZapOut}
             isConnected={isConnected}
-            openConnectModal={openConnectModal}/>
+            openConnectModal={openConnectModal}/> }
+              </div>
+            ) 
+            // : selectedAction === "zapIn" ? (
+            //   <ZapInSection
+            //     zapAmount={zapAmount}
+            //     setZapAmount={setZapAmount}
+            //     zapTokenAddress={zapTokenAddress}
+            //     handleZapTokenChange={handleZapTokenChange}
+            //     selectedZapTokenBalance={selectedZapTokenBalance}
+            //     poolTokens={poolTokens}
+            //     sliderValue={sliderValue}
+            //     setSliderValue={setSliderValue}
+            //     onZapIn={onZapIn}
+            //     isConnected={isConnected}
+            //     openConnectModal={openConnectModal}
+            //   />
+            // )
+            // :
+            // <ZapOutSection 
+            // zapAmount={zapOutAmount}
+            // setZapAmount={setZapOutAmount}
+            // zapTokenAddress={zapOutTokenAddress}
+            // handleZapTokenChange={handleZapOutTokenChange}
+            // selectedZapTokenBalance={selectedZapOutTokenBalance}
+            // poolTokens={poolTokens}
+            // sliderValue={sliderZapOutValue}
+            // setSliderValue={setSliderZapOutValue}
+            // onZapOut={onZapOut}
+            // isConnected={isConnected}
+            // openConnectModal={openConnectModal}/>
           }
           </div>
           <Divider className="border-blue-700 mt-4" />

@@ -59,8 +59,18 @@ const ZapOutSection: React.FC<ZapOutSectionProps> = ({
 
   return (
     selectedPool && (
-      <>
-        <div className="mt-5">
+      <div className="flex flex-col gap-10">
+       <div>
+            <Typography className="mb-4">Withdraw in</Typography>
+            <Dropdown
+          defaultValue={poolTokens[0]?.address || ""}
+          value={zapTokenAddress}
+          options={zapTokenOptions}
+          className="order-first sm:order-none sm:col-span-4 col-span-12 max-w-[10rem]"
+          onChange={handleZapTokenChange}
+          disabled={!poolTokens.length}/>
+          </div>
+        <div>
           <Typography>Zap-Out amount</Typography>
           <div className="bg_gray my-3 flex items-center gap-4">
             <Dropdown
@@ -105,39 +115,6 @@ const ZapOutSection: React.FC<ZapOutSectionProps> = ({
               SHARES
             </Typography>
           </div>
-          <div className="py-4">
-            <RangeSlider
-              min={0}
-              max={100}
-              value={Number(sliderValue)}
-              onChange={(e) => setSliderValue(Number(e.target.value))}
-            />
-          </div>
-          <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
-            <Button className="bg_turq" onClick={() => setSliderValue(50)}>
-              <Typography secondary size="xs" fw={700} tt="uppercase">
-                50%
-              </Typography>
-            </Button>
-            <Button className="bg_turq" onClick={() => setSliderValue(100)}>
-              <Typography secondary size="xs" fw={700} tt="uppercase">
-                MAX
-              </Typography>
-            </Button>
-          </div>
-          <div>
-            <Typography className="mb-4">Select token you want to receive in your wallet</Typography>
-            <div>
-            <Dropdown
-          defaultValue={poolTokens[0]?.address || ""}
-          value={zapTokenAddress}
-          options={zapTokenOptions}
-          className="order-first sm:order-none sm:col-span-4 col-span-12 max-w-[10rem]"
-          onChange={handleZapTokenChange}
-          disabled={!poolTokens.length}
-        />
-            </div>
-          </div>
           <Button
             onClick={
               isConnected
@@ -149,7 +126,7 @@ const ZapOutSection: React.FC<ZapOutSectionProps> = ({
             <Typography secondary>ZAP-OUT</Typography>
           </Button>
         </div>
-      </>
+      </div>
     )
   );
 };

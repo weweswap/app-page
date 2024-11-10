@@ -17,7 +17,8 @@ interface ZapOutResponse {
 }
 
 export const useZapOut = () => {
-    const [pendingToConfirm, setPendingToConfirm] = useState(false);
+    const [pendingToConfirm, setPendingToConfirm] = useState<boolean>(false);
+    const [zapOutError, setZapOutError] = useState<boolean>(false)
 
     const {
         data: hash,
@@ -42,25 +43,13 @@ export const useZapOut = () => {
             if(!response.data) {
                 throw new Error('No data returned from Zap-out API.');
             }
-
-            console.log("ResponseDatA:", response?.data)
-
             const result = response.data;
-            // if (
-            //     !vaultAddress ||
-            //     !result.tokenToSwap ||
-            //     !result.sharesToBurn || 
-            //     !result.kyberSwapEncodedRoute
-            //   ) {
-            //     throw new Error("Incomplete data returned from Zap-Out API.");
-            //   }
 
-              const args = [
+            const args = [
                 vaultAddress,
                 sharesToBurn,
                 result?.swapToToken,
-                result?.kyberSwapEncodedRoute
-              ]
+                result?.kyberSwapEncodedRoute ]
 
 
               const tx = await writeContractAsync({
@@ -72,11 +61,13 @@ export const useZapOut = () => {
 
         
               const receipt = await provider.waitForTransaction(tx);
-              setPendingToConfirm(false);
         
               return receipt;
         } catch (error) {
             console.error("Error while fetching zap out data:", error)
+            setPendingToConfirm(false);
+            setZapOutError(true)
+        }finally {
             setPendingToConfirm(false);
         }
     }
@@ -86,6 +77,7 @@ export const useZapOut = () => {
         isPending: isTxCreating,
         isError: isCreationError,
         isConfirming: pendingToConfirm,
+        zapOutError,
         zapOut
     }
 }
