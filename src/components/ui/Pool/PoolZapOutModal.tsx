@@ -207,9 +207,9 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
       </div>
       <Divider className="border-blue-700" />
       <div className="flex justify-end">
-        <Typography className="text_light_gray" size="xs">
+        {/* <Typography className="text_light_gray" size="xs">
           Total fee cost: $0.10
-        </Typography>
+        </Typography> */}
       </div>
       {finishSuccessfully && (
         <div className="flex flex-col gap-4 w-full">
