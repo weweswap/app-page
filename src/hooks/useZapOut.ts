@@ -59,7 +59,6 @@ export const useZapOut = () => {
                 args,
               });
 
-        
               const receipt = await provider.waitForTransaction(tx);
         
               return receipt;

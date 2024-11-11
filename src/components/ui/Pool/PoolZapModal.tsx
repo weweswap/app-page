@@ -72,11 +72,10 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
     }
   }, [data, selectedPool]);
 
-
   useEffect(() => {
     async function deposit() {
       if (selectedPool && data && address) {
-        await approveToken(
+        const approveReceipt = await approveToken(
           data.zapInTokenAddress,
           CONTRACT_ADDRESSES.zapContract,
           ethers.parseUnits(data.zapInAmount, zapInToken?.decimals),
@@ -88,10 +87,13 @@ const PoolZapModal = ({ onTxError, onClose, opened, data }: ZapModalProps) => {
             .parseUnits(data.zapInAmount, zapInToken?.decimals)
             .toString()
         );
+
       }
     }
     deposit();
   }, [selectedPool, data, address]);
+
+  
 
   useEffect(() => {
     if (isErrorApproveToken || isErrorZapIn) {

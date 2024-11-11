@@ -68,12 +68,12 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
       zapOutTokenAddress.toLowerCase() ===
       selectedPool.token0.address.toLowerCase()
     ) {
-      return selectedPool.token0;
+      return selectedPool.token1;
     } else if (
         zapOutTokenAddress.toLowerCase() ===
       selectedPool.token1.address.toLowerCase()
     ) {
-      return selectedPool.token1;
+      return selectedPool.token0;
     }
   }, [data, selectedPool]);
   
