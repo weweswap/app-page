@@ -88,16 +88,6 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
     remainedAmountToMerge > balanceMeme ?
       balanceMeme : remainedAmountToMerge;
 
-  console.log({
-    totalMerged,
-    maxSupply,
-    remainedAmountToMerge,
-    remainingCap,
-    maxAmountToMerge,
-    mergedAmount,
-    whitelisted: whitelistData?.whitelistInfo.amount,
-  })
-
   const handleSelect = (div: number) => {
     setAmount(dn.toString(dn.div([maxAmountToMerge, mergeConfig.inputToken.decimals], div)))
   };
