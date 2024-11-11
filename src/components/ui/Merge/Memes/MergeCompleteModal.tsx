@@ -15,7 +15,7 @@ type MergeCompleteModalProps = {
 } & ModalRootProps;
 
 const MergeCompleteModal = (props:MergeCompleteModalProps) => {
-  const { inputToken } = props;
+  const { inputToken, ...restOfTheProps } = props;
   const handleDetails = () => {
     window.open(
       `https://basescan.org/tx/${props.hash}`,
@@ -25,7 +25,7 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
   };
 
   return (
-    <MtModal.Root centered {...props}>
+    <MtModal.Root centered {...restOfTheProps}>
       <MtModal.Overlay />
       <MtModal.Content
         classNames={{ content: "bg-black border_stroke text-white p-6" }}

@@ -39,9 +39,9 @@ const MergeTokenList = {
     name: "GOODLE",
     logo: "/img/tokens/goodle.svg",
   },
-  fomo: {
-    name: "FOMO",
-    logo: "/img/tokens/FOMO.webp",
+  boomer: {
+    name: "BOOMER",
+    logo: "/img/tokens/boomer.webp",
   }
 }
 
@@ -148,7 +148,7 @@ const MergePage = () => {
           <tbody>
             <MergeTableRow token1={MergeTokenList.wewe} token2={MergeTokenList.vult} mergeLink="/merge/vult" />
             <MergeTableRow token1={MergeTokenList.bro} token2={MergeTokenList.wewe} mergeLink="/merge/bro" />
-            <MergeTableRow token1={MergeTokenList.fomo} token2={MergeTokenList.wewe} mergeLink="/merge/fomo" />
+            <MergeTableRow token1={MergeTokenList.boomer} token2={MergeTokenList.wewe} mergeLink="/merge/boomer" />
             <MergeTableRow token1={MergeTokenList.duh} token2={MergeTokenList.wewe}  />
             <MergeTableRow token1={MergeTokenList.moby} token2={MergeTokenList.wewe} />
             <MergeTableRow token1={MergeTokenList.cosmic} token2={MergeTokenList.wewe}/>

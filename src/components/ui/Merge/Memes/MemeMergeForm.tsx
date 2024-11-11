@@ -81,11 +81,22 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
   );
 
   const remainingCap = maxSupply - totalMerged;
-  const remainedAmountToMerge = BigInt(whitelistData?.whitelistInfo.amount ?? 0) > 0 ? BigInt(whitelistData?.whitelistInfo.amount ?? 0) - mergedAmount : 0n;
+
+  const remainedAmountToMerge = BigInt(whitelistData?.whitelistInfo.amount ?? 0) > 0 ? dn.mul(whitelistData?.whitelistInfo.amount || 0, 10 ** mergeConfig.inputToken.decimals)[0] - mergedAmount : 0n;
   const maxAmountToMerge = remainedAmountToMerge > remainingCap ?
     remainingCap :
     remainedAmountToMerge > balanceMeme ?
       balanceMeme : remainedAmountToMerge;
+
+  console.log({
+    totalMerged,
+    maxSupply,
+    remainedAmountToMerge,
+    remainingCap,
+    maxAmountToMerge,
+    mergedAmount,
+    whitelisted: whitelistData?.whitelistInfo.amount,
+  })
 
   const handleSelect = (div: number) => {
     setAmount(dn.toString(dn.div([maxAmountToMerge, mergeConfig.inputToken.decimals], div)))
