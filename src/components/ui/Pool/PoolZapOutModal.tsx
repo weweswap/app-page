@@ -1,6 +1,6 @@
 import {Divider, Loader, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Modal, Typography } from "~/components/common";
 import { Hex } from "viem";
 import { usePoolContext } from "./PoolContext";
@@ -43,6 +43,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
 
   const { selectedPool } = usePoolContext();
   const { address } = useAccount();
+  const [finalTxValue, setFinalTxValue] = useState<number>()
 
   const {
     hash: hashApproveToken,
@@ -81,11 +82,14 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
   useEffect(() => {
     async function withdraw () {
         if(selectedPool && data && address) {
-            await approveToken(
+            const approveTx = await approveToken(
                 CONTRACT_ADDRESSES.weweVault, //we need to approve SHARES token
                 CONTRACT_ADDRESSES.zapContract,
                 ethers.parseUnits(data.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
             )
+            
+
+            
         const txReceipt= await zapOut(
             selectedPool?.address, 
             zapOutToken!.address,  
@@ -95,7 +99,8 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
             const totalFee = (txReceipt!?.gasUsed * txReceipt!?.gasPrice);
             const getUsdFees = async () => {
               const finalUsdValue = await usdConverter(totalFee)
-              // setTotalGasFee(finalUsdValue)
+              console.log("ApprovalTX:", finalUsdValue)
+              setFinalTxValue(finalUsdValue)
             }
       
           getUsdFees() 
@@ -207,9 +212,9 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
       </div>
       <Divider className="border-blue-700" />
       <div className="flex justify-end">
-        {/* <Typography className="text_light_gray" size="xs">
-          Total fee cost: $0.10
-        </Typography> */}
+        {finishSuccessfully && <Typography className="text_light_gray" size="xs">
+          Total fee cost: {`${(finalTxValue)?.toFixed(4)}`}
+        </Typography>}
       </div>
       {finishSuccessfully && (
         <div className="flex flex-col gap-4 w-full">
