@@ -207,7 +207,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
           <div className="w-full flex items-center gap-4 mt-3">
             <div>
               <Typography size="xs" className="text_light_gray">
-                Available:
+                Can Merge:
               </Typography>
               <Typography size="xs" className="text_light_gray">
                 {Math.trunc(
