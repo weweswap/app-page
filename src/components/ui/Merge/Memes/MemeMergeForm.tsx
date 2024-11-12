@@ -305,10 +305,9 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
 
       <MergeCompleteModal
         key="merge-complete-modal"
-        amount={claimableAmount}
+        mergeConfig={mergeConfig}
         hash={hash as Hex}
         ratio={rate}
-        inputToken={mergeConfig.inputToken}
         onClose={() => {
           setAmount("")
           setIsComplete(false)

@@ -1,21 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Modal as MtModal, ModalRootProps, Loader } from "@mantine/core";
 import { Button, Typography } from "~/components/common";
 import Image from "next/image";
 import * as dn from "dnum";
 import { Hex } from 'viem';
-import { TokenItem } from '~/models';
+
+import { useAccount, useWatchContractEvent } from 'wagmi';
+import MemeEaterAbi from '~/lib/abis/MemeEaterABI';
+import { MergeConfig } from '~/constants/mergeConfigs';
 
 type MergeCompleteModalProps = {
   hash: Hex;
-  amount?: string;
   ratio: number;
   onClose: () => void;
-  inputToken: TokenItem;
+  mergeConfig: MergeConfig;
 } & ModalRootProps;
 
 const MergeCompleteModal = (props:MergeCompleteModalProps) => {
-  const { inputToken, ...restOfTheProps } = props;
+  const { mergeConfig, ...restOfTheProps } = props;
+  const { address} = useAccount();
+  const [mergedAmount, setMergedAmount] = useState("0");
+  const [isLoading, setIsLoading] = useState(true);
   const handleDetails = () => {
     window.open(
       `https://basescan.org/tx/${props.hash}`,
@@ -23,6 +28,19 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
       "noopener,noreferrer"
     );
   };
+
+  useWatchContractEvent({
+    address: mergeConfig.eaterContractAddress,
+    abi: MemeEaterAbi,
+    eventName: "Merged",
+    onLogs: (data) => {
+      const eventInfo = data[0].args;
+      if(eventInfo.account?.toLowerCase() === address?.toLocaleLowerCase()) {
+        setMergedAmount(dn.format([eventInfo.weweAmount || 0n, 18], { locale: "en", digits: 3 }));
+        setIsLoading(false);
+      }
+    },
+  });
 
   return (
     <MtModal.Root centered {...restOfTheProps}>
@@ -53,11 +71,11 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
               Ratio: 1
             </Typography>
             <Image
-              src={inputToken.icon}
+              src={mergeConfig.inputToken.icon}
               width={17}
               height={17}
               className="rounded-full h-5 w-5"
-              alt={`${inputToken.symbol} logo`}
+              alt={`${mergeConfig.inputToken.symbol} logo`}
             />
 
             <Typography size="md" fw={600}>
@@ -79,16 +97,15 @@ const MergeCompleteModal = (props:MergeCompleteModalProps) => {
             />
             <div className="flex flex-col">
             {
-                props.amount
-                  ? <>
+                isLoading
+                  ? <Loader /> : <>
                     <Typography size="sm" className="text_light_gray">
                       RESERVED
                     </Typography>
                     <Typography size="md" className="font-bold">
-                      {props.amount}
+                      {mergedAmount}
                     </Typography>
                   </>
-                  : <Loader />
               }
             </div>
           </div>

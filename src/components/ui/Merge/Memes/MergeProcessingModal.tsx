@@ -60,7 +60,7 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
       }
     }
     startEat()
-  }, [data, address])
+  }, [data.token.address, data.eater, data.amountToMerge, data.proof, address])
 
 
   useEffect(() => {

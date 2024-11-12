@@ -8,7 +8,8 @@ interface CapsCardProps {
 }
 export function CapsCard({mergeConfig}: CapsCardProps) {
   const { maxSupply, totalMerged } = useMemeEaterCapsInfo(mergeConfig.eaterContractAddress);
-  const capsFilledPercentage = maxSupply === 0n ? 0 :  dn.toNumber(dn.mul(dn.div(totalMerged, maxSupply), 100), 0);
+  
+  const capsFilledPercentage = maxSupply === 0n ? 0 :  dn.toNumber(dn.mul(dn.div(totalMerged, maxSupply, 4), 100), 2);
 
   return (
     <div className='text-center py-10 font-bold'>

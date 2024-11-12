@@ -32,7 +32,8 @@ function formatMinutesToHumanReadable(minutes: number) {
 }
 
 export function useMemeEat(eaterAddress: Hex) {
-  const [pendingToConfirm, setPendingToConfirm] = useState(false)
+  const [pendingToConfirm, setPendingToConfirm] = useState(false);
+  const [isError, setIsError] = useState(false);
   const {
     data: hash,
     isError: isCreationError,
@@ -63,6 +64,10 @@ export function useMemeEat(eaterAddress: Hex) {
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
 
+    if(receipt.status === "reverted") {
+      setIsError(true);
+    }
+
     setPendingToConfirm(false);
     return receipt;
   };
@@ -70,7 +75,7 @@ export function useMemeEat(eaterAddress: Hex) {
   return {
     hash: hash,
     isPending: pendingToConfirm,
-    isError: isCreationError,
+    isError: isCreationError || isError,
     eat,
   };
 }
@@ -112,6 +117,15 @@ export function useVestingsInfo(address: Hex) {
     args: [account!],
     query: {
       enabled: isConnected && !!account,
+    },
+  });
+
+  useWatchContractEvent({
+    address: address,
+    abi: MemeEaterAbi,
+    eventName: "Merged",
+    onLogs: () => {
+      refetch();
     },
   });
 
@@ -251,7 +265,7 @@ export function useMemeEaterMerklInfo(eaterAddress: Hex, tokenAddress: Hex) {
 }
 
 export function useMemeEaterCapsInfo(eaterAddress: Hex) {
-  const { data, isLoading } = useReadContracts({
+  const { data, isLoading, refetch } = useReadContracts({
     contracts: [
       {
         abi: MemeEaterAbi,
@@ -264,6 +278,15 @@ export function useMemeEaterCapsInfo(eaterAddress: Hex) {
         functionName: "totalMerged",
       }
     ]
+  });
+
+  useWatchContractEvent({
+    address: eaterAddress,
+    abi: MemeEaterAbi,
+    eventName: "Merged",
+    onLogs: () => {
+      refetch();
+    },
   });
 
   return {
