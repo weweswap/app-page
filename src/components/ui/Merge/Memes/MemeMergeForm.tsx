@@ -19,6 +19,8 @@ import { WEWE_COINGECKO_ID } from '~/constants'
 import { useCoinGeckoGetPrice } from '~/hooks/useCoingeckoGetPrice';
 import { padHex } from 'viem';
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
+import { HoverCard, Group } from '@mantine/core';
+import { InfoIconFill } from '~/components/common/Icons'
 
 interface MemeMergeFormProps {
   mergeConfig: MergeConfig;
@@ -82,10 +84,8 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
 
   const remainingCap = maxSupply - totalMerged;
 
-  const remainedAmountToMerge = BigInt(whitelistData?.whitelistInfo.amount ?? 0) > 0 ? dn.mul(whitelistData?.whitelistInfo.amount || 0, 10 ** mergeConfig.inputToken.decimals)[0] - mergedAmount : 0n;
-  const maxAmountToMerge = remainedAmountToMerge > remainingCap ?
-    remainingCap :
-    remainedAmountToMerge > balanceMeme ?
+  const remainedAmountToMerge = BigInt(whitelistData?.whitelistInfo.amount ?? 0) > 0 ? BigInt(whitelistData?.whitelistInfo.amount || 0) - mergedAmount : 0n;
+  const maxAmountToMerge = remainedAmountToMerge > balanceMeme ?
       balanceMeme : remainedAmountToMerge;
 
   const handleSelect = (div: number) => {
@@ -154,7 +154,7 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
                 {
                   amountBigNumber > remainingCap ? (
                     <div className="text-red-400 text-sm">
-                      Amount is greater than remaining cap
+                      Amount is greater than remaining cap({dn.format([remainingCap, mergeConfig.inputToken.decimals], { locale: "en", digits: 2 })}).
                     </div>
                   ) : null
                 }
@@ -206,9 +206,49 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
 
           <div className="w-full flex items-center gap-4 mt-3">
             <div>
-              <Typography size="xs" className="text_light_gray">
-                Can Merge:
-              </Typography>
+              <Group justify="center">
+                <HoverCard width={280} withArrow keepMounted radius={0} position="top" classNames={{ dropdown: "bg_light_dark" }}>
+                  <HoverCard.Target>
+                    <div className="flex">
+                      <Typography size="xs" className="text_light_gray">
+                        Can Merge: 
+                      </Typography>
+                      <InfoIconFill size={16} />
+                    </div>
+                  </HoverCard.Target>
+                  <HoverCard.Dropdown >
+                    <div>
+                      <div className="flex flex-col gap-1 border-b py-2">
+                        <span className="text-sm">
+                          Whitelisted Tokens:
+                        </span>
+                        <span className="font-bold">
+                        {dn.format([BigInt(whitelistData?.whitelistInfo.amount || "0"), mergeConfig.inputToken.decimals], { locale: "en", digits: 6 })}
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col gap-1 border-b py-2">
+                        <span className="text-sm">
+                          Already Merged:
+                        </span>
+                        <span className="font-bold">
+                        {dn.format([mergedAmount, mergeConfig.inputToken.decimals], { locale: "en", digits: 6 })}
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col gap-1 py-2">
+                        <span className="text-sm">
+                          Wallet Balance:
+                        </span>
+                        <span className="font-bold">
+                          {dn.format([balanceMeme, mergeConfig.inputToken.decimals], { locale: "en", digits: 6 })}
+                        </span>
+                      </div>
+                    </div>
+                  </HoverCard.Dropdown>
+                </HoverCard>
+              </Group>
+
               <Typography size="xs" className="text_light_gray">
                 {Math.trunc(
                   Number(formatUnits(maxAmountToMerge, mergeConfig.inputToken.decimals))
