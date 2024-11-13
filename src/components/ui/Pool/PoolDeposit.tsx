@@ -144,13 +144,16 @@ const PoolDeposit = ({
         ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
       );
 
+      console.log("Price0:", (prices.priceToken0 * walletToken0) / prices.priceToken1)
+      console.log("Price1:", walletToken1)
+
       if (
         (prices.priceToken0 * walletToken0) / prices.priceToken1 <
         walletToken1
       ) {
         setInputValueToken0(formattedToken0);
         setFormattedShares(formattedShares);
-        setInputValueToken1(formattedToken1);
+        setInputValueToken1(Number(token1Equivalent.toFixed(6)));
       } else {
         setInputValueToken1(formattedToken1);
         setFormattedShares(formattedShares);
