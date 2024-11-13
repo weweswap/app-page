@@ -144,9 +144,6 @@ const PoolDeposit = ({
         ethers.formatUnits(balanceToken1, selectedPool?.token1.decimals)
       );
 
-      console.log("Price0:", (prices.priceToken0 * walletToken0) / prices.priceToken1)
-      console.log("Price1:", walletToken1)
-
       if (
         (prices.priceToken0 * walletToken0) / prices.priceToken1 <
         walletToken1
