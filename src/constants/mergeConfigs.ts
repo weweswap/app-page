@@ -11,6 +11,7 @@ export interface MergeConfig {
   uniAdaptorAddress: Hex;
   chartUrl: string;
   mergeDeadline: string;
+  mergeStartTimestamp: number;
   isMergeDisabled: boolean;
 }
 
@@ -27,6 +28,7 @@ const boomerMergeConfig: MergeConfig = {
   uniAdaptorAddress: "0xbb1a07e99f7638dcC730b523e1b107FdC7c379Ac" as `0x${string}`,
   chartUrl: "https://dexscreener.com/base/0xa926342d7f9324A1DbDe8F5ab77c92706f289b5d?embed=1&theme=dark&trades=0&info=0",
   mergeDeadline: dayjs().year(2024).month(9).date(31).format("DD.MMM"),
+  mergeStartTimestamp: 1731512264447,
   isMergeDisabled: false,
 }
 
