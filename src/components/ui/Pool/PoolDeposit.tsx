@@ -150,11 +150,11 @@ const PoolDeposit = ({
       ) {
         setInputValueToken0(formattedToken0);
         setFormattedShares(formattedShares);
-        setInputValueToken1(Number(token1Equivalent.toFixed(6)));
+        setInputValueToken1(token1Equivalent);
       } else {
         setInputValueToken1(formattedToken1);
         setFormattedShares(formattedShares);
-        setInputValueToken0(Number(token0Equivalent.toFixed(6)));
+        setInputValueToken0(token0Equivalent);
       }
 
       if (selectedAction === "zap") {
@@ -227,6 +227,8 @@ const PoolDeposit = ({
       console.error(error);
     }
   };
+
+  console.log("Tokens:", selectedPool?.token1.decimals)
 
   return (
     selectedPool && (
@@ -512,7 +514,7 @@ const PoolDeposit = ({
                   disabled={
                     BigInt(
                       ethers.parseUnits(
-                        String(inputValueToken1 || 0),
+                        String(inputValueToken1.toFixed(selectedPool.token1.decimals) || 0),
                         selectedPool.token1.decimals
                       )
                     ) > balanceToken1
@@ -530,7 +532,7 @@ const PoolDeposit = ({
                   <Typography secondary tt="uppercase">
                     {BigInt(
                       ethers.parseUnits(
-                        String(inputValueToken1 || 0),
+                        String(inputValueToken1.toFixed(selectedPool.token1.decimals) || 0),
                         selectedPool.token1.decimals
                       )
                     ) > balanceToken1
