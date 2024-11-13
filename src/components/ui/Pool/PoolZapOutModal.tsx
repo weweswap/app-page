@@ -99,7 +99,6 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
             const totalFee = (txReceipt!?.gasUsed * txReceipt!?.gasPrice);
             const getUsdFees = async () => {
               const finalUsdValue = await usdConverter(totalFee)
-              console.log("ApprovalTX:", finalUsdValue)
               setFinalTxValue(finalUsdValue)
             }
       
