@@ -198,7 +198,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
             </>
           )}
         </div>
-        {!finishSuccessfully && (
+        {((isPendingZapOut || !hashZapOut) && !zapOutError) ? 
             <div className="flex gap-3 items-center">
               <Image
                 src="/img/icons/inform.svg"
@@ -208,15 +208,23 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
               />
               <Typography>Please sign transaction</Typography>
             </div>
-          )}
+            :
+            <></>
+          }
       </div>
-      <Divider className="border-blue-700" />
-      <div className="flex justify-end">
-        {finishSuccessfully && <Typography className="text_light_gray" size="xs">
-          Total fee cost: {`${(finalTxValue)?.toFixed(4)}`}
-        </Typography>}
+     
+      {(isPendingZapOut || !hashZapOut) && !zapOutError ? 
+      <></> : (
+        <>
+     <Divider className="border-blue-700" />
+        <div className="flex justify-end">
+         <Typography size="xs" className="text_light_gray  flex">
+          Total fee cost: {!finalTxValue ? <span className="animate-pulse">$0.00</span> 
+            : <>
+              {`${(finalTxValue)?.toFixed(4)}`}
+            </>}
+        </Typography>
       </div>
-      {finishSuccessfully && (
         <div className="flex flex-col gap-4 w-full">
           <Button onClick={onClose} className="w-full">
             <Typography secondary size="xs" fw={700} tt="uppercase">
@@ -232,6 +240,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
             </Typography>
           </Button>
         </div>
+        </>
       )}
       
     </Modal>
