@@ -228,8 +228,6 @@ const PoolDeposit = ({
     }
   };
 
-  console.log("Tokens:", selectedPool?.token1.decimals)
-
   return (
     selectedPool && (
       <>
