@@ -21,6 +21,7 @@ import { provider } from "~/hooks/provider";
 import { Hex } from "viem";
 import { useVaultTotalSupply } from "~/hooks/useVaultTotalSupply";
 import { useVaultInfo } from "~/hooks/useVaultInfo";
+import * as dn from "dnum";
 
 import ActionNav from "./ActionNav";
 import ZapInSection from "./ZapInSection";
@@ -56,8 +57,6 @@ const PoolDeposit = ({
   const [inputValueToken1, setInputValueToken1] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
   const [secondaryTokenIndex, setSecondaryTokenIndex] = useState(0);
-  const [tokenShare0, setTokenShare0] = useState<bigint | number>(0);
-  const [tokenShare1, setTokenShare1] = useState<bigint | number>(0);
 
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -130,9 +129,8 @@ const PoolDeposit = ({
     return () => clearInterval(intervalId);
   }, []);
 
-  const formattedShare0 = totalSupply ? (token0UnderlyingAmount/totalSupply)*balanceShares : 0
-  const formattedShare1 = totalSupply ? (token1UnderlyingAmount/totalSupply)*balanceShares : 0
-
+  const formattedShare0 = totalSupply ? dn.format(dn.mul(dn.div([token0UnderlyingAmount, selectedPool?.token0.decimals || 18], [totalSupply, 18]), formattedShares), { locale: "en", digits: 6 }) : 0
+  const formattedShare1 = totalSupply ? dn.format(dn.mul(dn.div([token1UnderlyingAmount, selectedPool?.token1.decimals || 18], [totalSupply, 18]), formattedShares), { locale: "en", digits: 6 }) : 0
 
   useEffect(() => {
     if (prices && selectedPool) {
@@ -191,9 +189,6 @@ const PoolDeposit = ({
         setZapAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
       }
     }
-
-    setTokenShare0(formattedShare0)
-    setTokenShare1(formattedShare1)
 
   }, [
     prices,
@@ -606,7 +601,7 @@ const PoolDeposit = ({
                         alt=""
                       />
                       <Typography secondary>
-                         {Number(ethers.formatUnits(tokenShare0)).toFixed(4)}
+                         {formattedShare0}
                       </Typography>
                     </div>
                     <div className="flex items-center gap-2">
@@ -617,7 +612,7 @@ const PoolDeposit = ({
                         alt=""
                       />
                       <Typography secondary>
-                         {Number(ethers.formatUnits(tokenShare1)).toFixed(4)}
+                         {formattedShare1}
                       </Typography>
                     </div>
                   </div>
