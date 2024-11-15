@@ -5,7 +5,7 @@ import { usePoolContext } from "./PoolContext";
 import { Divider, NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import { verdana } from "~/fonts";
-import { TOKEN_LIST } from "~/constants";
+import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
 import RangeSlider from "~/components/common/RangeSlider";
@@ -15,13 +15,21 @@ import { WewePosition } from "~/hooks/useWewePositions";
 import { PoolChartCard } from "./PoolChartCard";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { formatNumber } from "~/utils";
+
+import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
+import { provider } from "~/hooks/provider";
 import { Hex } from "viem";
+import { useVaultTotalSupply } from "~/hooks/useVaultTotalSupply";
+import { useVaultInfo } from "~/hooks/useVaultInfo";
+import * as dn from "dnum";
+
 import ActionNav from "./ActionNav";
 import ZapInSection from "./ZapInSection";
 import ZapOutSection from "./ZapOutSection";
 import Switch from "~/components/common/Switch";
 
 type Action = "deposit" | "withdraw" ;
+
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -32,6 +40,7 @@ type PoolDepositProps = {
   onClaim?: (wewePositon: WewePosition) => void;
   enableClaimBlock?: boolean;
 };
+
 
 const PoolDeposit = ({
   onBack,
@@ -52,8 +61,11 @@ const PoolDeposit = ({
   const [inputValueToken1, setInputValueToken1] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
   const [secondaryTokenIndex, setSecondaryTokenIndex] = useState(0);
+
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+  const {totalSupply} = useVaultTotalSupply(selectedPool)
+  const {token0UnderlyingAmount, token1UnderlyingAmount} = useVaultInfo(selectedPool) 
 
   const [zapInSwitch, setZapInSwitch] = useState<boolean>(false)
   const [zapOutSwitch, setZapOutSwitch] = useState<boolean>(false)
@@ -116,6 +128,7 @@ const PoolDeposit = ({
   );
 
   useEffect(() => {
+
     const intervalId = setInterval(() => {
       refechToken1Balance();
       refechToken0Balance();
@@ -124,8 +137,12 @@ const PoolDeposit = ({
         refetchZapTokenBalance();
       }
     }, 5000);
+
     return () => clearInterval(intervalId);
   }, []);
+
+  const formattedShare0 = totalSupply ? dn.format(dn.mul(dn.div([token0UnderlyingAmount, selectedPool?.token0.decimals || 18], [totalSupply, 18]), formattedShares), { locale: "en", digits: 6 }) : 0
+  const formattedShare1 = totalSupply ? dn.format(dn.mul(dn.div([token1UnderlyingAmount, selectedPool?.token1.decimals || 18], [totalSupply, 18]), formattedShares), { locale: "en", digits: 6 }) : 0
 
   useEffect(() => {
     if (prices && selectedPool) {
@@ -199,6 +216,7 @@ const PoolDeposit = ({
         setZapOutAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
       }
     }
+
   }, [
     prices,
     sliderValue,
@@ -211,6 +229,7 @@ const PoolDeposit = ({
     zapInSwitch,
     zapOutSwitch
   ]);
+
 
   const handleChangeToken0 = (newValue: number) => {
     if (prices) {
@@ -649,26 +668,27 @@ const PoolDeposit = ({
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center justify-center gap-5">
+
                     <div className="flex items-center gap-2">
                       <Image
                         src={selectedPool?.token0.icon}
-                        height={24}
-                        width={24}
+                        height={20}
+                        width={20}
                         alt=""
                       />
                       <Typography secondary>
-                        {selectedPool?.token0.chain}
+                         {formattedShare0}
                       </Typography>
                     </div>
                     <div className="flex items-center gap-2">
                       <Image
                         src={selectedPool?.token1.icon}
-                        height={24}
-                        width={24}
+                        height={20}
+                        width={20}
                         alt=""
                       />
                       <Typography secondary>
-                        {selectedPool?.token1.symbol}
+                         {formattedShare1}
                       </Typography>
                     </div>
                   </div>
