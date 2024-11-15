@@ -55,8 +55,8 @@ const PoolDeposit = ({
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
 
-  const [zapInSwitch, setZapInSwitch] = useState<number>(0)
-  const [zapOutSwitch, setZapOutSwitch] = useState<number>(0)
+  const [zapInSwitch, setZapInSwitch] = useState<boolean>(false)
+  const [zapOutSwitch, setZapOutSwitch] = useState<boolean>(false)
 
   const [zapOutAmount, setZapOutAmount] = useState<string>("0")
   const [zapOutTokenAddress, setZapOutTokenAddress] = useState<string>("");
@@ -169,7 +169,7 @@ const PoolDeposit = ({
         setInputValueToken0(Number(token0Equivalent.toFixed(6)));
       }
 
-      if (zapInSwitch === 1) {
+      if (zapInSwitch) {
         const selectedZapToken = poolTokens.find(
           (token) => token.address === zapTokenAddress
         );
@@ -184,7 +184,7 @@ const PoolDeposit = ({
         setZapAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
       }
 
-      if (zapOutSwitch === 1) {
+      if (zapOutSwitch) {
         const resultShares = (BigInt(sliderZapOutValue) * balanceShares) / BigInt(100);
         const selectedZapToken = poolTokens.find(
           (token) => token.address === zapOutTokenAddress
@@ -414,12 +414,12 @@ const PoolDeposit = ({
                 <div className="my-8">
                   <Switch 
                   value={zapInSwitch}
-                  onClick={() => setZapInSwitch(() => zapInSwitch === 0 ? 1:0)} 
+                  onClick={() => setZapInSwitch(zapInSwitch => !zapInSwitch)} 
                   label="ZAP IN"
                   description="Deposit in the pool with a single token. Half of your deposit will be automatically sold for the other asset in the pool ratio." />
                 </div>
              
-                {zapInSwitch===0 ? <div>
+                {!zapInSwitch ? <div>
                 <div className="mt-4">
                   <Typography>Deposit amount</Typography>
                 </div>
@@ -611,12 +611,12 @@ const PoolDeposit = ({
                    <div className="my-8">
                   <Switch 
                   value={zapOutSwitch}
-                  onClick={() => setZapOutSwitch(() => zapOutSwitch === 0 ? 1:0)} 
+                  onClick={() => setZapOutSwitch(zapOutSwitch => !zapOutSwitch)} 
                   label="ZAP-OUT"
                   description="Withdraw from the pool into one token. The other pool token will be sold for the desired coin." />
                 
                 </div>
-                {zapOutSwitch === 0 ? <>
+                {!zapOutSwitch ? <>
                 <Typography>Withdraw amount</Typography>
                 <div className="bg_gray my-3 flex items-center gap-4">
                   <Dropdown
@@ -734,34 +734,6 @@ const PoolDeposit = ({
             openConnectModal={openConnectModal}/> }
               </div>
             ) 
-            // : selectedAction === "zapIn" ? (
-            //   <ZapInSection
-            //     zapAmount={zapAmount}
-            //     setZapAmount={setZapAmount}
-            //     zapTokenAddress={zapTokenAddress}
-            //     handleZapTokenChange={handleZapTokenChange}
-            //     selectedZapTokenBalance={selectedZapTokenBalance}
-            //     poolTokens={poolTokens}
-            //     sliderValue={sliderValue}
-            //     setSliderValue={setSliderValue}
-            //     onZapIn={onZapIn}
-            //     isConnected={isConnected}
-            //     openConnectModal={openConnectModal}
-            //   />
-            // )
-            // :
-            // <ZapOutSection 
-            // zapAmount={zapOutAmount}
-            // setZapAmount={setZapOutAmount}
-            // zapTokenAddress={zapOutTokenAddress}
-            // handleZapTokenChange={handleZapOutTokenChange}
-            // selectedZapTokenBalance={selectedZapOutTokenBalance}
-            // poolTokens={poolTokens}
-            // sliderValue={sliderZapOutValue}
-            // setSliderValue={setSliderZapOutValue}
-            // onZapOut={onZapOut}
-            // isConnected={isConnected}
-            // openConnectModal={openConnectModal}/>
           }
           </div>
           <Divider className="border-blue-700 mt-4" />

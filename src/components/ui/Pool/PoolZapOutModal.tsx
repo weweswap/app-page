@@ -16,14 +16,6 @@ export type PayloadZapOutModal = {
   zapOutTokenAddress: Hex;
 };
 
-const handleDetails = (hash: string) => {
-  window.open(
-    `https://basescan.org/tx/${hash}`,
-    "_blank",
-    "noopener,noreferrer"
-  );
-};
-
 type ZapModalProps = {
   onOpen: () => void;
   onClose: () => void;
