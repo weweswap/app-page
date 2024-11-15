@@ -17,9 +17,10 @@ type LiquidityProps = {
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
   onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
+  onZapOut:(tokenAmount: string, tokenAddress: Hex) => void;
 };
 
-const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw, onZapIn }: LiquidityProps) => {
+const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw, onZapIn, onZapOut }: LiquidityProps) => {
   const [currentPage, setCurrentPage] = useState("");
   const { setSelectedPool } = usePoolContext();
 
@@ -176,7 +177,7 @@ const Liquidity = ({ setPoolTypes, poolTypes, onDeposit, onWithdraw, onZapIn }: 
       {/* {currentPage === "pool-details" && (
         <PoolDetail onBack={handleHideDetails} />
       )} */}
-      {currentPage === "deposit" && <PoolDeposit onWithdraw={onWithdraw} onDeposit={onDeposit} onZapIn={onZapIn} onBack={() => setCurrentPage("")} />}
+      {currentPage === "deposit" && <PoolDeposit onWithdraw={onWithdraw} onDeposit={onDeposit} onZapIn={onZapIn} onZapOut={onZapOut} onBack={() => setCurrentPage("")} />}
     </>
   );
 };

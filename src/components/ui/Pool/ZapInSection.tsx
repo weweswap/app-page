@@ -4,7 +4,6 @@ import { Button, Dropdown, Typography } from "~/components/common";
 import { NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import { verdana } from "~/fonts";
-import RangeSlider from "~/components/common/RangeSlider";
 import { formatNumber } from "~/utils";
 import { ethers } from "ethers";
 import { Hex } from "viem";
@@ -30,8 +29,6 @@ const ZapInSection: React.FC<ZapInSectionProps> = ({
   handleZapTokenChange,
   selectedZapTokenBalance,
   poolTokens,
-  sliderValue,
-  setSliderValue,
   onZapIn,
   isConnected,
   openConnectModal,
@@ -55,6 +52,7 @@ const ZapInSection: React.FC<ZapInSectionProps> = ({
           disabled={!poolTokens.length}
         />
         <NumberInput
+        thousandSeparator
           classNames={{
             root: "flex-1 w-auto",
             input: clsx(
@@ -81,26 +79,6 @@ const ZapInSection: React.FC<ZapInSectionProps> = ({
           )}{" "}
           {poolTokens.find((token) => token.address === zapTokenAddress)?.symbol}
         </Typography>
-      </div>
-      <div className="py-4">
-        <RangeSlider
-          min={0}
-          max={100}
-          value={Number(sliderValue)}
-          onChange={(e) => setSliderValue(Number(e.target.value))}
-        />
-      </div>
-      <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
-        <Button className="bg_turq" onClick={() => setSliderValue(50)}>
-          <Typography secondary size="xs" fw={700} tt="uppercase">
-            50%
-          </Typography>
-        </Button>
-        <Button className="bg_turq" onClick={() => setSliderValue(100)}>
-          <Typography secondary size="xs" fw={700} tt="uppercase">
-            MAX
-          </Typography>
-        </Button>
       </div>
       <Button
         onClick={

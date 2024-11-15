@@ -13,6 +13,7 @@ type MySharesProps = {
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
   onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
+  onZapOut: (tokenAmount: string, tokenAddress: Hex) => void;
   setPoolTypes: (number: number) => void;
   poolTypes: number;
 };
@@ -22,6 +23,7 @@ const MyShares = ({
   onDeposit,
   onWithdraw,
   onZapIn,
+  onZapOut, 
   setPoolTypes,
   poolTypes,
 }: MySharesProps) => {
@@ -285,6 +287,7 @@ const MyShares = ({
           onDeposit={onDeposit}
           onBack={() => setCurrentPage("")}
           onZapIn={onZapIn}
+          onZapOut={onZapOut}
         />
       )}
     </>
