@@ -34,7 +34,7 @@ export const ChaosRewardCard = ({ mergeConfig }: ChaosRewardCardProps) => {
         size="xs"
         className="text-center mb-5"
       >
-        BE FAST. RATIO WILL DROP TO ZERO BY THE END OF THE MERGE.
+        BE FAST. RATIO WILL DROP HARD BY THE END OF THE MERGE.
       </Typography>
 
       <Typography
