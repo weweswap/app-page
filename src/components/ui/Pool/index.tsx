@@ -15,9 +15,10 @@ import PoolDepositModal from "./PoolDepositModal";
 import DepositSuccessModal from "./DepositSuccessModal";
 import WithdrawModal, { PayloadWithdrawalModal } from "./WithdrawModal";
 import WithdrawSuccessModal, { PayloadWithdrawalSuccess } from "./WithdrawSuccessModal";
-import PoolZapModal, { PayloadZapInModal } from "./PoolZapModal";
+import PoolZapModal, { PayloadZapInModal, PayloadZapOutModal } from "./PoolZapModal";
 import { Hex } from "viem";
 import { usdConverter } from "~/utils";
+import PoolZapOutModal from "./PoolZapOutModal";
 
 
 export const Pool = () => {
@@ -29,6 +30,7 @@ export const Pool = () => {
   const [payloadWithdrawalModal, setPayloadWithdrawalModal] = useState<PayloadWithdrawalModal>()
   const [payloadWithdrawalSuccessModal, setPayloadWithdrawalSuccessModal] = useState<PayloadWithdrawalSuccess>()
   const [payloadZapInModal, setPayloadZapInModal] = useState<PayloadZapInModal>()
+  const [payloadZapOutModal, setPayloadZapOutModal] = useState<PayloadZapOutModal>()
 
   const [openedDepositModal,{ open: openDepositModal, close: closeDepositModal }] =
   useDisclosure(false);
@@ -40,6 +42,9 @@ export const Pool = () => {
   const [openedWithdrawSuccessModal,{ open: openWithdrawSuccessModal, close: closeWithdrawSuccessModal }] =
   useDisclosure(false);
   const [openedZapInModal,{ open: openZapInModal, close: closeZapInModal }] =
+  useDisclosure(false);
+
+  const [openedZapOutModal,{ open: openZapOutModal, close: closeZapOutModal }] =
   useDisclosure(false);
 
   const [
@@ -119,6 +124,7 @@ export const Pool = () => {
     setGenericHashError(hash)
     closeApproveModal()
     closeWithdrawModal()
+    closeZapOutModal()
     openFailModal()
   }
 
@@ -177,6 +183,16 @@ export const Pool = () => {
     closeZapInModal()
   }
 
+  const handleZapOutModal = (zapOutAmount: string, zapOutTokenAddress: Hex) => {
+    setPayloadZapOutModal({zapOutAmount, zapOutTokenAddress})
+    openZapOutModal()
+  }
+
+  const handleCloseZapOut = () => {
+    setPayloadZapOutModal(undefined)
+    closeZapOutModal()
+  }
+
   return (
     <>
       {step === 0 && (
@@ -185,6 +201,7 @@ export const Pool = () => {
           onDeposit={handleApproveTokenModal}
           onWithdraw={handleWithdrawalModal}
           onZapIn={handleZapInModal}
+          onZapOut={handleZapOutModal}
           onNext={() => setStep(1)}
           onBack={() => setStep(0)} 
           onAdd={openAdd}
@@ -236,6 +253,15 @@ export const Pool = () => {
           onClose={handleCloseZapIn}
           onTxError={handleErrorModal}
           data={payloadZapInModal}
+        />
+      }
+      {payloadZapOutModal &&
+        <PoolZapOutModal 
+        opened={openedZapOutModal}
+        onOpen={() => {}}
+        onClose={handleCloseZapOut}
+        onTxError={handleErrorModal}
+        data={payloadZapOutModal}
         />
       }
       {

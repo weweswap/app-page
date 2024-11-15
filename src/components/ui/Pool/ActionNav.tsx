@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Typography } from "~/components/common";
 
-type Action = "zap" | "deposit" | "withdraw";
+type Action = "deposit" | "withdraw";
 
 type ActionNavProps = {
     selectedAction: Action;
@@ -12,11 +12,10 @@ const ActionNav: React.FC<ActionNavProps> = ({
   selectedAction,
   setSelectedAction,
 }) => {
-    const actions: Action[] = ["zap", "deposit", "withdraw"];
+    const actions: Action[] = ["deposit", "withdraw" ];
     const actionLabels: Record<Action, string> = {
-        zap: "ZAP-In",
         deposit: "Deposit",
-        withdraw: "Withdraw",
+        withdraw: "Withdraw"
       };
 
   return (
