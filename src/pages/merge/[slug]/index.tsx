@@ -36,7 +36,7 @@ const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
     <div>
       <Card  className="mb-5">
         <Typography secondary size="lg" className="text-center uppercase" >
-        Last Call to Merge & Upgrade, <span className="text-yellow">Merge live until {mergeConfig.mergeDeadline}!</span> 
+        MERGE YOUR {mergeConfig.inputToken.symbol}! <span className="text-yellow">LIVE UNTIL {mergeConfig.mergeDeadline}!</span> 
         </Typography>
       </Card>
       <div className="gap-5 grid grid-cols-12">
@@ -45,7 +45,7 @@ const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
             <div className="md:flex items-center justify-between gap-3 text-center md:text-start">
               <Link href="/merge">
                 <Typography secondary size="xl" tt="uppercase">
-                  <span>{"<"}</span>  MERGE NO&ensp;W
+                  <span>{"<"}</span>  MERGE NOW
                 </Typography>
               </Link>
             </div>
@@ -60,6 +60,12 @@ const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
             </div>
           </Card>
           <Card className="border-t-0">
+            <div>
+              <Typography className="pt-3">
+                We merge fragmented communities - into One United Power! <br/>
+                We target tokens with extremely low liquidity, high failure rate, but social power.
+              </Typography>
+            </div>
             <div className="flex flex-col my-5">
               <ul className="list-decimal list-inside text-base font-bold text_light_gray">
                 <li>Sacrifice your ${mergeConfig.inputToken.symbol} to get $WEWE</li>

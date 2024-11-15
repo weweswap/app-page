@@ -1,10 +1,11 @@
 import { use, useState } from "react";
 import { Hex } from "viem";
-import { useAccount, usePublicClient, useReadContract, useWatchContractEvent, useWriteContract } from "wagmi";
+import { useAccount, usePublicClient, useReadContract, useReadContracts, useWatchContractEvent, useWriteContract } from "wagmi";
 import MemeEaterAbi from "~/lib/abis/MemeEaterABI";
 import * as dn from "dnum";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { API_BASE_URL } from "~/constants/configs";
 
 interface WhiteListResponse {
   whitelistInfo: {
@@ -30,8 +31,9 @@ function formatMinutesToHumanReadable(minutes: number) {
   return "0m";
 }
 
-export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
-  const [pendingToConfirm, setPendingToConfirm] = useState(false)
+export function useMemeEat(eaterAddress: Hex) {
+  const [pendingToConfirm, setPendingToConfirm] = useState(false);
+  const [isError, setIsError] = useState(false);
   const {
     data: hash,
     isError: isCreationError,
@@ -39,7 +41,15 @@ export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
   } = useWriteContract();
   const publicClient = usePublicClient();
 
-  const eat = async (amount: string) => {
+  const eat = async ({
+    amount,
+    proof,
+    whitelistedAmount,
+  }: {
+    amount: string;
+    proof: Readonly<Hex[]>;
+    whitelistedAmount: string;
+  }) => {
     if (!publicClient) {
       throw Error("Public client not found");
     }
@@ -49,10 +59,14 @@ export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
     const tx = await writeContractAsync({
       abi: MemeEaterAbi,
       address: eaterAddress,
-      functionName: "merge",
-      args: [BigInt(amount)],
+      functionName: "mergeWithProof",
+      args: [BigInt(whitelistedAmount), BigInt(amount), proof],
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
+
+    if(receipt.status === "reverted") {
+      setIsError(true);
+    }
 
     setPendingToConfirm(false);
     return receipt;
@@ -61,7 +75,7 @@ export function useMemeEat(eaterAddress: Hex, uniAdaptorAddress: Hex) {
   return {
     hash: hash,
     isPending: pendingToConfirm,
-    isError: isCreationError,
+    isError: isCreationError || isError,
     eat,
   };
 }
@@ -106,9 +120,19 @@ export function useVestingsInfo(address: Hex) {
     },
   });
 
+  useWatchContractEvent({
+    address: address,
+    abi: MemeEaterAbi,
+    eventName: "Merged",
+    onLogs: () => {
+      refetch();
+    },
+  });
+
   return {
     lockedAmount: data?.[0] as bigint ?? 0n,
     lockedUntil: data?.[1] as bigint ?? 0n,
+    mergedAmount: data?.[2] as bigint ?? 0n,
     isLoading,
     refetch
   };
@@ -206,7 +230,7 @@ export function useMemeEaterIsPaused(eaterAddress: Hex) {
   }
 }
 
-export function useMemeEaterMerklInfo(eaterAddress: Hex) {
+export function useMemeEaterMerklInfo(eaterAddress: Hex, tokenAddress: Hex) {
   const { address } = useAccount();
 
   const { data: merkleRoot, isLoading: isMerkleRootLoading } = useReadContract({
@@ -219,10 +243,13 @@ export function useMemeEaterMerklInfo(eaterAddress: Hex) {
   });
 
   const { data: whitelistData, isLoading: isWhitelistDataLoading } = useQuery({
-    queryKey: ["isWhitelisted", eaterAddress, address],
+    queryKey: ["isWhitelisted", tokenAddress, address],
     queryFn: async () => {
-      // TODO: replace it with prod url
-      const response = await axios.get<WhiteListResponse>(`https://app-backend-development.up.railway.app/api/merge/whitelist/${address}`);
+      const response = await axios.get<WhiteListResponse>(`${API_BASE_URL}/merge/whitelist/${tokenAddress}`, {
+        params: {
+          userAddress: address,
+        }
+      });
 
       return response.data;
     },
@@ -235,5 +262,36 @@ export function useMemeEaterMerklInfo(eaterAddress: Hex) {
     merkleRoot: merkleRoot,
     whitelistData: whitelistData
   }
+}
 
+export function useMemeEaterCapsInfo(eaterAddress: Hex) {
+  const { data, isLoading, refetch } = useReadContracts({
+    contracts: [
+      {
+        abi: MemeEaterAbi,
+        address: eaterAddress,
+        functionName: "maxSupply",
+      },
+      {
+        abi: MemeEaterAbi,
+        address: eaterAddress,
+        functionName: "totalMerged",
+      }
+    ]
+  });
+
+  useWatchContractEvent({
+    address: eaterAddress,
+    abi: MemeEaterAbi,
+    eventName: "Merged",
+    onLogs: () => {
+      refetch();
+    },
+  });
+
+  return {
+    maxSupply: data?.[0].result ?? 0n,
+    totalMerged: data?.[1].result ?? 0n,
+    isLoading
+  }
 }

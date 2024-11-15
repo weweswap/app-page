@@ -10,9 +10,11 @@ import { TokenItem } from '~/models';
 
 export type PayloadMergeProcessingModal = {
   amountToMerge: string,
+  whitelistedAmount: string,
   token: TokenItem
   eater: Hex
-  uniAdapter: Hex
+  uniAdapter: Hex,
+  proof: string[],
 }
 
 type MergeProcessingProps = {
@@ -41,19 +43,24 @@ const MergeProcessingModal = ({ data, onClose, onTxError, onMergeSuccess, opened
     isPending: isPendingEatToken,
     isError: isErrorEatToken,
     eat: eat,
-  } = useMemeEat(data.eater, data.uniAdapter);
+  } = useMemeEat(data.eater);
 
   useEffect(() => {
     async function startEat() {
       try {
-        await approveToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'))
-        await eat(data.amountToMerge)
+        await approveToken(data.token.address, data.eater, BigInt(data.amountToMerge || '0'));
+        await eat({
+          amount: data.amountToMerge, 
+          proof: (data.proof as `0x${string}`[]),
+          whitelistedAmount: data.whitelistedAmount
+        });
       } catch (error) {
+        console.log(error)
         onTxError(hashEatToken || hashApproveToken)
       }
     }
     startEat()
-  }, [data, address])
+  }, [data.token.address, data.eater, data.amountToMerge, data.proof, address])
 
 
   useEffect(() => {

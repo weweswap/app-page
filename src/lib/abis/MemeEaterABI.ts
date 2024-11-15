@@ -311,6 +311,11 @@ const MemeEaterAbi = [
         "inputs": [
             {
                 "internalType": "uint256",
+                "name": "allocation",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
                 "name": "amount",
                 "type": "uint256"
             },
@@ -521,6 +526,19 @@ const MemeEaterAbi = [
         "name": "togglePause",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "totalMerged",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
