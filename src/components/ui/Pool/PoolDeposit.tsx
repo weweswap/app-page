@@ -5,7 +5,7 @@ import { usePoolContext } from "./PoolContext";
 import { Divider, NumberInput } from "@mantine/core";
 import clsx from "clsx";
 import { verdana } from "~/fonts";
-import { TOKEN_LIST } from "~/constants";
+import { CONTRACT_ADDRESSES, TOKEN_LIST } from "~/constants";
 import { useTokenBalance } from "~/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
 import RangeSlider from "~/components/common/RangeSlider";
@@ -15,26 +15,39 @@ import { WewePosition } from "~/hooks/useWewePositions";
 import { PoolChartCard } from "./PoolChartCard";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { formatNumber } from "~/utils";
+
+import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
+import { provider } from "~/hooks/provider";
 import { Hex } from "viem";
+import { useVaultTotalSupply } from "~/hooks/useVaultTotalSupply";
+import { useVaultInfo } from "~/hooks/useVaultInfo";
+import * as dn from "dnum";
+
 import ActionNav from "./ActionNav";
 import ZapInSection from "./ZapInSection";
+import ZapOutSection from "./ZapOutSection";
+import Switch from "~/components/common/Switch";
 
-type Action = "zap" | "deposit" | "withdraw";
+type Action = "deposit" | "withdraw" ;
+
 
 type PoolDepositProps = {
   onBack: () => void;
   onDeposit: (token0: number, token1: number) => void;
   onWithdraw: (sharesAmount: bigint) => void;
   onZapIn: (tokenAmount: string, tokenAddress: Hex) => void;
+  onZapOut: (tokenAmount: string, tokenAddress: Hex) => void;
   onClaim?: (wewePositon: WewePosition) => void;
   enableClaimBlock?: boolean;
 };
+
 
 const PoolDeposit = ({
   onBack,
   onDeposit,
   onWithdraw,
   onZapIn,
+  onZapOut,
   onClaim,
   enableClaimBlock,
 }: PoolDepositProps) => {
@@ -48,8 +61,18 @@ const PoolDeposit = ({
   const [inputValueToken1, setInputValueToken1] = useState<number>(0);
   const [inputTokenIndex, setInputTokenIndex] = useState(0);
   const [secondaryTokenIndex, setSecondaryTokenIndex] = useState(0);
+
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+  const {totalSupply} = useVaultTotalSupply(selectedPool)
+  const {token0UnderlyingAmount, token1UnderlyingAmount} = useVaultInfo(selectedPool) 
+
+  const [zapInSwitch, setZapInSwitch] = useState<boolean>(false)
+  const [zapOutSwitch, setZapOutSwitch] = useState<boolean>(false)
+
+  const [zapOutAmount, setZapOutAmount] = useState<string>("0")
+  const [zapOutTokenAddress, setZapOutTokenAddress] = useState<string>("");
+  const [sliderZapOutValue, setSliderZapOutValue] = useState<number>(50);
 
   const { address } = useAccount();
 
@@ -77,6 +100,7 @@ const PoolDeposit = ({
       );
       // Reset zapTokenAddress to the first token's address when pool changes
       setZapTokenAddress(poolTokens[0]?.address || "");
+      setZapOutTokenAddress(poolTokens[0]?.address || "");
     }
   }, [selectedPool]);
 
@@ -104,16 +128,21 @@ const PoolDeposit = ({
   );
 
   useEffect(() => {
+
     const intervalId = setInterval(() => {
       refechToken1Balance();
       refechToken0Balance();
       refechShares();
-      if (zapTokenAddress) {
+      if (zapTokenAddress || zapOutTokenAddress) {
         refetchZapTokenBalance();
       }
     }, 5000);
+
     return () => clearInterval(intervalId);
   }, []);
+
+  const formattedShare0 = totalSupply ? dn.format(dn.mul(dn.div([token0UnderlyingAmount, selectedPool?.token0.decimals || 18], [totalSupply, 18]), formattedShares), { locale: "en", digits: 6 }) : 0
+  const formattedShare1 = totalSupply ? dn.format(dn.mul(dn.div([token1UnderlyingAmount, selectedPool?.token1.decimals || 18], [totalSupply, 18]), formattedShares), { locale: "en", digits: 6 }) : 0
 
   useEffect(() => {
     if (prices && selectedPool) {
@@ -150,14 +179,14 @@ const PoolDeposit = ({
       ) {
         setInputValueToken0(formattedToken0);
         setFormattedShares(formattedShares);
-        setInputValueToken1(formattedToken1);
+        setInputValueToken1(token1Equivalent);
       } else {
         setInputValueToken1(formattedToken1);
         setFormattedShares(formattedShares);
-        setInputValueToken0(Number(token0Equivalent.toFixed(6)));
+        setInputValueToken0(token0Equivalent);
       }
 
-      if (selectedAction === "zap") {
+      if (zapInSwitch) {
         const selectedZapToken = poolTokens.find(
           (token) => token.address === zapTokenAddress
         );
@@ -171,15 +200,36 @@ const PoolDeposit = ({
           (sliderValue / 100) * selectedZapTokenBalanceFormatted;
         setZapAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
       }
+
+      if (zapOutSwitch) {
+        const resultShares = (BigInt(sliderZapOutValue) * balanceShares) / BigInt(100);
+        const selectedZapToken = poolTokens.find(
+          (token) => token.address === zapOutTokenAddress
+        );
+        const selectedZapTokenBalanceFormatted = Number(
+          ethers.formatUnits(
+            selectedZapOutTokenBalance || BigInt(0),
+            selectedZapToken?.decimals
+          )
+        );
+        const newZapAmount = Number(ethers.formatUnits(resultShares, 18));
+        setZapOutAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
+      }
     }
+
   }, [
     prices,
     sliderValue,
+    sliderZapOutValue,
     balanceToken0,
     selectedPool,
     selectedAction,
     zapTokenAddress,
+    zapOutTokenAddress,
+    zapInSwitch,
+    zapOutSwitch
   ]);
+
 
   const handleChangeToken0 = (newValue: number) => {
     if (prices) {
@@ -204,10 +254,19 @@ const PoolDeposit = ({
       enabled: !!zapTokenAddress,
     });
 
+    const { data: selectedZapOutTokenBalance, refetch: refetchZapOutTokenBalance } =
+    useTokenBalance(address, zapOutTokenAddress as Hex, {
+      enabled: !!zapOutTokenAddress,
+    });
+
   const handleZapTokenChange = (selectedAddress: string) => {
     setZapTokenAddress(selectedAddress);
     setZapAmount("0");
     setSliderValue(50);
+  };
+
+  const handleZapOutTokenChange = (selectedAddress: string) => {
+    setZapOutTokenAddress(selectedAddress);
   };
 
   const handleWithdraw = () => {
@@ -368,8 +427,18 @@ const PoolDeposit = ({
                 setSelectedAction={setSelectedAction}
               />
             </div>
+            <div></div>
             {selectedAction === "deposit" ? (
-              <div>
+                 <div>
+                <div className="my-8">
+                  <Switch 
+                  value={zapInSwitch}
+                  onClick={() => setZapInSwitch(zapInSwitch => !zapInSwitch)} 
+                  label="ZAP IN"
+                  description="Deposit in the pool with a single token. Half of your deposit will be automatically sold for the other asset in the pool ratio." />
+                </div>
+             
+                {!zapInSwitch ? <div>
                 <div className="mt-4">
                   <Typography>Deposit amount</Typography>
                 </div>
@@ -512,7 +581,7 @@ const PoolDeposit = ({
                   disabled={
                     BigInt(
                       ethers.parseUnits(
-                        String(inputValueToken1 || 0),
+                        String(inputValueToken1.toFixed(selectedPool.token1.decimals) || 0),
                         selectedPool.token1.decimals
                       )
                     ) > balanceToken1
@@ -530,7 +599,7 @@ const PoolDeposit = ({
                   <Typography secondary tt="uppercase">
                     {BigInt(
                       ethers.parseUnits(
-                        String(inputValueToken1 || 0),
+                        String(inputValueToken1.toFixed(selectedPool.token1.decimals) || 0),
                         selectedPool.token1.decimals
                       )
                     ) > balanceToken1
@@ -538,9 +607,35 @@ const PoolDeposit = ({
                       : "Deposit"}
                   </Typography>
                 </Button>
+                </div>
+                :
+                (
+                     <ZapInSection
+                zapAmount={zapAmount}
+                setZapAmount={setZapAmount}
+                zapTokenAddress={zapTokenAddress}
+                handleZapTokenChange={handleZapTokenChange}
+                selectedZapTokenBalance={selectedZapTokenBalance}
+                poolTokens={poolTokens}
+                sliderValue={sliderValue}
+                setSliderValue={setSliderValue}
+                onZapIn={onZapIn}
+                isConnected={isConnected}
+                openConnectModal={openConnectModal}
+              />
+                )}
               </div>
-            ) : selectedAction === "withdraw" ? (
+            ) : (
               <div className="mt-5">
+                   <div className="my-8">
+                  <Switch 
+                  value={zapOutSwitch}
+                  onClick={() => setZapOutSwitch(zapOutSwitch => !zapOutSwitch)} 
+                  label="ZAP-OUT"
+                  description="Withdraw from the pool into one token. The other pool token will be sold for the desired coin." />
+                
+                </div>
+                {!zapOutSwitch ? <>
                 <Typography>Withdraw amount</Typography>
                 <div className="bg_gray my-3 flex items-center gap-4">
                   <Dropdown
@@ -573,26 +668,27 @@ const PoolDeposit = ({
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center justify-center gap-5">
+
                     <div className="flex items-center gap-2">
                       <Image
                         src={selectedPool?.token0.icon}
-                        height={24}
-                        width={24}
+                        height={20}
+                        width={20}
                         alt=""
                       />
                       <Typography secondary>
-                        {selectedPool?.token0.chain}
+                         {formattedShare0}
                       </Typography>
                     </div>
                     <div className="flex items-center gap-2">
                       <Image
                         src={selectedPool?.token1.icon}
-                        height={24}
-                        width={24}
+                        height={20}
+                        width={20}
                         alt=""
                       />
                       <Typography secondary>
-                        {selectedPool?.token1.symbol}
+                         {formattedShare1}
                       </Typography>
                     </div>
                   </div>
@@ -642,22 +738,23 @@ const PoolDeposit = ({
                 <Button onClick={handleWithdraw} className="w-full mt-5 mb-2">
                   <Typography secondary>WITHDRAW</Typography>
                 </Button>
+                </>
+                :
+                <ZapOutSection 
+            zapAmount={zapOutAmount}
+            setZapAmount={setZapOutAmount}
+            zapTokenAddress={zapOutTokenAddress}
+            handleZapTokenChange={handleZapOutTokenChange}
+            selectedZapTokenBalance={selectedZapOutTokenBalance}
+            poolTokens={poolTokens}
+            sliderValue={sliderZapOutValue}
+            setSliderValue={setSliderZapOutValue}
+            onZapOut={onZapOut}
+            isConnected={isConnected}
+            openConnectModal={openConnectModal}/> }
               </div>
-            ) : (
-              <ZapInSection
-                zapAmount={zapAmount}
-                setZapAmount={setZapAmount}
-                zapTokenAddress={zapTokenAddress}
-                handleZapTokenChange={handleZapTokenChange}
-                selectedZapTokenBalance={selectedZapTokenBalance}
-                poolTokens={poolTokens}
-                sliderValue={sliderValue}
-                setSliderValue={setSliderValue}
-                onZapIn={onZapIn}
-                isConnected={isConnected}
-                openConnectModal={openConnectModal}
-              />
-            )}
+            ) 
+          }
           </div>
           <Divider className="border-blue-700 mt-4" />
           <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">

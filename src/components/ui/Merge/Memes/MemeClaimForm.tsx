@@ -90,7 +90,7 @@ export const MemeClaimForm = ({ mergeConfig }: MemeClaimFormProps) => {
                     size="sm"
                     secondary
                     className="font-black text-yellow mb-5">
-                    AVAILABLE $WEWE:
+                    YOUR VESTED $WEWE:
                   </Typography>
 
                   <Typography

@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Typography } from "~/components/common";
 import { MergeConfig } from "~/constants/mergeConfigs";
 import { useMemeEaterRate } from "~/hooks/useMemeEater";
@@ -8,6 +9,8 @@ interface ChaosRewardCardProps {
 
 export const ChaosRewardCard = ({ mergeConfig }: ChaosRewardCardProps) => {
   const { rate } = useMemeEaterRate(mergeConfig.eaterContractAddress);
+  const daysPassedSinceMerge = dayjs().diff(mergeConfig.mergeStartTimestamp, "day");
+  console.log(daysPassedSinceMerge)
 
   return (
     <div className="flex flex-col items-center gap-4 py-5">
@@ -31,7 +34,7 @@ export const ChaosRewardCard = ({ mergeConfig }: ChaosRewardCardProps) => {
         size="xs"
         className="text-center mb-5"
       >
-        BE FAST. RATIO WILL DROP TO ZERO BY THE END OF THE MERGE.
+        BE FAST. RATIO WILL DROP HARD BY THE END OF THE MERGE.
       </Typography>
 
       <Typography
@@ -47,7 +50,9 @@ export const ChaosRewardCard = ({ mergeConfig }: ChaosRewardCardProps) => {
         className="mb-3"
         secondary
       >
-        5X
+        {
+          daysPassedSinceMerge < 1 ? "10X" : daysPassedSinceMerge < 2 ? "5X" : "2X"
+        }
       </Typography>
 
       <Typography

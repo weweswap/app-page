@@ -18,6 +18,7 @@ export const CONTRACT_ADDRESSES = {
   bbroEater: "0x4dA1f4Fe67D117536aF7ea7641C729cd23d39fFd" as `0x${string}`,
   broToken: "0x93750140C2EcEA27a53c6ed30380829607815A31" as `0x${string}`,
   bbroToken: "0xdE74eB14FB3f6F7236550819934065Acc9890622" as `0x${string}`,
+  arrakisV2Helper: "0x89E4bE1F999E3a58D16096FBe405Fc2a1d7F07D6" as `0x${string}`,
   wethWeweContract:
     "0x5E9BB3d7682A9537DB831060176C4247aB80D1Ec" as `0x${string}`,
   wethUsdcContract:
