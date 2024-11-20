@@ -49,7 +49,7 @@ function checkIsValidProof({
 }
 
 const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
-  const { refetch: refetchVestings } = useVestingsInfo(mergeConfig.eaterContractAddress);
+  const { refetch: refetchVestings, mergedAmount } = useVestingsInfo(mergeConfig.eaterContractAddress);
   const [amount, setAmount] = useState("");
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -60,7 +60,6 @@ const MemeMergeForm = ({ mergeConfig }: MemeMergeFormProps) => {
   const { rate, isLoading: isRateLoading } = useMemeEaterRate(mergeConfig.eaterContractAddress);
   const { isPaused } = useMemeEaterIsPaused(mergeConfig.eaterContractAddress);
   const { isLoading: isMerklInfoLoading, merkleRoot, whitelistData } = useMemeEaterMerklInfo(mergeConfig.eaterContractAddress, mergeConfig.inputToken.address);
-  const { mergedAmount } = useVestingsInfo(mergeConfig.eaterContractAddress);
   const { totalMerged, maxSupply } = useMemeEaterCapsInfo(mergeConfig.eaterContractAddress);
 
 

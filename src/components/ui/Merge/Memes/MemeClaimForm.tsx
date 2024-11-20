@@ -3,7 +3,6 @@ import { LoadingScreen } from "~/components/common/LoadingScreen";
 import * as dn from "dnum";
 import dayjs from "dayjs";
 import { useMemeEaterVestingDuration, useVestingsInfo } from "~/hooks/useMemeEater";
-import { CONTRACT_ADDRESSES } from "~/constants";
 import { useState } from "react";
 import { Hex } from "viem";
 import { useAccount } from "wagmi";

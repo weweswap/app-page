@@ -6,6 +6,7 @@ import * as dn from "dnum";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API_BASE_URL } from "~/constants/configs";
+import { slugToMergeConfig } from "~/constants/mergeConfigs";
 
 interface WhiteListResponse {
   whitelistInfo: {
@@ -109,6 +110,7 @@ export function useMemeEaterRate(address: Hex): {
 
 export function useVestingsInfo(address: Hex) {
   const { address: account, isConnected } = useAccount();
+  const isFomo = address === slugToMergeConfig["fomo"].eaterContractAddress;
 
   const { data, isLoading, refetch } = useReadContract({
     abi: MemeEaterAbi,
@@ -116,7 +118,42 @@ export function useVestingsInfo(address: Hex) {
     functionName: "vestings",
     args: [account!],
     query: {
-      enabled: isConnected && !!account,
+      enabled: isConnected && !!account && !isFomo,
+    },
+  });
+
+  const { data: legacyData, isLoading: isLegacyLoading, refetch: refetchLegacy } = useReadContract({
+    abi: [
+      {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "vestings",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "end",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+    ],
+    address: address,
+    functionName: "vestings",
+    args: [account!],
+    query: {
+      enabled: isConnected && !!account && isFomo,
     },
   });
 
@@ -125,9 +162,23 @@ export function useVestingsInfo(address: Hex) {
     abi: MemeEaterAbi,
     eventName: "Merged",
     onLogs: () => {
-      refetch();
+      if(isFomo) {
+        refetchLegacy();
+      } else {
+        refetch();
+      }
     },
   });
+
+  if(isFomo) {
+    return {
+      lockedAmount: legacyData?.[0] as bigint ?? 0n,
+      lockedUntil: legacyData?.[1] as bigint ?? 0n,
+      mergedAmount: 0n,
+      isLoading: isLegacyLoading,
+      refetch: refetchLegacy
+    };
+  }
 
   return {
     lockedAmount: data?.[0] as bigint ?? 0n,
