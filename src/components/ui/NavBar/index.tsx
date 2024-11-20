@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { PAGE_LINKS } from "./links";
 import NavLink from "./NavLink";
-import { ConnectButton } from "~/components/common";
+import { ConnectButton, Typography } from "~/components/common";
 import { useDisclosure } from "@mantine/hooks";
 import { NavBarModal } from "./NavBarModal";
+import ChaosPoints from "~/components/common/ChaosPoints";
 
 export const NavBar = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -29,7 +30,11 @@ export const NavBar = () => {
           ))}
         </ul>
 
-        <div className="flex items-center gap-2 lg:gap-4">
+        <div className="flex items-center gap-2 lg:gap-4 relative h-full">
+        <div className="hidden xl:flex border_violet flex-col gap-2 text-center py-1 px-4">
+            <Typography size="xs" secondary>CHAOS Points</Typography>
+            <Typography size="md" fw={900} secondary>123,456</Typography>
+        </div>
           <ConnectButton />
           <button onClick={open} className="block lg:hidden">
             <Image
@@ -41,8 +46,12 @@ export const NavBar = () => {
           </button>
         </div>
       </nav>
-
+      <div className="flex xl:hidden border_violet items-center justify-between gap-2 text-center mx-4 lg:mx-8 p-4">
+            <Typography size="lg" className="text_violet text-left" secondary>CHAOS Points</Typography>
+            <Typography size="md" className="text-right" fw={900} secondary>123,456</Typography>
+        </div>
       <NavBarModal opened={opened} onClose={close} />
+    
     </header>
   );
 };
