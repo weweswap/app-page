@@ -6,11 +6,6 @@ import MergerCards from "./MergerCards";
 
 
 const MergeTokenList = [
-    // {
-    //   name: "WEWE",
-    //   logo: "/img/tokens/wewe.svg",
-    //   mergeLink:"/merge/vult"
-    // },
   {
       name: "VULT",
       logo: "/img/tokens/vult.svg",
@@ -56,6 +51,10 @@ const MergeTokenList = [
       logo: "/img/tokens/goodle.svg",
     },
   ];
+
+  const TableHead = [
+    "Name", "X:WEWE Ratio", "Premium", "CHAOS Multiplier", "Snapshot", "Caps", ""
+  ]
   
 
 export const OngoingMergers = () => {
@@ -63,13 +62,9 @@ export const OngoingMergers = () => {
     <Table stickyHeader className="min-w-[70rem]">
       <Table.Thead>
         <Table.Tr className="bg_rich_dark">
-          <Table.Th>Name</Table.Th>
-          <Table.Th>X:WEWE Ratio</Table.Th>
-          <Table.Th>Premium</Table.Th>
-          <Table.Th>CHAOS Multipliers</Table.Th>
-          <Table.Th>Snapshot</Table.Th>
-          <Table.Th>Caps</Table.Th>
-          <Table.Th></Table.Th>
+          {TableHead.map((head) => {
+            return <Table.Th key={head}>{head}</Table.Th>
+          })}
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>

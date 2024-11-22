@@ -45,8 +45,6 @@ const MergerCards = ({token}:MergerProps) => {
     const premium = (rate*wewePrice/tokenPrice)-1;
     const premiumPercentage = Number(premium*100).toFixed(2);
 
-    console.log(token.name, premiumPercentage)
-
   return (
     <>
      <Table.Tr>
