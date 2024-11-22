@@ -10,7 +10,6 @@ interface ChaosRewardCardProps {
 export const ChaosRewardCard = ({ mergeConfig }: ChaosRewardCardProps) => {
   const { rate } = useMemeEaterRate(mergeConfig.eaterContractAddress);
   const daysPassedSinceMerge = dayjs().diff(mergeConfig.mergeStartTimestamp, "day");
-  console.log(daysPassedSinceMerge)
 
   return (
     <div className="flex flex-col items-center gap-4 py-5">

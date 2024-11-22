@@ -16,6 +16,7 @@ interface MemeMergePageProps {
 export const getServerSideProps: GetServerSideProps<MemeMergePageProps> = async ({ params }) => {
   const mergeConfig = slugToMergeConfig[params?.slug as string];
 
+
   if (!mergeConfig) {
     return {
       notFound: true
@@ -31,6 +32,7 @@ export const getServerSideProps: GetServerSideProps<MemeMergePageProps> = async 
 
 const MemeMergePage = ({ mergeConfig }: MemeMergePageProps) => {
   const { vestingDuration } = useMemeEaterVestingDuration(mergeConfig.eaterContractAddress);
+
 
   return (
     <div>
