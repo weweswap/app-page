@@ -24,7 +24,7 @@ type MergerProps = {
 
 const MergerCards = ({token}:MergerProps) => {
 
-    const tokenName = token.name.toLocaleLowerCase()
+    const tokenName = token?.name?.toLocaleLowerCase()
 
     const mergeConfig = slugToMergeConfig[tokenName];
 
@@ -35,9 +35,7 @@ const MergerCards = ({token}:MergerProps) => {
     const snapShotDate = dayjs(mergeConfig?.mergeStartTimestamp);
     const formattedDate = snapShotDate.format('DD/MM/YYYY')
     const capsFilledPercentage = maxSupply === 0n ? 0 :  dn.toNumber(dn.mul(dn.div(totalMerged, maxSupply, 4), 100), 2);
-    const { rate: broEaterRate } = useEaterRate(CONTRACT_ADDRESSES.broEater);
 
-    const formattedBroEaterRate = Math.round(Number(dn.format([broEaterRate, 2])))
     const { data: tokenPrices } = useCoinGeckoGetPrice([mergeConfig?.tokenCoinGeckoId, WEWE_COINGECKO_ID]);
     const tokenPrice = tokenPrices?.[0] ?? 0;
     const wewePrice = tokenPrices?.[1] ?? 0;
@@ -56,8 +54,10 @@ const MergerCards = ({token}:MergerProps) => {
           </Table.Td>
           <Table.Td>
             <Typography>
-                {!token?.mergeLink || token?.name === "VULT" ? 
-                  "-": token?.name === "BRO"? `1:${formattedBroEaterRate}` :`1:${Math.round(rate)}`}
+                {!token?.mergeLink || 
+                token?.name === "VULT" || 
+                token?.name === "BRO" ? 
+                  "-": `1:${Math.round(rate)}`}
             </Typography>
           </Table.Td>
           <Table.Td>
@@ -67,16 +67,27 @@ const MergerCards = ({token}:MergerProps) => {
           </Table.Td>
           <Table.Td>
             <Typography>
-            {!token?.mergeLink ? daysPassedSinceMerge < 1 ? "-" : "10x" : daysPassedSinceMerge < 2 ? "5x" : "2x"}
+            {!token?.mergeLink ? 
+            daysPassedSinceMerge < 1 || 
+            token?.name === "VULT" || 
+            token?.name === "BRO" || 
+            token?.name === "FOMO" ? 
+            "-" : "10x" : daysPassedSinceMerge < 2 ? 
+            "5x" : "2x"}
             </Typography>
           </Table.Td>
           <Table.Td>
             <Typography>
-            {!token?.mergeLink || token?.name === "BRO" ||  token?.name === "VULT" ? "-" : formattedDate}
+            {!token?.mergeLink || 
+            token?.name === "BRO" || 
+            token?.name === "VULT" ? 
+            "-" : formattedDate}
             </Typography>
           </Table.Td>
           <Table.Td>
-          {!token?.mergeLink ? "-" : capsFilledPercentage === 0 ? `0%` :  `${capsFilledPercentage}%`}
+          {!token?.mergeLink ? 
+          "-" : capsFilledPercentage === 0 ? 
+          `0%` : `${capsFilledPercentage}%`}
           </Table.Td>
           <Table.Td>
           {

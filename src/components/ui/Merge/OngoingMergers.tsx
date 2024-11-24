@@ -1,8 +1,6 @@
-import { Table } from "@mantine/core";
-import Image from "next/image";
-import Link from "next/link";
-import { Button, Typography } from "~/components/common";
+import { InputBase, Table } from "@mantine/core";
 import MergerCards from "./MergerCards";
+import { useEffect, useState } from "react";
 
 
 const MergeTokenList = [
@@ -58,8 +56,34 @@ const MergeTokenList = [
   
 
 export const OngoingMergers = () => {
+
+  const [search, setSearch] = useState("");
+  const [tokenList, setTokenList] = useState(MergeTokenList)
+
+  useEffect(() => {
+    console.log("Counting")
+    if(search === "") {
+      setTokenList(MergeTokenList)
+    }
+
+    else {
+      setTokenList(prevTokenList => {
+        return prevTokenList.filter((token) => {
+          return token.name.toLowerCase().includes(search.toLowerCase())
+        })
+      })
+    }
+
+  }, [search, tokenList])
+
+
+
   return (
-    <Table stickyHeader className="min-w-[70rem]">
+    <div className="min-h-[40rem]">
+    <div>
+      <InputBase placeholder="Search by token name" value={search} onChange={(e) => setSearch(e.target.value)} />
+    </div>
+    <Table stickyHeader className="min-w-[70rem] mt-4">
       <Table.Thead>
         <Table.Tr className="bg_rich_dark">
           {TableHead.map((head) => {
@@ -68,14 +92,13 @@ export const OngoingMergers = () => {
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
-       {MergeTokenList.map((token) => {
+       {tokenList.map((token) => {
         return (
-          <>
         <MergerCards key={token.name} token={token} />
-        </>
         )
        }) }
       </Table.Tbody>
     </Table>
+    </div>
   );
 };
