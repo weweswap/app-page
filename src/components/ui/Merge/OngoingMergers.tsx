@@ -72,20 +72,13 @@ export const OngoingMergers = () => {
   const [tokenList, setTokenList] = useState(MergeTokenList)
 
   useEffect(() => {
-    console.log("Counting")
-    
     if(search.startsWith("0")) {
       setTokenList(MergeTokenList.filter((token) => token?.tokenAddress.toLowerCase().includes(search.toLowerCase())))
     }
-
     else {
       setTokenList(MergeTokenList.filter((token) => token.name.toLowerCase().includes(search.toLowerCase())))
     }
-    
-
   }, [search])
-
-
 
   return (
     <div className="min-h-[40rem]">

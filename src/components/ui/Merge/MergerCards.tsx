@@ -10,6 +10,8 @@ import * as dn from "dnum";
 import { useEaterRate } from '~/hooks/useEater'
 import { CONTRACT_ADDRESSES, WEWE_COINGECKO_ID } from '~/constants'
 import { useCoinGeckoGetPrice } from '~/hooks/useCoingeckoGetPrice'
+import { useQuoteVult } from '~/hooks'
+import { formatEther, parseEther } from 'viem'
 
 
 interface MergerCardProps  {
@@ -31,6 +33,7 @@ const MergerCards = ({token}:MergerProps) => {
     const { rate } = useMemeEaterRate(mergeConfig?.eaterContractAddress);
     const { maxSupply, totalMerged } = useMemeEaterCapsInfo(mergeConfig?.eaterContractAddress);
     const daysPassedSinceMerge = dayjs().diff(mergeConfig?.mergeStartTimestamp, "day");
+    const { rate: broEaterRate } = useEaterRate(CONTRACT_ADDRESSES.broEater);
     
     const snapShotDate = dayjs(mergeConfig?.mergeStartTimestamp);
     const formattedDate = snapShotDate.format('DD/MM/YYYY')
@@ -43,6 +46,12 @@ const MergerCards = ({token}:MergerProps) => {
     const premium = (rate*wewePrice/tokenPrice)-1;
     const premiumPercentage = Number(premium*100).toFixed(2);
 
+    const { data: vultRatio, isFetching: isRatioFetching } = useQuoteVult(
+      parseEther(String("1000"))
+    );
+
+    const formattedBroRate = Math.round(Number(dn.format([broEaterRate, 2], { locale: "en" })))
+
   return (
     <>
      <Table.Tr>
@@ -54,10 +63,10 @@ const MergerCards = ({token}:MergerProps) => {
           </Table.Td>
           <Table.Td>
             <Typography>
-                {!token?.mergeLink || 
-                token?.name === "VULT" || 
-                token?.name === "BRO" ? 
-                  "-": `1:${Math.round(rate)}`}
+                  {!token?.mergeLink ?
+                  "-" : token?.name === "VULT" ? 
+                  `${Number(formatEther(vultRatio)).toLocaleString("en-US")}:1000` : 
+                  token?.name === "BRO" ? `1:${formattedBroRate} `: `1:${Math.round(rate)}`}
             </Typography>
           </Table.Td>
           <Table.Td>
@@ -67,11 +76,11 @@ const MergerCards = ({token}:MergerProps) => {
           </Table.Td>
           <Table.Td>
             <Typography>
-            {!token?.mergeLink ? 
-            daysPassedSinceMerge < 1 || 
+            {!token?.mergeLink || 
             token?.name === "VULT" || 
             token?.name === "BRO" || 
             token?.name === "FOMO" ? 
+            daysPassedSinceMerge < 1 ? 
             "-" : "10x" : daysPassedSinceMerge < 2 ? 
             "5x" : "2x"}
             </Typography>
