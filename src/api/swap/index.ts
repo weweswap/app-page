@@ -29,6 +29,7 @@ export default {
           amountIn: amountInFormatted,
           gasInclude: "true",
           source: CLIENT_ID,
+          includedSources: "uniswapv3"
         },
       };
       return await api.get<RouterApiResponse>(
