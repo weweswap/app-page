@@ -141,8 +141,8 @@ const PoolDeposit = ({
     return () => clearInterval(intervalId);
   }, []);
 
-  const formattedShare0 = totalSupply ? dn.format(dn.mul(dn.div([token0UnderlyingAmount, selectedPool?.token0.decimals || 18], [totalSupply, 18]), formattedShares), { locale: "en", digits: 6 }) : 0
-  const formattedShare1 = totalSupply ? dn.format(dn.mul(dn.div([token1UnderlyingAmount, selectedPool?.token1.decimals || 18], [totalSupply, 18]), formattedShares), { locale: "en", digits: 6 }) : 0
+  const formattedShare0 = totalSupply ? dn.format(dn.mul(dn.div([token0UnderlyingAmount, selectedPool?.token0.decimals || 18], [totalSupply, 18]), formattedShares || 0), { locale: "en", digits: 6 }) : 0
+  const formattedShare1 = totalSupply ? dn.format(dn.mul(dn.div([token1UnderlyingAmount, selectedPool?.token1.decimals || 18], [totalSupply, 18]), formattedShares || 0), { locale: "en", digits: 6 }) : 0
 
   useEffect(() => {
     if (prices && selectedPool) {

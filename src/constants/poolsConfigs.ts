@@ -11,7 +11,7 @@ export const POOLS_BLACKLIST = [
   "0x137c8040d44e25D2c7677224165Da6Aa0901e33B"
 ].map(address => address.toLowerCase());
 
-export const PoolsStaticDetail = [
+export const PoolsStaticDetail: PoolStaticDetail[] = [
   {
     address: "0x3Fd7957D9F98D46c755685B67dFD8505468A7Cb6",
     range: "INFINITY",
