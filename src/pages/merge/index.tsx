@@ -1,166 +1,116 @@
+import { Table } from "@mantine/core";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, Card, Typography } from "~/components/common";
+import { formatEther, parseEther } from "viem";
+import { Card, Typography } from "~/components/common";
+import { OngoingMergers } from "~/components/ui/Merge/OngoingMergers";
+import { useQuoteVult } from "~/hooks";
 
-const MergeTokenList = {
-  wewe: {
-    name: "WEWE",
-    logo: "/img/tokens/wewe.svg",
-  },
-  vult: {
-    name: "VULT",
-    logo: "/img/tokens/vult.svg",
-  },
-  bro: {
-    name: "BRO",
-    logo: "/img/tokens/bro.svg",
-  },
-  duh: {
-    name: "DUH",
-    logo: "/img/tokens/DUH.webp",
-  },
-  moby: {
-    name: "MOBY",
-    logo: "/img/tokens/MOBY.webp",
-  },
-  cosmic: {
-    name: "COSMIC",
-    logo: "/img/tokens/COSMIC.webp",
-  },
-  fckn: {
-    name: "FCKN",
-    logo: "/img/tokens/FCKN.webp",
-  },
-  cds: {
-    name: "CDS",
-    logo: "/img/tokens/CDS.webp",
-  },
-  goodle: {
-    name: "GOODLE",
-    logo: "/img/tokens/goodle.svg",
-  },
-  fomo: {
-    name: "FOMO",
-    logo: "/img/tokens/FOMO.webp",
-  },
-  boomer: {
-    name: "BOOMER",
-    logo: "/img/tokens/boomer.webp",
-  }
-}
 
-interface MergeTableRowProps {
-  token1: {
-    name: string;
-    logo: string;
-  };
-  token2: {
-    name: string;
-    logo: string;
-  };
-  mergeLink?: string;
-}
-
-const MergeTableRow: React.FC<MergeTableRowProps> = ({ token1, token2, mergeLink }) => (
-  <tr
-    className="bg-[#1c1c1c] w-[full] cursor-pointer hover:bg-[#202020]"
-    style={{ borderBottom: "1rem solid black" }}
-  >
-    <td className="p-4 font-bold min-w-[13rem]">
-      <div className="flex items-center gap-5">
-        <div className="flex gap-1">
-          <Image
-            className="lg:w-10 lg:h-10 rounded-full"
-            src={token1.logo}
-            width={32}
-            height={32}
-            alt={`${token1.name} logo`}
-          />
-          <Image
-            className="ml-[-10px] lg:w-10 lg:h-10 rounded-full"
-            src={token2.logo}
-            width={32}
-            height={32}
-            alt={`${token2.name} logo`}
-          />
-        </div>
-        <Typography size="xs" opacity={0.7}>
-          {token1.name}/{token2.name}
-        </Typography>
-      </div>
-    </td>
-    <td className="p-4" align="right">
-      {
-        mergeLink ? (
-          <Link href={mergeLink}>
-            <Button
-              className="w-full md:w-auto min-w-[5rem]"
-              aria-label={`Merge ${token1.name} to ${token2.name}`}
-            >
-              <Typography
-                secondary
-                size="xs"
-                fw="700"
-                tt="uppercase"
-              >
-                MERGE
-              </Typography>
-            </Button>
-          </Link>) : (
-          <Button
-            className="w-full md:w-auto min-w-[6rem]"
-            aria-label={`Merge ${token1.name} to ${token2.name}`}
-            disabled
-          >
-            <Typography
-              secondary
-              size="xs"
-              fw="700"
-              tt="uppercase"
-            >
-              SOON
-            </Typography>
-          </Button>
-        )
-      }
-
-    </td>
-  </tr>
-);
 
 const MergePage = () => {
+
+  const { data: vultRatio, isFetching: isRatioFetching } = useQuoteVult(
+    parseEther(String("1000"))
+  );
+
   return (
     <div className="w-full flex bg-black p-2 flex-col gap-8">
-      <div className="">
-        <Typography secondary size="xl" tt="uppercase">
-          MERGE
+      <div className="text-center">
+        <Typography secondary size="xxl" tt="uppercase">
+          MERGE!
+        </Typography>
+        <Typography secondary size="xs" className="py-4 leading-6">
+          Merge your tokens and reach the eternal meme glory.
+          <br />
+          Get a WEWE premium on your memecoin and produce more $CHAOS in the market!
         </Typography>
       </div>
-      <Card className="overflow-x-scroll">
-        <table className="w-[fit-content] min-w-[100%] table-auto text-left bg_dark mt-5">
-          <thead>
-            <tr>
-              <th className="bg-blue-gray-50 p-4">
-                <Typography size="sm" className="leading-none opacity-70">
-                  ASSETS
+      <div className="p-5">
+        <Typography secondary size="xl" className="pb-5 text-center" fw={1000}>
+          Vultsig
+        </Typography>
+        <div className="flex xl:flex-row flex-col items-center">
+          <div className="xl:w-[50%]">
+            <Image
+              src="/img/vultimg.webp"
+              alt="MERGER"
+              width={575}
+              height={400}
+            />
+          </div>
+          <div className="flex flex-col items-center gap-3 justify-center xl:w-[50%] py-10 lg:p-10">
+            <Typography fw={900} size="xl" secondary>
+            WEWE {'>'} VULT
+            </Typography>
+            <div className="flex justify-center w-full gap-4">
+            <div className="flex justify-center gap-2 md:my-5 my-2 md:mb-5 mb-10">
+                <Typography size="md" fw={600}>
+                  Ratio: 1000
                 </Typography>
-              </th>
-              <th className="bg-blue-gray-50 p-4">
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <MergeTableRow token1={MergeTokenList.wewe} token2={MergeTokenList.vult} mergeLink="/merge/vult" />
-            <MergeTableRow token1={MergeTokenList.bro} token2={MergeTokenList.wewe} mergeLink="/merge/bro" />
-            <MergeTableRow token1={MergeTokenList.fomo} token2={MergeTokenList.wewe} mergeLink="/merge/fomo" />
-            <MergeTableRow token1={MergeTokenList.boomer} token2={MergeTokenList.wewe} mergeLink="/merge/boomer" />
-            <MergeTableRow token1={MergeTokenList.duh} token2={MergeTokenList.wewe}  />
-            <MergeTableRow token1={MergeTokenList.moby} token2={MergeTokenList.wewe} />
-            <MergeTableRow token1={MergeTokenList.cosmic} token2={MergeTokenList.wewe}/>
-            <MergeTableRow token1={MergeTokenList.fckn} token2={MergeTokenList.wewe}/>
-            <MergeTableRow token1={MergeTokenList.cds} token2={MergeTokenList.wewe} />
-          </tbody>
-        </table>
+                <Image
+                  src="/img/tokens/wewe.svg"
+                  width={17}
+                  height={17}
+                  alt="Vult"
+                />
+
+                <Typography size="md" fw={600}>
+                  ≈ {Number(formatEther(vultRatio)).toLocaleString("en-US")}
+                </Typography>
+
+                <Image
+                  src="/img/tokens/vult-border.svg"
+                  width={17}
+                  height={17}
+                  alt="Vult"
+                />
+              </div>
+              {/* <div className="text-center">
+                <Typography size="sm">Premium</Typography>
+                <Typography size="sm" fw={900}>
+                  16%
+                </Typography>
+              </div>
+              <div className="text-center">
+                <Typography size="sm">CHAOS Bonus</Typography>
+                <Typography size="sm" fw={900}>
+                  2x
+                </Typography>
+              </div> */}
+            </div>
+            {/* <div className="w-full relative h-4 my-5">
+              <div
+                className="bg-blue-500 h-6 transition-all duration-300"
+                style={{
+                  background:
+                    "linear-gradient(to left,red, orange, yellow, green)",
+                }}
+              />
+              <div
+                style={{
+                  width: `${100 - 78}%`,
+                }}
+                className="absolute top-0 right-0 h-6 bg-slate-400"
+              ></div>
+              <div className="absolute top-1 w-full text-center text-black">
+                <Typography secondary size="xs">
+                  Caps Filled: 78%
+                </Typography>
+              </div>
+            </div> */}
+            <div>
+              <Link href={"/merge/vult"} >
+              <button className="bg-green-500 px-4 py-2">
+                <Typography secondary>MERGE</Typography>
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Card className="overflow-x-scroll">
+        <OngoingMergers />
       </Card>
     </div>
   );
