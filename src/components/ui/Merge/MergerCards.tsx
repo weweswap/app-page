@@ -76,14 +76,11 @@ const MergerCards = ({token}:MergerProps) => {
           </Table.Td>
           <Table.Td>
             <Typography>
-            {!token?.mergeLink || 
-            token?.name === "VULT" || 
+            {!token?.mergeLink || token?.name === "VULT" || 
             token?.name === "BRO" || 
-            token?.name === "FOMO" ? 
-            daysPassedSinceMerge < 1 ? 
-            "-" : "10x" : daysPassedSinceMerge < 2 ? 
-            "5x" : "2x"}
-            </Typography>
+            token?.name === "FOMO" ? "-" :
+            daysPassedSinceMerge < 1 ? "10x" : daysPassedSinceMerge < 2 ? "5x" : "2x"
+          }</Typography>
           </Table.Td>
           <Table.Td>
             <Typography>
