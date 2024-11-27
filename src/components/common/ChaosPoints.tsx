@@ -2,8 +2,12 @@ import React from 'react'
 import { Typography } from './Typography'
 import Image from 'next/image'
 import { Button } from './Button'
+import { useAccount } from 'wagmi'
+import { useGetChaosUserInfo } from '~/hooks/useChaos'
 
 const ChaosPoints = () => {
+
+
   return (
     <div className='lg:min-w-[10rem] w-full p-3 border_violet flex items-center flex-col justify-center gap-5'>
         <Typography secondary className='text-center' size='md'>CHAOS POINTS</Typography>
