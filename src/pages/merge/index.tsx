@@ -28,7 +28,7 @@ const MergePage = () => {
       </div>
       <div className="p-5">
         <Typography secondary size="xl" className="pb-5 text-center" fw={1000}>
-          Vultsig
+          Vultisig
         </Typography>
         <div className="flex xl:flex-row flex-col items-center">
           <div className="xl:w-[50%]">
@@ -66,39 +66,7 @@ const MergePage = () => {
                   alt="Vult"
                 />
               </div>
-              {/* <div className="text-center">
-                <Typography size="sm">Premium</Typography>
-                <Typography size="sm" fw={900}>
-                  16%
-                </Typography>
-              </div>
-              <div className="text-center">
-                <Typography size="sm">CHAOS Bonus</Typography>
-                <Typography size="sm" fw={900}>
-                  2x
-                </Typography>
-              </div> */}
             </div>
-            {/* <div className="w-full relative h-4 my-5">
-              <div
-                className="bg-blue-500 h-6 transition-all duration-300"
-                style={{
-                  background:
-                    "linear-gradient(to left,red, orange, yellow, green)",
-                }}
-              />
-              <div
-                style={{
-                  width: `${100 - 78}%`,
-                }}
-                className="absolute top-0 right-0 h-6 bg-slate-400"
-              ></div>
-              <div className="absolute top-1 w-full text-center text-black">
-                <Typography secondary size="xs">
-                  Caps Filled: 78%
-                </Typography>
-              </div>
-            </div> */}
             <div>
               <Link href={"/merge/vult"} >
               <button className="bg-green-500 px-4 py-2">
