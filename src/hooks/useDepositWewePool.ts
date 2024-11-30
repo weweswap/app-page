@@ -54,7 +54,7 @@ export function useEstimateMintShares(wewePool?: WewePool, amount0Max?: string, 
             provider
         );
 
-        const result = arrakisResolver.getMintAmounts(wewePool.address, amount0Max, amount1Max)
+        const result = await arrakisResolver.getMintAmounts(wewePool.address, amount0Max, amount1Max)
 
         return result;
       },
