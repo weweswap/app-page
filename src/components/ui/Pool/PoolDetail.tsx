@@ -89,13 +89,25 @@ const PoolDetail = ({ onBack }: PoolDetailProps) => {
               </div>
               <div className="flex items-center gap-1">
                 <div className="flex items-center">
-                  <Image
-                    src="/img/icons/Infinity.svg"
-                    className="translate-x-[5px]"
-                    width={20}
-                    height={20}
-                    alt=""
-                  />
+                  {
+                    selectedPool.range === "INFINITY" ? (
+                      <Image
+                        src="/img/icons/Infinity.svg"
+                        className="translate-x-[5px]"
+                        width={20}
+                        height={20}
+                        alt=""
+                      />
+                    ) : (
+                      <Image
+                        src="/img/icons/wide.svg"
+                        className="translate-x-[5px]"
+                        width={20}
+                        height={20}
+                        alt=""
+                      />
+                    )
+                  }
                 </div>
                 <Typography size="xs" className="translate-x-1">
                   {selectedPool.range}
@@ -153,7 +165,7 @@ const PoolDetail = ({ onBack }: PoolDetailProps) => {
                 </div>
               </div>
             </div>
-            <Button  className="w-full mt-4">
+            <Button className="w-full mt-4">
               <Typography secondary size="xs" fw={700} tt="uppercase">
                 ZAP-IN
               </Typography>

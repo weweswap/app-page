@@ -1,4 +1,4 @@
-import {Divider, Loader, ModalRootProps } from "@mantine/core";
+import { Divider, Loader, ModalRootProps } from "@mantine/core";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { Button, Modal, Typography } from "~/components/common";
@@ -63,39 +63,39 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
     ) {
       return selectedPool.token1;
     } else if (
-        zapOutTokenAddress.toLowerCase() ===
+      zapOutTokenAddress.toLowerCase() ===
       selectedPool.token1.address.toLowerCase()
     ) {
       return selectedPool.token0;
     }
   }, [data, selectedPool]);
-  
-  
-  useEffect(() => {
-    async function withdraw () {
-        if(selectedPool && data && address) {
-            const approveTx = await approveToken(
-                CONTRACT_ADDRESSES.weweVault, //we need to approve SHARES token
-                CONTRACT_ADDRESSES.zapContract,
-                ethers.parseUnits(data.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
-            )
-            
 
-            
-        const txReceipt= await zapOut(
-            selectedPool?.address, 
-            zapOutToken!.address,  
-            ethers.parseUnits(data?.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
+
+  useEffect(() => {
+    async function withdraw() {
+      if (selectedPool && data && address) {
+        const approveTx = await approveToken(
+          selectedPool.address, //we need to approve SHARES token
+          CONTRACT_ADDRESSES.zapContract,
+          ethers.parseUnits(data.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
+        )
+
+
+
+        const txReceipt = await zapOut(
+          selectedPool?.address,
+          zapOutToken!.address,
+          ethers.parseUnits(data?.zapOutAmount, 18) //shares decimals, we SHOULD NOT HARDCODE THEM
             .toString() as `0x${string}`)
 
-            const totalFee = (txReceipt!?.gasUsed * txReceipt!?.gasPrice);
-            const getUsdFees = async () => {
-              const finalUsdValue = await usdConverter(totalFee)
-              setFinalTxValue(finalUsdValue)
-            }
-      
-          getUsdFees() 
+        const totalFee = (txReceipt!?.gasUsed * txReceipt!?.gasPrice);
+        const getUsdFees = async () => {
+          const finalUsdValue = await usdConverter(totalFee)
+          setFinalTxValue(finalUsdValue)
         }
+
+        getUsdFees()
+      }
     }
     withdraw()
   }, [data, selectedPool, address])
@@ -114,7 +114,7 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
 
   return (
     <Modal title="ZAP OUT" onClose={onClose} opened={opened}>
-     <div className="flex gap-4 ">
+      <div className="flex gap-4 ">
         <Typography fw={1000} className="text_light_gray" size="sm">
           {data?.zapOutAmount} SHARES
         </Typography>
@@ -130,8 +130,8 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
       <div className="flex flex-col gap-3">
         <div className="flex gap-3 items-center">
           {isPendingApproveToken ||
-          isConfirmingApproveToken ||
-          !hashApproveToken ? (
+            isConfirmingApproveToken ||
+            !hashApproveToken ? (
             <>
               <Loader color="grey" />
               <Typography>
@@ -140,25 +140,25 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
             </>
           ) : (
             !isErrorApproveToken ?
-            <>
-              <Image
-                src="/img/icons/success.svg"
-                width={36}
-                height={36}
-                alt=""
-              />
-              <Typography>Shares Approved</Typography>
-            </>
-            :
-             <>
-             <Image
-               src="/img/icons/fail.png"
-               width={36}
-               height={36}
-               alt=""
-             />
-             <Typography>Error approving tokens</Typography>
-           </>
+              <>
+                <Image
+                  src="/img/icons/success.svg"
+                  width={36}
+                  height={36}
+                  alt=""
+                />
+                <Typography>Shares Approved</Typography>
+              </>
+              :
+              <>
+                <Image
+                  src="/img/icons/fail.png"
+                  width={36}
+                  height={36}
+                  alt=""
+                />
+                <Typography>Error approving tokens</Typography>
+              </>
           )}
         </div>
         <div className="flex gap-3 items-center">
@@ -189,51 +189,51 @@ const PoolZapOutModal = ({ onTxError, onClose, opened, data }: ZapModalProps) =>
             </>
           )}
         </div>
-        {((isPendingZapOut || !hashZapOut) && !zapOutError) ? 
-            <div className="flex gap-3 items-center">
-              <Image
-                src="/img/icons/inform.svg"
-                width={36}
-                height={36}
-                alt=""
-              />
-              <Typography>Please sign transaction</Typography>
+        {((isPendingZapOut || !hashZapOut) && !zapOutError) ?
+          <div className="flex gap-3 items-center">
+            <Image
+              src="/img/icons/inform.svg"
+              width={36}
+              height={36}
+              alt=""
+            />
+            <Typography>Please sign transaction</Typography>
+          </div>
+          :
+          <></>
+        }
+      </div>
+
+      {(isPendingZapOut || !hashZapOut) && !zapOutError ?
+        <></> : (
+          <>
+            <Divider className="border-blue-700" />
+            <div className="flex justify-end">
+              <Typography size="xs" className="text_light_gray  flex">
+                Total fee cost: {!finalTxValue ? <span className="animate-pulse">$0.00</span>
+                  : <>
+                    {`${(finalTxValue)?.toFixed(4)}`}
+                  </>}
+              </Typography>
             </div>
-            :
-            <></>
-          }
-      </div>
-     
-      {(isPendingZapOut || !hashZapOut) && !zapOutError ? 
-      <></> : (
-        <>
-     <Divider className="border-blue-700" />
-        <div className="flex justify-end">
-         <Typography size="xs" className="text_light_gray  flex">
-          Total fee cost: {!finalTxValue ? <span className="animate-pulse">$0.00</span> 
-            : <>
-              {`${(finalTxValue)?.toFixed(4)}`}
-            </>}
-        </Typography>
-      </div>
-        <div className="flex flex-col gap-4 w-full">
-          <Button onClick={onClose} className="w-full">
-            <Typography secondary size="xs" fw={700} tt="uppercase">
-              COMPLETED
-            </Typography>
-          </Button>
-          <Button
-            className="w-full md:w-auto"
-            onClick={() => handleDetails(hashZapOut!)}
-          >
-            <Typography secondary size="xs" fw={700} tt="uppercase">
-              VIEW DETAILS
-            </Typography>
-          </Button>
-        </div>
-        </>
-      )}
-      
+            <div className="flex flex-col gap-4 w-full">
+              <Button onClick={onClose} className="w-full">
+                <Typography secondary size="xs" fw={700} tt="uppercase">
+                  COMPLETED
+                </Typography>
+              </Button>
+              <Button
+                className="w-full md:w-auto"
+                onClick={() => handleDetails(hashZapOut!)}
+              >
+                <Typography secondary size="xs" fw={700} tt="uppercase">
+                  VIEW DETAILS
+                </Typography>
+              </Button>
+            </div>
+          </>
+        )}
+
     </Modal>
   );
 };

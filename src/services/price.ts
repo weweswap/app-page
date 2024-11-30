@@ -24,13 +24,18 @@ export const fetchETHPrice = async () => {
 };
 
 const mapTokenUsdcPair = {
-  [CONTRACT_ADDRESSES.wewe.toLowerCase()]: CONTRACT_ADDRESSES.weweUsdcContract
+  [CONTRACT_ADDRESSES.wewe.toLowerCase()]: CONTRACT_ADDRESSES.weweUsdcContract,
+  [CONTRACT_ADDRESSES.weth.toLowerCase()]: CONTRACT_ADDRESSES.wethUsdcContract,
 }
 
 export const fetchPricePerAddressInUsdc = async (address: string) => {
   if (CONTRACT_ADDRESSES.usdc.toLowerCase() === address.toLowerCase()) {
     return 1
   }
+  if (CONTRACT_ADDRESSES.usdt.toLowerCase() === address.toLowerCase()) {
+    return 1
+  }
+
   if (!mapTokenUsdcPair[address.toLowerCase()]) {
     throw Error ('Not supported token on price service')
   }

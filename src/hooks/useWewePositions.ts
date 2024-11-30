@@ -83,7 +83,7 @@ async function getPendingRewards(
     rewardsPrecision,
     userRewardsDebt,
     chaosRate,
-  ] = await Promise.all([
+  ]: (bigint | undefined)[] = await Promise.all([
     vaultContract.balanceOf(userAddress),
     feeManagerContract.accumulatedRewardsPerShare(),
     feeManagerContract.REWARDS_PRECISION(),
@@ -91,10 +91,10 @@ async function getPendingRewards(
     feeManagerContract.rate(),
   ]);
 
-  const totalReward = (userBalance * accumulatedRewardsPerShare) / rewardsPrecision;
+  const totalReward = !userBalance || !accumulatedRewardsPerShare || !rewardsPrecision ? 0n : (userBalance * accumulatedRewardsPerShare) / rewardsPrecision;
 
-  const pendingToHarvest = totalReward - userRewardsDebt;
-  const chaosRewardBigNumber = pendingToHarvest * chaosRate;
+  const pendingToHarvest = totalReward > (userRewardsDebt ?? 0n) ? totalReward - (userRewardsDebt ?? 0n) : 0n;
+  const chaosRewardBigNumber = pendingToHarvest * (chaosRate ?? 0n);
   const pendingToHarvestChaos = Number(chaosRewardBigNumber) / 100;
 
   return {

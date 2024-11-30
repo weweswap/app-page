@@ -39,8 +39,8 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
   const { data: estimationMintShares } = useEstimateMintShares
   (
     selectedPool, 
-    ethers.parseUnits(String(data?.amountToken0 || 0), selectedPool?.token0?.decimals || 18).toString(), 
-    ethers.parseUnits(String(data?.amountToken1 || 0), selectedPool?.token1?.decimals || 18).toString(), 
+    ethers.parseUnits((data?.amountToken0 || 0).toFixed(selectedPool?.token0?.decimals || 18), selectedPool?.token0?.decimals || 18).toString(), 
+    ethers.parseUnits((data?.amountToken1 || 0).toFixed(selectedPool?.token1?.decimals || 18), selectedPool?.token1?.decimals || 18).toString(), 
   )
 
   const {
@@ -135,9 +135,9 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
                 <Typography size='xs'>AMOUNT</Typography>
                 <div className='text-right flex flex-col gap-2'>
                     <div className='flex gap-2 items-center'>
-                        <Typography className='text_light_gray' size='xs'>{parseFloat(Number(data?.amountToken0).toFixed(2))}</Typography>
+                        <Typography className='text_light_gray' size='xs'>{Number(data?.amountToken0) < 0.01 ? '<0.01' : parseFloat(Number(data?.amountToken0).toFixed(2))}</Typography>
                         <Image src={selectedPool?.token0.icon!} alt='' width={24} height={24} />
-                        <Typography className='text_light_gray' size='xs'>{parseFloat(Number(data?.amountToken1).toFixed(2))}</Typography>
+                        <Typography className='text_light_gray' size='xs'>{Number(data?.amountToken1) < 0.01 ? '<0.01' : parseFloat(Number(data?.amountToken1).toFixed(2))}</Typography>
                         <Image src={selectedPool?.token1.icon!} alt='' width={24} height={24} />
                     </div>
                 </div>

@@ -11,6 +11,7 @@ import { fetchPricePerAddressInUsdc } from "~/services/price";
 import { provider } from "./provider";
 import uniswapV3PoolAbi from "~/lib/abis/UniswapPool";
 import { API_BASE_URL } from "~/constants/configs";
+import { POOLS_BLACKLIST, PoolsStaticDetail } from "~/constants/poolsConfigs";
 
 export type WewePool = {
   address: Hex;
@@ -123,12 +124,14 @@ export function useWewePools(): UseQueryResult<
       const weweVaultNumber = await arrakisFactory.numVaults();
       const weweVaults = await arrakisFactory.vaults(0, weweVaultNumber);
 
+      const activeWeweVaults = weweVaults.filter((vaultAddress: Hex) => !POOLS_BLACKLIST.includes(vaultAddress.toLowerCase()))
+
       const wewePools: WewePool[] = [];
       const poolAddresses: string[] = [];
 
-      for (let key in weweVaults) {
-        if (Object.hasOwn(weweVaults, key)) {
-          poolAddresses.push(weweVaults[key]);
+      for (let key in activeWeweVaults) {
+        if (Object.hasOwn(activeWeweVaults, key)) {
+          poolAddresses.push(activeWeweVaults[key]);
         }
       }
 
@@ -153,9 +156,9 @@ export function useWewePools(): UseQueryResult<
       );
 
       // Create an array of promises to fetch data for each vault in parallel
-      const wewePoolsPromises = Object.keys(weweVaults).map(async (key) => {
-        if (Object.hasOwn(weweVaults, key)) {
-          const vaultAddress = weweVaults[key];
+      const wewePoolsPromises = Object.keys(activeWeweVaults).map(async (key) => {
+        if (Object.hasOwn(activeWeweVaults, key)) {
+          const vaultAddress = activeWeweVaults[key];
           const arrakisVault = new ethers.Contract(
             vaultAddress,
             ArrakisVaultABI,
@@ -181,7 +184,7 @@ export function useWewePools(): UseQueryResult<
               ),
               getUniswapFeePercentage(poolAddressList[0])
             ]);
-      
+
             const token0info = TOKEN_LIST.find(
               ({ address }) => address.toLowerCase() === token0.toLowerCase()
             );
@@ -219,7 +222,7 @@ export function useWewePools(): UseQueryResult<
               pool: "EXOTIC",
               tvl: tlv.toString(),
               volume: volume.toFixed(2),
-              range: "INFINITY",
+              range: PoolsStaticDetail.find(item => item.address.toLowerCase() === vaultAddress.toLowerCase())?.range || "INFINITY",
               apr: feeApr,
               dailyFeesInUsd,
               incentives,

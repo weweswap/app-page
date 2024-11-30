@@ -25,10 +25,28 @@ export const WEWE =   {
   decimals: 18,
 };
 
+export const USDT_BASE =   {
+  chain: Chain.BASE,
+  symbol: "USDT",
+  address: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2" as `0x${string}`,
+  icon: "/img/tokens/usdt.png",
+  decimals: 6,
+};
+
+export const WETH_BASE = {
+  chain: Chain.BASE,
+  symbol: "WETH",
+  address: "0x4200000000000000000000000000000000000006" as `0x${string}`,
+  icon: "/img/tokens/weth.png",
+  decimals: 18,
+}
+
 export const TOKEN_LIST: TokenItem[] = [
   ETH_BASE,
   USDC_BASE,
   WEWE,
+  USDT_BASE,
+  WETH_BASE,
 ];
 
 
