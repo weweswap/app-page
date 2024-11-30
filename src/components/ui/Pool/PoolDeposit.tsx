@@ -139,30 +139,43 @@ const PoolDeposit = ({
     return () => clearInterval(intervalId);
   }, []);
 
-  const formattedShare0 = totalSupply
-    ? dn.format(
-        dn.mul(
-          dn.div(
-            [token0UnderlyingAmount, selectedPool?.token0.decimals || 18],
-            [totalSupply, 18]
+  const formatShare0 = (share: number) => {
+    if (!share) {
+      return 0;
+    }
+
+    return totalSupply
+      ? dn.format(
+          dn.mul(
+            dn.div(
+              [token0UnderlyingAmount, selectedPool?.token0.decimals || 18],
+              [totalSupply, 18]
+            ),
+            formattedShares
           ),
-          formattedShares
-        ),
-        { locale: "en", digits: 6 }
-      )
-    : 0;
-  const formattedShare1 = totalSupply
-    ? dn.format(
-        dn.mul(
-          dn.div(
-            [token1UnderlyingAmount, selectedPool?.token1.decimals || 18],
-            [totalSupply, 18]
+          { locale: "en", digits: 6 }
+        )
+      : 0;
+  };
+
+  const formatShare1 = (share: number) => {
+    if (!share) {
+      return 0;
+    }
+
+    return totalSupply
+      ? dn.format(
+          dn.mul(
+            dn.div(
+              [token1UnderlyingAmount, selectedPool?.token1.decimals || 18],
+              [totalSupply, 18]
+            ),
+            formattedShares
           ),
-          formattedShares
-        ),
-        { locale: "en", digits: 6 }
-      )
-    : 0;
+          { locale: "en", digits: 6 }
+        )
+      : 0;
+  };
 
   const disableDepositButton = (selectedPool: any): boolean => {
     if (!selectedPool) {
@@ -715,7 +728,7 @@ const PoolDeposit = ({
                             width={20}
                             alt=""
                           />
-                          <Typography secondary>{formattedShare0}</Typography>
+                          <Typography secondary>{formatShare0}</Typography>
                         </div>
                         <div className="flex items-center gap-2">
                           <Image
@@ -724,7 +737,7 @@ const PoolDeposit = ({
                             width={20}
                             alt=""
                           />
-                          <Typography secondary>{formattedShare1}</Typography>
+                          <Typography secondary>{formatShare1}</Typography>
                         </div>
                       </div>
                       <div className="flex items-center justify-center gap-2 py-3">
