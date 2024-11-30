@@ -28,8 +28,7 @@ import ZapInSection from "./ZapInSection";
 import ZapOutSection from "./ZapOutSection";
 import Switch from "~/components/common/Switch";
 
-type Action = "deposit" | "withdraw" ;
-
+type Action = "deposit" | "withdraw";
 
 type PoolDepositProps = {
   onBack: () => void;
@@ -40,7 +39,6 @@ type PoolDepositProps = {
   onClaim?: (wewePositon: WewePosition) => void;
   enableClaimBlock?: boolean;
 };
-
 
 const PoolDeposit = ({
   onBack,
@@ -64,13 +62,14 @@ const PoolDeposit = ({
 
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
-  const {totalSupply} = useVaultTotalSupply(selectedPool)
-  const {token0UnderlyingAmount, token1UnderlyingAmount} = useVaultInfo(selectedPool) 
+  const { totalSupply } = useVaultTotalSupply(selectedPool);
+  const { token0UnderlyingAmount, token1UnderlyingAmount } =
+    useVaultInfo(selectedPool);
 
-  const [zapInSwitch, setZapInSwitch] = useState<boolean>(false)
-  const [zapOutSwitch, setZapOutSwitch] = useState<boolean>(false)
+  const [zapInSwitch, setZapInSwitch] = useState<boolean>(false);
+  const [zapOutSwitch, setZapOutSwitch] = useState<boolean>(false);
 
-  const [zapOutAmount, setZapOutAmount] = useState<string>("0")
+  const [zapOutAmount, setZapOutAmount] = useState<string>("0");
   const [zapOutTokenAddress, setZapOutTokenAddress] = useState<string>("");
   const [sliderZapOutValue, setSliderZapOutValue] = useState<number>(50);
 
@@ -128,7 +127,6 @@ const PoolDeposit = ({
   );
 
   useEffect(() => {
-
     const intervalId = setInterval(() => {
       refechToken1Balance();
       refechToken0Balance();
@@ -141,8 +139,49 @@ const PoolDeposit = ({
     return () => clearInterval(intervalId);
   }, []);
 
-  const formattedShare0 = totalSupply ? dn.format(dn.mul(dn.div([token0UnderlyingAmount, selectedPool?.token0.decimals || 18], [totalSupply, 18]), formattedShares), { locale: "en", digits: 6 }) : 0
-  const formattedShare1 = totalSupply ? dn.format(dn.mul(dn.div([token1UnderlyingAmount, selectedPool?.token1.decimals || 18], [totalSupply, 18]), formattedShares), { locale: "en", digits: 6 }) : 0
+  const formattedShare0 = totalSupply
+    ? dn.format(
+        dn.mul(
+          dn.div(
+            [token0UnderlyingAmount, selectedPool?.token0.decimals || 18],
+            [totalSupply, 18]
+          ),
+          formattedShares
+        ),
+        { locale: "en", digits: 6 }
+      )
+    : 0;
+  const formattedShare1 = totalSupply
+    ? dn.format(
+        dn.mul(
+          dn.div(
+            [token1UnderlyingAmount, selectedPool?.token1.decimals || 18],
+            [totalSupply, 18]
+          ),
+          formattedShares
+        ),
+        { locale: "en", digits: 6 }
+      )
+    : 0;
+
+  const disableDepositButton = (selectedPool: any): boolean => {
+    if (!selectedPool) {
+      return true;
+    }
+
+    if (!inputValueToken1) {
+      return true;
+    }
+
+    return (
+      BigInt(
+        ethers.parseUnits(
+          String(inputValueToken1.toFixed(selectedPool.token1?.decimals) || 0),
+          selectedPool.token1?.decimals
+        )
+      ) > balanceToken1
+    );
+  };
 
   useEffect(() => {
     if (prices && selectedPool) {
@@ -202,7 +241,8 @@ const PoolDeposit = ({
       }
 
       if (zapOutSwitch) {
-        const resultShares = (BigInt(sliderZapOutValue) * balanceShares) / BigInt(100);
+        const resultShares =
+          (BigInt(sliderZapOutValue) * balanceShares) / BigInt(100);
         const selectedZapToken = poolTokens.find(
           (token) => token.address === zapOutTokenAddress
         );
@@ -216,7 +256,6 @@ const PoolDeposit = ({
         setZapOutAmount(newZapAmount.toFixed(selectedZapToken?.decimals));
       }
     }
-
   }, [
     prices,
     sliderValue,
@@ -227,9 +266,8 @@ const PoolDeposit = ({
     zapTokenAddress,
     zapOutTokenAddress,
     zapInSwitch,
-    zapOutSwitch
+    zapOutSwitch,
   ]);
-
 
   const handleChangeToken0 = (newValue: number) => {
     if (prices) {
@@ -254,10 +292,12 @@ const PoolDeposit = ({
       enabled: !!zapTokenAddress,
     });
 
-    const { data: selectedZapOutTokenBalance, refetch: refetchZapOutTokenBalance } =
-    useTokenBalance(address, zapOutTokenAddress as Hex, {
-      enabled: !!zapOutTokenAddress,
-    });
+  const {
+    data: selectedZapOutTokenBalance,
+    refetch: refetchZapOutTokenBalance,
+  } = useTokenBalance(address, zapOutTokenAddress as Hex, {
+    enabled: !!zapOutTokenAddress,
+  });
 
   const handleZapTokenChange = (selectedAddress: string) => {
     setZapTokenAddress(selectedAddress);
@@ -429,332 +469,331 @@ const PoolDeposit = ({
             </div>
             <div></div>
             {selectedAction === "deposit" ? (
-                 <div>
+              <div>
                 <div className="my-8">
-                  <Switch 
-                  value={zapInSwitch}
-                  onClick={() => setZapInSwitch(zapInSwitch => !zapInSwitch)} 
-                  label="ZAP IN"
-                  description="Deposit in the pool with a single token. Half of your deposit will be automatically sold for the other asset in the pool ratio." />
-                </div>
-             
-                {!zapInSwitch ? <div>
-                <div className="mt-4">
-                  <Typography>Deposit amount</Typography>
-                </div>
-                <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
-                  <div className="bg_gray my-3 col-span-12 md:col-span-6 md:flex md:items-center md:mr-4">
-                    <Dropdown
-                      value={TOKEN_LIST[inputTokenIndex].address}
-                      options={TOKEN_LIST.map((token, index) => ({
-                        value: token.address,
-                        icon: token.icon,
-                        text: token.symbol,
-                        index: index,
-                      }))}
-                      className="md:w-1/2"
-                      disabled
-                    />
-                    <NumberInput
-                      classNames={{
-                        root: "md:col-span-2 col-span-6 h-full",
-                        wrapper: "h-full",
-                        input: clsx(
-                          verdana.className,
-                          "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
-                        ),
-                      }}
-                      defaultValue={inputValueToken0}
-                      hideControls
-                      value={inputValueToken0}
-                      onChange={(value) => handleChangeToken0(value as number)}
-                      allowNegative={false}
-                      trimLeadingZeroesOnBlur
-                      thousandSeparator
-                      decimalScale={6}
-                    />
-                  </div>
-                  {/* <button className="md:col-span-2 col-span-12 flex justify-center">
-                      <Image src="/img/icons/swapwewe.svg" alt="" width={36} height={36} />
-                    </button> */}
-                  <div className="bg_gray my-3 col-span-12 md:col-span-6 md:flex md:items-center md:ml-4">
-                    <Dropdown
-                      value={TOKEN_LIST[secondaryTokenIndex].address}
-                      options={TOKEN_LIST.map((token, index) => ({
-                        value: token.address,
-                        icon: token.icon,
-                        text: token.symbol,
-                        index: index,
-                      }))}
-                      className="md:w-1/2"
-                      disabled
-                    />
-                    <NumberInput
-                      classNames={{
-                        root: "md:col-span-2 col-span-6 h-full",
-                        wrapper: "h-full",
-                        input: clsx(
-                          verdana.className,
-                          "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
-                        ),
-                      }}
-                      defaultValue={inputValueToken1}
-                      hideControls
-                      value={inputValueToken1}
-                      onChange={(value) => handleChangeToken1(value as number)}
-                      allowNegative={false}
-                      trimLeadingZeroesOnBlur
-                      thousandSeparator
-                      decimalScale={6}
-                    />
-                  </div>
-                </div>
-                <div className="py-4">
-                  <RangeSlider
-                    min={0}
-                    max={100}
-                    value={Number(sliderValue)}
-                    onChange={(e) => setSliderValue(Number(e.target.value))}
+                  <Switch
+                    value={zapInSwitch}
+                    onClick={() =>
+                      setZapInSwitch((zapInSwitch) => !zapInSwitch)
+                    }
+                    label="ZAP IN"
+                    description="Deposit in the pool with a single token. Half of your deposit will be automatically sold for the other asset in the pool ratio."
                   />
                 </div>
-                <div className="flex items-center justify-evenly text_light_gray">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      alt=""
-                      src="/img/icons/wallet.svg"
-                      width={24}
-                      height={24}
-                    />
-                    <Typography size="xs">
-                      {formatNumber(
-                        ethers.formatUnits(
-                          balanceToken0,
-                          selectedPool?.token0.decimals
-                        ),
-                        {
-                          decimalDigits: 6,
-                        }
-                      )}{" "}
-                      {selectedPool?.token0.symbol}
-                    </Typography>
+
+                {!zapInSwitch ? (
+                  <div>
+                    <div className="mt-4">
+                      <Typography>Deposit amount</Typography>
+                    </div>
+                    <div className="grid grid-cols-12 md:flex-row items-center justify-between gap-3">
+                      <div className="bg_gray my-3 col-span-12 md:col-span-6 md:flex md:items-center md:mr-4">
+                        <Dropdown
+                          value={TOKEN_LIST[inputTokenIndex].address}
+                          options={TOKEN_LIST.map((token, index) => ({
+                            value: token.address,
+                            icon: token.icon,
+                            text: token.symbol,
+                            index: index,
+                          }))}
+                          className="md:w-1/2"
+                          disabled
+                        />
+                        <NumberInput
+                          classNames={{
+                            root: "md:col-span-2 col-span-6 h-full",
+                            wrapper: "h-full",
+                            input: clsx(
+                              verdana.className,
+                              "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
+                            ),
+                          }}
+                          defaultValue={inputValueToken0}
+                          hideControls
+                          value={inputValueToken0}
+                          onChange={(value) =>
+                            handleChangeToken0(value as number)
+                          }
+                          allowNegative={false}
+                          trimLeadingZeroesOnBlur
+                          thousandSeparator
+                          decimalScale={6}
+                        />
+                      </div>
+                      {/* <button className="md:col-span-2 col-span-12 flex justify-center">
+                      <Image src="/img/icons/swapwewe.svg" alt="" width={36} height={36} />
+                    </button> */}
+                      <div className="bg_gray my-3 col-span-12 md:col-span-6 md:flex md:items-center md:ml-4">
+                        <Dropdown
+                          value={TOKEN_LIST[secondaryTokenIndex].address}
+                          options={TOKEN_LIST.map((token, index) => ({
+                            value: token.address,
+                            icon: token.icon,
+                            text: token.symbol,
+                            index: index,
+                          }))}
+                          className="md:w-1/2"
+                          disabled
+                        />
+                        <NumberInput
+                          classNames={{
+                            root: "md:col-span-2 col-span-6 h-full",
+                            wrapper: "h-full",
+                            input: clsx(
+                              verdana.className,
+                              "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
+                            ),
+                          }}
+                          defaultValue={inputValueToken1}
+                          hideControls
+                          value={inputValueToken1}
+                          onChange={(value) =>
+                            handleChangeToken1(value as number)
+                          }
+                          allowNegative={false}
+                          trimLeadingZeroesOnBlur
+                          thousandSeparator
+                          decimalScale={6}
+                        />
+                      </div>
+                    </div>
+                    <div className="py-4">
+                      <RangeSlider
+                        min={0}
+                        max={100}
+                        value={Number(sliderValue)}
+                        onChange={(e) => setSliderValue(Number(e.target.value))}
+                      />
+                    </div>
+                    <div className="flex items-center justify-evenly text_light_gray">
+                      <div className="flex items-center gap-2">
+                        <Image
+                          alt=""
+                          src="/img/icons/wallet.svg"
+                          width={24}
+                          height={24}
+                        />
+                        <Typography size="xs">
+                          {formatNumber(
+                            ethers.formatUnits(
+                              balanceToken0,
+                              selectedPool?.token0.decimals
+                            ),
+                            {
+                              decimalDigits: 6,
+                            }
+                          )}{" "}
+                          {selectedPool?.token0.symbol}
+                        </Typography>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Image
+                          alt=""
+                          src="/img/icons/wallet.svg"
+                          width={24}
+                          height={24}
+                        />
+                        <Typography size="xs">
+                          {formatNumber(
+                            ethers.formatUnits(
+                              balanceToken1,
+                              selectedPool?.token1.decimals
+                            ),
+                            {
+                              decimalDigits: 6,
+                            }
+                          )}{" "}
+                          {selectedPool?.token1.symbol}
+                        </Typography>
+                      </div>
+                    </div>
+                    <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
+                      <Button
+                        className="bg_turq"
+                        onClick={() => setSliderValue(50)}
+                      >
+                        <Typography secondary size="xs" fw={700} tt="uppercase">
+                          50%
+                        </Typography>
+                      </Button>
+                      <Button
+                        className="bg_turq"
+                        onClick={() => setSliderValue(100)}
+                      >
+                        <Typography secondary size="xs" fw={700} tt="uppercase">
+                          MAX
+                        </Typography>
+                      </Button>
+                    </div>
+                    <Button
+                      disabled={disableDepositButton(selectedPool) || false}
+                      className="w-full mt-4"
+                      onClick={
+                        isConnected
+                          ? () => {
+                              onDeposit(inputValueToken0, inputValueToken1);
+                              setSliderValue(50);
+                            }
+                          : () => openConnectModal && openConnectModal()
+                      }
+                    >
+                      <Typography secondary tt="uppercase">
+                        {disableDepositButton(selectedPool)
+                          ? "Not Enough Balance / No Value"
+                          : "Deposit"}
+                      </Typography>
+                    </Button>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Image
-                      alt=""
-                      src="/img/icons/wallet.svg"
-                      width={24}
-                      height={24}
-                    />
-                    <Typography size="xs">
-                      {formatNumber(
-                        ethers.formatUnits(
-                          balanceToken1,
-                          selectedPool?.token1.decimals
-                        ),
-                        {
-                          decimalDigits: 6,
-                        }
-                      )}{" "}
-                      {selectedPool?.token1.symbol}
-                    </Typography>
-                  </div>
-                </div>
-                <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
-                  <Button
-                    className="bg_turq"
-                    onClick={() => setSliderValue(50)}
-                  >
-                    <Typography secondary size="xs" fw={700} tt="uppercase">
-                      50%
-                    </Typography>
-                  </Button>
-                  <Button
-                    className="bg_turq"
-                    onClick={() => setSliderValue(100)}
-                  >
-                    <Typography secondary size="xs" fw={700} tt="uppercase">
-                      MAX
-                    </Typography>
-                  </Button>
-                </div>
-                <Button
-                  disabled={
-                    BigInt(
-                      ethers.parseUnits(
-                        String(inputValueToken1.toFixed(selectedPool.token1.decimals) || 0),
-                        selectedPool.token1.decimals
-                      )
-                    ) > balanceToken1
-                  }
-                  className="w-full mt-4"
-                  onClick={
-                    isConnected
-                      ? () => {
-                          onDeposit(inputValueToken0, inputValueToken1);
-                          setSliderValue(50);
-                        }
-                      : () => openConnectModal && openConnectModal()
-                  }
-                >
-                  <Typography secondary tt="uppercase">
-                    {BigInt(
-                      ethers.parseUnits(
-                        String(inputValueToken1.toFixed(selectedPool.token1.decimals) || 0),
-                        selectedPool.token1.decimals
-                      )
-                    ) > balanceToken1
-                      ? "Not Enough Balance"
-                      : "Deposit"}
-                  </Typography>
-                </Button>
-                </div>
-                :
-                (
-                     <ZapInSection
-                zapAmount={zapAmount}
-                setZapAmount={setZapAmount}
-                zapTokenAddress={zapTokenAddress}
-                handleZapTokenChange={handleZapTokenChange}
-                selectedZapTokenBalance={selectedZapTokenBalance}
-                poolTokens={poolTokens}
-                sliderValue={sliderValue}
-                setSliderValue={setSliderValue}
-                onZapIn={onZapIn}
-                isConnected={isConnected}
-                openConnectModal={openConnectModal}
-              />
+                ) : (
+                  <ZapInSection
+                    zapAmount={zapAmount}
+                    setZapAmount={setZapAmount}
+                    zapTokenAddress={zapTokenAddress}
+                    handleZapTokenChange={handleZapTokenChange}
+                    selectedZapTokenBalance={selectedZapTokenBalance}
+                    poolTokens={poolTokens}
+                    sliderValue={sliderValue}
+                    setSliderValue={setSliderValue}
+                    onZapIn={onZapIn}
+                    isConnected={isConnected}
+                    openConnectModal={openConnectModal}
+                  />
                 )}
               </div>
             ) : (
               <div className="mt-5">
-                   <div className="my-8">
-                  <Switch 
-                  value={zapOutSwitch}
-                  onClick={() => setZapOutSwitch(zapOutSwitch => !zapOutSwitch)} 
-                  label="ZAP-OUT"
-                  description="Withdraw from the pool into one token. The other pool token will be sold for the desired coin." />
-                
-                </div>
-                {!zapOutSwitch ? <>
-                <Typography>Withdraw amount</Typography>
-                <div className="bg_gray my-3 flex items-center gap-4">
-                  <Dropdown
-                    value={selectedPool.address}
-                    options={[
-                      {
-                        value: selectedPool.address,
-                        icon: "/img/tokens/shares.png",
-                        text: "SHARES",
-                        index: 0,
-                      },
-                    ]}
-                    className="md:col-span-3 col-span-6 w-fit "
-                    disabled
-                  />
-                  <NumberInput
-                    classNames={{
-                      root: "flex-1 w-auto",
-                      input: clsx(
-                        verdana.className,
-                        "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
-                      ),
-                    }}
-                    onChange={(value) => setFormattedShares(value as number)}
-                    defaultValue="0"
-                    value={formattedShares}
-                    decimalScale={8}
-                    hideControls
+                <div className="my-8">
+                  <Switch
+                    value={zapOutSwitch}
+                    onClick={() =>
+                      setZapOutSwitch((zapOutSwitch) => !zapOutSwitch)
+                    }
+                    label="ZAP-OUT"
+                    description="Withdraw from the pool into one token. The other pool token will be sold for the desired coin."
                   />
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center justify-center gap-5">
-
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src={selectedPool?.token0.icon}
-                        height={20}
-                        width={20}
-                        alt=""
+                {!zapOutSwitch ? (
+                  <>
+                    <Typography>Withdraw amount</Typography>
+                    <div className="bg_gray my-3 flex items-center gap-4">
+                      <Dropdown
+                        value={selectedPool.address}
+                        options={[
+                          {
+                            value: selectedPool.address,
+                            icon: "/img/tokens/shares.png",
+                            text: "SHARES",
+                            index: 0,
+                          },
+                        ]}
+                        className="md:col-span-3 col-span-6 w-fit "
+                        disabled
                       />
-                      <Typography secondary>
-                         {formattedShare0}
-                      </Typography>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src={selectedPool?.token1.icon}
-                        height={20}
-                        width={20}
-                        alt=""
+                      <NumberInput
+                        classNames={{
+                          root: "flex-1 w-auto",
+                          input: clsx(
+                            verdana.className,
+                            "text-start bg-transparent text-white text-2xl h-auto border-transparent rounded-none"
+                          ),
+                        }}
+                        onChange={(value) =>
+                          setFormattedShares(value as number)
+                        }
+                        defaultValue="0"
+                        value={formattedShares}
+                        decimalScale={8}
+                        hideControls
                       />
-                      <Typography secondary>
-                         {formattedShare1}
-                      </Typography>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-center gap-2 py-3">
-                    <Image
-                      alt=""
-                      src="/img/icons/wallet.svg"
-                      width={24}
-                      height={24}
-                    />
-                    <Typography size="xs" className="text_light_gray">
-                      {parseFloat(
-                        Number(
-                          ethers.formatUnits(balanceShares.toString(), 18)
-                        ).toFixed(8)
-                      )}{" "}
-                      SHARES
-                    </Typography>
-                  </div>
-                </div>
-                <div className="py-4">
-                  <RangeSlider
-                    min={0}
-                    max={100}
-                    value={Number(sliderValue)}
-                    onChange={(e) => setSliderValue(Number(e.target.value))}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-center gap-5">
+                        <div className="flex items-center gap-2">
+                          <Image
+                            src={selectedPool?.token0.icon}
+                            height={20}
+                            width={20}
+                            alt=""
+                          />
+                          <Typography secondary>{formattedShare0}</Typography>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Image
+                            src={selectedPool?.token1.icon}
+                            height={20}
+                            width={20}
+                            alt=""
+                          />
+                          <Typography secondary>{formattedShare1}</Typography>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-center gap-2 py-3">
+                        <Image
+                          alt=""
+                          src="/img/icons/wallet.svg"
+                          width={24}
+                          height={24}
+                        />
+                        <Typography size="xs" className="text_light_gray">
+                          {parseFloat(
+                            Number(
+                              ethers.formatUnits(balanceShares.toString(), 18)
+                            ).toFixed(8)
+                          )}{" "}
+                          SHARES
+                        </Typography>
+                      </div>
+                    </div>
+                    <div className="py-4">
+                      <RangeSlider
+                        min={0}
+                        max={100}
+                        value={Number(sliderValue)}
+                        onChange={(e) => setSliderValue(Number(e.target.value))}
+                      />
+                    </div>
+                    <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
+                      <Button
+                        className="bg_turq"
+                        onClick={() => setSliderValue(50)}
+                      >
+                        <Typography secondary size="xs" fw={700} tt="uppercase">
+                          50%
+                        </Typography>
+                      </Button>
+                      <Button
+                        className="bg_turq"
+                        onClick={() => setSliderValue(100)}
+                      >
+                        <Typography secondary size="xs" fw={700} tt="uppercase">
+                          MAX
+                        </Typography>
+                      </Button>
+                    </div>
+                    <Button
+                      onClick={handleWithdraw}
+                      className="w-full mt-5 mb-2"
+                    >
+                      <Typography secondary>WITHDRAW</Typography>
+                    </Button>
+                  </>
+                ) : (
+                  <ZapOutSection
+                    zapAmount={zapOutAmount}
+                    setZapAmount={setZapOutAmount}
+                    zapTokenAddress={zapOutTokenAddress}
+                    handleZapTokenChange={handleZapOutTokenChange}
+                    selectedZapTokenBalance={selectedZapOutTokenBalance}
+                    poolTokens={poolTokens}
+                    sliderValue={sliderZapOutValue}
+                    setSliderValue={setSliderZapOutValue}
+                    onZapOut={onZapOut}
+                    isConnected={isConnected}
+                    openConnectModal={openConnectModal}
                   />
-                </div>
-                <div className="flex justify-end gap-4 font-extrabold text-black text-sm">
-                  <Button
-                    className="bg_turq"
-                    onClick={() => setSliderValue(50)}
-                  >
-                    <Typography secondary size="xs" fw={700} tt="uppercase">
-                      50%
-                    </Typography>
-                  </Button>
-                  <Button
-                    className="bg_turq"
-                    onClick={() => setSliderValue(100)}
-                  >
-                    <Typography secondary size="xs" fw={700} tt="uppercase">
-                      MAX
-                    </Typography>
-                  </Button>
-                </div>
-                <Button onClick={handleWithdraw} className="w-full mt-5 mb-2">
-                  <Typography secondary>WITHDRAW</Typography>
-                </Button>
-                </>
-                :
-                <ZapOutSection 
-            zapAmount={zapOutAmount}
-            setZapAmount={setZapOutAmount}
-            zapTokenAddress={zapOutTokenAddress}
-            handleZapTokenChange={handleZapOutTokenChange}
-            selectedZapTokenBalance={selectedZapOutTokenBalance}
-            poolTokens={poolTokens}
-            sliderValue={sliderZapOutValue}
-            setSliderValue={setSliderZapOutValue}
-            onZapOut={onZapOut}
-            isConnected={isConnected}
-            openConnectModal={openConnectModal}/> }
+                )}
               </div>
-            ) 
-          }
+            )}
           </div>
           <Divider className="border-blue-700 mt-4" />
           <div className="p-5 my-5 flex flex-wrap items-center justify-center bg_light_dark h-full">
