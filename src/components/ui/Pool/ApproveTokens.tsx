@@ -4,7 +4,7 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { Button, Modal, Typography } from '~/components/common'
 import { usePoolContext } from './PoolContext';
-import { useDualDeposit, useEstimateMintShares } from '~/hooks/useDepositWewePool';
+import { useDualDeposit, useEstimateMintShares2 } from '~/hooks/useDepositWewePool';
 import { useApproveToken } from '~/hooks/useApproveToken';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
@@ -36,11 +36,13 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
   const { address } = useAccount();
   
   const [totalGasFee, setTotalGasFee] = useState<number>()
-  const { data: estimationMintShares } = useEstimateMintShares
+  const { data: estimationMintShares } = useEstimateMintShares2
   (
     selectedPool, 
-    ethers.parseUnits(String(data?.amountToken0 || 0), selectedPool?.token0?.decimals || 18).toString(), 
-    ethers.parseUnits(String(data?.amountToken1 || 0), selectedPool?.token1?.decimals || 18).toString(), 
+    // ethers.parseUnits(String(data?.amountToken0 || 0), selectedPool?.token0?.decimals || 18).toString(), 
+    // ethers.parseUnits(String(data?.amountToken1 || 0), selectedPool?.token1?.decimals || 18).toString(), 
+    data?.amountToken0,
+    data?.amountToken1
   )
 
   const {
