@@ -95,8 +95,33 @@ export function useEstimateMintShares2(wewePool?: WewePool, amount0Max?: number,
       let _amount1Max = 0n;
 
       try {
-        _amount0Max = ethers.parseUnits(amount0Max.toString(), token0Decimals);
-        _amount1Max = ethers.parseUnits(amount1Max.toString(), token1Decimals);
+
+        let _amount0MaxString = amount0Max.toString();
+        let _amount1MaxString = amount1Max.toString();
+
+        // Use regex to check how many decimals are in the string
+        const regex = /^(\d+\.\d{1,6})\d*$|^(\d+)$/;
+
+        if (regex.test(_amount0MaxString)) {
+          _amount0MaxString = _amount0MaxString.replace(regex, (match, decimalGroup, integerGroup) => {
+            if (decimalGroup) {
+              return decimalGroup;
+            }
+            return integerGroup;
+          });
+        }
+
+        if (regex.test(_amount0MaxString)) {
+          _amount1MaxString = _amount1MaxString.replace(regex, (match, decimalGroup, integerGroup) => {
+            if (decimalGroup) {
+              return decimalGroup;
+            }
+            return integerGroup;
+          });
+        }
+
+        _amount0Max = ethers.parseUnits(_amount0MaxString, token0Decimals);
+        _amount1Max = ethers.parseUnits(_amount1MaxString, token1Decimals);
       } catch (e) {
         console.error(e)
       }
