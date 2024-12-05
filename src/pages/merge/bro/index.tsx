@@ -21,9 +21,8 @@ const BroMergePage = () => {
   const { data: broContractBalance } = useTokenBalance(CONTRACT_ADDRESSES.broEater, CONTRACT_ADDRESSES.wewe);
   const { data: bbroContractBalance } = useTokenBalance(CONTRACT_ADDRESSES.bbroEater, CONTRACT_ADDRESSES.wewe);
 
-  const getDaysRemaining = () => {
-    return dayjs(endDateTimeStamp).diff(dayjs(), "day");
-  }
+  const remainingDays = dayjs(endDateTimeStamp).diff(dayjs(), "day");
+  const remainingMinutes = dayjs(endDateTimeStamp).diff(dayjs(), "minute");
 
   return (
     <div className="gap-5 grid grid-cols-12">
@@ -97,7 +96,7 @@ const BroMergePage = () => {
               size="lg"
               secondary
               className="font-bold my-8">
-              {getDaysRemaining() > 0 ? getDaysRemaining() : 0} DAYS
+              {remainingDays > 0 ? `${remainingDays} DAYS` : remainingMinutes > 0 ? `${Math.floor(remainingMinutes / 60)} H ${remainingMinutes % 60} MIN` : "0 MIN"}
             </Typography>
           </div>
 
