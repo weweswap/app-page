@@ -96,7 +96,7 @@ const BroMergePage = () => {
               size="lg"
               secondary
               className="font-bold my-8">
-              {remainingDays > 0 ? `${remainingDays} DAYS` : remainingMinutes > 0 ? `${Math.floor(remainingMinutes / 60)} H ${remainingMinutes % 60} MIN` : "0 MIN"}
+              {remainingDays > 0 ? `${remainingDays} DAYS` : remainingMinutes > 0 ? `${Math.floor(remainingMinutes / 60)} H ${remainingMinutes % 60} MIN` : "Merge completed"}
             </Typography>
           </div>
 
