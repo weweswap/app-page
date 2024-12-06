@@ -58,6 +58,15 @@ export const MemeClaimForm = ({ mergeConfig }: MemeClaimFormProps) => {
     return isClaimActive() ? "NOT CLAIMABLE:" : "CLAIM YOUR WEWE NOW";
   }
 
+  const claimInCopy = () => {
+    // {remainingDays} DAYS {remainingHours % 24} HOURS
+    if (remainingDays < 0 && remainingHours < 0) {
+      return "CLAIMING PERIOD HAS ENDED";
+    }
+
+    return `${remainingDays} DAYS ${remainingHours % 24} HOURS`;
+  }
+
   if (isLoading) {
     return <LoadingScreen />;
   }
@@ -91,7 +100,7 @@ export const MemeClaimForm = ({ mergeConfig }: MemeClaimFormProps) => {
               </Typography>
 
               <Typography size="sm" secondary className="font-black my-10">
-                {remainingDays} DAYS {remainingHours % 24} HOURS
+                {claimInCopy()}
               </Typography>
             </>
           ) : (
