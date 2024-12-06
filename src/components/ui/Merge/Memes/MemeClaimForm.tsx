@@ -40,7 +40,7 @@ export const MemeClaimForm = ({ mergeConfig }: MemeClaimFormProps) => {
 
   const isClaimActive = () => {
     if (isPaused) {
-      return true; // Claiming is paused
+      return true; // Claiming is paused (disabled)
     }
 
     return Number(lockedUntil) > Date.now() / 1000;
