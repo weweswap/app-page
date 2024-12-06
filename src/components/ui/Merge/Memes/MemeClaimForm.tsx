@@ -59,9 +59,8 @@ export const MemeClaimForm = ({ mergeConfig }: MemeClaimFormProps) => {
   }
 
   const claimInCopy = () => {
-    // {remainingDays} DAYS {remainingHours % 24} HOURS
     if (remainingDays < 0 && remainingHours < 0) {
-      return "CLAIMING PERIOD HAS ENDED";
+      return "CLAIMING NOW AVAILABLE";
     }
 
     return `${remainingDays} DAYS ${remainingHours % 24} HOURS`;
