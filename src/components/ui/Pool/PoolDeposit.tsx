@@ -16,8 +16,6 @@ import { PoolChartCard } from "./PoolChartCard";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { formatNumber } from "~/utils";
 
-import { ArrakisVaultABI } from "~/lib/abis/ArrakisVault";
-import { provider } from "~/hooks/provider";
 import { Hex } from "viem";
 import { useVaultTotalSupply } from "~/hooks/useVaultTotalSupply";
 import { useVaultInfo } from "~/hooks/useVaultInfo";

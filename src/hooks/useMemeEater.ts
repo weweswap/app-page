@@ -281,6 +281,20 @@ export function useMemeEaterIsPaused(eaterAddress: Hex) {
   }
 }
 
+// Check the contract state for the paused state
+export function useMemeEaterIsPaused2(eaterAddress: Hex) {
+  const { data, isLoading, refetch } = useReadContract({
+    abi: MemeEaterAbi,
+    address: eaterAddress,
+    functionName: "paused",
+  });
+
+  return {
+    isPaused: data,
+    isLoading
+  }
+}
+
 export function useMemeEaterMerklInfo(eaterAddress: Hex, tokenAddress: Hex) {
   const { address } = useAccount();
 

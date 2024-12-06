@@ -38,9 +38,7 @@ const ApproveTokens = ({ data, onClose, onTxError, opened}: ApproveTokensProps) 
   const [totalGasFee, setTotalGasFee] = useState<number>()
   const { data: estimationMintShares } = useEstimateMintShares2
   (
-    selectedPool, 
-    // ethers.parseUnits(String(data?.amountToken0 || 0), selectedPool?.token0?.decimals || 18).toString(), 
-    // ethers.parseUnits(String(data?.amountToken1 || 0), selectedPool?.token1?.decimals || 18).toString(), 
+    selectedPool,
     data?.amountToken0,
     data?.amountToken1
   )
