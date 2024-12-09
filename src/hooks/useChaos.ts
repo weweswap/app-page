@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { API_DEVELOPEMENT_BASE_URL } from "~/constants/configs";
+import { API_BASE_URL } from "~/constants/configs";
 
 export const useGetChaosList = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["chaos-leaderboard"],
     staleTime: 1000 * 60 * 5,
     queryFn: async () => {
-      const response = await axios.get(`${API_DEVELOPEMENT_BASE_URL}/chaos/leaderboard`);
+      const response = await axios.get(`${API_BASE_URL}/chaos/leaderboard`);
       
       if (!response.data) {
         throw new Error("No data returned from Chaos leaderboard API.");
@@ -22,9 +22,9 @@ export const useGetChaosList = () => {
 
 export const useGetChaosUserInfo = (address:string) => {
     const { data, isLoading, error } = useQuery({
-      queryKey: ["chaos-user-info"],
+      queryKey: ["chaos-user-info", address],
       queryFn: async () => {
-        const response = await axios.get(`${API_DEVELOPEMENT_BASE_URL}/chaos/info/${address}`);
+        const response = await axios.get(`${API_BASE_URL}/chaos/info/${address}`);
         
         if (!response.data) {
           throw new Error("No data returned from Chaos leaderboard API.");
